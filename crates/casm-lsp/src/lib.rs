@@ -30,6 +30,13 @@
 //! never fails, and [`hover`], which degrades to partial information rather than
 //! disappearing.
 //!
+//! # Two ways to use this crate
+//!
+//! With the default `server` feature it is a language server binary. Without it, the
+//! protocol layer and its async runtime disappear and what remains is pure analysis —
+//! which is exactly what `casm-wasm` compiles into a browser, where completion and
+//! diagnostics are wanted and a JSON-RPC socket is not.
+//!
 //! # Panics are contained, not permitted
 //!
 //! Every request handler runs inside `catch_unwind`. A bug that escapes the lint gates
@@ -50,9 +57,11 @@ pub mod hover;
 pub mod index;
 pub mod navigation;
 pub mod schema;
+#[cfg(feature = "server")]
 pub mod server;
 pub mod text;
 
 pub use documents::{DocumentStore, Limits};
+#[cfg(feature = "server")]
 pub use server::Backend;
 pub use text::{Position, Span};

@@ -22,6 +22,12 @@ node_modules/
 editors/vscode/out/
 *.vsix
 
+# WebAssembly build output (regenerate with scripts/build-wasm.sh)
+/dist
+/web/pkg
+/edge/casm_wasm.js
+/edge/casm_wasm_bg.wasm
+
 # CASIMIR generated output
 /out
 *.casm.gen/

@@ -179,6 +179,56 @@ not a deadlock — see [ADR-0006](docs/adr/0006-only-blocking-edges-form-cycles.
 
 ---
 
+## In a browser
+
+`casm-wasm` compiles the domain, parser, validator, renderer, and the analysis half of the
+language server to WebAssembly. Nothing had to change to make that work — those crates
+have been pure and I/O-free since [ADR-0001](docs/adr/0001-hexagonal-crate-layout.md), so
+Phase 10 is a binding layer rather than a rewrite.
+
+```console
+$ ./scripts/build-wasm.sh
+$ python3 -m http.server -d web 8080     # then open http://localhost:8080
+```
+
+The [playground](web/) validates as you type, renders diagrams, and shows the fingerprint
+updating — reorder two nodes and watch it stay the same. All client-side; nothing is
+uploaded.
+
+```javascript
+import init, * as casm from "./pkg/casm_wasm.js";
+await init();
+
+const result = JSON.parse(casm.validate(source));
+// { valid, exitCode, fingerprint, diagnostics: [{ severity, rule, message, line, start, end }] }
+```
+
+Every export takes strings and returns JSON. Nothing throws and **nothing traps** — a
+parse failure is a value in the result, because a WebAssembly trap poisons the module and
+would break the page until it reloaded. `exitCode` matches `casm validate` exactly, so a
+page and a pipeline never disagree.
+
+| | raw | gzip |
+|---|---|---|
+| `casm_wasm_bg.wasm` | 938 KB | 314 KB |
+| total with JS glue | 956 KB | 317 KB |
+
+45% of the roadmap's 2 MiB ceiling; the build script fails if that is ever exceeded.
+
+### At the edge
+
+The same module runs as a [Cloudflare Worker](edge/) — no container, no language runtime,
+one JavaScript file and a `.wasm`:
+
+```console
+$ curl -X POST --data-binary @architecture.yaml https://casm.example/validate
+```
+
+Cold-start latency is **unverified**: it can only be measured on the platform, and this
+has not been deployed.
+
+---
+
 ## History that means something
 
 `git log architecture.yaml` lists every commit that touched the file. Most of them
@@ -275,7 +325,8 @@ casm-core         domain — entities and invariants, no I/O
   ├── casm-diff          domain × domain → semantic changes, and drift vs reality
   ├── casm-git           domain × Git history → what actually changed, and when
   ├── casm-cli           the `casm` binary
-  └── casm-lsp           the `casm-lsp` language server
+  ├── casm-lsp           the `casm-lsp` language server
+  └── casm-wasm          the browser and edge runtime
 ```
 
 Dependencies point strictly inward. Full reasoning in
@@ -292,6 +343,7 @@ Dependencies point strictly inward. Full reasoning in
 | [0007](docs/adr/0007-deterministic-rendering.md) | Positional diagram ids; rendering is pure |
 | [0008](docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
 | [0009](docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
+| [0010](docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred, not abandoned |
 
 ### Engineering rules
 
@@ -309,7 +361,7 @@ Adapted from the JPL Power of Ten and enforced in CI, not aspirational:
 | Supply-chain hygiene | `cargo deny` for licences and advisories |
 
 ```console
-$ cargo test --workspace          # 623 tests
+$ cargo test --workspace          # 654 tests
 $ cargo clippy --workspace --all-targets -- -D warnings
 ```
 
@@ -318,13 +370,21 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 ## Status
 
 **v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
-and Git-native history are implemented, tested, and usable. The API is pre-1.0 and will
-change.
+Git-native history, and WebAssembly runtime are implemented, tested, and usable. The API
+is pre-1.0 and will change.
 
-Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6
-and 8 are what you see here. Phase 7 (distributed pattern registry) and phases 9–12 — LLM
-bridge, WASM runtime, OpenTelemetry, documentation site — are **not implemented**; they
-are documented direction, not shipped code.
+Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
+8, and 10 are what you see here.
+
+Phase 10 is three-quarters done: the browser module, playground, and edge worker ship; the
+`no_std` embedded validator does not. The dependency set was verified to build for a
+bare-metal target, but neither `serde_yaml_ng` nor `toml` supports `no_std`, so it would be
+a validator that cannot read the format its users write —
+[ADR-0010](docs/adr/0010-embedded-validator-deferred.md) records the analysis.
+
+Phase 7 (distributed pattern registry) and phases 9, 11, and 12 — LLM bridge,
+OpenTelemetry, documentation site — are **not implemented**; they are documented
+direction, not shipped code.
 
 ---
 

@@ -13,6 +13,14 @@ categories.workspace = true
 [[bin]]
 name = "casm-lsp"
 path = "src/main.rs"
+required-features = ["server"]
+
+[features]
+default = ["server"]
+# The JSON-RPC layer, and the async runtime it needs. Off, the crate is pure analysis
+# with no `tokio` — which is what `casm-wasm` depends on, since a browser has neither a
+# socket nor a reason to carry a multi-threaded runtime.
+server = ["dep:tower-lsp-server", "dep:tokio"]
 
 [dependencies]
 casm-core.workspace = true
@@ -20,8 +28,8 @@ casm-parser.workspace = true
 casm-validator.workspace = true
 casm-renderer.workspace = true
 serde_json.workspace = true
-tower-lsp-server = "0.23"
-tokio = { version = "1", features = ["rt-multi-thread", "io-std", "macros"] }
+tower-lsp-server = { version = "0.23", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "io-std", "macros"], optional = true }
 
 [dev-dependencies]
 serde.workspace = true

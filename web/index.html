@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CASIMIR playground</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #fbfbfa;
+        --panel: #ffffff;
+        --ink: #16181d;
+        --muted: #6b7280;
+        --line: #e4e4e7;
+        --accent: #3b5bdb;
+        --error: #c92a2a;
+        --warning: #b26a00;
+        --info: #4263eb;
+        --ok: #2b8a3e;
+        --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14161a;
+          --panel: #1b1e24;
+          --ink: #e8eaed;
+          --muted: #9aa0aa;
+          --line: #2b3037;
+          --accent: #748ffc;
+          --error: #ff8787;
+          --warning: #ffc078;
+          --info: #91a7ff;
+          --ok: #69db7c;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      header {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--line);
+      }
+      header h1 { margin: 0; font-size: 1.05rem; letter-spacing: 0.01em; }
+      header .tagline { color: var(--muted); font-size: 0.85rem; }
+      header .spacer { flex: 1; }
+      header .badge {
+        font: 0.75rem/1 var(--mono);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.3rem 0.6rem;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1px;
+        background: var(--line);
+        height: calc(100vh - 58px);
+      }
+      @media (max-width: 900px) {
+        main { grid-template-columns: 1fr; height: auto; }
+      }
+
+      section { background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      .toolbar .label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-right: auto;
+      }
+
+      button {
+        font: inherit;
+        font-size: 0.82rem;
+        color: var(--ink);
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.25rem 0.6rem;
+        cursor: pointer;
+      }
+      button:hover { border-color: var(--accent); }
+      button[aria-pressed="true"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      textarea {
+        flex: 1;
+        min-height: 340px;
+        resize: none;
+        border: 0;
+        outline: none;
+        padding: 0.9rem 1rem;
+        background: transparent;
+        color: var(--ink);
+        font: 13px/1.65 var(--mono);
+        tab-size: 2;
+      }
+
+      .output { flex: 1; overflow: auto; padding: 0.75rem 1rem; min-height: 200px; }
+
+      pre {
+        margin: 0;
+        font: 12.5px/1.6 var(--mono);
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .summary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+      .dot.ok { background: var(--ok); }
+      .dot.warning { background: var(--warning); }
+      .dot.error { background: var(--error); }
+
+      .finding {
+        display: grid;
+        grid-template-columns: 3.2rem 1fr;
+        gap: 0.6rem;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid var(--line);
+        cursor: pointer;
+      }
+      .finding:last-child { border-bottom: 0; }
+      .finding:hover .msg { color: var(--accent); }
+      .finding .where { font: 11.5px/1.7 var(--mono); color: var(--muted); text-align: right; }
+      .finding .msg { font-size: 0.85rem; white-space: pre-wrap; }
+      .finding .rule {
+        display: inline-block;
+        font: 11px/1.5 var(--mono);
+        padding: 0 0.35rem;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+        margin-right: 0.4rem;
+      }
+      .severity-error .rule { color: var(--error); }
+      .severity-warning .rule { color: var(--warning); }
+      .severity-info .rule { color: var(--info); }
+
+      .empty { color: var(--muted); font-size: 0.85rem; padding: 0.5rem 0; }
+      .fingerprint { font: 11.5px/1.6 var(--mono); color: var(--muted); }
+      a { color: var(--accent); }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>CASIMIR playground</h1>
+      <span class="tagline">Validation, diagrams, and fingerprints — entirely in your browser.</span>
+      <span class="spacer"></span>
+      <span class="badge" id="badge">loading…</span>
+    </header>
+
+    <main>
+      <section>
+        <div class="toolbar">
+          <span class="label">architecture.yaml</span>
+          <button type="button" data-example="storefront">storefront</button>
+          <button type="button" data-example="broken">a syntax error</button>
+          <button type="button" data-example="cycle">a dependency cycle</button>
+          <button type="button" data-example="exposed">an exposed database</button>
+        </div>
+        <textarea id="source" spellcheck="false" aria-label="Architecture source"></textarea>
+        <div class="summary">
+          <span class="dot" id="status-dot"></span>
+          <span id="status">…</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="toolbar">
+          <span class="label">output</span>
+          <button type="button" data-view="findings" aria-pressed="true">findings</button>
+          <button type="button" data-view="mermaid" aria-pressed="false">mermaid</button>
+          <button type="button" data-view="ascii" aria-pressed="false">ascii</button>
+          <button type="button" data-view="json" aria-pressed="false">json</button>
+        </div>
+        <div class="output" id="output"></div>
+        <div class="summary"><span class="fingerprint" id="fingerprint"></span></div>
+      </section>
+    </main>
+
+    <script type="module">
+      import init, * as casm from "./pkg/casm_wasm.js";
+
+      const EXAMPLES = {
+        storefront: `name: storefront
+version: 1.0.0
+description: Order capture for the public storefront.
+
+nodes:
+  - name: edge-gateway
+    type: gateway
+    interfaces:
+      - name: public-api
+        protocol: http2
+        version: 2.1.0
+    controls:
+      - type: security
+        standard: OIDC-Core-1.0
+        description: Every request carries a validated OIDC token.
+      - type: security
+        standard: TLS1.3
+        description: TLS 1.3 terminated at the edge.
+
+  - name: orders
+    type: service
+    interfaces:
+      - name: grpc
+        protocol: grpc
+        version: 1.0.0
+
+  - name: orders-db
+    type: database
+    interfaces:
+      - name: sql
+        protocol: sql
+        version: 16.0.0
+
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+    protocol: grpc
+    latency-budget-ms: 120
+
+  - source: orders
+    target: orders-db
+    type: sync
+    protocol: sql
+    latency-budget-ms: 40
+`,
+
+        broken: `name: storefront
+nodes:
+  - name: api
+    type: srvice
+`,
+
+        cycle: `name: tangled
+nodes:
+  - name: orders
+    type: service
+  - name: billing
+    type: service
+relationships:
+  - source: orders
+    target: billing
+    type: sync
+  - source: billing
+    target: orders
+    type: sync
+`,
+
+        exposed: `name: exposed
+nodes:
+  - name: partner
+    type: external-system
+  - name: orders-db
+    type: database
+relationships:
+  - source: partner
+    target: orders-db
+    type: sync
+`,
+      };
+
+      const source = document.getElementById("source");
+      const output = document.getElementById("output");
+      const status = document.getElementById("status");
+      const statusDot = document.getElementById("status-dot");
+      const fingerprintLine = document.getElementById("fingerprint");
+      const badge = document.getElementById("badge");
+
+      let view = "findings";
+
+      /** Escapes text for insertion into HTML. */
+      const escape = (text) =>
+        String(text).replace(
+          /[&<>"']/g,
+          (character) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character],
+        );
+
+      /** Moves the caret to a zero-based line and column. */
+      function jumpTo(line, column) {
+        const lines = source.value.split("\n");
+        let offset = 0;
+        for (let index = 0; index < Math.min(line, lines.length); index += 1) {
+          offset += lines[index].length + 1;
+        }
+        source.focus();
+        source.setSelectionRange(offset + column, offset + column);
+      }
+
+      function renderFindings(result) {
+        if (result.diagnostics.length === 0) {
+          output.innerHTML = '<p class="empty">Nothing to report. This architecture is clean.</p>';
+          return;
+        }
+
+        output.innerHTML = result.diagnostics
+          .map(
+            (finding) => `
+              <div class="finding severity-${finding.severity}"
+                   data-line="${finding.line}" data-column="${finding.start}">
+                <div class="where">${finding.line + 1}:${finding.start + 1}</div>
+                <div class="msg"><span class="rule">${escape(finding.rule)}</span>${escape(
+                  finding.message,
+                )}</div>
+              </div>`,
+          )
+          .join("");
+
+        for (const element of output.querySelectorAll(".finding")) {
+          element.addEventListener("click", () =>
+            jumpTo(Number(element.dataset.line), Number(element.dataset.column)),
+          );
+        }
+      }
+
+      function renderDiagram(backend) {
+        const result = JSON.parse(casm.render(source.value, backend));
+        output.innerHTML = result.ok
+          ? `<pre>${escape(result.diagram)}</pre>`
+          : `<p class="empty">${escape(result.error)}</p>`;
+      }
+
+      function analyse() {
+        const raw = casm.validate(source.value);
+        const result = JSON.parse(raw);
+
+        const errors = result.diagnostics.filter((d) => d.severity === "error").length;
+        const warnings = result.diagnostics.filter((d) => d.severity === "warning").length;
+
+        statusDot.className = `dot ${errors ? "error" : warnings ? "warning" : "ok"}`;
+        status.textContent = result.parsed
+          ? `${result.nodeCount} node(s), ${result.relationshipCount} relationship(s) — ${errors} error(s), ${warnings} warning(s)`
+          : "does not parse";
+
+        fingerprintLine.textContent = result.fingerprint
+          ? `fingerprint ${result.fingerprint.slice(0, 24)}…`
+          : "";
+
+        if (view === "findings") renderFindings(result);
+        else if (view === "json") output.innerHTML = `<pre>${escape(JSON.stringify(result, null, 2))}</pre>`;
+        else renderDiagram(view);
+      }
+
+      for (const button of document.querySelectorAll("[data-view]")) {
+        button.addEventListener("click", () => {
+          view = button.dataset.view;
+          for (const other of document.querySelectorAll("[data-view]")) {
+            other.setAttribute("aria-pressed", String(other === button));
+          }
+          analyse();
+        });
+      }
+
+      for (const button of document.querySelectorAll("[data-example]")) {
+        button.addEventListener("click", () => {
+          source.value = EXAMPLES[button.dataset.example];
+          analyse();
+        });
+      }
+
+      source.addEventListener("input", analyse);
+
+      init()
+        .then(() => {
+          badge.textContent = `casm ${casm.version()} · wasm`;
+          source.value = EXAMPLES.storefront;
+          analyse();
+        })
+        .catch((error) => {
+          badge.textContent = "failed to load";
+          output.innerHTML = `<p class="empty">Could not load the WebAssembly module: ${escape(
+            error,
+          )}<br /><br />Build it with <code>scripts/build-wasm.sh</code>, then serve this
+          directory over HTTP — <code>file://</code> will not work for ES modules.</p>`;
+        });
+    </script>
+  </body>
+</html>

@@ -116,8 +116,31 @@ jobs:
       - run: npx tsc -p ./ --noEmit
         working-directory: editors/vscode
 
-  # Gate 9: CASIMIR validates its own example architectures. If the tool cannot keep
-  # its own house in order, it has no business auditing anyone else's.
+  # Gate 9: the WebAssembly module must build, stay under the size ceiling, and actually
+  # run. The Rust tests execute on the host, where `SystemTime` exists and `usize` is
+  # 64-bit; only running the real module catches a wasm-only failure.
+  wasm:
+    name: wasm (build, size, run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: Swatinem/rust-cache@v2
+      - name: install wasm-bindgen-cli at the pinned version
+        run: |
+          version=$(cargo tree -p casm-wasm -i wasm-bindgen --depth 0 | head -1 | awk '{print $2}' | tr -d 'v')
+          cargo install wasm-bindgen-cli --version "$version" --locked
+      - run: ./scripts/build-wasm.sh
+      - run: node crates/casm-wasm/tests/node/run.mjs
+      - run: node edge/tests/handler.test.mjs
+
+  # Gate 10: CASIMIR validates its own example architectures. If the tool cannot keep
+  # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)
     runs-on: ubuntu-latest

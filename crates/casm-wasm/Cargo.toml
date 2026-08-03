@@ -1,0 +1,50 @@
+[package]
+name = "casm-wasm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "CASIMIR compiled to WebAssembly: validate, render, and diff architectures in a browser or at the edge"
+keywords.workspace = true
+categories.workspace = true
+
+[lib]
+# `cdylib` is what produces a `.wasm`; `rlib` keeps the crate testable on the host, which
+# is where every unit test below actually runs.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+casm-core.workspace = true
+casm-parser.workspace = true
+casm-validator.workspace = true
+casm-renderer.workspace = true
+casm-diff.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+# The analysis half of the language server, without its JSON-RPC layer or async runtime.
+# This is what gives the browser diagnostics with line and column positions, and the same
+# completion the editor gets.
+casm-lsp = { path = "../casm-lsp", version = "0.1.0", default-features = false }
+
+wasm-bindgen = "0.2"
+
+# Turns a panic into a `console.error` instead of a silent trap. A trap poisons the
+# module: every later call fails with no explanation of the first one.
+console_error_panic_hook = "0.1"
+
+# On `wasm32-unknown-unknown` there is no clock and no entropy source, so `NodeId::new`
+# — which mints a UUIDv7 whenever a document omits `id:` — would panic, and a panic here
+# is a trap that poisons the module. The `js` feature routes both through the host:
+# `Date.now()` for the timestamp, the Web Crypto API for randomness.
+#
+# Declared here rather than in `casm-core` so the domain layer keeps no knowledge of
+# JavaScript. Cargo features are additive, so this reaches `casm-core`'s `uuid` too, and
+# only when the target is wasm.
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+uuid = { version = "1", features = ["js"] }
+
+[lints]
+workspace = true
