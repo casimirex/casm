@@ -4,12 +4,20 @@
 
 ```console
 $ cargo test --workspace
-$ cargo clippy --workspace --all-targets -- -D warnings
+$ cargo +stable clippy --workspace --all-targets --all-features -- -D warnings
 $ cargo fmt --all
 ```
 
-All three must pass. CI runs them plus Miri, `cargo deny`, an MSRV check, rustdoc with
-`-D warnings`, and `casm check examples --strict`.
+All three must pass.
+
+**Use `+stable` for clippy.** CI does, and the two toolchains disagree: nightly and
+stable differ on which identifiers `doc_markdown` wants backticked, and a lint that exists
+on one may be an unknown-lint error on the other. Linting on nightly and pushing is how
+you get a red build for something that passed locally.
+
+CI runs those three plus Miri, `cargo deny`, an MSRV check, rustdoc with `-D warnings`,
+a fuzz smoke run, the TLA+ and Alloy model checkers, the WebAssembly bundle, the container
+image, the book, and `casm check examples --strict`.
 
 ## Engineering rules
 

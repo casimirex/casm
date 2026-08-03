@@ -113,7 +113,9 @@ fn guarded<T>(operation_name: &'static str, operation: impl FnOnce() -> T) -> Rp
 // Every handler below is `async` because the `LanguageServer` trait declares it so; the
 // signatures are not ours to choose. Clippy's suggestion — return `std::future::ready`
 // instead — cannot be taken for a trait method, so the lint is a false positive here.
-#[allow(clippy::unused_async_trait_impl)]
+// `unused_async_trait_impl` is nightly-only, so stable clippy would reject the attribute
+// itself under `-D warnings`. `unknown_lints` makes the allow portable across both.
+#[allow(unknown_lints, clippy::unused_async_trait_impl)]
 impl LanguageServer for Backend {
     async fn initialize(&self, _: InitializeParams) -> RpcResult<InitializeResult> {
         Ok(InitializeResult {

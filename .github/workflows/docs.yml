@@ -1,7 +1,11 @@
 name: Documentation
 
-# Publishes the book to GitHub Pages. Separate from CI because CI must stay fast and must
-# run on pull requests from forks, which cannot be given Pages credentials.
+# Builds the book on every change, and publishes it to GitHub Pages when that is
+# possible. Pages is unavailable for a private repository on a free plan, so the publish
+# steps are guarded rather than left to fail on every push — a workflow that is always red
+# teaches people to ignore the red.
+#
+# Make the repository public and the deploy begins working with no change here.
 on:
   push:
     branches: [main]
@@ -19,7 +23,10 @@ concurrency:
 
 jobs:
   build:
+    name: build the book
     runs-on: ubuntu-latest
+    outputs:
+      publishable: ${{ steps.visibility.outputs.public }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -27,13 +34,26 @@ jobs:
       - run: cargo install mdbook --locked
       - run: mdbook build
         working-directory: docs/book
+
+      - id: visibility
+        run: echo "public=${{ github.event.repository.private == false }}" >> "$GITHUB_OUTPUT"
+
       - uses: actions/configure-pages@v5
+        if: steps.visibility.outputs.public == 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.visibility.outputs.public == 'true'
         with:
           path: docs/book/book
 
+      - name: note why publishing was skipped
+        if: steps.visibility.outputs.public != 'true'
+        run: |
+          echo "The book built successfully but was not published." >> "$GITHUB_STEP_SUMMARY"
+          echo "GitHub Pages needs a public repository on this plan." >> "$GITHUB_STEP_SUMMARY"
+
   deploy:
     needs: build
+    if: needs.build.outputs.publishable == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

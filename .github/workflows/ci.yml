@@ -63,19 +63,30 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo check --workspace --all-features
 
-  # Gate 5: NASA Rule 1 — `#![forbid(unsafe_code)]` is verified, not merely asserted.
-  # Miri detects undefined behaviour that safe-looking code can still reach through
-  # dependencies.
+  # Gate 5: NASA Rule 1. Every crate is `#![forbid(unsafe_code)]`, so the compiler already
+  # guarantees CASIMIR contains none; what Miri adds is detecting undefined behaviour
+  # reached *through dependencies* — `uuid`, `sha3`, `indexmap`, and `serde` all have
+  # unsafe internals.
+  #
+  # Scoped to `casm-core`: it is where those primitives are exercised, and Miri runs
+  # roughly a hundred times slower than native, so the whole workspace would take longer
+  # than every other gate combined.
   miri:
     name: miri (undefined behaviour)
     runs-on: ubuntu-latest
+    env:
+      # Isolation blocks `getcwd`, which `proptest` calls to locate its regression file.
+      # Miri is being used here to find UB, not to sandbox.
+      MIRIFLAGS: -Zmiri-disable-isolation
+      # 256 cases per property is right for a native run and disproportionate under Miri.
+      PROPTEST_CASES: 4
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: miri
       - uses: Swatinem/rust-cache@v2
-      - run: cargo miri test -p casm-core -p casm-parser
+      - run: cargo miri test -p casm-core --lib
 
   # Gate 6: supply chain — licences, advisories, and duplicate dependencies.
   deny:

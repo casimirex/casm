@@ -58,6 +58,19 @@ Until the first crate is published, `cargo package -p casm-parser` fails with
 defect in the manifest — `casm-core` packages cleanly today, and each subsequent crate
 will once the one before it exists.
 
+## Documentation hosting
+
+The book builds in CI on every change. It is **not** published: GitHub Pages needs a
+public repository on this plan, and the repository is private. The deploy job is guarded
+on visibility rather than left failing, so making the repository public is all that is
+needed to start publishing.
+
+Until then, read it locally:
+
+```console
+$ mdbook serve docs/book --open
+```
+
 ## Versioning
 
 Every crate shares the workspace version and is released together. Separate versions would

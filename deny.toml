@@ -25,6 +25,11 @@ allow = [
     "Zlib",
     "CC0-1.0",
     "MPL-2.0",
+    # MIT with the attribution clause removed, and a public-domain dedication. Both are
+    # strictly more permissive than MIT, which is already allowed above. Reached through
+    # `gix` and the `jiff`/`walkdir` family.
+    "MIT-0",
+    "Unlicense",
 ]
 confidence-threshold = 0.9
 

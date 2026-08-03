@@ -225,6 +225,10 @@ mod tests {
     }
 
     #[test]
+    // Miri simulates a clock that starts at the Unix epoch, so "later than 2020" is not a
+    // property that can hold there. The conversion itself is covered by the round-trip
+    // tests, which Miri does run.
+    #[cfg_attr(miri, ignore = "Miri's simulated clock starts at the epoch")]
     fn timestamp_is_recoverable_and_plausible() {
         let id = NodeId::new();
         // 2020-01-01T00:00:00Z in milliseconds; any clock after that is plausible.

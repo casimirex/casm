@@ -60,7 +60,7 @@ pub enum Protocol {
     WebSocket,
     /// A raw TCP or UDP socket protocol.
     Tcp,
-    /// A SQL wire protocol (PostgreSQL, MySQL, …).
+    /// A SQL wire protocol (`PostgreSQL`, `MySQL`, …).
     Sql,
     /// An escape hatch for protocols CASIMIR does not model natively.
     Custom(String),
