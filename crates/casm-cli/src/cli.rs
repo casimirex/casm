@@ -76,6 +76,17 @@ pub(crate) enum InventorySource {
     Terraform,
 }
 
+/// The formal-methods tools `formal` can target.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub(crate) enum FormalTarget {
+    /// TLA+, for failure and recovery over time.
+    Tla,
+    /// Alloy, for static structure and counterexamples.
+    Alloy,
+    /// Both.
+    All,
+}
+
 /// The serialisation formats `fmt` can emit.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub(crate) enum DocumentFormat {
@@ -270,6 +281,24 @@ pub(crate) enum Command {
         /// Validate the reconstructed architecture instead of printing it.
         #[arg(long)]
         validate: bool,
+    },
+
+    /// Export the architecture as a formal specification.
+    ///
+    /// TLA+ models failure propagation over time; Alloy models static structure.
+    /// Both restate CASIMIR's own rules as machine-checked assertions.
+    Formal {
+        /// The architecture file to export.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// Which tool to target.
+        #[arg(short, long, value_enum, default_value_t = FormalTarget::All)]
+        target: FormalTarget,
+
+        /// Where to write the specifications. Defaults to standard output.
+        #[arg(short, long)]
+        output: Option<PathBuf>,
     },
 
     /// Manage the Git pre-commit hook that validates architectures.

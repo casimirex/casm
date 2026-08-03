@@ -16,6 +16,7 @@ with no downsides has not finished thinking.
 | [0008](0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the language server can contain panics | Accepted |
 | [0009](0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity, not a byte identity | Accepted |
 | [0010](0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred, not abandoned | Accepted |
+| [0011](0011-what-a-formal-model-of-an-architecture-means.md) | An architecture models failure propagation; each tool proves a different class of property | Accepted |
 
 ## Adding one
 

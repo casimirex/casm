@@ -123,6 +123,7 @@ warning-free architecture — CI validates it on every push.
 | `casm blame` | Which commit last changed a given node |
 | `casm checkout` | Print an architecture as it was at any revision |
 | `casm drift` | Compare the declared architecture against real infrastructure |
+| `casm formal` | Export a TLA+ or Alloy specification |
 | `casm hook` | Install a pre-commit hook that validates before you commit |
 | `casm check` | Validate every architecture file under a directory |
 | `casm fmt` | Reformat or convert between YAML, JSON, and TOML |
@@ -176,6 +177,53 @@ not a deadlock — see [ADR-0006](docs/adr/0006-only-blocking-edges-form-cycles.
   with:
     sarif_file: casm.sarif
 ```
+
+---
+
+## Proving things before you build
+
+`casm formal` exports the architecture as a specification that a model checker can
+verify. TLA+ gets failure and recovery over time; Alloy gets static structure and
+counterexamples.
+
+```console
+$ casm formal --output spec/
+wrote spec/Storefront.tla
+wrote spec/Storefront.cfg
+wrote spec/StorefrontLiveness.cfg
+wrote spec/storefront.als
+
+$ tlc Storefront.tla
+Model checking completed. No error has been found.
+```
+
+The semantics are the ones CASIMIR already uses: **a node is unavailable if it has failed,
+or if anything it *blocks on* is unavailable, transitively.** Asynchronous and event-driven
+edges deliberately do not propagate failure — which is what makes "put a queue between
+them" a formally meaningful act rather than a diagram change. See
+[ADR-0011](docs/adr/0011-what-a-formal-model-of-an-architecture-means.md).
+
+Each generated assertion restates a rule you already have, so a checker confirms it
+independently:
+
+| Assertion | Restates |
+|---|---|
+| `NoBlockingCycles` | `no-dependency-cycles` |
+| `NoDirectExternalAccessToState` | `no-publicly-exposed-datastores` |
+| `NoIsolatedNodes` | `no-isolated-nodes` |
+| `AsyncIsolation` / `AsyncBoundariesHold` | what a queue is *for* |
+| `EveryFailureIsRepaired` | the model is not deadlocked |
+
+The point is not those five — it is that the topology is already encoded correctly, so
+*your* property is a few lines rather than a day's work.
+
+**These are checked, not just generated.** CI runs TLC and Alloy against the output and
+asserts both that the assertions hold for a sound architecture *and that they fail* for a
+cyclic one. An assertion that holds for every input proves nothing.
+
+What they do **not** prove: latency. Budgets are emitted as comments but are not modelled,
+so the specs establish *whether* a node degrades, not how fast. `casm validate` already
+does the arithmetic.
 
 ---
 
@@ -324,6 +372,7 @@ casm-core         domain — entities and invariants, no I/O
   ├── casm-renderer      domain → diagrams, deterministic
   ├── casm-diff          domain × domain → semantic changes, and drift vs reality
   ├── casm-git           domain × Git history → what actually changed, and when
+  ├── casm-formal        domain → TLA+ and Alloy specifications
   ├── casm-cli           the `casm` binary
   ├── casm-lsp           the `casm-lsp` language server
   └── casm-wasm          the browser and edge runtime
@@ -344,6 +393,7 @@ Dependencies point strictly inward. Full reasoning in
 | [0008](docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
 | [0009](docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
 | [0010](docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred, not abandoned |
+| [0011](docs/adr/0011-what-a-formal-model-of-an-architecture-means.md) | What a formal model of an architecture means |
 
 ### Engineering rules
 
@@ -361,7 +411,7 @@ Adapted from the JPL Power of Ten and enforced in CI, not aspirational:
 | Supply-chain hygiene | `cargo deny` for licences and advisories |
 
 ```console
-$ cargo test --workspace          # 654 tests
+$ cargo test --workspace          # 709 tests
 $ cargo clippy --workspace --all-targets -- -D warnings
 ```
 
@@ -370,11 +420,11 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 ## Status
 
 **v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
-Git-native history, and WebAssembly runtime are implemented, tested, and usable. The API
-is pre-1.0 and will change.
+Git-native history, WebAssembly runtime, and formal-methods bridge are implemented,
+tested, and usable. The API is pre-1.0 and will change.
 
 Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
-8, and 10 are what you see here.
+8, and 10 are complete, and Phase 9's formal verification bridge is what you see above.
 
 Phase 10 is three-quarters done: the browser module, playground, and edge worker ship; the
 `no_std` embedded validator does not. The dependency set was verified to build for a
@@ -382,9 +432,10 @@ bare-metal target, but neither `serde_yaml_ng` nor `toml` supports `no_std`, so 
 a validator that cannot read the format its users write —
 [ADR-0010](docs/adr/0010-embedded-validator-deferred.md) records the analysis.
 
-Phase 7 (distributed pattern registry) and phases 9, 11, and 12 — LLM bridge,
-OpenTelemetry, documentation site — are **not implemented**; they are documented
-direction, not shipped code.
+The rest of Phase 9 — LLM-driven generation, review, and the chat interface — is **not
+implemented**: it needs a model provider and credentials, and stubbing it would be
+pretending. Phase 7 (distributed pattern registry) and phases 11 and 12 (OpenTelemetry,
+documentation site) are likewise documented direction, not shipped code.
 
 ---
 

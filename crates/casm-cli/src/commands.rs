@@ -15,7 +15,9 @@ use casm_parser::{Format, emit_str, parse_file};
 use casm_validator::{Report, Validator, ValidatorConfig, sarif};
 use std::path::{Path, PathBuf};
 
-use crate::cli::{DiagramFormat, DocumentFormat, HookAction, InventorySource, OutputFormat};
+use crate::cli::{
+    DiagramFormat, DocumentFormat, FormalTarget, HookAction, InventorySource, OutputFormat,
+};
 use crate::exit::ExitCode;
 use crate::hook;
 use casm_diff::Diff;
@@ -310,6 +312,71 @@ fn target_path(file: &Path, format: Format) -> PathBuf {
         Format::Toml => "toml",
     };
     file.with_extension(extension)
+}
+
+/// Exports the architecture as a formal specification.
+pub(crate) fn formal(file: &Path, target: FormalTarget, output: Option<&Path>) -> CommandResult {
+    let architecture = parse_file(file)?;
+    let model = casm_formal::FormalModel::of(&architecture);
+
+    let mut written: Vec<(String, String)> = Vec::new();
+
+    if matches!(target, FormalTarget::Tla | FormalTarget::All) {
+        let tla = casm_formal::tla::emit(&model);
+        // Names first: each accessor borrows `tla`, and moving a field out would end
+        // the borrow before the next one is taken.
+        let (specification, config, liveness) = (
+            tla.specification_filename(),
+            tla.config_filename(),
+            tla.liveness_config_filename(),
+        );
+        written.push((specification, tla.specification));
+        written.push((config, tla.config));
+        written.push((liveness, tla.liveness_config));
+    }
+
+    if matches!(target, FormalTarget::Alloy | FormalTarget::All) {
+        let alloy = casm_formal::alloy::emit(&model);
+        let filename = alloy.filename();
+        written.push((filename, alloy.model));
+    }
+
+    let Some(directory) = output else {
+        // To standard output, each file introduced by its name so the stream can be
+        // split apart again. Writing several files to a pipe otherwise loses which is
+        // which.
+        for (name, contents) in &written {
+            println!("==> {name} <==");
+            print!("{contents}");
+            println!();
+        }
+        return Ok(ExitCode::Success);
+    };
+
+    std::fs::create_dir_all(directory).map_err(|error| {
+        CommandError(format!("cannot create '{}': {error}", directory.display()))
+    })?;
+
+    for (name, contents) in &written {
+        let path = directory.join(name);
+        std::fs::write(&path, contents)
+            .map_err(|error| CommandError(format!("cannot write '{}': {error}", path.display())))?;
+        println!("wrote {}", path.display());
+    }
+
+    if matches!(target, FormalTarget::Tla | FormalTarget::All) {
+        let module = casm_formal::tla::module_name(&model.name);
+        println!("\n  check safety:   tlc {module}.tla");
+        println!("  check liveness: tlc -config {module}Liveness.cfg {module}.tla");
+    }
+    if matches!(target, FormalTarget::Alloy | FormalTarget::All) {
+        println!(
+            "  check structure: alloy exec {}",
+            casm_formal::alloy::module_name(&model.name)
+        );
+    }
+
+    Ok(ExitCode::Success)
 }
 
 /// Manages the Git pre-commit hook.

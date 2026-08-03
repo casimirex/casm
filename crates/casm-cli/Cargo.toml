@@ -21,6 +21,7 @@ casm-validator.workspace = true
 casm-renderer.workspace = true
 casm-diff.workspace = true
 casm-git.workspace = true
+casm-formal.workspace = true
 clap.workspace = true
 serde_json.workspace = true
 

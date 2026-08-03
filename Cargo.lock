@@ -171,6 +171,7 @@ version = "0.1.0"
 dependencies = [
  "casm-core",
  "casm-diff",
+ "casm-formal",
  "casm-git",
  "casm-parser",
  "casm-renderer",
@@ -201,6 +202,14 @@ dependencies = [
  "casm-parser",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "casm-formal"
+version = "0.1.0"
+dependencies = [
+ "casm-core",
+ "casm-parser",
 ]
 
 [[package]]

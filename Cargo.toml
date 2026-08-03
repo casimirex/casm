@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm"]
+members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm", "crates/casm-formal"]
 
 [workspace.package]
 version = "0.1.0"
@@ -23,6 +23,7 @@ casm-lsp = { path = "crates/casm-lsp", version = "0.1.0" }
 casm-diff = { path = "crates/casm-diff", version = "0.1.0" }
 casm-git = { path = "crates/casm-git", version = "0.1.0" }
 casm-wasm = { path = "crates/casm-wasm", version = "0.1.0" }
+casm-formal = { path = "crates/casm-formal", version = "0.1.0" }
 
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

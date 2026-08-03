@@ -128,6 +128,12 @@ fn dispatch(cli: Cli) -> CommandResult {
             validate,
         } => commands::checkout(&revision, &file, validate),
 
+        Command::Formal {
+            file,
+            target,
+            output,
+        } => commands::formal(&file, target, output.as_deref()),
+
         Command::Hook { action } => commands::manage_hook(&action),
 
         Command::Rules { json } => commands::rules(json),

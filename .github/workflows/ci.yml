@@ -139,7 +139,34 @@ jobs:
       - run: node crates/casm-wasm/tests/node/run.mjs
       - run: node edge/tests/handler.test.mjs
 
-  # Gate 10: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 10: the generated specifications must be accepted by the real model checkers,
+  # and must still FAIL on an architecture that violates them. A spec that parses and
+  # proves nothing would pass every Rust test in the crate.
+  formal:
+    name: formal (TLC + Alloy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: Swatinem/rust-cache@v2
+      - name: fetch the model checkers
+        run: |
+          mkdir -p "$RUNNER_TEMP/tools"
+          curl -sSL -o "$RUNNER_TEMP/tools/tla2tools.jar" \
+            https://github.com/tlaplus/tlaplus/releases/latest/download/tla2tools.jar
+          curl -sSL -o "$RUNNER_TEMP/tools/alloy.jar" \
+            https://github.com/AlloyTools/org.alloytools.alloy/releases/download/v6.2.0/org.alloytools.alloy.dist.jar
+      - name: model-check the generated specifications
+        env:
+          CASM_TLA_TOOLS: ${{ runner.temp }}/tools/tla2tools.jar
+          CASM_ALLOY_JAR: ${{ runner.temp }}/tools/alloy.jar
+        run: cargo test -p casm-formal --test checked -- --test-threads=2
+
+  # Gate 11: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)
