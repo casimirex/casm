@@ -1,0 +1,205 @@
+name: wide
+nodes:
+  - name: hub
+    type: gateway
+  - name: leaf0
+    type: service
+  - name: leaf1
+    type: service
+  - name: leaf2
+    type: service
+  - name: leaf3
+    type: service
+  - name: leaf4
+    type: service
+  - name: leaf5
+    type: service
+  - name: leaf6
+    type: service
+  - name: leaf7
+    type: service
+  - name: leaf8
+    type: service
+  - name: leaf9
+    type: service
+  - name: leaf10
+    type: service
+  - name: leaf11
+    type: service
+  - name: leaf12
+    type: service
+  - name: leaf13
+    type: service
+  - name: leaf14
+    type: service
+  - name: leaf15
+    type: service
+  - name: leaf16
+    type: service
+  - name: leaf17
+    type: service
+  - name: leaf18
+    type: service
+  - name: leaf19
+    type: service
+  - name: leaf20
+    type: service
+  - name: leaf21
+    type: service
+  - name: leaf22
+    type: service
+  - name: leaf23
+    type: service
+  - name: leaf24
+    type: service
+  - name: leaf25
+    type: service
+  - name: leaf26
+    type: service
+  - name: leaf27
+    type: service
+  - name: leaf28
+    type: service
+  - name: leaf29
+    type: service
+  - name: leaf30
+    type: service
+  - name: leaf31
+    type: service
+  - name: leaf32
+    type: service
+  - name: leaf33
+    type: service
+  - name: leaf34
+    type: service
+  - name: leaf35
+    type: service
+  - name: leaf36
+    type: service
+  - name: leaf37
+    type: service
+  - name: leaf38
+    type: service
+  - name: leaf39
+    type: service
+relationships:
+  - source: hub
+    target: leaf0
+    type: sync
+  - source: hub
+    target: leaf1
+    type: sync
+  - source: hub
+    target: leaf2
+    type: sync
+  - source: hub
+    target: leaf3
+    type: sync
+  - source: hub
+    target: leaf4
+    type: sync
+  - source: hub
+    target: leaf5
+    type: sync
+  - source: hub
+    target: leaf6
+    type: sync
+  - source: hub
+    target: leaf7
+    type: sync
+  - source: hub
+    target: leaf8
+    type: sync
+  - source: hub
+    target: leaf9
+    type: sync
+  - source: hub
+    target: leaf10
+    type: sync
+  - source: hub
+    target: leaf11
+    type: sync
+  - source: hub
+    target: leaf12
+    type: sync
+  - source: hub
+    target: leaf13
+    type: sync
+  - source: hub
+    target: leaf14
+    type: sync
+  - source: hub
+    target: leaf15
+    type: sync
+  - source: hub
+    target: leaf16
+    type: sync
+  - source: hub
+    target: leaf17
+    type: sync
+  - source: hub
+    target: leaf18
+    type: sync
+  - source: hub
+    target: leaf19
+    type: sync
+  - source: hub
+    target: leaf20
+    type: sync
+  - source: hub
+    target: leaf21
+    type: sync
+  - source: hub
+    target: leaf22
+    type: sync
+  - source: hub
+    target: leaf23
+    type: sync
+  - source: hub
+    target: leaf24
+    type: sync
+  - source: hub
+    target: leaf25
+    type: sync
+  - source: hub
+    target: leaf26
+    type: sync
+  - source: hub
+    target: leaf27
+    type: sync
+  - source: hub
+    target: leaf28
+    type: sync
+  - source: hub
+    target: leaf29
+    type: sync
+  - source: hub
+    target: leaf30
+    type: sync
+  - source: hub
+    target: leaf31
+    type: sync
+  - source: hub
+    target: leaf32
+    type: sync
+  - source: hub
+    target: leaf33
+    type: sync
+  - source: hub
+    target: leaf34
+    type: sync
+  - source: hub
+    target: leaf35
+    type: sync
+  - source: hub
+    target: leaf36
+    type: sync
+  - source: hub
+    target: leaf37
+    type: sync
+  - source: hub
+    target: leaf38
+    type: sync
+  - source: hub
+    target: leaf39
+    type: sync

@@ -1,0 +1,4 @@
+name: e
+nodes:
+  - name: a
+    type: srvice

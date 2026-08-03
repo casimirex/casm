@@ -28,6 +28,14 @@ editors/vscode/out/
 /edge/casm_wasm.js
 /edge/casm_wasm_bg.wasm
 
+# Fuzzing: the seed corpus is committed, the grown corpus and artifacts are not.
+/fuzz/corpus
+/fuzz/artifacts
+/fuzz/target
+
+# Built documentation
+/docs/book/book
+
 # CASIMIR generated output
 /out
 *.casm.gen/

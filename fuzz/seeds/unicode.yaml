@@ -1,0 +1,5 @@
+name: i
+nodes:
+  - name: café
+    type: service
+    description: "🚀 unicode"

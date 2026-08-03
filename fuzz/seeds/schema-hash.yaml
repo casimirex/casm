@@ -1,0 +1,9 @@
+name: k
+nodes:
+  - name: a
+    type: service
+    interfaces:
+      - name: i
+        protocol: http2
+        version: 1.0.0
+        schema-hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

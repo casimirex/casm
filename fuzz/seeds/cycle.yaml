@@ -1,0 +1,13 @@
+name: c
+nodes:
+  - name: a
+    type: service
+  - name: b
+    type: service
+relationships:
+  - source: a
+    target: b
+    type: sync
+  - source: b
+    target: a
+    type: sync

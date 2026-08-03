@@ -1,0 +1,12 @@
+/* Architecture examples read better with a little more room than prose. */
+pre code { line-height: 1.55; }
+
+/* Callouts used throughout the explanation section. */
+blockquote {
+    border-left: 3px solid var(--links);
+    background: var(--quote-bg);
+    padding: 0.6rem 1rem;
+}
+
+/* Tables of rules and flags are dense; give them air. */
+table td, table th { padding: 0.4rem 0.7rem; }

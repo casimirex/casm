@@ -1,0 +1,8 @@
+name: f
+nodes:
+  - name: a
+    type: service
+relationships:
+  - source: a
+    target: ghost
+    type: sync

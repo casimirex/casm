@@ -1,0 +1,8 @@
+name: j
+nodes:
+  - name: a
+    type: service
+    controls:
+    - type: security
+      standard: S
+      description: flush indentation

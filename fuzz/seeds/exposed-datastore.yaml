@@ -1,0 +1,10 @@
+name: d
+nodes:
+  - name: p
+    type: external-system
+  - name: db
+    type: database
+relationships:
+  - source: p
+    target: db
+    type: sync

@@ -1,0 +1,6 @@
+name: l
+nodes:
+  - name: a
+    type: service
+    metadata:
+      infrastructure-id: aws_db_instance.primary

@@ -166,7 +166,57 @@ jobs:
           CASM_ALLOY_JAR: ${{ runner.temp }}/tools/alloy.jar
         run: cargo test -p casm-formal --test checked -- --test-threads=2
 
-  # Gate 11: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 11: the fuzz targets must build and survive a short run. Not a substitute for a
+  # long campaign — that belongs on a schedule — but it catches a target that stopped
+  # compiling, and a regression shallow enough to find in a minute.
+  fuzz:
+    name: fuzz (smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-fuzz --locked
+      - run: cargo fuzz build
+      - name: run each target briefly
+        run: |
+          for target in parse validate analyse roundtrip; do
+            cargo fuzz run "$target" -- -max_total_time=45 -rss_limit_mb=4096
+          done
+
+  # Gate 12: the container image must build. It is how a good number of people will run
+  # CASIMIR, and a Dockerfile nobody builds is a Dockerfile that has already rotted.
+  container:
+    name: container image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: casm:ci
+      - name: the image runs
+        run: |
+          docker run --rm casm:ci --version
+          docker run --rm -v "$PWD/examples:/work" casm:ci validate /work/storefront.yaml
+
+  # Gate 13: the documentation must build, and every link in it must resolve. A book
+  # with a dead link is a book that has silently rotted.
+  docs-site:
+    name: documentation site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install mdbook mdbook-linkcheck --locked
+      - run: mdbook build
+        working-directory: docs/book
+
+  # Gate 14: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)

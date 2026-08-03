@@ -46,13 +46,20 @@ carry no defensive handling for states they cannot encounter.
 ## Install
 
 ```console
-$ git clone https://github.com/casimirex/casimir.git
-$ cd casimir
-$ cargo install --path crates/casm-cli
+$ cargo install casm-cli casm-lsp
 ```
 
-Requires Rust 1.88 or later. No other toolchain — diagram generation is pure Rust and
-never shells out to `dot` or `mmdc`.
+Or download a binary for Linux, macOS, or Windows from the
+[releases page](https://github.com/casimirex/casimir/releases), or run the container:
+
+```console
+$ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casimir validate /work/architecture.yaml
+```
+
+Building from source needs Rust 1.88 or later. No other toolchain — diagram generation is
+pure Rust and never shells out to `dot` or `mmdc`.
+
+📖 **[Documentation](docs/book/)** — tutorial, how-to guides, explanation, and reference.
 
 ---
 
@@ -413,7 +420,13 @@ Adapted from the JPL Power of Ten and enforced in CI, not aspirational:
 ```console
 $ cargo test --workspace          # 709 tests
 $ cargo clippy --workspace --all-targets -- -D warnings
+$ cargo fuzz run parse            # four targets; 884k executions, no crashes
 ```
+
+The parser is the surface most exposed to untrusted input, so it is fuzzed rather than
+merely tested. Four `cargo-fuzz` targets cover parsing, validation and rendering, the
+editor analysis, and the emit/parse round trip — the last asserting a *property*, not just
+the absence of a panic. CI runs a short campaign on every push.
 
 ---
 
@@ -421,7 +434,8 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 
 **v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
 Git-native history, WebAssembly runtime, and formal-methods bridge are implemented,
-tested, and usable. The API is pre-1.0 and will change.
+tested, and usable, with a release pipeline and container image behind them. The API is
+pre-1.0 and will change — see [CHANGELOG.md](CHANGELOG.md) and [RELEASING.md](RELEASING.md).
 
 Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
 8, and 10 are complete, and Phase 9's formal verification bridge is what you see above.
@@ -434,8 +448,12 @@ a validator that cannot read the format its users write —
 
 The rest of Phase 9 — LLM-driven generation, review, and the chat interface — is **not
 implemented**: it needs a model provider and credentials, and stubbing it would be
-pretending. Phase 7 (distributed pattern registry) and phases 11 and 12 (OpenTelemetry,
-documentation site) are likewise documented direction, not shipped code.
+pretending. Phase 12 ships release engineering, fuzzing, the container image, and this documentation
+site; its multi-language translations and certification programme do not, and are not
+planned — machine-translated documentation nobody can review is worse than none.
+
+Phase 7 (distributed pattern registry) and Phase 11 (OpenTelemetry) remain documented
+direction, not shipped code.
 
 ---
 

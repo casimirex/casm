@@ -1,0 +1,205 @@
+name: Release
+
+# Tag-driven. A release is cut by pushing an annotated tag:
+#
+#   git tag -a v0.2.0 -m "..." && git push origin v0.2.0
+#
+# Nothing here runs on a branch push, so a release is always a deliberate act rather than
+# a side effect of merging.
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build (for a dry run)"
+        required: true
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Nothing is published unless the same gates that guard `main` pass on the tagged
+  # commit. A release built from an unverified tree is worse than no release.
+  verify:
+    name: verify the tagged commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - run: cargo test --workspace --all-features
+      - run: cargo run -p casm-cli -- check examples --strict
+
+  build:
+    name: ${{ matrix.target }}
+    needs: verify
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: install the cross linker
+        if: matrix.cross
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+          echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> "$GITHUB_ENV"
+
+      # `--locked` so the released binary is built from the dependency graph that was
+      # tested, not whatever resolved on the day.
+      - name: build
+        run: cargo build --release --locked --target ${{ matrix.target }} --bin casm --bin casm-lsp
+
+      - name: package (unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          name="casm-${version}-${{ matrix.target }}"
+          mkdir -p "dist/$name"
+          cp "target/${{ matrix.target }}/release/casm" "target/${{ matrix.target }}/release/casm-lsp" "dist/$name/"
+          cp README.md LICENSE CHANGELOG.md "dist/$name/"
+          tar -C dist -czf "dist/$name.tar.gz" "$name"
+          shasum -a 256 "dist/$name.tar.gz" | awk '{print $1}' > "dist/$name.tar.gz.sha256"
+
+      - name: package (windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          name="casm-${version}-${{ matrix.target }}"
+          mkdir -p "dist/$name"
+          cp "target/${{ matrix.target }}/release/casm.exe" "target/${{ matrix.target }}/release/casm-lsp.exe" "dist/$name/"
+          cp README.md LICENSE CHANGELOG.md "dist/$name/"
+          (cd dist && 7z a "$name.zip" "$name" >/dev/null)
+          certutil -hashfile "dist/$name.zip" SHA256 | sed -n 2p | tr -d ' \r' > "dist/$name.zip.sha256"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
+
+  # A software bill of materials, in both formats the ecosystem asks for. An SBOM that
+  # nobody can ingest is paperwork; SPDX and CycloneDX between them cover the tooling.
+  sbom:
+    name: SBOM
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-cyclonedx cargo-sbom --locked
+      - run: |
+          mkdir -p dist
+          cargo cyclonedx --format json --all --override-filename casm
+          find . -name 'casm.cdx.json' -exec cp {} dist/casm-cyclonedx.json \; 2>/dev/null || true
+          cargo sbom --output-format spdx_json_2_3 > dist/casm-spdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: dist/*.json
+          if-no-files-found: error
+
+  publish:
+    name: publish the release
+    needs: [build, sbom]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: collect
+        run: |
+          mkdir -p dist
+          find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.sha256' -o -name '*.json' \) \
+            -exec cp {} dist/ \;
+          (cd dist && sha256sum *.tar.gz *.zip 2>/dev/null > SHA256SUMS || true)
+          ls -la dist
+
+      # Build provenance, signed by GitHub's OIDC identity. Cheaper and harder to get
+      # wrong than a GPG key somebody has to hold, and verifiable with `gh attestation`.
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: "dist/*.tar.gz, dist/*.zip"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          body: |
+            Install by downloading the archive for your platform, or:
+
+            ```console
+            cargo install casm-cli casm-lsp
+            ```
+
+            Verify a download against `SHA256SUMS`, and its provenance with:
+
+            ```console
+            gh attestation verify <archive> --repo ${{ github.repository }}
+            ```
+
+  container:
+    name: container image
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

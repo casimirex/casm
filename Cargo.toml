@@ -1,5 +1,8 @@
 [workspace]
 resolver = "3"
+# The fuzz crate needs nightly and libFuzzer; it is built by `cargo fuzz`, not by
+# `cargo build --workspace`.
+exclude = ["fuzz"]
 members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm", "crates/casm-formal"]
 
 [workspace.package]
