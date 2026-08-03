@@ -57,7 +57,16 @@ nodes:
 
 section("module loads and identifies itself");
 check("version is reported", /^\d+\.\d+\.\d+$/.test(casm.version()), casm.version());
-check("rules are catalogued", JSON.parse(casm.rules()).length === 8);
+// Pinned deliberately: adding a rule without updating this is a reminder that the
+// browser build ships the same rule library the CLI does, not a subset of it.
+{
+  const rules = JSON.parse(casm.rules());
+  check("rules are catalogued", rules.length === 9, `${rules.length} rules`);
+  check(
+    "every rule documents itself",
+    rules.every((r) => r.id && r.description),
+  );
+}
 
 section("validate");
 {

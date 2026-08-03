@@ -58,7 +58,7 @@ console.log("routing");
   check("GET /health reports the version", health.status === 200 && /^\d+\./.test(body.version));
 
   const rules = await handle(request("/rules", { method: "GET" }), casm);
-  check("GET /rules lists the catalogue", (await rules.json()).length === 8);
+  check("GET /rules lists the catalogue", (await rules.json()).length === 9);
 
   const unknown = await handle(request("/nope"), casm);
   check("an unknown route is a 404 naming the real ones", unknown.status === 404);

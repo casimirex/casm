@@ -490,7 +490,11 @@ fn unavailable(
         format!("claims conformance to '{reference}', which was not available to check"),
     )
     .with_suggestion(if known.is_empty() {
-        "pass --patterns <dir> so the claim can be checked".to_owned()
+        // Named as a library rather than as a flag: this rule also runs in the language
+        // server and in the WebAssembly build, neither of which has a command line.
+        "supply a pattern library so the claim can be checked — \
+         `casm validate --patterns <dir>`"
+            .to_owned()
     } else {
         format!("the patterns supplied were: {}", known.join(", "))
     })

@@ -1,6 +1,6 @@
 # Validation rules
 
-Eight rules. A rule is an **error** only when the architecture is genuinely unbuildable or
+Nine rules. A rule is an **error** only when the architecture is genuinely unbuildable or
 unsafe as written; everything else is a warning. A validator that reports style
 preferences as errors is a validator that gets switched off, and then it reports nothing.
 

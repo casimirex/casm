@@ -11,12 +11,16 @@ work. Setup for each is in [`editors/`](https://github.com/casimirex/casimir/tre
 
 | Feature | Behaviour |
 |---|---|
-| Diagnostics | Parse errors and all eight rules, on every keystroke |
+| Diagnostics | Parse errors and the rule library, on every keystroke |
 | Completion | Node types, relationship types, protocols, control types, field names, and the node names *this document* declares |
 | Hover | A node's interfaces, controls, and both directions of its edges |
 | Go to definition | From a `source:` or `target:` to the node's declaration |
 | Find references | Every mention of a node |
 | Quick fixes | Insert the controls a diagnostic asks for, matching your indentation |
+
+`patterns-are-satisfied` is the exception: the server has nowhere to load a pattern
+library from, so it reports conformance claims as unchecked. Run
+`casm validate --patterns <dir>` to check them.
 
 ## The part that matters
 

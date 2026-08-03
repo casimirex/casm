@@ -29,6 +29,16 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
     what a tool could add from what only a human can decide, reuses the bindings written
     for an earlier version of the same pattern, and never rewrites the file.
 
+### Known limitations
+
+- The language server and the WebAssembly build cannot yet check conformance claims:
+  both construct their own validator and have nowhere to load a pattern library from.
+  They report every claim as unchecked, which is honest but less than useful. Giving the
+  LSP a workspace setting for the pattern directory, and the WASM ABI an argument for it,
+  is a design decision of its own rather than something to bolt on.
+- Signing, content addressing over the wire, and a federated hub remain unbuilt. Patterns
+  already carry a fingerprint, which is what content addressing needs.
+
 ### Changed
 
 - **The Merkle scheme tag is now `casm-merkle-v2`.** Conformance claims are part of what

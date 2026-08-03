@@ -238,7 +238,11 @@ missing control, a missing edge) from what only you can decide (which of two ser
 merge silently corrupts the file — which is the failure this project exists to prevent.
 
 The registry is therefore optional rather than a prerequisite: patterns are files, and a
-directory works. See
+directory works.
+
+Conformance is checked by `casm validate` and `casm check`. The language server and the
+browser build report claims as *unchecked* — neither has anywhere to load a library from
+yet. See
 [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md), including what this costs
 — patterns cannot scaffold, and a shape can only require what the model can express.
 
@@ -407,12 +411,15 @@ Zed all work. Setup for each is in [`editors/`](editors/).
 
 | Feature | Behaviour |
 |---|---|
-| Diagnostics | Parse errors and all eight rules, on every keystroke |
+| Diagnostics | Parse errors and the rule library, on every keystroke |
 | Completion | Node types, relationship types, protocols, control types, field names, and the node names *this document* declares |
 | Hover | A node's interfaces, controls, and both directions of its edges; an explanation for every enum value and field |
 | Go to definition | From a `source:` or `target:` to the node's declaration |
 | Find references | Every mention of a node |
 | Quick fixes | Insert the controls a diagnostic asks for, matching your indentation |
+
+`patterns-are-satisfied` is the exception: the server has nowhere to load a pattern
+library from, so it reports conformance claims as unchecked rather than checking them.
 
 The part that matters: **all of this works while the document is syntactically broken**,
 which is when you actually need it. The server reads the text through a line-oriented
