@@ -67,6 +67,15 @@ impl DiagramFormat {
     }
 }
 
+/// Where an inventory of real infrastructure comes from.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub(crate) enum InventorySource {
+    /// CASIMIR's own inventory schema.
+    Native,
+    /// A Terraform state file, projected through CASIMIR's resource-type map.
+    Terraform,
+}
+
 /// The serialisation formats `fmt` can emit.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub(crate) enum DocumentFormat {
@@ -189,12 +198,108 @@ pub(crate) enum Command {
         write: bool,
     },
 
+    /// Compare a declared architecture against infrastructure that actually exists.
+    Drift {
+        /// The architecture file to check.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// The inventory of observed infrastructure.
+        #[arg(short, long)]
+        inventory: PathBuf,
+
+        /// How to read the inventory.
+        #[arg(long, value_enum, default_value_t = InventorySource::Native)]
+        from: InventorySource,
+
+        /// How to present the findings.
+        #[arg(short, long, value_enum, default_value_t = OutputFormat::Human)]
+        format: OutputFormat,
+
+        /// Exit with a failure code if any drift is found.
+        #[arg(long)]
+        fail_on_drift: bool,
+    },
+
+    /// Show the commits at which the architecture's meaning changed.
+    ///
+    /// Unlike `git log`, commits that only reformatted or reordered the file are omitted.
+    Log {
+        /// The architecture file whose history to read.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// The most changes to report.
+        #[arg(short, long, default_value_t = 20)]
+        limit: usize,
+
+        /// How to present the history.
+        #[arg(short, long, value_enum, default_value_t = OutputFormat::Human)]
+        format: OutputFormat,
+    },
+
+    /// Show the commits at which one node's meaning changed.
+    Blame {
+        /// The node's name.
+        node: String,
+
+        /// The architecture file whose history to read.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// The most changes to report.
+        #[arg(short, long, default_value_t = 20)]
+        limit: usize,
+
+        /// How to present the history.
+        #[arg(short, long, value_enum, default_value_t = OutputFormat::Human)]
+        format: OutputFormat,
+    },
+
+    /// Print an architecture as it was at a past revision.
+    ///
+    /// Writes to standard output; the working tree is never touched.
+    Checkout {
+        /// The revision to read, such as `HEAD~3`, a tag, or a commit hash.
+        revision: String,
+
+        /// The architecture file to read.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// Validate the reconstructed architecture instead of printing it.
+        #[arg(long)]
+        validate: bool,
+    },
+
+    /// Manage the Git pre-commit hook that validates architectures.
+    Hook {
+        /// What to do with the hook.
+        #[command(subcommand)]
+        action: HookAction,
+    },
+
     /// List the built-in validation rules.
     Rules {
         /// Emit the rule catalogue as JSON.
         #[arg(long)]
         json: bool,
     },
+}
+
+/// What `casm hook` can do.
+#[derive(Debug, Subcommand)]
+pub(crate) enum HookAction {
+    /// Install the pre-commit hook.
+    Install {
+        /// Replace an existing hook that CASIMIR did not write.
+        #[arg(long)]
+        force: bool,
+    },
+    /// Remove the pre-commit hook, if CASIMIR wrote it.
+    Uninstall,
+    /// Report whether the hook is installed.
+    Status,
 }
 
 #[cfg(test)]

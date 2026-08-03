@@ -78,8 +78,10 @@
 pub mod architecture;
 pub mod control;
 pub mod error;
+mod hex;
 pub mod ids;
 pub mod interface;
+pub mod merkle;
 pub mod names;
 pub mod node;
 pub mod relationship;
@@ -89,6 +91,7 @@ pub use control::{Control, ControlType};
 pub use error::{CoreError, Result};
 pub use ids::NodeId;
 pub use interface::{Interface, Protocol, SchemaHash};
+pub use merkle::{Fingerprint, MerkleTree};
 pub use names::{MAX_NAME_LEN, Name};
 pub use node::{Node, NodeConfig, NodeType};
 pub use relationship::{MAX_LATENCY_BUDGET_MS, Relationship, RelationshipConfig, RelationshipType};

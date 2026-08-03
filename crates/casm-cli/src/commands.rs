@@ -15,9 +15,10 @@ use casm_parser::{Format, emit_str, parse_file};
 use casm_validator::{Report, Validator, ValidatorConfig, sarif};
 use std::path::{Path, PathBuf};
 
-use crate::cli::{DiagramFormat, DocumentFormat, OutputFormat};
-use crate::diff::Diff;
+use crate::cli::{DiagramFormat, DocumentFormat, HookAction, InventorySource, OutputFormat};
 use crate::exit::ExitCode;
+use crate::hook;
+use casm_diff::Diff;
 
 /// The template `casm init` scaffolds.
 ///
@@ -309,6 +310,200 @@ fn target_path(file: &Path, format: Format) -> PathBuf {
         Format::Toml => "toml",
     };
     file.with_extension(extension)
+}
+
+/// Manages the Git pre-commit hook.
+pub(crate) fn manage_hook(action: &HookAction) -> CommandResult {
+    let repository = casm_git::Repository::discover(Path::new("."))
+        .map_err(|error| CommandError(error.to_string()))?;
+    let git_dir = repository.root().join(".git");
+
+    match action {
+        HookAction::Install { force } => {
+            let previous = hook::install(&git_dir, *force).map_err(CommandError)?;
+            match previous {
+                hook::Status::Installed => println!("hook already installed; refreshed it"),
+                hook::Status::Foreign => println!("replaced an existing hook (--force)"),
+                hook::Status::Absent => {
+                    println!("installed {}", hook::hook_path(&git_dir).display());
+                }
+            }
+            println!("  architectures are now validated before each commit");
+        }
+        HookAction::Uninstall => match hook::uninstall(&git_dir).map_err(CommandError)? {
+            hook::Status::Installed => println!("removed {}", hook::hook_path(&git_dir).display()),
+            hook::Status::Absent | hook::Status::Foreign => println!("nothing to remove"),
+        },
+        HookAction::Status => match hook::status(&git_dir) {
+            hook::Status::Installed => {
+                println!("installed at {}", hook::hook_path(&git_dir).display());
+            }
+            hook::Status::Absent => println!("not installed; run `casm hook install`"),
+            hook::Status::Foreign => println!(
+                "a pre-commit hook exists at {}, but CASIMIR did not write it",
+                hook::hook_path(&git_dir).display()
+            ),
+        },
+    }
+
+    Ok(ExitCode::Success)
+}
+
+/// Compares a declared architecture against an observed inventory.
+pub(crate) fn drift(
+    file: &Path,
+    inventory_path: &Path,
+    from: InventorySource,
+    format: OutputFormat,
+    fail_on_drift: bool,
+) -> CommandResult {
+    let architecture = parse_file(file)?;
+
+    let raw = std::fs::read_to_string(inventory_path).map_err(|error| {
+        CommandError(format!(
+            "cannot read '{}': {error}",
+            inventory_path.display()
+        ))
+    })?;
+
+    let inventory = match from {
+        InventorySource::Native => casm_diff::Inventory::from_json(&raw),
+        InventorySource::Terraform => casm_diff::Inventory::from_terraform_state(&raw),
+    }
+    .map_err(CommandError)?;
+
+    let report = casm_diff::drift::detect(&architecture, &inventory);
+
+    match format {
+        OutputFormat::Json | OutputFormat::Sarif => {
+            let json = serde_json::to_string_pretty(&report)
+                .map_err(|error| CommandError(format!("cannot serialise report: {error}")))?;
+            println!("{json}");
+        }
+        OutputFormat::Human => {
+            println!(
+                "{}: {} node(s) declared",
+                file.display(),
+                architecture.node_count()
+            );
+            if !report.is_clean() {
+                println!();
+                print!("{}", report.render());
+            }
+            println!("\n{}", report.summary());
+        }
+    }
+
+    if fail_on_drift && !report.is_clean() {
+        return Ok(ExitCode::ValidationErrors);
+    }
+    Ok(ExitCode::Success)
+}
+
+/// Opens the repository containing `file`, reporting failures in the user's terms.
+fn repository_for(file: &Path) -> Result<casm_git::Repository, CommandError> {
+    let search_from = file
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty());
+    casm_git::Repository::discover(search_from.unwrap_or(Path::new(".")))
+        .map_err(|error| CommandError(error.to_string()))
+}
+
+/// Shows the commits at which the architecture's meaning changed.
+pub(crate) fn log(file: &Path, limit: usize, format: OutputFormat) -> CommandResult {
+    let repository = repository_for(file)?;
+    let options = casm_git::HistoryOptions::default().with_max_revisions(limit);
+
+    let revisions = repository
+        .semantic_history(file, options)
+        .map_err(|error| CommandError(error.to_string()))?;
+
+    render_revisions(file, &revisions, format, None)
+}
+
+/// Shows the commits at which one node's meaning changed.
+pub(crate) fn blame(file: &Path, node: &str, limit: usize, format: OutputFormat) -> CommandResult {
+    let repository = repository_for(file)?;
+    let options = casm_git::HistoryOptions::default().with_max_revisions(limit);
+
+    let revisions = repository
+        .blame_node(file, node, options)
+        .map_err(|error| CommandError(error.to_string()))?;
+
+    render_revisions(file, &revisions, format, Some(node))
+}
+
+/// Renders a list of revisions in the requested format.
+fn render_revisions(
+    file: &Path,
+    revisions: &[casm_git::Revision],
+    format: OutputFormat,
+    node: Option<&str>,
+) -> CommandResult {
+    match format {
+        OutputFormat::Json | OutputFormat::Sarif => {
+            // SARIF describes findings, not history, so JSON is the only machine format
+            // that means anything here.
+            let json = serde_json::to_string_pretty(revisions)
+                .map_err(|error| CommandError(format!("cannot serialise history: {error}")))?;
+            println!("{json}");
+        }
+        OutputFormat::Human => print_revisions(file, revisions, node),
+    }
+
+    Ok(ExitCode::Success)
+}
+
+/// Prints revisions as prose.
+fn print_revisions(file: &Path, revisions: &[casm_git::Revision], node: Option<&str>) {
+    let subject = node.map_or_else(
+        || file.display().to_string(),
+        |name| format!("node '{name}' in {}", file.display()),
+    );
+
+    if revisions.is_empty() {
+        println!("no semantic changes recorded for {subject}");
+        return;
+    }
+
+    println!("{subject}\n");
+    for revision in revisions {
+        println!(
+            "{}  {}  {}",
+            revision.short_commit(),
+            revision.dated().to_date(),
+            revision.summary
+        );
+        println!("    {} <{}>", revision.author, revision.email);
+        println!("    fingerprint {}", revision.fingerprint.abbreviated(12));
+
+        if revision.introduced {
+            println!("    introduced here");
+        } else if !revision.changed_nodes.is_empty() {
+            println!("    nodes: {}", revision.changed_nodes.join(", "));
+        }
+        println!();
+    }
+
+    println!("{} semantic change(s)", revisions.len());
+}
+
+/// Prints an architecture as it was at a past revision.
+pub(crate) fn checkout(revision: &str, file: &Path, validate_it: bool) -> CommandResult {
+    let repository = repository_for(file)?;
+    let source = repository
+        .read_at(revision, file)
+        .map_err(|error| CommandError(error.to_string()))?;
+
+    if !validate_it {
+        print!("{source}");
+        return Ok(ExitCode::Success);
+    }
+
+    let architecture = casm_parser::parse_str(&source, file)?;
+    let report = Validator::new().validate(&architecture);
+    print_human(file, &architecture, &report);
+    Ok(exit_code_for(&report, false))
 }
 
 /// Lists the built-in validation rules.

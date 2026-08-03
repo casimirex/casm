@@ -159,27 +159,9 @@ impl SchemaHash {
     ///
     /// Returns a human-readable message if `raw` is not exactly 64 hex digits.
     pub fn parse_hex(raw: &str) -> Result<Self, String> {
-        let raw = raw.strip_prefix("sha3-256:").unwrap_or(raw);
-
-        if raw.len() != HASH_LEN * 2 {
-            return Err(format!(
-                "schema hash must be {} hexadecimal digits, found {}",
-                HASH_LEN * 2,
-                raw.len()
-            ));
-        }
-
-        let mut bytes = [0_u8; HASH_LEN];
-        for (index, slot) in bytes.iter_mut().enumerate() {
-            let start = index * 2;
-            let pair = raw
-                .get(start..start + 2)
-                .ok_or("schema hash is not valid ASCII hex")?;
-            *slot = u8::from_str_radix(pair, 16)
-                .map_err(|_| format!("'{pair}' at offset {start} is not a hexadecimal byte"))?;
-        }
-
-        Ok(Self(bytes))
+        crate::hex::decode(raw)
+            .map(Self)
+            .map_err(|reason| format!("schema hash: {reason}"))
     }
 
     /// Borrows the raw digest bytes.
@@ -192,13 +174,7 @@ impl SchemaHash {
     /// Renders the digest as 64 lowercase hexadecimal characters.
     #[must_use]
     pub fn to_hex(&self) -> String {
-        let mut out = String::with_capacity(HASH_LEN * 2);
-        for byte in &self.0 {
-            // Two hex digits per byte; `write!` to a String is infallible.
-            out.push(char::from_digit(u32::from(byte >> 4), 16).unwrap_or('0'));
-            out.push(char::from_digit(u32::from(byte & 0x0f), 16).unwrap_or('0'));
-        }
-        out
+        crate::hex::encode(&self.0)
     }
 }
 

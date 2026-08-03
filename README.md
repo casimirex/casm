@@ -119,6 +119,11 @@ warning-free architecture — CI validates it on every push.
 | `casm validate` | Run the rule library; `--format human\|json\|sarif` |
 | `casm generate` | Render Mermaid, Graphviz DOT, or ASCII |
 | `casm diff` | Semantic diff between two versions |
+| `casm log` | Commits where the architecture's *meaning* changed |
+| `casm blame` | Which commit last changed a given node |
+| `casm checkout` | Print an architecture as it was at any revision |
+| `casm drift` | Compare the declared architecture against real infrastructure |
+| `casm hook` | Install a pre-commit hook that validates before you commit |
 | `casm check` | Validate every architecture file under a directory |
 | `casm fmt` | Reformat or convert between YAML, JSON, and TOML |
 | `casm rules` | List the built-in rules |
@@ -174,6 +179,65 @@ not a deadlock — see [ADR-0006](docs/adr/0006-only-blocking-edges-form-cycles.
 
 ---
 
+## History that means something
+
+`git log architecture.yaml` lists every commit that touched the file. Most of them
+reformatted it. `casm log` lists only the ones that changed the architecture:
+
+```console
+$ git log --oneline architecture.yaml
+37e5c3a move orders to object storage
+8ee6fa8 reorder nodes and add comments
+5c4d1a2 add the checkout architecture
+
+$ casm log
+37e5c3a  2026-08-03  move orders to object storage
+    fingerprint fc25259ed5ff
+    nodes: orders-db
+
+5c4d1a2  2026-08-03  add the checkout architecture
+    introduced here
+
+2 semantic change(s)
+```
+
+The reformat is invisible because it changed nothing. Underneath, each commit's
+architecture is reduced to a SHA3-256 Merkle root that excludes declaration order and
+generated identifiers ([ADR-0009](docs/adr/0009-merkle-fingerprint-is-semantic.md)), so
+two commits with the same fingerprint are the same architecture whatever their bytes.
+
+The same walk, per node, is `casm blame <node>` — the commit that last changed a node, not
+the one that last reindented it. `casm checkout HEAD~5` prints the architecture as it was,
+to standard output; nothing in `casm-git` ever writes to your repository.
+
+### Drift
+
+An architecture nobody has checked against reality is a diagram.
+
+```console
+$ casm drift --inventory terraform.tfstate --from terraform
+~ node 'orders-db' (storage) is declared but was not found in the inventory
+~ resource 'aws_s3_bucket.audit-logs' (storage) exists but is not declared
+
+2 drift(s) against terraform: 1 node(s) matched
+```
+
+Nodes bind to resources by name, or explicitly when the names differ — which they usually
+do:
+
+```yaml
+- name: orders-db
+  type: database
+  metadata:
+    infrastructure-id: aws_db_instance.primary
+```
+
+CASIMIR reports what it cannot bind rather than guessing. A resource type it does not
+recognise asserts nothing about the node's type, because inventing a disagreement from
+ignorance is worse than staying quiet.
+
+---
+
 ## In your editor
 
 `casm-lsp` is a Language Server Protocol implementation, so VS Code, Neovim, Helix, and
@@ -208,6 +272,8 @@ casm-core         domain — entities and invariants, no I/O
   ├── casm-parser        bytes → domain, with diagnostic-grade errors
   ├── casm-validator     domain → findings, with SARIF output
   ├── casm-renderer      domain → diagrams, deterministic
+  ├── casm-diff          domain × domain → semantic changes, and drift vs reality
+  ├── casm-git           domain × Git history → what actually changed, and when
   ├── casm-cli           the `casm` binary
   └── casm-lsp           the `casm-lsp` language server
 ```
@@ -225,6 +291,7 @@ Dependencies point strictly inward. Full reasoning in
 | [0006](docs/adr/0006-only-blocking-edges-form-cycles.md) | Only blocking edges form cycles |
 | [0007](docs/adr/0007-deterministic-rendering.md) | Positional diagram ids; rendering is pure |
 | [0008](docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
+| [0009](docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
 
 ### Engineering rules
 
@@ -242,7 +309,7 @@ Adapted from the JPL Power of Ten and enforced in CI, not aspirational:
 | Supply-chain hygiene | `cargo deny` for licences and advisories |
 
 ```console
-$ cargo test --workspace          # 520 tests
+$ cargo test --workspace          # 623 tests
 $ cargo clippy --workspace --all-targets -- -D warnings
 ```
 
@@ -250,13 +317,14 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 
 ## Status
 
-**v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, and language
-server are implemented, tested, and usable. The API is pre-1.0 and will change.
+**v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
+and Git-native history are implemented, tested, and usable. The API is pre-1.0 and will
+change.
 
 Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6
-are what you see here. Phases 7–12 — distributed pattern registry, Git-native temporal
-queries, LLM bridge, WASM runtime, OpenTelemetry, documentation site — are **not
-implemented**; they are documented direction, not shipped code.
+and 8 are what you see here. Phase 7 (distributed pattern registry) and phases 9–12 — LLM
+bridge, WASM runtime, OpenTelemetry, documentation site — are **not implemented**; they
+are documented direction, not shipped code.
 
 ---
 

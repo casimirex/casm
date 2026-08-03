@@ -1,0 +1,34 @@
+[package]
+name = "casm-git"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "CASIMIR temporal mechanics: read an architecture's history from Git, semantically"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+casm-core.workspace = true
+casm-parser.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+
+# Pure Rust, no libgit2 and no C toolchain — the project claims `#![forbid(unsafe_code)]`
+# and spawns no subprocesses, and shelling out to `git` would break both.
+# Default features are off: they pull in networking, worktree checkout, and diffing that
+# reading history does not need.
+gix = { version = "0.86", default-features = false, features = [
+    "basic",
+    "revision",
+    "sha1",
+    "max-performance-safe",
+] }
+
+[dev-dependencies]
+casm-renderer.workspace = true
+
+[lints]
+workspace = true

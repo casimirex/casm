@@ -1,7 +1,7 @@
-//! Module: `casm_cli::diff`
+//! Module: `casm_diff::semantic`
 //! Purpose: Semantic comparison of two architecture versions.
-//! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
-//! Complexity: Max 10 (enforced by clippy).
+//! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
+//! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0
 //!
 //! # Why not just `diff`?
@@ -22,11 +22,15 @@
 
 use casm_core::{Architecture, Node, Relationship};
 use core::fmt;
+use serde::{Deserialize, Serialize};
 
 /// A single semantic difference between two architectures.
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[non_exhaustive]
-pub(crate) enum Change {
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case", tag = "change")]
+// Not `#[non_exhaustive]`, per ADR-0005: a consumer rendering a diff must decide how to
+// present every change kind, and a wildcard arm is how a new one silently prints as
+// "something changed".
+pub enum Change {
     /// The architecture's version changed.
     Version {
         /// The previous version.
@@ -112,7 +116,7 @@ impl Change {
     /// Used to decide whether a diff warrants a major version bump. Removals and type
     /// changes are breaking; additions generally are not.
     #[must_use]
-    pub(crate) const fn is_breaking(&self) -> bool {
+    pub const fn is_breaking(&self) -> bool {
         match self {
             Self::NodeRemoved { .. }
             | Self::NodeTypeChanged { .. }
@@ -128,7 +132,7 @@ impl Change {
 
     /// The diff marker for this change: `+`, `-`, or `~`.
     #[must_use]
-    pub(crate) const fn marker(&self) -> char {
+    pub const fn marker(&self) -> char {
         match self {
             Self::NodeAdded { .. } | Self::RelationshipAdded { .. } => '+',
             Self::NodeRemoved { .. } | Self::RelationshipRemoved { .. } => '-',
@@ -221,16 +225,16 @@ fn added_removed(added: &[String], removed: &[String]) -> String {
 }
 
 /// The complete semantic difference between two architectures.
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub(crate) struct Diff {
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Diff {
     /// Every change, grouped by kind and deterministically ordered.
-    pub(crate) changes: Vec<Change>,
+    pub changes: Vec<Change>,
 }
 
 impl Diff {
     /// Computes the semantic difference from `old` to `new`.
     #[must_use]
-    pub(crate) fn compute(old: &Architecture, new: &Architecture) -> Self {
+    pub fn compute(old: &Architecture, new: &Architecture) -> Self {
         let mut changes = Vec::new();
 
         if old.version() != new.version() {
@@ -355,19 +359,19 @@ impl Diff {
 
     /// Returns `true` if the two architectures are semantically identical.
     #[must_use]
-    pub(crate) fn is_empty(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
         self.changes.is_empty()
     }
 
     /// Returns `true` if any change could break an existing consumer.
     #[must_use]
-    pub(crate) fn has_breaking_changes(&self) -> bool {
+    pub fn has_breaking_changes(&self) -> bool {
         self.changes.iter().any(Change::is_breaking)
     }
 
     /// Renders the diff as a marker-prefixed list.
     #[must_use]
-    pub(crate) fn render(&self) -> String {
+    pub fn render(&self) -> String {
         if self.is_empty() {
             return "no semantic changes\n".to_owned();
         }

@@ -27,8 +27,8 @@
 
 mod cli;
 mod commands;
-mod diff;
 mod exit;
+mod hook;
 
 use clap::Parser as _;
 
@@ -100,6 +100,35 @@ fn dispatch(cli: Cli) -> CommandResult {
             format,
             write,
         } => commands::fmt(&file, format, write),
+
+        Command::Drift {
+            file,
+            inventory,
+            from,
+            format,
+            fail_on_drift,
+        } => commands::drift(&file, &inventory, from, format, fail_on_drift),
+
+        Command::Log {
+            file,
+            limit,
+            format,
+        } => commands::log(&file, limit, format),
+
+        Command::Blame {
+            node,
+            file,
+            limit,
+            format,
+        } => commands::blame(&file, &node, limit, format),
+
+        Command::Checkout {
+            revision,
+            file,
+            validate,
+        } => commands::checkout(&revision, &file, validate),
+
+        Command::Hook { action } => commands::manage_hook(&action),
 
         Command::Rules { json } => commands::rules(json),
     }

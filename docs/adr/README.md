@@ -14,6 +14,7 @@ with no downsides has not finished thinking.
 | [0006](0006-only-blocking-edges-form-cycles.md) | Only blocking edges form dependency cycles | Accepted |
 | [0007](0007-deterministic-rendering.md) | Positional diagram ids; rendering is a pure function | Accepted |
 | [0008](0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the language server can contain panics | Accepted |
+| [0009](0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity, not a byte identity | Accepted |
 
 ## Adding one
 
