@@ -99,7 +99,24 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo doc --workspace --no-deps --all-features
 
-  # Gate 8: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 8: the VS Code client must typecheck. It is thin, but a broken client is the
+  # first thing most users would meet.
+  extension:
+    name: vscode extension (tsc)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: editors/vscode/package.json
+      - run: npm install --no-audit --no-fund
+        working-directory: editors/vscode
+      - run: npx tsc -p ./ --noEmit
+        working-directory: editors/vscode
+
+  # Gate 9: CASIMIR validates its own example architectures. If the tool cannot keep
   # its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)

@@ -17,6 +17,11 @@ Cargo.lock.bak
 *.swp
 .DS_Store
 
+# VS Code extension build artefacts
+node_modules/
+editors/vscode/out/
+*.vsix
+
 # CASIMIR generated output
 /out
 *.casm.gen/

@@ -58,7 +58,9 @@ impl core::fmt::Display for Severity {
 /// The architectural element a diagnostic is about.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case", tag = "kind")]
-#[non_exhaustive]
+// Not `#[non_exhaustive]`, per ADR-0005: every consumer that renders a finding must
+// decide how to present each subject, and a wildcard arm is how a new one gets shown
+// as "unknown" in three different places instead of failing to compile in one.
 pub enum Subject {
     /// The architecture as a whole.
     Architecture,

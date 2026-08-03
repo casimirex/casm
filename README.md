@@ -65,6 +65,12 @@ $ casm generate --format mermaid  # emit a diagram
 $ casm diff v1.yaml v2.yaml       # semantic diff, ignoring cosmetic churn
 ```
 
+For live feedback while you write, install the language server:
+
+```console
+$ cargo install --path crates/casm-lsp
+```
+
 ### The grammar
 
 ```yaml
@@ -168,6 +174,33 @@ not a deadlock — see [ADR-0006](docs/adr/0006-only-blocking-edges-form-cycles.
 
 ---
 
+## In your editor
+
+`casm-lsp` is a Language Server Protocol implementation, so VS Code, Neovim, Helix, and
+Zed all work. Setup for each is in [`editors/`](editors/).
+
+| Feature | Behaviour |
+|---|---|
+| Diagnostics | Parse errors and all eight rules, on every keystroke |
+| Completion | Node types, relationship types, protocols, control types, field names, and the node names *this document* declares |
+| Hover | A node's interfaces, controls, and both directions of its edges; an explanation for every enum value and field |
+| Go to definition | From a `source:` or `target:` to the node's declaration |
+| Find references | Every mention of a node |
+| Quick fixes | Insert the controls a diagnostic asks for, matching your indentation |
+
+The part that matters: **all of this works while the document is syntactically broken**,
+which is when you actually need it. The server reads the text through a line-oriented
+index that never fails, independent of the parser, and hover degrades to partial
+information rather than disappearing.
+
+Two smaller commitments follow from the same idea. Quick-fixes insert `TODO` markers
+rather than plausible-sounding text — a fix that wrote "description: Security is enforced"
+would satisfy the validator and defeat it. And every request handler runs inside
+`catch_unwind`, so a bug costs one failed request instead of your editor session
+([ADR-0008](docs/adr/0008-unwinding-for-lsp-panic-isolation.md)).
+
+---
+
 ## Design
 
 ```
@@ -175,7 +208,8 @@ casm-core         domain — entities and invariants, no I/O
   ├── casm-parser        bytes → domain, with diagnostic-grade errors
   ├── casm-validator     domain → findings, with SARIF output
   ├── casm-renderer      domain → diagrams, deterministic
-  └── casm-cli           the only crate that touches stdout or the filesystem
+  ├── casm-cli           the `casm` binary
+  └── casm-lsp           the `casm-lsp` language server
 ```
 
 Dependencies point strictly inward. Full reasoning in
@@ -190,6 +224,7 @@ Dependencies point strictly inward. Full reasoning in
 | [0005](docs/adr/0005-domain-enums-are-exhaustive.md) | Domain enums are not `#[non_exhaustive]` |
 | [0006](docs/adr/0006-only-blocking-edges-form-cycles.md) | Only blocking edges form cycles |
 | [0007](docs/adr/0007-deterministic-rendering.md) | Positional diagram ids; rendering is pure |
+| [0008](docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
 
 ### Engineering rules
 
@@ -207,7 +242,7 @@ Adapted from the JPL Power of Ten and enforced in CI, not aspirational:
 | Supply-chain hygiene | `cargo deny` for licences and advisories |
 
 ```console
-$ cargo test --workspace          # 332 tests
+$ cargo test --workspace          # 520 tests
 $ cargo clippy --workspace --all-targets -- -D warnings
 ```
 
@@ -215,12 +250,12 @@ $ cargo clippy --workspace --all-targets -- -D warnings
 
 ## Status
 
-**v0.1.0 — early, but real.** The core, parser, validator, renderer, and CLI are
-implemented, tested, and usable. The API is pre-1.0 and will change.
+**v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, and language
+server are implemented, tested, and usable. The API is pre-1.0 and will change.
 
-Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–5
-are what you see here. Phases 6–12 — language server, distributed pattern registry,
-Git-native temporal queries, LLM bridge, WASM runtime, OpenTelemetry — are **not
+Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6
+are what you see here. Phases 7–12 — distributed pattern registry, Git-native temporal
+queries, LLM bridge, WASM runtime, OpenTelemetry, documentation site — are **not
 implemented**; they are documented direction, not shipped code.
 
 ---

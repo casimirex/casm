@@ -1,0 +1,117 @@
+{
+  "name": "casimir",
+  "displayName": "CASIMIR — Architecture as Code",
+  "description": "Completion, validation, hover, and quick-fixes for CASIMIR architecture files.",
+  "version": "0.1.0",
+  "publisher": "casimirex",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casimirex/casimir.git",
+    "directory": "editors/vscode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "architecture",
+    "architecture-as-code",
+    "casimir",
+    "c4"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/architecture.yaml",
+    "workspaceContains:**/*.casm.yaml"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "casm",
+        "aliases": [
+          "CASIMIR Architecture",
+          "casm"
+        ],
+        "extensions": [
+          ".casm.yaml",
+          ".casm.yml"
+        ],
+        "filenames": [
+          "architecture.yaml",
+          "architecture.yml"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "casm",
+        "scopeName": "source.casm",
+        "path": "./syntaxes/casm.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "casm.generateDiagram",
+        "title": "Generate Mermaid diagram",
+        "category": "CASIMIR"
+      },
+      {
+        "command": "casm.validateWorkspace",
+        "title": "Validate every open architecture",
+        "category": "CASIMIR"
+      },
+      {
+        "command": "casm.restartServer",
+        "title": "Restart the language server",
+        "category": "CASIMIR"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "casm.generateDiagram",
+          "when": "editorLangId == casm",
+          "group": "casm"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CASIMIR",
+      "properties": {
+        "casm.server.path": {
+          "type": "string",
+          "default": "casm-lsp",
+          "markdownDescription": "Path to the `casm-lsp` executable. Leave as the default to use whatever is on `PATH`."
+        },
+        "casm.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Log the traffic between VS Code and the language server. Use 'verbose' when reporting a bug."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  }
+}

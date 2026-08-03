@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "CASIMIR Architecture",
+  "scopeName": "source.casm",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#section" },
+    { "include": "#reference" },
+    { "include": "#enum-value" },
+    { "include": "#key" },
+    { "include": "#string" },
+    { "include": "#number" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.number-sign.casm",
+      "match": "(^|\\s)#.*$"
+    },
+    "section": {
+      "comment": "Top-level structural keys.",
+      "name": "keyword.control.section.casm",
+      "match": "^(nodes|relationships|metadata)(?=:)"
+    },
+    "reference": {
+      "comment": "A relationship endpoint names a node, so highlight it as a link.",
+      "match": "^(\\s*-?\\s*)(source|target)(:)\\s*(.+)$",
+      "captures": {
+        "2": { "name": "keyword.other.endpoint.casm" },
+        "3": { "name": "punctuation.separator.key-value.casm" },
+        "4": { "name": "variable.other.node-reference.casm" }
+      }
+    },
+    "enum-value": {
+      "comment": "The closed vocabularies. Anything outside these is a validation error.",
+      "match": "\\b(type|protocol)(:)\\s*(service|database|queue|cache|gateway|storage|external-system|legacy|human|boundary|sync|async|event-driven|depends-on|composed|deployed-on|quantum-entangled|security|compliance|operational|data-governance|http1\\.1|http2|http3|grpc|kafka|amqp|mqtt|graphql|websocket|tcp|sql)\\b",
+      "captures": {
+        "1": { "name": "keyword.other.casm" },
+        "2": { "name": "punctuation.separator.key-value.casm" },
+        "3": { "name": "constant.language.casm" }
+      }
+    },
+    "key": {
+      "match": "^(\\s*-?\\s*)([A-Za-z][\\w.-]*)(:)",
+      "captures": {
+        "2": { "name": "entity.name.tag.casm" },
+        "3": { "name": "punctuation.separator.key-value.casm" }
+      }
+    },
+    "string": {
+      "patterns": [
+        { "name": "string.quoted.double.casm", "match": "\"[^\"]*\"" },
+        { "name": "string.quoted.single.casm", "match": "'[^']*'" }
+      ]
+    },
+    "number": {
+      "comment": "Latency budgets and similar scalars.",
+      "name": "constant.numeric.casm",
+      "match": "\\b\\d+(\\.\\d+)*\\b"
+    }
+  }
+}
