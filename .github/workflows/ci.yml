@@ -209,10 +209,15 @@ jobs:
           push: false
           load: true
           tags: casm:ci
+      # The example claims a pattern, so the pattern library is mounted alongside it.
+      # That is not incidental: it proves the image can read a library from a mounted
+      # volume, which is how anyone running CASIMIR in a container will supply one.
       - name: the image runs
         run: |
           docker run --rm casm:ci --version
-          docker run --rm -v "$PWD/examples:/work" casm:ci validate /work/storefront.yaml
+          docker run --rm \
+            -v "$PWD/examples:/work" -v "$PWD/patterns:/patterns:ro" \
+            casm:ci validate /work/storefront.yaml --patterns /patterns
 
   # Gate 13: the documentation must build, and every link in it must resolve. A book
   # with a dead link is a book that has silently rotted.
