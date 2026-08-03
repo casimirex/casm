@@ -7,6 +7,38 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+### Added
+
+- **Patterns** (roadmap Phase 7). A pattern is a *shape to conform to*, not a template to
+  stamp — see [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md), which also
+  records what that costs. Patterns are ordinary files in an ordinary directory, so the
+  federated registry is a distribution mechanism rather than a prerequisite.
+  - `Pattern`, `Requirement`, `RequiredRelationship`, and `Conformance` in `casm-core`,
+    with the same construction-time invariants as every other entity, plus content
+    addressing via the existing Merkle fingerprint.
+  - A `patterns:` block in the authoring grammar, and a pattern-file grammar with the same
+    diagnostic-grade errors and "did you mean" hints as the architecture grammar.
+  - `casm_parser::Library`, loading a directory of patterns one level deep, bounded by
+    `MAX_LIBRARY_PATTERNS`, refusing two definitions of one `name@version`.
+  - `casm_core::conformance::check`, a pure function deciding which node fills which role.
+    A role binds by itself when exactly one node has the required type; ambiguity is
+    reported rather than guessed at.
+  - A `patterns-are-satisfied` validation rule, and `--patterns <dir>` on `casm validate`
+    and `casm check`. A claim that cannot be checked is a warning, not a silent pass.
+  - `casm evolve`, reporting what an architecture must change to conform. It separates
+    what a tool could add from what only a human can decide, reuses the bindings written
+    for an earlier version of the same pattern, and never rewrites the file.
+
+### Changed
+
+- **The Merkle scheme tag is now `casm-merkle-v2`.** Conformance claims are part of what
+  an architecture asserts about itself, so they join the fingerprint and the semantic
+  diff — otherwise `casm log` would report a change `casm diff` stayed silent about.
+  Every previously computed digest is invalidated, which is what the scheme tag is for.
+- `ArchitectureError::NodeStillReferenced` now counts conformance bindings alongside
+  relationships, and its message says "reference(s)" rather than "relationship(s)".
+
+
 ## [0.1.0] — 2026-08-03
 
 First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.

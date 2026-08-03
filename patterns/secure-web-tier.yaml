@@ -1,0 +1,37 @@
+# A gateway fronting an application service, with the gateway actually governed.
+#
+# A pattern is a shape to conform to, not a template to stamp: nothing here is copied
+# into your architecture. `casm validate --patterns patterns` checks that whatever you
+# already have satisfies it. See docs/adr/0012-patterns-are-shapes-not-templates.md.
+#
+#   casm evolve examples/storefront.yaml --patterns patterns
+
+name: secure-web-tier
+version: 1.0.0
+description: >
+  Public traffic enters through one governed gateway, which calls an application
+  service synchronously. The gateway is the only thing on the trust boundary, so it
+  is the only thing that has to carry boundary controls.
+
+satisfies:
+  - SOC2-CC6.1
+  - SOC2-CC6.6
+
+requires:
+  - role: edge
+    type: gateway
+    description: The single public entry point.
+    min-security-controls: 2
+    requires-protocols: [http2]
+
+  - role: application
+    type: service
+    description: The service the gateway fronts.
+
+relationships:
+  - source: edge
+    target: application
+    type: sync
+    description: >
+      Synchronous, so the gateway's availability is bounded by the application's.
+      An architecture that made this asynchronous would not be this pattern.

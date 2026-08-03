@@ -63,6 +63,16 @@ architecture, which is a legitimate starting point.
 A node called synchronously should declare the interface being called, so its contract can
 be version-checked. Advisory.
 
+## `patterns-are-satisfied`
+
+Every pattern the architecture claims conformance to must actually be satisfied. Error
+when a requirement is unmet; warning when the claim could not be checked because no
+pattern library was supplied.
+
+Pass `--patterns <dir>` to supply one. Without it the rule reports each claim as
+unchecked rather than assuming it true — and as a warning rather than an error, because
+failing every run that has not passed `--patterns` teaches people to silence the rule.
+
 ## Suppressing
 
 ```console

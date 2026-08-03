@@ -153,6 +153,10 @@ pub(crate) enum Command {
         /// How many security controls each service must declare.
         #[arg(long, value_name = "N")]
         min_security_controls: Option<usize>,
+
+        /// A directory of pattern files, to check conformance claims against.
+        #[arg(long, value_name = "DIR")]
+        patterns: Option<PathBuf>,
     },
 
     /// Generate a diagram from an architecture.
@@ -190,6 +194,34 @@ pub(crate) enum Command {
         directory: PathBuf,
 
         /// Treat warnings as errors.
+        #[arg(long)]
+        strict: bool,
+
+        /// A directory of pattern files, to check conformance claims against.
+        #[arg(long, value_name = "DIR")]
+        patterns: Option<PathBuf>,
+    },
+
+    /// Report what an architecture must change to conform to a pattern.
+    ///
+    /// Reports rather than rewrites: a pattern is a shape to conform to, not a template
+    /// to stamp, so `evolve` tells you what is missing and leaves the edit to you.
+    Evolve {
+        /// The architecture file to examine.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// The directory holding the pattern files.
+        #[arg(long, value_name = "DIR", default_value = "patterns")]
+        patterns: PathBuf,
+
+        /// The pattern to migrate to, as `name@version`.
+        ///
+        /// Defaults to every pattern the architecture already claims.
+        #[arg(long = "to", value_name = "PATTERN")]
+        to: Option<String>,
+
+        /// Exit with a failure code if anything is unmet.
         #[arg(long)]
         strict: bool,
     },

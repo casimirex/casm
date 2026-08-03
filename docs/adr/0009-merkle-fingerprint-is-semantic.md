@@ -25,11 +25,14 @@ An architecture's fingerprint is a SHA3-256 Merkle root over what it **means**:
 - **Node identifiers are excluded.** Nodes are hashed by name, the stable human handle
   (ADR-0004). Relationship endpoints are hashed by the names they resolve to, not the
   `NodeId`s.
-- **Everything else is included**: name, version, description, metadata, and every node
-  and relationship in full — interfaces, controls, protocols, latency budgets.
+- **Everything else is included**: name, version, description, metadata, every node and
+  relationship in full — interfaces, controls, protocols, latency budgets — and every
+  pattern-conformance claim, whose bindings are encoded by node name so they inherit the
+  identifier exclusion above.
 
 The encoding is length-prefixed rather than delimiter-separated, and every digest is
-domain-separated by a label. The root additionally mixes in a scheme tag, `casm-merkle-v1`.
+domain-separated by a label. The root additionally mixes in a scheme tag,
+`casm-merkle-v2` — bumped from `v1` in 0.2.0, when conformance claims joined the encoding.
 
 ## Consequences
 

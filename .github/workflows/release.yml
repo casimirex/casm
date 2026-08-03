@@ -38,7 +38,7 @@ jobs:
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
       - run: cargo test --workspace --all-features
-      - run: cargo run -p casm-cli -- check examples --strict
+      - run: cargo run -p casm-cli -- check examples --strict --patterns patterns
 
   build:
     name: ${{ matrix.target }}

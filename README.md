@@ -132,6 +132,7 @@ warning-free architecture — CI validates it on every push.
 | `casm drift` | Compare the declared architecture against real infrastructure |
 | `casm formal` | Export a TLA+ or Alloy specification |
 | `casm hook` | Install a pre-commit hook that validates before you commit |
+| `casm evolve` | Report what an architecture must change to conform to a pattern |
 | `casm check` | Validate every architecture file under a directory |
 | `casm fmt` | Reformat or convert between YAML, JSON, and TOML |
 | `casm rules` | List the built-in rules |
@@ -166,6 +167,7 @@ $ casm rules
 | `boundary-crossings-require-controls` | warning |
 | `no-isolated-nodes` | warning |
 | `sync-targets-should-declare-interfaces` | info |
+| `patterns-are-satisfied` | error |
 
 Suppress individually with `--allow <rule-id>`; tune thresholds with
 `--max-critical-path-ms` and `--min-security-controls`. A rule is an *error* only when the
@@ -184,6 +186,61 @@ not a deadlock — see [ADR-0006](docs/adr/0006-only-blocking-edges-form-cycles.
   with:
     sarif_file: casm.sarif
 ```
+
+---
+
+## Patterns
+
+A pattern is a **shape to conform to**, not a template to stamp. Nothing is copied into
+your architecture; `casm validate --patterns` checks that what you already have satisfies
+the shape.
+
+```yaml
+# patterns/secure-web-tier.yaml
+name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+    min-security-controls: 2
+    requires-protocols: [http2]
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+```
+
+Your architecture claims conformance:
+
+```yaml
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+```
+
+`bind:` is optional. A role binds by itself when exactly one node has the required type;
+when two could fill it, the ambiguity is **reported, not guessed at** — the same choice
+drift detection makes with `infrastructure-id`.
+
+```console
+$ casm validate architecture.yaml --patterns patterns
+$ casm evolve architecture.yaml --patterns patterns --to secure-web-tier@2.0.0
+```
+
+`evolve` reports; it does not rewrite. Migrating becomes "here is what you do not yet
+satisfy", which is a computation over two sets. It separates what you could add (a
+missing control, a missing edge) from what only you can decide (which of two services is
+*the* application). Re-stamping a template would instead be a three-way merge, and a wrong
+merge silently corrupts the file — which is the failure this project exists to prevent.
+
+The registry is therefore optional rather than a prerequisite: patterns are files, and a
+directory works. See
+[ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md), including what this costs
+— patterns cannot scaffold, and a shape can only require what the model can express.
 
 ---
 
@@ -452,8 +509,14 @@ pretending. Phase 12 ships release engineering, fuzzing, the container image, an
 site; its multi-language translations and certification programme do not, and are not
 planned — machine-translated documentation nobody can review is worse than none.
 
-Phase 7 (distributed pattern registry) and Phase 11 (OpenTelemetry) remain documented
-direction, not shipped code.
+Phase 7 ships as patterns, conformance checking, and `casm evolve`. The federated registry
+does not: [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md) makes a pattern a
+*shape to conform to* rather than a template to stamp, which turns patterns into ordinary
+files and demotes the registry from prerequisite to distribution mechanism. Signing,
+content addressing, and a hub API remain open — a pattern already carries a fingerprint,
+which is what content addressing needs.
+
+Phase 11 (OpenTelemetry) remains documented direction, not shipped code.
 
 ---
 

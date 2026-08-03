@@ -1,0 +1,11 @@
+name: c
+nodes:
+  - name: g
+    type: gateway
+  - name: s
+    type: service
+patterns:
+  - pattern: shape@1.0.0
+    bind:
+      edge: g
+  - pattern: shape@2.0.0

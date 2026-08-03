@@ -13,6 +13,7 @@
 - [Check an architecture against real infrastructure](how-to/detect-drift.md)
 - [Find when a node actually changed](how-to/read-history.md)
 - [Prove a property with a model checker](how-to/prove-a-property.md)
+- [Conform to a pattern](how-to/conform-to-a-pattern.md)
 - [Set up your editor](how-to/set-up-your-editor.md)
 
 # Explanation

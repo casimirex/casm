@@ -54,8 +54,9 @@ The encoding is length-prefixed rather than delimiter-separated. Without that,
 `name: "ab", description: "c"` could collide with `name: "a", description: "bc"` — a real
 forgery a separator scheme permits, and one the tests pin.
 
-The scheme is versioned (`casm-merkle-v1`) and mixed into every root digest, so changing
+The scheme is versioned (`casm-merkle-v2`) and mixed into every root digest, so changing
 the encoding is detectable rather than silent. It is therefore a compatibility surface:
-bumping it invalidates every previously computed digest.
+bumping it invalidates every previously computed digest. It was bumped once already, in
+0.2.0, when pattern-conformance claims joined the encoding.
 
 See [ADR-0009](https://github.com/casimirex/casimir/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md).

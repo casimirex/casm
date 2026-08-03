@@ -185,7 +185,10 @@ fn unresolved_reference_span(error: &casm_parser::ParseError, index: &DocumentIn
 /// Finds the span a validator subject should be underlined at.
 fn anchor(index: &DocumentIndex, subject: &Subject) -> Span {
     match subject {
-        Subject::Architecture => first_line_span(index),
+        // The index tracks nodes and relationships, not the `patterns:` block, so a
+        // conformance finding anchors where a whole-architecture finding does, rather
+        // than at a line that would have to be guessed.
+        Subject::Architecture | Subject::Pattern { .. } => first_line_span(index),
         Subject::Node { name, .. } => index
             .node_named(name)
             .map_or_else(|| first_line_span(index), |node| node.name_span),

@@ -43,8 +43,9 @@
 //! [`ParseError::UnresolvedReference`] carrying a "did you mean" hint.
 
 use casm_core::{
-    Architecture, ArchitectureConfig, Control, ControlType, Interface, Node, NodeConfig, NodeId,
-    NodeType, Protocol, Relationship, RelationshipConfig, RelationshipType, SchemaHash,
+    Architecture, ArchitectureConfig, Conformance, Control, ControlType, Interface, Node,
+    NodeConfig, NodeId, NodeType, PatternRef, Protocol, Relationship, RelationshipConfig,
+    RelationshipType, SchemaHash,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -381,6 +382,71 @@ impl RelationshipDoc {
     }
 }
 
+/// A claim, as written by a human, that this architecture conforms to a pattern.
+///
+/// ```yaml
+/// patterns:
+///   - pattern: secure-web-tier@1.0.0
+///     bind:
+///       edge: edge-gateway
+///       application: orders
+/// ```
+///
+/// `bind` is optional: a role with exactly one candidate node binds by itself. It exists
+/// for the ambiguous case, and for authors who would rather the choice be written down
+/// than inferred.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "kebab-case")]
+pub struct ConformanceDoc {
+    /// The pattern claimed, as `name@version`.
+    pub pattern: String,
+    /// Role-to-node bindings, each node given by name or by `NodeId`.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub bind: BTreeMap<String, String>,
+}
+
+impl ConformanceDoc {
+    /// Resolves this fragment into a validated [`Conformance`] claim.
+    fn resolve(&self, path: &Path, index: &NodeIndex<'_>) -> Result<Conformance, ParseError> {
+        let reference = PatternRef::parse(&self.pattern).map_err(|error| ParseError::Semantic {
+            path: path.to_path_buf(),
+            message: error.to_string(),
+            suggestion: Some("a pattern is claimed by exact version, as 'name@1.2.3'".to_owned()),
+        })?;
+
+        let mut claim = Conformance::new(reference);
+        for (role, node) in &self.bind {
+            let id = index.resolve_binding(node, &self.pattern, role, path)?;
+            claim = claim
+                .binding(role.clone(), id)
+                .map_err(|error| ParseError::Semantic {
+                    path: path.to_path_buf(),
+                    message: format!("pattern '{}': {error}", self.pattern),
+                    suggestion: None,
+                })?;
+        }
+
+        Ok(claim)
+    }
+
+    /// Renders a validated claim back into authoring form, naming bound nodes.
+    fn from_conformance(claim: &Conformance, architecture: &Architecture) -> Self {
+        Self {
+            pattern: claim.pattern().to_string(),
+            bind: claim
+                .bindings()
+                .iter()
+                .map(|(role, id)| {
+                    let node = architecture
+                        .node(*id)
+                        .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+                    (role.as_str().to_owned(), node)
+                })
+                .collect(),
+        }
+    }
+}
+
 /// Maps the names and ids declared in a document to their resolved [`NodeId`]s.
 struct NodeIndex<'a> {
     by_name: Vec<(&'a str, NodeId)>,
@@ -397,33 +463,62 @@ impl<'a> NodeIndex<'a> {
         }
     }
 
-    /// Resolves a reference written as either a node name or a `NodeId`.
+    /// Looks up a reference written as either a node name or a `NodeId`.
+    fn lookup(&self, reference: &str) -> Option<NodeId> {
+        // Names are tried first: they are the common case, and a name that happens to
+        // look like a UUID is impossible (the CASIMIR alphabet permits it, but a node so
+        // named would still be found here, which is the author's evident intent).
+        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name == reference) {
+            return Some(*id);
+        }
+
+        NodeId::parse(reference)
+            .ok()
+            .filter(|id| self.by_name.iter().any(|(_, known)| known == id))
+    }
+
+    /// The "did you mean" hint for an unresolvable reference, if one is close enough.
+    fn hint(&self, reference: &str) -> Option<String> {
+        let names = self.by_name.iter().map(|(name, _)| *name);
+        suggest::closest(reference, names).map(suggest::did_you_mean)
+    }
+
+    /// Resolves a relationship endpoint.
     fn resolve(
         &self,
         reference: &str,
         endpoint: &'static str,
         path: &Path,
     ) -> Result<NodeId, ParseError> {
-        // Names are tried first: they are the common case, and a name that happens to
-        // look like a UUID is impossible (the CASIMIR alphabet permits it, but a node so
-        // named would still be found here, which is the author's evident intent).
-        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name == reference) {
-            return Ok(*id);
-        }
+        self.lookup(reference)
+            .ok_or_else(|| ParseError::UnresolvedReference {
+                path: path.to_path_buf(),
+                endpoint,
+                reference: reference.to_owned(),
+                suggestion: self.hint(reference),
+            })
+    }
 
-        if let Ok(id) = NodeId::parse(reference)
-            && self.by_name.iter().any(|(_, known)| *known == id)
-        {
-            return Ok(id);
-        }
-
-        let names = self.by_name.iter().map(|(name, _)| *name);
-        Err(ParseError::UnresolvedReference {
-            path: path.to_path_buf(),
-            endpoint,
-            reference: reference.to_owned(),
-            suggestion: suggest::closest(reference, names).map(suggest::did_you_mean),
-        })
+    /// Resolves a pattern-conformance binding.
+    ///
+    /// A distinct error from [`NodeIndex::resolve`] because the fix is distinct: a
+    /// dangling endpoint means the topology is wrong, while a dangling binding means the
+    /// claim points at a node that is not there.
+    fn resolve_binding(
+        &self,
+        reference: &str,
+        pattern: &str,
+        role: &str,
+        path: &Path,
+    ) -> Result<NodeId, ParseError> {
+        self.lookup(reference)
+            .ok_or_else(|| ParseError::UnresolvedBinding {
+                path: path.to_path_buf(),
+                pattern: pattern.to_owned(),
+                role: role.to_owned(),
+                reference: reference.to_owned(),
+                suggestion: self.hint(reference),
+            })
     }
 }
 
@@ -448,6 +543,9 @@ pub struct Document {
     /// The directed edges between participants.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub relationships: Vec<RelationshipDoc>,
+    /// Patterns this architecture claims to conform to.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub patterns: Vec<ConformanceDoc>,
     /// Arbitrary key/value annotations.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub metadata: BTreeMap<String, String>,
@@ -481,6 +579,12 @@ impl Document {
             .map(|doc| doc.resolve(path, &index))
             .collect::<Result<_, ParseError>>()?;
 
+        let conformance: Vec<Conformance> = self
+            .patterns
+            .iter()
+            .map(|doc| doc.resolve(path, &index))
+            .collect::<Result<_, ParseError>>()?;
+
         let mut config = ArchitectureConfig::new()
             .name(self.name)
             .version(self.version);
@@ -496,6 +600,9 @@ impl Document {
         }
         for relationship in relationships {
             config = config.relationship(relationship);
+        }
+        for claim in conformance {
+            config = config.conformance(claim);
         }
 
         config.build().map_err(|error| ParseError::Semantic {
@@ -519,6 +626,10 @@ impl Document {
             relationships: architecture
                 .relationships()
                 .map(|edge| RelationshipDoc::from_relationship(edge, architecture))
+                .collect(),
+            patterns: architecture
+                .conformance()
+                .map(|claim| ConformanceDoc::from_conformance(claim, architecture))
                 .collect(),
             metadata: architecture.metadata().clone(),
         }
@@ -574,6 +685,7 @@ mod tests {
                 latency_budget_ms: Some(50),
                 controls: Vec::new(),
             }],
+            patterns: Vec::new(),
             metadata: BTreeMap::new(),
         }
     }

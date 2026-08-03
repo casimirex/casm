@@ -65,7 +65,7 @@ pub mod graph;
 pub mod rules;
 pub mod sarif;
 
-use casm_core::Architecture;
+use casm_core::{Architecture, Pattern};
 
 pub use config::ValidatorConfig;
 pub use diagnostic::{Diagnostic, Report, Severity, Subject};
@@ -76,6 +76,7 @@ pub use rules::{Rule, RuleContext};
 pub struct Validator {
     config: ValidatorConfig,
     rules: Vec<Box<dyn Rule>>,
+    patterns: Vec<Pattern>,
 }
 
 impl Validator {
@@ -91,6 +92,7 @@ impl Validator {
         Self {
             config,
             rules: rules::built_in(),
+            patterns: Vec::new(),
         }
     }
 
@@ -100,6 +102,7 @@ impl Validator {
         Self {
             config,
             rules: Vec::new(),
+            patterns: Vec::new(),
         }
     }
 
@@ -108,6 +111,23 @@ impl Validator {
     pub fn with_rule(mut self, rule: Box<dyn Rule>) -> Self {
         self.rules.push(rule);
         self
+    }
+
+    /// Supplies the patterns that conformance claims are checked against.
+    ///
+    /// Loading them is the caller's job — `casm-validator` reads no files, and a
+    /// validator handed no patterns still runs: a claim it cannot check is reported as
+    /// unchecked rather than assumed true.
+    #[must_use]
+    pub fn with_patterns(mut self, patterns: Vec<Pattern>) -> Self {
+        self.patterns = patterns;
+        self
+    }
+
+    /// The patterns this validator will check claims against.
+    #[must_use]
+    pub fn patterns(&self) -> &[Pattern] {
+        &self.patterns
     }
 
     /// The thresholds this validator is configured with.
@@ -132,6 +152,7 @@ impl Validator {
         let context = RuleContext {
             architecture,
             graph: &graph,
+            patterns: &self.patterns,
             config: &self.config,
         };
 

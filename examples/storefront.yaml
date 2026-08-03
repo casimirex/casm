@@ -16,6 +16,14 @@ metadata:
   owner: platform-team
   tier: "1"
 
+# A claim, checked by `casm validate --patterns patterns`. `application` is bound
+# explicitly because two services could fill it, and the pattern will not guess.
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+
 nodes:
   - name: customer
     type: human

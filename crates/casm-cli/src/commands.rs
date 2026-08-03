@@ -10,8 +10,8 @@
 //! files are read, standard output is written, and exit codes are decided. Keeping the
 //! boundary sharp is what makes the rest of CASIMIR testable without a filesystem.
 
-use casm_core::Architecture;
-use casm_parser::{Format, emit_str, parse_file};
+use casm_core::{Architecture, Pattern, conformance};
+use casm_parser::{Format, Library, emit_str, parse_file};
 use casm_validator::{Report, Validator, ValidatorConfig, sarif};
 use std::path::{Path, PathBuf};
 
@@ -149,10 +149,13 @@ pub(crate) fn validate(
     allow: &[String],
     max_critical_path_ms: Option<u64>,
     min_security_controls: Option<usize>,
+    patterns: Option<&Path>,
 ) -> CommandResult {
     let architecture = parse_file(file)?;
     let config = validator_config(allow, max_critical_path_ms, min_security_controls);
-    let report = Validator::with_config(config).validate(&architecture);
+    let report = Validator::with_config(config)
+        .with_patterns(load_patterns(patterns)?)
+        .validate(&architecture);
 
     match format {
         OutputFormat::Human => print_human(file, &architecture, &report),
@@ -242,7 +245,7 @@ pub(crate) fn diff(old: &Path, new: &Path, fail_on_breaking: bool) -> CommandRes
 }
 
 /// Validates every architecture file found under a directory.
-pub(crate) fn check(directory: &Path, strict: bool) -> CommandResult {
+pub(crate) fn check(directory: &Path, strict: bool, patterns: Option<&Path>) -> CommandResult {
     let files = discover(directory)?;
 
     if files.is_empty() {
@@ -253,7 +256,7 @@ pub(crate) fn check(directory: &Path, strict: bool) -> CommandResult {
         return Ok(ExitCode::Success);
     }
 
-    let validator = Validator::new();
+    let validator = Validator::new().with_patterns(load_patterns(patterns)?);
     let mut worst = ExitCode::Success;
     let mut checked = 0_usize;
 
@@ -465,6 +468,152 @@ pub(crate) fn drift(
         return Ok(ExitCode::ValidationErrors);
     }
     Ok(ExitCode::Success)
+}
+
+/// Loads a pattern library, or none if the caller supplied no directory.
+///
+/// A missing directory is an error rather than an empty library: an author who typed
+/// `--patterns ptterns` should be told, not handed a silent all-clear.
+fn load_patterns(directory: Option<&Path>) -> Result<Vec<Pattern>, CommandError> {
+    let Some(directory) = directory else {
+        return Ok(Vec::new());
+    };
+
+    let library = Library::load(directory).map_err(|error| CommandError(error.render()))?;
+    Ok(library.patterns().cloned().collect())
+}
+
+/// Reports what an architecture must change to conform to a pattern.
+///
+/// Reports rather than rewrites. ADR-0012: a pattern is a shape, so migrating to a new
+/// version is "here is what you do not yet satisfy" — a computation over two sets — and
+/// not a three-way merge that could silently corrupt the file.
+pub(crate) fn evolve(
+    file: &Path,
+    patterns: &Path,
+    to: Option<&str>,
+    strict: bool,
+) -> CommandResult {
+    let architecture = parse_file(file)?;
+    let library = Library::load(patterns).map_err(|error| CommandError(error.render()))?;
+
+    let claims = evolve_targets(&architecture, to)?;
+    if claims.is_empty() {
+        println!(
+            "{}: claims no patterns, and none was requested with --to",
+            file.display()
+        );
+        return Ok(ExitCode::Success);
+    }
+
+    println!("{}: {} pattern(s)\n", file.display(), claims.len());
+
+    let mut unmet_total = 0_usize;
+    for claim in &claims {
+        let reference = claim.pattern().to_string();
+
+        let Some(pattern) = library.get(claim.pattern()) else {
+            println!("{reference}: not found in '{}'", patterns.display());
+            if let Some(hint) = library.closest(claim.pattern()) {
+                println!("  help: {hint}");
+            }
+            unmet_total = unmet_total.saturating_add(1);
+            continue;
+        };
+
+        let report = conformance::check(&architecture, pattern, claim);
+        unmet_total = unmet_total.saturating_add(report.unmet().len());
+        print_conformance(&reference, &report, &architecture);
+    }
+
+    if unmet_total == 0 {
+        println!("conforms to every pattern claimed");
+        return Ok(ExitCode::Success);
+    }
+
+    println!("{unmet_total} requirement(s) unmet");
+    if strict {
+        return Ok(ExitCode::ValidationErrors);
+    }
+    Ok(ExitCode::Success)
+}
+
+/// Decides which claims `casm evolve` should report on.
+///
+/// With `--to`, exactly that pattern, whether or not the architecture already claims it —
+/// that is the migration case. Without it, everything already claimed.
+fn evolve_targets(
+    architecture: &Architecture,
+    to: Option<&str>,
+) -> Result<Vec<casm_core::Conformance>, CommandError> {
+    let Some(wanted) = to else {
+        return Ok(architecture.conformance().cloned().collect());
+    };
+
+    let reference = casm_core::PatternRef::parse(wanted)
+        .map_err(|error| CommandError(format!("--to: {error}")))?;
+
+    // An existing claim carries the author's bindings, and discarding them would report
+    // back an ambiguity they have already resolved. Any version of the same pattern will
+    // do: migrating from 1.0.0 to 2.0.0 is precisely the case where the bindings written
+    // for the old version are the ones worth reusing. Roles the new version does not have
+    // are reported rather than dropped, which is the honest outcome — a binding that no
+    // longer means anything is a thing the author should be told about.
+    let inherited = architecture
+        .conformance()
+        .find(|claim| claim.pattern() == &reference)
+        .or_else(|| {
+            architecture
+                .conformance()
+                .find(|claim| claim.pattern().name() == reference.name())
+        });
+
+    let Some(existing) = inherited else {
+        return Ok(vec![casm_core::Conformance::new(reference)]);
+    };
+
+    let mut claim = casm_core::Conformance::new(reference);
+    for (role, node) in existing.bindings() {
+        claim = claim
+            .binding(role.as_str(), *node)
+            .map_err(|error| CommandError(format!("--to: {error}")))?;
+    }
+    Ok(vec![claim])
+}
+
+/// Prints one conformance report.
+fn print_conformance(
+    reference: &str,
+    report: &casm_core::ConformanceReport,
+    architecture: &Architecture,
+) {
+    if report.conforms() {
+        println!("{reference}: conforms");
+        return;
+    }
+
+    println!("{reference}: {} unmet", report.unmet().len());
+
+    for (role, id) in report.bindings() {
+        let node = architecture
+            .node(*id)
+            .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+        println!("  {role} -> {node}");
+    }
+
+    // Mechanical failures first: they are the ones an author can act on immediately.
+    let (mechanical, decisions): (Vec<_>, Vec<_>) = report
+        .unmet()
+        .iter()
+        .partition(|unmet| unmet.is_mechanical());
+
+    for unmet in mechanical {
+        println!("  add: {}", unmet.message());
+    }
+    for unmet in decisions {
+        println!("  decide: {}", unmet.message());
+    }
+    println!();
 }
 
 /// Opens the repository containing `file`, reporting failures in the user's terms.
@@ -834,7 +983,7 @@ mod tests {
     #[test]
     fn check_returns_success_when_nothing_is_found() {
         let dir = temp_dir("empty");
-        assert_eq!(check(&dir, false).map_or(-1, ExitCode::code), 0);
+        assert_eq!(check(&dir, false, None).map_or(-1, ExitCode::code), 0);
         std::fs::remove_dir_all(&dir).ok();
     }
 
@@ -847,7 +996,7 @@ mod tests {
         )
         .unwrap();
 
-        let code = check(&dir, false).map_or(-1, ExitCode::code);
+        let code = check(&dir, false, None).map_or(-1, ExitCode::code);
         assert_eq!(code, ExitCode::Failure.code());
 
         std::fs::remove_dir_all(&dir).ok();
@@ -893,6 +1042,7 @@ mod tests {
             &[],
             None,
             None,
+            None,
         );
         assert!(result.is_err());
     }
@@ -901,5 +1051,174 @@ mod tests {
     fn rules_listing_succeeds_in_both_formats() {
         assert!(rules(false).is_ok());
         assert!(rules(true).is_ok());
+    }
+
+    /// A pattern the scaffold template satisfies: one gateway, one service, one sync hop.
+    const SCAFFOLD_PATTERN: &str = r"
+name: scaffold-shape
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+    min-security-controls: 2
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+";
+
+    /// Writes an architecture and a pattern library into one temporary directory.
+    fn evolve_fixture(label: &str, claim: bool) -> (PathBuf, PathBuf, PathBuf) {
+        let dir = temp_dir(label);
+        let patterns = dir.join("patterns");
+        std::fs::create_dir_all(&patterns).unwrap();
+        std::fs::write(patterns.join("scaffold-shape.yaml"), SCAFFOLD_PATTERN).unwrap();
+
+        let mut source = TEMPLATE.replace("{{NAME}}", "demo");
+        if claim {
+            source.push_str("\npatterns:\n  - pattern: scaffold-shape@1.0.0\n");
+        }
+        let file = dir.join("architecture.yaml");
+        std::fs::write(&file, source).unwrap();
+
+        (dir, file, patterns)
+    }
+
+    #[test]
+    fn evolve_reports_conformance_for_a_claim_the_architecture_satisfies() {
+        let (dir, file, patterns) = evolve_fixture("evolve-ok", true);
+        let code = evolve(&file, &patterns, None, true).map_or(-1, ExitCode::code);
+        assert_eq!(code, 0);
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_with_no_claims_and_no_target_succeeds_quietly() {
+        let (dir, file, patterns) = evolve_fixture("evolve-none", false);
+        let code = evolve(&file, &patterns, None, true).map_or(-1, ExitCode::code);
+        assert_eq!(code, 0);
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_checks_a_pattern_the_architecture_does_not_yet_claim() {
+        // The migration case: "what would it take to conform to this?"
+        let (dir, file, patterns) = evolve_fixture("evolve-to", false);
+        let code =
+            evolve(&file, &patterns, Some("scaffold-shape@1.0.0"), true).map_or(-1, ExitCode::code);
+        assert_eq!(code, 0);
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_fails_under_strict_when_a_requirement_is_unmet() {
+        let (dir, file, patterns) = evolve_fixture("evolve-unmet", false);
+        std::fs::write(
+            patterns.join("scaffold-shape.yaml"),
+            // The scaffold template has no queue, so this cannot be satisfied.
+            "name: scaffold-shape\nversion: 1.0.0\nrequires:\n  - role: bus\n    type: queue\n",
+        )
+        .unwrap();
+
+        let code =
+            evolve(&file, &patterns, Some("scaffold-shape@1.0.0"), true).map_or(-1, ExitCode::code);
+        assert_eq!(code, ExitCode::ValidationErrors.code());
+
+        // The same run without --strict reports the same thing and exits zero.
+        let lenient = evolve(&file, &patterns, Some("scaffold-shape@1.0.0"), false)
+            .map_or(-1, ExitCode::code);
+        assert_eq!(lenient, 0);
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_reports_a_pattern_the_library_does_not_hold() {
+        let (dir, file, patterns) = evolve_fixture("evolve-missing", false);
+        let code =
+            evolve(&file, &patterns, Some("nonexistent@1.0.0"), true).map_or(-1, ExitCode::code);
+        assert_eq!(code, ExitCode::ValidationErrors.code());
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_rejects_a_malformed_pattern_reference() {
+        let (dir, file, patterns) = evolve_fixture("evolve-malformed", false);
+        assert!(evolve(&file, &patterns, Some("no-version"), false).is_err());
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn a_missing_pattern_directory_is_an_error_rather_than_an_empty_library() {
+        // An author who typed `--patterns ptterns` must be told, not handed all-clear.
+        assert!(load_patterns(Some(Path::new("/nonexistent/patterns"))).is_err());
+        assert!(load_patterns(None).unwrap().is_empty());
+    }
+
+    #[test]
+    fn validate_checks_conformance_when_patterns_are_supplied() {
+        let (dir, file, patterns) = evolve_fixture("validate-patterns", true);
+        let code = validate(
+            &file,
+            OutputFormat::Human,
+            false,
+            &[],
+            None,
+            None,
+            Some(&patterns),
+        )
+        .map_or(-1, ExitCode::code);
+
+        // The scaffold template warns about other things by design; what matters is that
+        // the conformance claim itself did not add an error.
+        assert_ne!(code, ExitCode::Failure.code());
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn evolve_to_a_new_version_reuses_the_bindings_written_for_the_old_one() {
+        // The migration case: an ambiguity resolved for 1.0.0 should not be reported back
+        // when moving to 2.0.0.
+        let dir = temp_dir("evolve-migrate");
+        let patterns = dir.join("patterns");
+        std::fs::create_dir_all(&patterns).unwrap();
+        std::fs::write(
+            patterns.join("v2.yaml"),
+            "name: shape\nversion: 2.0.0\nrequires:\n  - role: application\n    type: service\n",
+        )
+        .unwrap();
+
+        // Two services, so `application` is ambiguous unless something says which.
+        let two_services = "\
+name: demo
+nodes:
+  - name: orders
+    type: service
+  - name: payments
+    type: service
+";
+        let file = dir.join("architecture.yaml");
+        std::fs::write(&file, two_services).unwrap();
+
+        let unbound =
+            evolve(&file, &patterns, Some("shape@2.0.0"), true).map_or(-1, ExitCode::code);
+        assert_eq!(
+            unbound,
+            ExitCode::ValidationErrors.code(),
+            "two services must be ambiguous without a binding"
+        );
+
+        // Claim 1.0.0 with a binding, then migrate to 2.0.0.
+        let claiming = format!(
+            "{two_services}patterns:\n  - pattern: shape@1.0.0\n    bind:\n      application: orders\n"
+        );
+        std::fs::write(&file, claiming).unwrap();
+
+        let bound = evolve(&file, &patterns, Some("shape@2.0.0"), true).map_or(-1, ExitCode::code);
+        assert_eq!(bound, 0, "the 1.0.0 binding should carry over to 2.0.0");
+
+        std::fs::remove_dir_all(&dir).ok();
     }
 }

@@ -69,14 +69,19 @@
 pub mod document;
 pub mod error;
 pub mod format;
+pub mod library;
 pub mod suggest;
 
 use casm_core::Architecture;
 use std::path::Path;
 
-pub use document::{ControlDoc, Document, InterfaceDoc, NodeDoc, RelationshipDoc};
+pub use document::{ConformanceDoc, ControlDoc, Document, InterfaceDoc, NodeDoc, RelationshipDoc};
 pub use error::{Location, ParseError, Result};
 pub use format::Format;
+pub use library::{
+    Library, MAX_LIBRARY_PATTERNS, PatternDoc, RequiredRelationshipDoc, RequirementDoc,
+    emit_pattern_str, parse_pattern_file, parse_pattern_str,
+};
 
 /// The largest document `casm-parser` will read from disk, in bytes.
 ///
@@ -146,14 +151,17 @@ pub fn parse_file(path: &Path) -> Result<Architecture> {
 ///
 /// Returns [`ParseError::Emit`] if the underlying serialiser fails.
 pub fn emit_str(architecture: &Architecture, format: Format) -> Result<String> {
-    let document = Document::from_architecture(architecture);
+    serialize(&Document::from_architecture(architecture), format)
+}
 
+/// Renders an authoring document in `format`.
+fn serialize<T: serde::Serialize>(document: &T, format: Format) -> Result<String> {
     match format {
-        Format::Yaml => serde_yaml_ng::to_string(&document).map_err(|error| ParseError::Emit {
+        Format::Yaml => serde_yaml_ng::to_string(document).map_err(|error| ParseError::Emit {
             format: "yaml",
             message: error.to_string(),
         }),
-        Format::Json => serde_json::to_string_pretty(&document)
+        Format::Json => serde_json::to_string_pretty(document)
             .map(|mut json| {
                 json.push('\n');
                 json
@@ -162,7 +170,7 @@ pub fn emit_str(architecture: &Architecture, format: Format) -> Result<String> {
                 format: "json",
                 message: error.to_string(),
             }),
-        Format::Toml => toml::to_string_pretty(&document).map_err(|error| ParseError::Emit {
+        Format::Toml => toml::to_string_pretty(document).map_err(|error| ParseError::Emit {
             format: "toml",
             message: error.to_string(),
         }),
@@ -171,20 +179,35 @@ pub fn emit_str(architecture: &Architecture, format: Format) -> Result<String> {
 
 /// Stage 1: bytes to [`Document`], with format-specific error positioning.
 fn deserialize(source: &str, path: &Path, format: Format) -> Result<Document> {
+    deserialize_as(source, path, format)
+}
+
+/// Stage 1 for any authoring grammar: an architecture [`Document`] or a
+/// [`library::PatternDoc`].
+///
+/// Generic over the target type rather than duplicated per grammar, because the only
+/// thing that differs between them is what `serde` is asked to build — the line/column
+/// extraction and the "did you mean" inference are identical, and a second copy of them
+/// would drift.
+fn deserialize_as<T: serde::de::DeserializeOwned>(
+    source: &str,
+    path: &Path,
+    format: Format,
+) -> Result<T> {
     match format {
-        Format::Yaml => serde_yaml_ng::from_str::<Document>(source).map_err(|error| {
+        Format::Yaml => serde_yaml_ng::from_str::<T>(source).map_err(|error| {
             let location = error.location().map_or_else(Location::start, |loc| {
                 Location::new(loc.line(), loc.column())
             });
             syntax_error(path, location, &error.to_string())
         }),
 
-        Format::Json => serde_json::from_str::<Document>(source).map_err(|error| {
+        Format::Json => serde_json::from_str::<T>(source).map_err(|error| {
             let location = Location::new(error.line(), error.column());
             syntax_error(path, location, &error.to_string())
         }),
 
-        Format::Toml => toml::from_str::<Document>(source).map_err(|error| {
+        Format::Toml => toml::from_str::<T>(source).map_err(|error| {
             let location = error.span().map_or_else(Location::start, |span| {
                 offset_to_location(source, span.start)
             });

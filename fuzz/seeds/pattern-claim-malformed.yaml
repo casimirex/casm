@@ -1,0 +1,10 @@
+name: c
+nodes:
+  - name: g
+    type: gateway
+patterns:
+  - pattern: no-version
+  - pattern: "@1.0.0"
+  - pattern: shape@1
+    bind:
+      edge: nonexistent

@@ -76,6 +76,7 @@
 #![forbid(unsafe_code)]
 
 pub mod architecture;
+pub mod conformance;
 pub mod control;
 pub mod error;
 mod hex;
@@ -84,9 +85,11 @@ pub mod interface;
 pub mod merkle;
 pub mod names;
 pub mod node;
+pub mod pattern;
 pub mod relationship;
 
 pub use architecture::{Architecture, ArchitectureConfig};
+pub use conformance::{ConformanceReport, Unmet};
 pub use control::{Control, ControlType};
 pub use error::{CoreError, Result};
 pub use ids::NodeId;
@@ -94,4 +97,7 @@ pub use interface::{Interface, Protocol, SchemaHash};
 pub use merkle::{Fingerprint, MerkleTree};
 pub use names::{MAX_NAME_LEN, Name};
 pub use node::{Node, NodeConfig, NodeType};
+pub use pattern::{
+    Conformance, Pattern, PatternConfig, PatternRef, RequiredRelationship, Requirement,
+};
 pub use relationship::{MAX_LATENCY_BUDGET_MS, Relationship, RelationshipConfig, RelationshipType};

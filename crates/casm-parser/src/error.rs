@@ -98,6 +98,24 @@ pub enum ParseError {
         suggestion: Option<String>,
     },
 
+    /// A pattern-conformance binding referenced a node that does not exist.
+    #[error(
+        "{path}: pattern '{pattern}' binds role '{role}' to '{reference}', \
+         which does not match any declared node"
+    )]
+    UnresolvedBinding {
+        /// The offending file.
+        path: PathBuf,
+        /// The pattern reference as written.
+        pattern: String,
+        /// The role that was bound.
+        role: String,
+        /// The unresolvable node reference as written.
+        reference: String,
+        /// The closest declared node name, if one is close enough to suggest.
+        suggestion: Option<String>,
+    },
+
     /// The document exceeded the configured size ceiling.
     ///
     /// NASA Rule 5: bounded allocation. Parsing is the point where an attacker-controlled
@@ -110,6 +128,30 @@ pub enum ParseError {
         size: u64,
         /// The configured ceiling.
         limit: u64,
+    },
+
+    /// Two files in a pattern library defined the same `name@version`.
+    #[error("{path}: pattern '{pattern}' is already defined by '{first}'")]
+    DuplicatePattern {
+        /// The file that redefined it.
+        path: PathBuf,
+        /// The colliding `name@version` reference.
+        pattern: String,
+        /// The file that defined it first.
+        first: PathBuf,
+    },
+
+    /// A pattern library directory held more pattern files than the ceiling allows.
+    ///
+    /// NASA Rule 5: a directory is attacker-controlled input in the same way a file is.
+    #[error("'{path}' holds {count} pattern files, exceeding the limit of {limit}")]
+    TooManyPatterns {
+        /// The offending directory.
+        path: PathBuf,
+        /// How many pattern files it holds.
+        count: usize,
+        /// The configured ceiling.
+        limit: usize,
     },
 
     /// The file could not be read.
@@ -140,6 +182,9 @@ impl ParseError {
             | Self::Syntax { path, .. }
             | Self::Semantic { path, .. }
             | Self::UnresolvedReference { path, .. }
+            | Self::UnresolvedBinding { path, .. }
+            | Self::DuplicatePattern { path, .. }
+            | Self::TooManyPatterns { path, .. }
             | Self::TooLarge { path, .. }
             | Self::Io { path, .. } => Some(path),
             Self::Emit { .. } => None,
@@ -154,6 +199,9 @@ impl ParseError {
             Self::UnknownFormat { .. }
             | Self::Semantic { .. }
             | Self::UnresolvedReference { .. }
+            | Self::UnresolvedBinding { .. }
+            | Self::DuplicatePattern { .. }
+            | Self::TooManyPatterns { .. }
             | Self::TooLarge { .. }
             | Self::Io { .. }
             | Self::Emit { .. } => None,
@@ -166,8 +214,11 @@ impl ParseError {
         match self {
             Self::Syntax { suggestion, .. }
             | Self::Semantic { suggestion, .. }
-            | Self::UnresolvedReference { suggestion, .. } => suggestion.as_deref(),
+            | Self::UnresolvedReference { suggestion, .. }
+            | Self::UnresolvedBinding { suggestion, .. } => suggestion.as_deref(),
             Self::UnknownFormat { .. }
+            | Self::DuplicatePattern { .. }
+            | Self::TooManyPatterns { .. }
             | Self::TooLarge { .. }
             | Self::Io { .. }
             | Self::Emit { .. } => None,

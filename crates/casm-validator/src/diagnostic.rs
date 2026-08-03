@@ -83,6 +83,11 @@ pub enum Subject {
         /// The participating node names, in a deterministic order.
         names: Vec<String>,
     },
+    /// A pattern the architecture claims to conform to.
+    Pattern {
+        /// The `name@version` reference, as claimed.
+        reference: String,
+    },
 }
 
 impl core::fmt::Display for Subject {
@@ -94,6 +99,7 @@ impl core::fmt::Display for Subject {
                 write!(f, "relationship '{source}' -> '{target}'")
             }
             Self::NodeSet { names } => write!(f, "nodes [{}]", names.join(", ")),
+            Self::Pattern { reference } => write!(f, "pattern '{reference}'"),
         }
     }
 }

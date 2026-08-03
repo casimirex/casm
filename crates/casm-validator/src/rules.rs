@@ -21,7 +21,9 @@
 //! Everything else is a [`Severity::Warning`]. A validator that reports style
 //! preferences as errors gets switched off, and then it reports nothing at all.
 
-use casm_core::{Architecture, ControlType, Node, NodeType, RelationshipType};
+use casm_core::{
+    Architecture, ControlType, Node, NodeType, Pattern, RelationshipType, conformance,
+};
 
 use crate::config::ValidatorConfig;
 use crate::diagnostic::{Diagnostic, Report, Severity, Subject};
@@ -33,6 +35,11 @@ pub struct RuleContext<'a> {
     pub architecture: &'a Architecture,
     /// Its blocking-dependency graph, built once and shared across all rules.
     pub graph: &'a DependencyGraph,
+    /// The patterns available to check conformance claims against.
+    ///
+    /// Empty unless the caller loaded a pattern library. A claim naming a pattern that is
+    /// not here is reported rather than ignored — see [`PatternsAreSatisfied`].
+    pub patterns: &'a [Pattern],
     /// The thresholds this run is configured with.
     pub config: &'a ValidatorConfig,
 }
@@ -410,6 +417,85 @@ impl Rule for SyncTargetsShouldDeclareInterfaces {
     }
 }
 
+/// Every pattern an architecture claims to conform to must actually be satisfied.
+///
+/// A conformance claim is a statement the architecture makes about itself, and this rule
+/// is what stops it from quietly becoming false. See ADR-0012 for why a pattern is a
+/// shape to check rather than a template to re-stamp.
+pub struct PatternsAreSatisfied;
+
+impl Rule for PatternsAreSatisfied {
+    fn id(&self) -> &'static str {
+        "patterns-are-satisfied"
+    }
+
+    fn description(&self) -> &'static str {
+        "every pattern the architecture claims conformance to must be satisfied"
+    }
+
+    fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+        for claim in context.architecture.conformance() {
+            let reference = claim.pattern().to_string();
+            let subject = Subject::Pattern {
+                reference: reference.clone(),
+            };
+
+            let Some(pattern) = context
+                .patterns
+                .iter()
+                .find(|pattern| claim.pattern().matches(pattern))
+            else {
+                report.push(unavailable(
+                    self.id(),
+                    subject,
+                    &reference,
+                    context.patterns,
+                ));
+                continue;
+            };
+
+            for unmet in conformance::check(context.architecture, pattern, claim).unmet() {
+                report.push(
+                    Diagnostic::new(self.id(), Severity::Error, subject.clone(), unmet.message())
+                        .with_suggestion(if unmet.is_mechanical() {
+                            "run 'casm evolve' to see the change this needs, or drop the claim"
+                        } else {
+                            "this needs a decision rather than an edit: bind the role \
+                         explicitly, or add the node the pattern requires"
+                        }),
+                );
+            }
+        }
+    }
+}
+
+/// Builds the finding for a claim naming a pattern nobody supplied.
+///
+/// A warning rather than an error: the claim may be perfectly true, and the run simply
+/// had no library to check it against. Reporting it as an error would make `casm
+/// validate` fail for everyone who has not passed `--patterns`, which teaches people to
+/// pass `--allow patterns-are-satisfied` and lose the rule entirely.
+fn unavailable(
+    id: &'static str,
+    subject: Subject,
+    reference: &str,
+    available: &[Pattern],
+) -> Diagnostic {
+    let known: Vec<String> = available.iter().map(Pattern::reference).collect();
+
+    Diagnostic::new(
+        id,
+        Severity::Warning,
+        subject,
+        format!("claims conformance to '{reference}', which was not available to check"),
+    )
+    .with_suggestion(if known.is_empty() {
+        "pass --patterns <dir> so the claim can be checked".to_owned()
+    } else {
+        format!("the patterns supplied were: {}", known.join(", "))
+    })
+}
+
 /// Returns the complete built-in rule library, in execution order.
 ///
 /// Order matters only for output readability: errors that explain other findings come
@@ -425,6 +511,7 @@ pub fn built_in() -> Vec<Box<dyn Rule>> {
         Box::new(BoundaryCrossingsRequireControls),
         Box::new(NoIsolatedNodes),
         Box::new(SyncTargetsShouldDeclareInterfaces),
+        Box::new(PatternsAreSatisfied),
     ]
 }
 
@@ -849,5 +936,177 @@ mod tests {
                 rule.id()
             );
         }
+    }
+
+    /// A gateway with two security controls, fronting one service.
+    fn web_tier_architecture() -> Architecture {
+        let edge = NodeConfig::new()
+            .name("edge")
+            .node_type(NodeType::Gateway)
+            .control(security_control("OIDC"))
+            .control(security_control("WAF"))
+            .build()
+            .unwrap();
+        let orders = service("orders");
+        let (edge_id, orders_id) = (edge.id(), orders.id());
+
+        ArchitectureConfig::new()
+            .name("storefront")
+            .node(edge)
+            .node(orders)
+            .relationship(
+                RelationshipConfig::new()
+                    .source(edge_id)
+                    .target(orders_id)
+                    .relationship_type(RelationshipType::Sync)
+                    .build()
+                    .unwrap(),
+            )
+            .build()
+            .unwrap()
+    }
+
+    fn web_tier_pattern(min_controls: usize) -> Pattern {
+        casm_core::PatternConfig::new()
+            .name("secure-web-tier")
+            .version("1.0.0")
+            .requirement(
+                casm_core::Requirement::new("edge", NodeType::Gateway)
+                    .unwrap()
+                    .requiring_security_controls(min_controls),
+            )
+            .requirement(casm_core::Requirement::new("application", NodeType::Service).unwrap())
+            .relationship(
+                casm_core::RequiredRelationship::new("edge", "application", RelationshipType::Sync)
+                    .unwrap(),
+            )
+            .build()
+            .unwrap()
+    }
+
+    /// Adds a claim to `secure-web-tier@1.0.0`.
+    fn claiming(architecture: Architecture) -> Architecture {
+        architecture
+            .with_conformance(casm_core::Conformance::new(
+                casm_core::PatternRef::parse("secure-web-tier@1.0.0").unwrap(),
+            ))
+            .unwrap()
+    }
+
+    /// Runs only the conformance rule, with `patterns` available.
+    fn conformance_findings(
+        architecture: &Architecture,
+        patterns: Vec<Pattern>,
+    ) -> Vec<Diagnostic> {
+        Validator::empty(ValidatorConfig::default())
+            .with_rule(Box::new(PatternsAreSatisfied))
+            .with_patterns(patterns)
+            .validate(architecture)
+            .diagnostics
+    }
+
+    #[test]
+    fn a_satisfied_claim_produces_no_finding() {
+        let findings = conformance_findings(
+            &claiming(web_tier_architecture()),
+            vec![web_tier_pattern(2)],
+        );
+        assert!(findings.is_empty(), "{findings:?}");
+    }
+
+    #[test]
+    fn an_unsatisfied_claim_is_an_error_naming_the_pattern() {
+        let findings = conformance_findings(
+            &claiming(web_tier_architecture()),
+            vec![web_tier_pattern(5)],
+        );
+
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert_eq!(findings[0].severity, Severity::Error);
+        assert_eq!(
+            findings[0].subject,
+            Subject::Pattern {
+                reference: "secure-web-tier@1.0.0".to_owned()
+            }
+        );
+        assert!(
+            findings[0].message.contains("security control"),
+            "{findings:?}"
+        );
+    }
+
+    #[test]
+    fn an_architecture_that_claims_nothing_is_never_touched_by_this_rule() {
+        let findings = conformance_findings(&web_tier_architecture(), vec![web_tier_pattern(2)]);
+        assert!(findings.is_empty(), "{findings:?}");
+    }
+
+    #[test]
+    fn a_claim_with_no_library_is_a_warning_rather_than_an_error() {
+        // Erroring would make `casm validate` fail for everyone who has not passed
+        // --patterns, and the fix people would reach for is to silence the rule.
+        let findings = conformance_findings(&claiming(web_tier_architecture()), Vec::new());
+
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert_eq!(findings[0].severity, Severity::Warning);
+        assert!(
+            findings[0]
+                .suggestion
+                .as_deref()
+                .is_some_and(|hint| hint.contains("--patterns")),
+            "{findings:?}"
+        );
+    }
+
+    #[test]
+    fn a_claim_naming_an_absent_version_lists_what_was_supplied() {
+        let other = casm_core::PatternConfig::new()
+            .name("event-driven-core")
+            .version("2.0.0")
+            .build()
+            .unwrap();
+
+        let findings = conformance_findings(&claiming(web_tier_architecture()), vec![other]);
+
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert!(
+            findings[0]
+                .suggestion
+                .as_deref()
+                .is_some_and(|hint| hint.contains("event-driven-core@2.0.0")),
+            "{findings:?}"
+        );
+    }
+
+    #[test]
+    fn a_decision_and_an_edit_get_different_suggestions() {
+        // "Add a control" and "choose which service you meant" are not the same advice.
+        let mechanical = conformance_findings(
+            &claiming(web_tier_architecture()),
+            vec![web_tier_pattern(5)],
+        );
+        assert!(
+            mechanical[0]
+                .suggestion
+                .as_deref()
+                .is_some_and(|hint| hint.contains("casm evolve")),
+            "{mechanical:?}"
+        );
+
+        let ambiguous = conformance_findings(
+            &claiming(
+                web_tier_architecture()
+                    .with_node(service("payments"))
+                    .unwrap(),
+            ),
+            vec![web_tier_pattern(2)],
+        );
+        assert!(
+            ambiguous[0]
+                .suggestion
+                .as_deref()
+                .is_some_and(|hint| hint.contains("decision")),
+            "{ambiguous:?}"
+        );
     }
 }

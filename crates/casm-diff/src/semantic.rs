@@ -20,7 +20,7 @@
 //!   outside that is exactly what a rename is, and pretending otherwise would hide a
 //!   breaking change to every consumer that referenced the old name.
 
-use casm_core::{Architecture, Node, Relationship};
+use casm_core::{Architecture, Conformance, Node, Relationship};
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
@@ -97,6 +97,25 @@ pub enum Change {
         /// The relationship type.
         kind: String,
     },
+    /// The architecture began claiming conformance to a pattern.
+    PatternClaimed {
+        /// The `name@version` reference now claimed.
+        reference: String,
+    },
+    /// The architecture stopped claiming conformance to a pattern.
+    PatternDropped {
+        /// The `name@version` reference no longer claimed.
+        reference: String,
+    },
+    /// A claimed pattern's role bindings changed.
+    PatternBindingsChanged {
+        /// The pattern whose bindings moved.
+        reference: String,
+        /// Bindings written as `role=node`, added.
+        added: Vec<String>,
+        /// Bindings written as `role=node`, removed.
+        removed: Vec<String>,
+    },
     /// A relationship's latency budget changed.
     LatencyBudgetChanged {
         /// The source node's name.
@@ -120,12 +139,17 @@ impl Change {
         match self {
             Self::NodeRemoved { .. }
             | Self::NodeTypeChanged { .. }
-            | Self::RelationshipRemoved { .. } => true,
+            | Self::RelationshipRemoved { .. }
+            // Dropping a claim withdraws a compliance guarantee somebody may be relying
+            // on. Making a new claim takes nothing away, so it is not breaking.
+            | Self::PatternDropped { .. } => true,
             Self::Version { .. }
             | Self::NodeAdded { .. }
             | Self::NodeInterfacesChanged { .. }
             | Self::NodeControlsChanged { .. }
             | Self::RelationshipAdded { .. }
+            | Self::PatternClaimed { .. }
+            | Self::PatternBindingsChanged { .. }
             | Self::LatencyBudgetChanged { .. } => false,
         }
     }
@@ -134,12 +158,17 @@ impl Change {
     #[must_use]
     pub const fn marker(&self) -> char {
         match self {
-            Self::NodeAdded { .. } | Self::RelationshipAdded { .. } => '+',
-            Self::NodeRemoved { .. } | Self::RelationshipRemoved { .. } => '-',
+            Self::NodeAdded { .. }
+            | Self::RelationshipAdded { .. }
+            | Self::PatternClaimed { .. } => '+',
+            Self::NodeRemoved { .. }
+            | Self::RelationshipRemoved { .. }
+            | Self::PatternDropped { .. } => '-',
             Self::Version { .. }
             | Self::NodeTypeChanged { .. }
             | Self::NodeInterfacesChanged { .. }
             | Self::NodeControlsChanged { .. }
+            | Self::PatternBindingsChanged { .. }
             | Self::LatencyBudgetChanged { .. } => '~',
         }
     }
@@ -192,6 +221,23 @@ impl fmt::Display for Change {
             } => {
                 write!(f, "relationship '{source}' -> '{target}' removed ({kind})")
             }
+            Self::PatternClaimed { reference } => {
+                write!(f, "pattern '{reference}' claimed")
+            }
+            Self::PatternDropped { reference } => {
+                write!(f, "pattern '{reference}' no longer claimed")
+            }
+            Self::PatternBindingsChanged {
+                reference,
+                added,
+                removed,
+            } => {
+                write!(
+                    f,
+                    "pattern '{reference}' bindings: {}",
+                    added_removed(added, removed)
+                )
+            }
             Self::LatencyBudgetChanged {
                 source,
                 target,
@@ -210,6 +256,23 @@ impl fmt::Display for Change {
             }
         }
     }
+}
+
+/// Renders a claim's bindings as sorted `role=node` strings.
+///
+/// By node *name*, not `NodeId`, for the same reason the fingerprint is: re-parsing a
+/// file regenerates the identifiers, and a diff that reported that would be noise.
+fn bindings(architecture: &Architecture, claim: &Conformance) -> Vec<String> {
+    claim
+        .bindings()
+        .iter()
+        .map(|(role, id)| {
+            let node = architecture
+                .node(*id)
+                .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+            format!("{role}={node}")
+        })
+        .collect()
 }
 
 /// Formats an added/removed pair for display.
@@ -246,6 +309,7 @@ impl Diff {
 
         Self::diff_nodes(old, new, &mut changes);
         Self::diff_relationships(old, new, &mut changes);
+        Self::diff_conformance(old, new, &mut changes);
 
         Self { changes }
     }
@@ -320,6 +384,43 @@ impl Diff {
                 added,
                 removed,
             });
+        }
+    }
+
+    /// Appends conformance-claim changes.
+    ///
+    /// Included because the fingerprint includes them: if `casm diff` stayed silent about
+    /// a claim `casm log` reports as a change, the two would contradict each other.
+    fn diff_conformance(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+        for claim in new.conformance() {
+            let reference = claim.pattern().to_string();
+            let Some(previous) = old
+                .conformance()
+                .find(|earlier| earlier.pattern() == claim.pattern())
+            else {
+                changes.push(Change::PatternClaimed { reference });
+                continue;
+            };
+
+            let (added, removed) = difference(&bindings(old, previous), &bindings(new, claim));
+            if !added.is_empty() || !removed.is_empty() {
+                changes.push(Change::PatternBindingsChanged {
+                    reference,
+                    added,
+                    removed,
+                });
+            }
+        }
+
+        for claim in old.conformance() {
+            let still_claimed = new
+                .conformance()
+                .any(|current| current.pattern() == claim.pattern());
+            if !still_claimed {
+                changes.push(Change::PatternDropped {
+                    reference: claim.pattern().to_string(),
+                });
+            }
         }
     }
 
@@ -728,5 +829,90 @@ relationships:
         let (added, removed) = difference(&old, &new);
         assert_eq!(added, ["c"]);
         assert_eq!(removed, ["a"]);
+    }
+
+    /// `BASE` plus a conformance claim, optionally binding `store`.
+    fn claiming(reference: &str, bind: Option<&str>) -> Architecture {
+        let binding = bind.map_or_else(String::new, |node| {
+            format!("    bind:\n      store: {node}\n")
+        });
+        parse(&format!(
+            "{BASE}patterns:\n  - pattern: {reference}\n{binding}"
+        ))
+    }
+
+    #[test]
+    fn claiming_a_pattern_is_a_change() {
+        // The fingerprint counts it, so the diff must too, or `casm log` and `casm diff`
+        // would contradict each other.
+        let diff = Diff::compute(&parse(BASE), &claiming("secure-web-tier@1.0.0", None));
+
+        assert_eq!(diff.changes.len(), 1);
+        assert_eq!(
+            diff.changes[0],
+            Change::PatternClaimed {
+                reference: "secure-web-tier@1.0.0".to_owned()
+            }
+        );
+        assert_eq!(diff.changes[0].marker(), '+');
+        assert!(!diff.changes[0].is_breaking());
+    }
+
+    #[test]
+    fn dropping_a_claim_is_breaking() {
+        // It withdraws a guarantee somebody downstream may be relying on.
+        let diff = Diff::compute(&claiming("secure-web-tier@1.0.0", None), &parse(BASE));
+
+        assert_eq!(diff.changes.len(), 1);
+        assert!(diff.changes[0].is_breaking());
+        assert_eq!(diff.changes[0].marker(), '-');
+        assert!(
+            diff.changes[0].to_string().contains("no longer claimed"),
+            "{}",
+            diff.changes[0]
+        );
+    }
+
+    #[test]
+    fn rebinding_a_role_is_reported_without_being_breaking() {
+        let diff = Diff::compute(
+            &claiming("p@1.0.0", Some("api")),
+            &claiming("p@1.0.0", Some("orders-db")),
+        );
+
+        assert_eq!(diff.changes.len(), 1);
+        match &diff.changes[0] {
+            Change::PatternBindingsChanged { added, removed, .. } => {
+                assert_eq!(added, &["store=orders-db"]);
+                assert_eq!(removed, &["store=api"]);
+            }
+            other => panic!("expected PatternBindingsChanged, got {other:?}"),
+        }
+        assert!(!diff.changes[0].is_breaking());
+    }
+
+    #[test]
+    fn an_unchanged_claim_produces_nothing() {
+        let architecture = claiming("p@1.0.0", Some("api"));
+        assert!(Diff::compute(&architecture, &architecture).is_empty());
+    }
+
+    #[test]
+    fn reparsing_a_file_does_not_look_like_a_rebinding() {
+        // Identifiers are regenerated on every parse; bindings are compared by name so
+        // that a reparse is not reported as a change.
+        let first = claiming("p@1.0.0", Some("api"));
+        let second = claiming("p@1.0.0", Some("api"));
+        assert!(Diff::compute(&first, &second).is_empty());
+    }
+
+    #[test]
+    fn a_version_bump_of_a_pattern_is_a_drop_and_a_claim() {
+        // Different references are different claims: 2.0.0 does not silently subsume the
+        // guarantee 1.0.0 made.
+        let diff = Diff::compute(&claiming("p@1.0.0", None), &claiming("p@2.0.0", None));
+
+        assert_eq!(diff.changes.len(), 2, "{:?}", diff.changes);
+        assert!(diff.has_breaking_changes());
     }
 }

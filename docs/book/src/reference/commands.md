@@ -23,7 +23,7 @@ Scaffold a new architecture.
 Run the rule library.
 
 `--format human|json|sarif` · `--strict` · `--allow <rule>` (repeatable) ·
-`--max-critical-path-ms <ms>` · `--min-security-controls <n>`
+`--max-critical-path-ms <ms>` · `--min-security-controls <n>` · `--patterns <dir>`
 
 ## `casm generate [file]`
 
@@ -41,7 +41,14 @@ Semantic diff. Reordering and reformatting produce no output.
 
 Validate every architecture file found, identified by content rather than filename.
 
-`--strict`
+`--strict` · `--patterns <dir>`
+
+## `casm evolve [file]`
+
+Report what the architecture must change to conform to a pattern. Reports; does not
+rewrite.
+
+`--patterns <dir>` (default `patterns`) · `--to <name@version>` · `--strict`
 
 ## `casm fmt [file]`
 

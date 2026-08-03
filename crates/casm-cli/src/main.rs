@@ -72,6 +72,7 @@ fn dispatch(cli: Cli) -> CommandResult {
             allow,
             max_critical_path_ms,
             min_security_controls,
+            patterns,
         } => commands::validate(
             &file,
             format,
@@ -79,6 +80,7 @@ fn dispatch(cli: Cli) -> CommandResult {
             &allow,
             max_critical_path_ms,
             min_security_controls,
+            patterns.as_deref(),
         ),
 
         Command::Generate {
@@ -93,7 +95,18 @@ fn dispatch(cli: Cli) -> CommandResult {
             fail_on_breaking,
         } => commands::diff(&old, &new, fail_on_breaking),
 
-        Command::Check { directory, strict } => commands::check(&directory, strict),
+        Command::Check {
+            directory,
+            strict,
+            patterns,
+        } => commands::check(&directory, strict, patterns.as_deref()),
+
+        Command::Evolve {
+            file,
+            patterns,
+            to,
+            strict,
+        } => commands::evolve(&file, &patterns, to.as_deref(), strict),
 
         Command::Fmt {
             file,

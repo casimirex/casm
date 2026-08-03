@@ -16,8 +16,10 @@
 //! 2. Every node identifier is unique.
 //! 3. Every relationship endpoint resolves to a node in this architecture.
 //! 4. No relationship is duplicated (same source, target, and type).
+//! 5. Every pattern-conformance binding resolves to a node in this architecture.
+//! 6. No pattern is claimed more than once.
 //!
-//! Invariants 3 and 4 cannot be expressed in Rust's type system directly, so they are
+//! Invariants 3 to 6 cannot be expressed in Rust's type system directly, so they are
 //! enforced at every mutation point instead — [`Architecture::add_relationship`] is the
 //! *only* way an edge enters the aggregate, and it checks. Downstream crates
 //! (`casm-validator`, `casm-renderer`) are therefore free of dangling-reference handling
@@ -38,6 +40,7 @@ use crate::error::ArchitectureError;
 use crate::ids::NodeId;
 use crate::names::Name;
 use crate::node::Node;
+use crate::pattern::Conformance;
 use crate::relationship::Relationship;
 
 /// Phase 1 of architecture construction: mutable, possibly-invalid configuration.
@@ -48,6 +51,7 @@ pub struct ArchitectureConfig {
     description: Option<String>,
     nodes: Vec<Node>,
     relationships: Vec<Relationship>,
+    conformance: Vec<Conformance>,
     metadata: BTreeMap<String, String>,
 }
 
@@ -93,6 +97,13 @@ impl ArchitectureConfig {
         self
     }
 
+    /// Stages a claim that this architecture conforms to a pattern.
+    #[must_use]
+    pub fn conformance(mut self, conformance: Conformance) -> Self {
+        self.conformance.push(conformance);
+        self
+    }
+
     /// Attaches an arbitrary key/value annotation.
     #[must_use]
     pub fn metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
@@ -129,6 +140,7 @@ impl ArchitectureConfig {
             description: self.description,
             nodes: IndexMap::with_capacity(self.nodes.len()),
             relationships: Vec::with_capacity(self.relationships.len()),
+            conformance: Vec::with_capacity(self.conformance.len()),
             metadata: self.metadata,
         };
 
@@ -137,6 +149,9 @@ impl ArchitectureConfig {
         }
         for relationship in self.relationships {
             architecture.add_relationship(relationship)?;
+        }
+        for claim in self.conformance {
+            architecture.add_conformance(claim)?;
         }
 
         Ok(architecture)
@@ -184,6 +199,8 @@ pub struct Architecture {
     nodes: IndexMap<NodeId, Node>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     relationships: Vec<Relationship>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    conformance: Vec<Conformance>,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     metadata: BTreeMap<String, String>,
 }
@@ -252,6 +269,18 @@ impl Architecture {
     /// Iterates the relationships in insertion order.
     pub fn relationships(&self) -> impl Iterator<Item = &Relationship> {
         self.relationships.iter()
+    }
+
+    /// Iterates the pattern-conformance claims, in declaration order.
+    pub fn conformance(&self) -> impl Iterator<Item = &Conformance> {
+        self.conformance.iter()
+    }
+
+    /// How many patterns this architecture claims to conform to.
+    #[inline]
+    #[must_use]
+    pub fn conformance_count(&self) -> usize {
+        self.conformance.len()
     }
 
     /// Looks up a node by identifier.
@@ -369,16 +398,87 @@ impl Architecture {
         Ok(())
     }
 
-    /// Removes a node, refusing while any relationship still references it.
+    /// Records a conformance claim, enforcing that its bindings resolve.
     ///
-    /// Refusing is the point: silently cascading the delete would let a single removal
-    /// quietly sever edges the author never inspected.
+    /// A binding to a node that is not present is the same class of defect as a dangling
+    /// edge, and is refused for the same reason: every consumer downstream would
+    /// otherwise have to handle a case that should never have been representable.
     ///
     /// # Errors
     ///
-    /// Returns [`ArchitectureError::NodeStillReferenced`] with the offending edge count.
+    /// - [`ArchitectureError::DanglingBinding`] if a bound node is absent.
+    /// - [`ArchitectureError::DuplicateConformance`] if the same pattern is claimed twice.
+    pub fn add_conformance(&mut self, claim: Conformance) -> Result<(), ArchitectureError> {
+        self.check_conformance(&claim, self.conformance.len())?;
+        self.conformance.push(claim);
+        Ok(())
+    }
+
+    /// Consuming variant of [`Architecture::add_conformance`].
+    ///
+    /// # Errors
+    ///
+    /// As [`Architecture::add_conformance`].
+    pub fn with_conformance(mut self, claim: Conformance) -> Result<Self, ArchitectureError> {
+        self.add_conformance(claim)?;
+        Ok(self)
+    }
+
+    /// Validates one claim against the nodes present and the claims already recorded.
+    ///
+    /// `preceding` bounds the duplicate scan, so the same routine serves both insertion
+    /// (where everything already recorded precedes the new claim) and re-verification
+    /// (where each claim is checked against the ones before it).
+    fn check_conformance(
+        &self,
+        claim: &Conformance,
+        preceding: usize,
+    ) -> Result<(), ArchitectureError> {
+        for (role, id) in claim.bindings() {
+            if !self.nodes.contains_key(id) {
+                return Err(ArchitectureError::DanglingBinding {
+                    pattern: claim.pattern().to_string(),
+                    role: role.as_str().to_owned(),
+                    id: id.to_string(),
+                    architecture: self.name.as_str().to_owned(),
+                });
+            }
+        }
+
+        let claimed_twice = self
+            .conformance
+            .iter()
+            .take(preceding)
+            .any(|earlier| earlier.pattern() == claim.pattern());
+        if claimed_twice {
+            return Err(ArchitectureError::DuplicateConformance {
+                pattern: claim.pattern().to_string(),
+                architecture: self.name.as_str().to_owned(),
+            });
+        }
+
+        Ok(())
+    }
+
+    /// Removes a node, refusing while anything still references it.
+    ///
+    /// Refusing is the point: silently cascading the delete would let a single removal
+    /// quietly sever edges the author never inspected. A conformance binding counts as a
+    /// reference for the same reason — removing the node a pattern role is bound to
+    /// should make the author revisit the claim, not silently invalidate it.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`ArchitectureError::NodeStillReferenced`] with the reference count.
     pub fn remove_node(&mut self, id: NodeId) -> Result<Option<Node>, ArchitectureError> {
-        let references = self.degree(id);
+        let bound = self
+            .conformance
+            .iter()
+            .flat_map(|claim| claim.bindings().values())
+            .filter(|bound| **bound == id)
+            .count();
+
+        let references = self.degree(id) + bound;
         if references > 0 {
             return Err(ArchitectureError::NodeStillReferenced {
                 id: id.to_string(),
@@ -457,6 +557,10 @@ impl Architecture {
             }
         }
 
+        for (index, claim) in self.conformance.iter().enumerate() {
+            self.check_conformance(claim, index)?;
+        }
+
         Ok(())
     }
 
@@ -483,6 +587,7 @@ impl Architecture {
 mod tests {
     use super::*;
     use crate::node::{NodeConfig, NodeType};
+    use crate::pattern::PatternRef;
     use crate::relationship::{RelationshipConfig, RelationshipType};
 
     fn node(name: &str, node_type: NodeType) -> Node {
@@ -810,5 +915,117 @@ mod tests {
 
         assert_eq!(architecture.node_count(), 2);
         assert_eq!(architecture.relationship_count(), 1);
+    }
+
+    #[test]
+    fn a_conformance_claim_is_recorded_in_declaration_order() {
+        let (architecture, api_id, _) = sample();
+        let claim = Conformance::new(PatternRef::parse("secure-web-tier@1.0.0").unwrap())
+            .binding("application", api_id)
+            .unwrap();
+
+        let architecture = architecture.with_conformance(claim).unwrap();
+
+        assert_eq!(architecture.conformance_count(), 1);
+        let recorded = architecture.conformance().next().unwrap();
+        assert_eq!(recorded.pattern().name(), "secure-web-tier");
+        assert_eq!(
+            recorded.bound(&Name::new("application").unwrap()),
+            Some(api_id)
+        );
+    }
+
+    #[test]
+    fn a_binding_to_an_absent_node_is_rejected() {
+        // The conformance equivalent of a dangling edge, and refused for the same reason.
+        let (architecture, _, _) = sample();
+        let orphan = node("elsewhere", NodeType::Service).id();
+
+        let claim = Conformance::new(PatternRef::parse("p@1.0.0").unwrap())
+            .binding("edge", orphan)
+            .unwrap();
+
+        let error = architecture.with_conformance(claim).unwrap_err();
+        assert!(matches!(
+            error,
+            ArchitectureError::DanglingBinding { ref role, .. } if role == "edge"
+        ));
+    }
+
+    #[test]
+    fn the_same_pattern_cannot_be_claimed_twice() {
+        let (architecture, _, _) = sample();
+        let claim = || Conformance::new(PatternRef::parse("p@1.0.0").unwrap());
+
+        let error = architecture
+            .with_conformance(claim())
+            .unwrap()
+            .with_conformance(claim())
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            ArchitectureError::DuplicateConformance { .. }
+        ));
+    }
+
+    #[test]
+    fn two_versions_of_one_pattern_may_both_be_claimed() {
+        // Distinct references, so distinct claims — an architecture mid-migration may
+        // legitimately satisfy both.
+        let (architecture, _, _) = sample();
+        let architecture = architecture
+            .with_conformance(Conformance::new(PatternRef::parse("p@1.0.0").unwrap()))
+            .unwrap()
+            .with_conformance(Conformance::new(PatternRef::parse("p@2.0.0").unwrap()))
+            .unwrap();
+
+        assert_eq!(architecture.conformance_count(), 2);
+    }
+
+    #[test]
+    fn a_bound_node_cannot_be_removed_without_revisiting_the_claim() {
+        let isolated = node("cache", NodeType::Cache);
+        let cache_id = isolated.id();
+        let architecture = ArchitectureConfig::new()
+            .name("x")
+            .node(isolated)
+            .conformance(
+                Conformance::new(PatternRef::parse("p@1.0.0").unwrap())
+                    .binding("store", cache_id)
+                    .unwrap(),
+            )
+            .build()
+            .unwrap();
+
+        let mut architecture = architecture;
+        let error = architecture.remove_node(cache_id).unwrap_err();
+        assert!(matches!(
+            error,
+            ArchitectureError::NodeStillReferenced { count: 1, .. }
+        ));
+    }
+
+    #[test]
+    fn verify_invariants_catches_a_binding_smuggled_in_via_serde() {
+        let (architecture, api_id, _) = sample();
+        let architecture = architecture
+            .with_conformance(
+                Conformance::new(PatternRef::parse("p@1.0.0").unwrap())
+                    .binding("app", api_id)
+                    .unwrap(),
+            )
+            .unwrap();
+
+        let mut json: serde_json::Value =
+            serde_json::from_str(&serde_json::to_string(&architecture).unwrap()).unwrap();
+        json["conformance"][0]["bind"]["app"] =
+            serde_json::Value::String(NodeId::new().to_string());
+
+        let smuggled: Architecture = serde_json::from_value(json).unwrap();
+        assert!(matches!(
+            smuggled.verify_invariants(),
+            Err(ArchitectureError::DanglingBinding { .. })
+        ));
     }
 }

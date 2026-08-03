@@ -17,6 +17,7 @@ with no downsides has not finished thinking.
 | [0009](https://github.com/casimirex/casimir/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
 | [0010](https://github.com/casimirex/casimir/blob/main/docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred |
 | [0011](https://github.com/casimirex/casimir/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md) | What a formal model of an architecture means |
+| [0012](https://github.com/casimirex/casimir/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md) | A pattern is a shape to conform to, not a template to stamp |
 
 ## Engineering rules
 

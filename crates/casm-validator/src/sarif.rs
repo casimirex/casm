@@ -124,6 +124,9 @@ fn logical_locations(subject: &Subject) -> Vec<Value> {
             .iter()
             .map(|name| json!({ "name": name, "kind": "resource" }))
             .collect(),
+        Subject::Pattern { reference } => {
+            vec![json!({ "name": reference, "kind": "namespace" })]
+        }
     }
 }
 

@@ -35,6 +35,11 @@
 //! every node and relationship in full — interfaces, controls, protocols, and latency
 //! budgets. A version bump is a change and will show up, which is correct.
 //!
+//! Conformance claims are included too. Declaring that an architecture conforms to a
+//! pattern is a statement about the architecture, and a commit that adds or rebinds one
+//! is a commit `casm log` should show. Bindings are encoded by node *name*, so they
+//! inherit the identifier exclusion above.
+//!
 //! # Stability
 //!
 //! The encoding is domain-separated and versioned by [`SCHEME`]. Digests are values that
@@ -55,8 +60,9 @@ use std::collections::BTreeMap;
 
 use crate::architecture::Architecture;
 use crate::control::Control;
-use crate::interface::{Interface, SchemaHash};
+use crate::interface::{Interface, Protocol, SchemaHash};
 use crate::node::Node;
+use crate::pattern::{Conformance, Pattern, RequiredRelationship, Requirement};
 use crate::relationship::Relationship;
 
 /// Width of a SHA3-256 digest in bytes.
@@ -66,7 +72,7 @@ const DIGEST_LEN: usize = 32;
 ///
 /// Bump this if the encoding below ever changes, so that a digest computed by an old
 /// release can never be mistaken for one computed by a new release.
-pub const SCHEME: &str = "casm-merkle-v1";
+pub const SCHEME: &str = "casm-merkle-v2";
 
 /// A SHA3-256 digest identifying an architecture, or one part of one.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -291,6 +297,117 @@ pub fn relationship_digest(architecture: &Architecture, edge: &Relationship) -> 
     encoder.finish("relationship")
 }
 
+/// The digest of a single pattern requirement.
+fn requirement_digest(requirement: &Requirement) -> Fingerprint {
+    let mut encoder = Encoder::default();
+    encoder
+        .text(requirement.role().as_str())
+        .text(requirement.node_type().label())
+        .optional(requirement.description())
+        .text(&requirement.min_security_controls().to_string());
+
+    let mut controls: Vec<&str> = requirement
+        .required_control_types()
+        .iter()
+        .map(|control| control.label())
+        .collect();
+    controls.sort_unstable();
+    encoder.text(&controls.len().to_string());
+    for control in controls {
+        encoder.text(control);
+    }
+
+    let mut protocols: Vec<&str> = requirement
+        .required_protocols()
+        .iter()
+        .map(Protocol::label)
+        .collect();
+    protocols.sort_unstable();
+    encoder.text(&protocols.len().to_string());
+    for protocol in protocols {
+        encoder.text(protocol);
+    }
+
+    encoder.finish("requirement")
+}
+
+/// The digest of a single required relationship.
+fn required_relationship_digest(relationship: &RequiredRelationship) -> Fingerprint {
+    Encoder::default()
+        .text(relationship.source().as_str())
+        .text(relationship.target().as_str())
+        .text(relationship.relationship_type().label())
+        .optional(relationship.description())
+        .finish("required-relationship")
+}
+
+/// The content address of a pattern.
+///
+/// Order-independent in the same way and for the same reason as
+/// [`fingerprint`]: two authors who wrote the same requirements in a different order
+/// wrote the same shape, and a registry that treated them as distinct artefacts would be
+/// distributing a distinction without a difference.
+///
+/// `satisfies` and `metadata` are included — a pattern that claims to satisfy SOC2 is a
+/// different compliance artefact from one that does not, even if it checks identically.
+#[must_use]
+pub fn pattern_digest(pattern: &Pattern) -> Fingerprint {
+    let mut encoder = Encoder::default();
+    encoder
+        .text(pattern.name().as_str())
+        .text(&pattern.version().to_string())
+        .optional(pattern.description())
+        .map(pattern.metadata());
+
+    encoder.text(&pattern.requirements().len().to_string());
+    for digest in sorted_digests(pattern.requirements().iter().map(requirement_digest)) {
+        encoder.text(&digest);
+    }
+
+    encoder.text(&pattern.relationships().len().to_string());
+    for digest in sorted_digests(
+        pattern
+            .relationships()
+            .iter()
+            .map(required_relationship_digest),
+    ) {
+        encoder.text(&digest);
+    }
+
+    let mut standards: Vec<&str> = pattern.satisfies().iter().map(String::as_str).collect();
+    standards.sort_unstable();
+    encoder.text(&standards.len().to_string());
+    for standard in standards {
+        encoder.text(standard);
+    }
+
+    encoder.finish("pattern")
+}
+
+/// The digest of a conformance claim, with bound nodes named rather than identified.
+///
+/// Naming rather than identifying is the same choice [`relationship_digest`] makes, and
+/// for the same reason: a `NodeId` is generated, so including one would make the digest
+/// depend on when the file was written rather than on what it says.
+#[must_use]
+pub fn conformance_digest(architecture: &Architecture, claim: &Conformance) -> Fingerprint {
+    let mut encoder = Encoder::default();
+    encoder.text(&claim.pattern().to_string());
+
+    let bindings: BTreeMap<String, String> = claim
+        .bindings()
+        .iter()
+        .map(|(role, id)| {
+            let node = architecture
+                .node(*id)
+                .map_or_else(|| "?".to_owned(), |node| node.name().as_str().to_owned());
+            (role.as_str().to_owned(), node)
+        })
+        .collect();
+
+    encoder.map(&bindings).finish("conformance")
+}
+
 /// Renders digests as hex and sorts them, making the combination order-independent.
 fn sorted_digests(digests: impl Iterator<Item = Fingerprint>) -> Vec<String> {
     let mut rendered: Vec<String> = digests.map(|digest| digest.to_hex()).collect();
@@ -307,6 +424,7 @@ pub struct MerkleTree {
     root: Fingerprint,
     nodes_root: Fingerprint,
     relationships_root: Fingerprint,
+    conformance_root: Fingerprint,
     nodes: BTreeMap<String, Fingerprint>,
     relationships: BTreeMap<String, Fingerprint>,
 }
@@ -332,6 +450,12 @@ impl MerkleTree {
 
         let nodes_root = combine("nodes", nodes.values().copied());
         let relationships_root = combine("relationships", relationships.values().copied());
+        let conformance_root = combine(
+            "conformance",
+            architecture
+                .conformance()
+                .map(|claim| conformance_digest(architecture, claim)),
+        );
 
         let root = Encoder::default()
             .text(SCHEME)
@@ -341,12 +465,14 @@ impl MerkleTree {
             .map(architecture.metadata())
             .text(&nodes_root.to_hex())
             .text(&relationships_root.to_hex())
+            .text(&conformance_root.to_hex())
             .finish("architecture");
 
         Self {
             root,
             nodes_root,
             relationships_root,
+            conformance_root,
             nodes,
             relationships,
         }
@@ -371,6 +497,13 @@ impl MerkleTree {
     #[must_use]
     pub const fn relationships_root(&self) -> Fingerprint {
         self.relationships_root
+    }
+
+    /// The digest covering every conformance claim.
+    #[inline]
+    #[must_use]
+    pub const fn conformance_root(&self) -> Fingerprint {
+        self.conformance_root
     }
 
     /// The digest of one node, by name.
@@ -845,5 +978,59 @@ mod tests {
     fn debug_output_stays_short_enough_for_a_log_line() {
         let digest = fingerprint(&sample(false));
         assert!(format!("{digest:?}").len() < 32);
+    }
+
+    #[test]
+    fn declaring_conformance_changes_the_fingerprint() {
+        // A conformance claim is part of what the architecture asserts about itself, so
+        // the commit that adds one is a commit `casm log` must show.
+        let plain = sample(false);
+        let claiming = sample(false)
+            .with_conformance(Conformance::new(
+                crate::pattern::PatternRef::parse("secure-web-tier@1.0.0").unwrap(),
+            ))
+            .unwrap();
+
+        assert_ne!(fingerprint(&plain), fingerprint(&claiming));
+    }
+
+    #[test]
+    fn a_conformance_digest_names_bound_nodes_rather_than_identifying_them() {
+        // Two architectures that differ only by generated identifiers are the same
+        // architecture, claims included — otherwise re-parsing a file would change its
+        // fingerprint, which is the whole failure the digest exists to avoid.
+        let claim = |architecture: &Architecture| {
+            let api = architecture.node_by_name("api").unwrap().id();
+            Conformance::new(crate::pattern::PatternRef::parse("p@1.0.0").unwrap())
+                .binding("application", api)
+                .unwrap()
+        };
+
+        let first = sample(false);
+        let first = first.clone().with_conformance(claim(&first)).unwrap();
+        let second = sample(true);
+        let second = second.clone().with_conformance(claim(&second)).unwrap();
+
+        assert_eq!(fingerprint(&first), fingerprint(&second));
+    }
+
+    #[test]
+    fn rebinding_a_role_changes_the_fingerprint() {
+        let architecture = sample(false);
+        let reference = crate::pattern::PatternRef::parse("p@1.0.0").unwrap();
+
+        let bound_to = |name: &str| {
+            let id = architecture.node_by_name(name).unwrap().id();
+            architecture
+                .clone()
+                .with_conformance(
+                    Conformance::new(reference.clone())
+                        .binding("store", id)
+                        .unwrap(),
+                )
+                .unwrap()
+        };
+
+        assert_ne!(fingerprint(&bound_to("api")), fingerprint(&bound_to("db")));
     }
 }

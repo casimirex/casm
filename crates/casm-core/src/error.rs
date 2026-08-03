@@ -269,12 +269,106 @@ pub enum ArchitectureError {
     },
 
     /// A node could not be removed because relationships still point at it.
-    #[error("cannot remove node '{id}': {count} relationship(s) still reference it")]
+    #[error("cannot remove node '{id}': {count} reference(s) still point at it")]
     NodeStillReferenced {
         /// The node that could not be removed.
         id: String,
-        /// How many edges still reference it.
+        /// How many edges and conformance bindings still reference it.
         count: usize,
+    },
+
+    /// A conformance binding named a node that is not in the architecture.
+    #[error(
+        "pattern '{pattern}' binds role '{role}' to node '{id}', which does not exist \
+         in architecture '{architecture}'"
+    )]
+    DanglingBinding {
+        /// The pattern whose binding dangled.
+        pattern: String,
+        /// The role that was bound.
+        role: String,
+        /// The unresolvable node identifier.
+        id: String,
+        /// The architecture in which the dangle occurred.
+        architecture: String,
+    },
+
+    /// The same pattern was claimed twice.
+    ///
+    /// Invariant: a claim is a statement about the architecture, and stating it twice
+    /// either means nothing or means the author expected two different bindings — which
+    /// this model cannot express, so it is refused rather than half-honoured.
+    #[error("architecture '{architecture}' claims conformance to '{pattern}' more than once")]
+    DuplicateConformance {
+        /// The pattern claimed twice.
+        pattern: String,
+        /// The architecture in which the collision occurred.
+        architecture: String,
+    },
+}
+
+/// Failures arising from [`crate::Pattern`] construction.
+#[derive(Error, Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum PatternError {
+    /// A pattern or role name failed validation.
+    #[error("invalid pattern name: {0}")]
+    Name(#[from] NameError),
+
+    /// A required field was absent when `build()` was called.
+    #[error("pattern is missing required field '{field}'")]
+    MissingField {
+        /// The absent field.
+        field: &'static str,
+    },
+
+    /// The pattern version was not valid Semantic Versioning.
+    #[error("pattern version '{version}' is not valid semantic versioning: {reason}")]
+    InvalidVersion {
+        /// The rejected version string.
+        version: String,
+        /// Underlying parser message.
+        reason: String,
+    },
+
+    /// Two requirements claimed the same role.
+    ///
+    /// Invariant: a role names exactly one position in the shape. Two requirements for
+    /// one role have no coherent meaning — neither "both must hold" nor "either may"
+    /// is what an author writing the second one intended.
+    #[error("role '{role}' is required twice in the same pattern")]
+    DuplicateRole {
+        /// The duplicated role.
+        role: String,
+    },
+
+    /// A required relationship named a role the pattern does not declare.
+    ///
+    /// The pattern-level equivalent of
+    /// [`ArchitectureError::DanglingReference`], refused at construction so that
+    /// conformance checking never meets one.
+    #[error("relationship references {endpoint} role '{role}', which the pattern does not require")]
+    UnknownRole {
+        /// Which end dangled: `"source"` or `"target"`.
+        endpoint: &'static str,
+        /// The undeclared role.
+        role: String,
+    },
+
+    /// A required relationship connected a role to itself.
+    #[error("role '{role}' cannot have a required relationship to itself")]
+    SelfRelationship {
+        /// The role on both ends.
+        role: String,
+    },
+
+    /// A `name@version` reference could not be parsed.
+    #[error("'{reference}' is not a valid pattern reference: {reason}")]
+    MalformedReference {
+        /// The rejected reference.
+        reference: String,
+        /// Why it was rejected.
+        reason: String,
     },
 }
 
@@ -312,6 +406,10 @@ pub enum CoreError {
     /// An architecture invariant was violated.
     #[error(transparent)]
     Architecture(#[from] ArchitectureError),
+
+    /// A pattern invariant was violated.
+    #[error(transparent)]
+    Pattern(#[from] PatternError),
 }
 
 /// The canonical result type of the CASIMIR domain layer.
