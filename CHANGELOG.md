@@ -7,6 +7,8 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-08-03
+
 ### Added
 
 - **Release engineering.** Tagged builds produce signed, checksummed binaries for Linux
@@ -19,9 +21,7 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 - **Documentation site.** An mdBook structured on Diátaxis, embedding the WebAssembly
   playground so examples are executable rather than illustrative.
 
-## [0.1.0] — 2026-08-03
-
-First working release. Roadmap phases 0–6, 8, 9 (formal bridge), and 10.
+First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
 
 ### Added
 
@@ -51,6 +51,14 @@ First working release. Roadmap phases 0–6, 8, 9 (formal bridge), and 10.
 - **Formal verification bridge** (`casm-formal`). TLA+ for failure propagation over time,
   Alloy for static structure. CI runs TLC and Alloy against the generated specifications
   and asserts they fail on an architecture that violates them.
+
+### Fixed
+
+- CI had been failing on every push since the first commit: clippy was being run locally on
+  nightly while CI uses stable (the two disagree on `doc_markdown` and on which lints
+  exist), `cargo-deny` rejected the MIT-0 licence reached through `gix`, and Miri never
+  completed because its isolation blocks `proptest` and 256 cases per property is
+  disproportionate under a 100× slowdown.
 
 ### Known limitations
 
