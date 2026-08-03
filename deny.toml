@@ -1,0 +1,42 @@
+# cargo-deny configuration — supply chain gates for CASIMIR.
+#
+# Rationale: a dependency is code you did not write running with your privileges.
+# These gates make adding one a deliberate act rather than an accident.
+
+[graph]
+all-features = true
+
+[advisories]
+# Any unpatched advisory fails the build. There is no "we'll get to it" tier.
+yanked = "deny"
+ignore = []
+
+[licenses]
+# Permissive licences only. A copyleft dependency would silently impose its terms on
+# every downstream consumer of an Apache-2.0 tool.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "MIT",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "Zlib",
+    "CC0-1.0",
+    "MPL-2.0",
+]
+confidence-threshold = 0.9
+
+[bans]
+# Duplicate major versions of the same crate bloat the binary and, worse, mean two
+# incompatible copies of a type can coexist. Warn rather than deny: the transitive
+# graph is not always ours to fix.
+multiple-versions = "warn"
+wildcards = "deny"
+highlight = "all"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

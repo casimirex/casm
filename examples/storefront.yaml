@@ -1,0 +1,164 @@
+# A complete, warning-free CASIMIR architecture.
+#
+# CI runs `casm check examples --strict` against this file, so it doubles as an
+# executable specification of what "clean" means: every service carries two security
+# controls, every datastore carries at least one, every synchronously-called node
+# declares its contract, and the edge crossing the trust boundary is governed.
+#
+#   casm validate examples/storefront.yaml
+#   casm generate examples/storefront.yaml --format mermaid
+
+name: storefront
+version: 1.4.0
+description: Order capture and settlement for the public storefront.
+
+metadata:
+  owner: platform-team
+  tier: "1"
+
+nodes:
+  - name: customer
+    type: human
+    description: A member of the public placing an order.
+
+  - name: edge-gateway
+    type: gateway
+    description: TLS termination, authentication, and rate limiting.
+    interfaces:
+      - name: public-api
+        protocol: http2
+        version: 2.1.0
+        description: The public REST surface.
+    controls:
+      - type: security
+        standard: OIDC-Core-1.0
+        description: Every request carries an OIDC token validated against the issuer JWKS.
+        evidence-required: true
+        tags: [authentication]
+      - type: security
+        standard: TLS1.3
+        description: TLS 1.3 terminated at the edge; earlier versions are refused.
+        tags: [transport]
+      - type: operational
+        standard: RATE-LIMIT
+        description: 1000 requests per minute per authenticated subject.
+
+  - name: orders
+    type: service
+    description: Owns the order lifecycle from capture to fulfilment.
+    interfaces:
+      - name: grpc
+        protocol: grpc
+        version: 3.2.0
+        description: Internal order management API.
+    controls:
+      - type: security
+        standard: mTLS
+        description: Mutual TLS required for all inbound connections.
+        tags: [transport]
+      - type: security
+        standard: RBAC
+        description: Callers must present the orders.write scope to mutate an order.
+        evidence-required: true
+        tags: [authorisation]
+
+  - name: payments
+    type: service
+    description: Authorises and captures card payments.
+    interfaces:
+      - name: grpc
+        protocol: grpc
+        version: 1.8.0
+    controls:
+      - type: security
+        standard: mTLS
+        description: Mutual TLS required for all inbound connections.
+        tags: [transport]
+      - type: compliance
+        standard: PCI-DSS-3.4
+        description: Primary account numbers are tokenised and never persisted in the clear.
+        evidence-required: true
+        tags: [pci-dss]
+      - type: security
+        standard: RBAC
+        description: Only the orders service may request a capture.
+        tags: [authorisation]
+
+  - name: orders-db
+    type: database
+    description: Durable, point-in-time-recoverable order storage.
+    interfaces:
+      - name: sql
+        protocol: sql
+        version: 16.0.0
+        description: PostgreSQL 16 wire protocol.
+    controls:
+      - type: security
+        standard: ENC-AT-REST
+        description: AES-256-GCM encryption at rest with keys held in the managed KMS.
+        evidence-required: true
+      - type: operational
+        standard: PITR-35D
+        description: Point-in-time recovery retained for 35 days, restore-tested quarterly.
+      - type: data-governance
+        standard: GDPR-Art17
+        description: Erasure requests are satisfied within 30 days.
+        evidence-required: true
+
+  - name: order-events
+    type: queue
+    description: Durable log of order lifecycle events.
+    interfaces:
+      - name: kafka
+        protocol: kafka
+        version: 3.7.0
+    controls:
+      - type: operational
+        standard: RETENTION-7D
+        description: Events are retained for seven days with three-way replication.
+
+relationships:
+  - source: customer
+    target: edge-gateway
+    type: sync
+    protocol: http2
+    description: Browser and mobile traffic.
+    latency-budget-ms: 20
+    controls:
+      - type: security
+        standard: TLS1.3
+        description: Public traffic is encrypted in transit with TLS 1.3.
+        tags: [transport]
+
+  - source: edge-gateway
+    target: orders
+    type: sync
+    protocol: grpc
+    latency-budget-ms: 120
+
+  - source: edge-gateway
+    target: payments
+    type: sync
+    protocol: grpc
+    latency-budget-ms: 200
+
+  - source: orders
+    target: orders-db
+    type: sync
+    protocol: sql
+    description: Order reads and writes.
+    latency-budget-ms: 40
+
+  # Deliberately asynchronous. Making this hop blocking would put payments on the
+  # customer-facing critical path and create a sync cycle with the orders service.
+  - source: orders
+    target: order-events
+    type: async
+    protocol: kafka
+    description: Publishes order-placed and order-cancelled events.
+
+  - source: payments
+    target: order-events
+    type: event-driven
+    protocol: kafka
+    description: Consumes order-placed to trigger authorisation.

@@ -1,0 +1,74 @@
+[workspace]
+resolver = "3"
+members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+authors = ["CASIMIR Engineering <engineering@casm.io>"]
+repository = "https://github.com/casimirex/casimir"
+homepage = "https://github.com/casimirex/casimir"
+description = "CASIMIR — a NASA-grade, Rust-native Architecture-as-Code platform"
+keywords = ["architecture", "architecture-as-code", "validation", "c4", "calm"]
+categories = ["development-tools", "command-line-utilities"]
+
+[workspace.dependencies]
+casm-core = { path = "crates/casm-core", version = "0.1.0" }
+casm-spec = { path = "crates/casm-spec", version = "0.1.0" }
+casm-parser = { path = "crates/casm-parser", version = "0.1.0" }
+casm-validator = { path = "crates/casm-validator", version = "0.1.0" }
+casm-renderer = { path = "crates/casm-renderer", version = "0.1.0" }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml_ng = "0.10"
+toml = "0.9"
+thiserror = "2.0"
+uuid = { version = "1", features = ["v7", "serde", "std"] }
+semver = { version = "1.0", features = ["serde"] }
+sha3 = "0.10"
+petgraph = "0.8"
+indexmap = { version = "2", features = ["serde"] }
+clap = { version = "4", features = ["derive", "wrap_help"] }
+schemars = "1"
+proptest = "1"
+
+# NASA Rule 8: deterministic, reproducible builds. Optimise for auditability.
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+[profile.dev]
+# Overflow checks stay on: silent wraparound is an unacceptable failure mode.
+overflow-checks = true
+debug-assertions = true
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[workspace.lints.clippy]
+# NASA Rule 3: no panics in library code.
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+indexing_slicing = "warn"
+# NASA Rule 2: bounded complexity.
+cognitive_complexity = "warn"
+too_many_lines = "warn"
+# General rigour.
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+# `node_type`, `control_type`, `relationship_type` mirror the domain vocabulary
+# and the serialised schema. Renaming them to satisfy a lint would make the code
+# read less like the spec it implements.
+struct_field_names = "allow"

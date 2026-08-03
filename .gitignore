@@ -1,0 +1,22 @@
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Rust
+/target
+**/*.rs.bk
+Cargo.lock.bak
+
+# Editors and local tooling
+.idea/
+.vscode/
+.claude/
+*.swp
+.DS_Store
+
+# CASIMIR generated output
+/out
+*.casm.gen/
