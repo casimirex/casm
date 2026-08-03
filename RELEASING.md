@@ -31,6 +31,11 @@ $ sha256sum -c SHA256SUMS
 $ gh attestation verify casm-0.2.0-x86_64-unknown-linux-gnu.tar.gz --repo casimirex/casimir
 ```
 
+**Attestations need a public repository.** GitHub does not offer them for user-owned
+private repositories, so the step is guarded on visibility and skipped here — the first
+release run failed on exactly this before it was guarded. Checksums ship either way, and
+provenance resumes by itself if the repository is made public.
+
 ## Publishing to crates.io
 
 Not yet done. Two things are worth knowing before the first publish.

@@ -9,6 +9,8 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [0.1.0] — 2026-08-03
 
+First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
+
 ### Added
 
 - **Release engineering.** Tagged builds produce signed, checksummed binaries for Linux
@@ -20,11 +22,6 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   the editor analysis, and the emit/parse round trip. CI runs a short campaign on each.
 - **Documentation site.** An mdBook structured on Diátaxis, embedding the WebAssembly
   playground so examples are executable rather than illustrative.
-
-First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
-
-### Added
-
 - **Domain model** (`casm-core`). Entities whose invariants hold by construction: a value
   that exists is a value that is valid. Names, `UUIDv7` identifiers, interfaces, controls,
   nodes, relationships, and the `Architecture` aggregate.

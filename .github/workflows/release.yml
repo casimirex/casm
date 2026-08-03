@@ -156,9 +156,21 @@ jobs:
 
       # Build provenance, signed by GitHub's OIDC identity. Cheaper and harder to get
       # wrong than a GPG key somebody has to hold, and verifiable with `gh attestation`.
+      #
+      # Unavailable for a user-owned private repository, so guarded on visibility rather
+      # than left to fail the whole publish. Checksums still ship; attestation resumes by
+      # itself if the repository is made public.
       - uses: actions/attest-build-provenance@v1
+        if: github.event.repository.private == false
         with:
           subject-path: "dist/*.tar.gz, dist/*.zip"
+
+      - name: note why provenance was skipped
+        if: github.event.repository.private != false
+        run: |
+          echo "Build-provenance attestation was skipped." >> "$GITHUB_STEP_SUMMARY"
+          echo "GitHub requires a public repository for user-owned attestations." >> "$GITHUB_STEP_SUMMARY"
+          echo "Archives still carry SHA-256 checksums in SHA256SUMS." >> "$GITHUB_STEP_SUMMARY"
 
       - uses: softprops/action-gh-release@v2
         with:
@@ -171,7 +183,13 @@ jobs:
             cargo install casm-cli casm-lsp
             ```
 
-            Verify a download against `SHA256SUMS`, and its provenance with:
+            Verify a download against `SHA256SUMS`:
+
+            ```console
+            sha256sum -c SHA256SUMS
+            ```
+
+            Public releases additionally carry build provenance:
 
             ```console
             gh attestation verify <archive> --repo ${{ github.repository }}
