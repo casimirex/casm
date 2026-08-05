@@ -1,0 +1,21 @@
+--- crates/casm-core/src/node.rs
++++ replace <impl fmt::Display for NodeType>::fmt -> fmt::Result with Ok(Default::default())
+@@ -97,17 +97,17 @@
+             | Self::Legacy
+             | Self::Boundary => false,
+         }
+     }
+ }
+ 
+ impl fmt::Display for NodeType {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(self.label())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Phase 1 of node construction: mutable configuration that may still be invalid.
+ ///
+ /// See [`Node`] for the validated phase-2 counterpart.
+ #[derive(Clone, Debug, Default)]
+ pub struct NodeConfig {

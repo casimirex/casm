@@ -26,323 +26,342 @@
 
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-core@0.3.0
-       Fresh libc v0.2.189
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
        Fresh cfg-if v1.0.4
-       Fresh unicode-ident v1.0.24
        Fresh version_check v0.9.5
+       Fresh unicode-ident v1.0.24
+       Fresh libc v0.2.189
        Fresh typenum v1.20.1
        Fresh proc-macro2 v1.0.107
        Fresh serde_core v1.0.229
-       Fresh getrandom v0.4.3
        Fresh getrandom v0.3.4
+       Fresh getrandom v0.4.3
+       Fresh bitflags v2.13.1
        Fresh linux-raw-sys v0.12.1
        Fresh quote v1.0.47
        Fresh generic-array v0.14.7
        Fresh rand_core v0.9.5
        Fresh autocfg v1.5.1
-       Fresh bitflags v2.13.1
        Fresh zerocopy v0.8.55
        Fresh once_cell v1.21.4
        Fresh syn v3.0.3
        Fresh crypto-common v0.1.7
-       Fresh rustix v1.1.4
        Fresh block-buffer v0.10.4
+       Fresh rustix v1.1.4
        Fresh fastrand v2.5.0
+       Fresh ppv-lite86 v0.2.21
+       Fresh thiserror-impl v2.0.19
        Fresh tempfile v3.27.0
        Fresh digest v0.10.7
-       Fresh thiserror-impl v2.0.19
        Fresh serde_derive v1.0.229
-       Fresh ppv-lite86 v0.2.21
        Fresh wait-timeout v0.2.1
+       Fresh hashbrown v0.17.1
        Fresh quick-error v1.2.3
        Fresh equivalent v1.0.2
-       Fresh bit-vec v0.8.0
-       Fresh hashbrown v0.17.1
        Fresh keccak v0.1.6
+       Fresh bit-vec v0.8.0
        Fresh fnv v1.0.7
-       Fresh sha3 v0.10.9
-       Fresh bit-set v0.8.0
-       Fresh indexmap v2.14.0
-       Fresh serde v1.0.229
-       Fresh rand_chacha v0.9.0
        Fresh num-traits v0.2.19
-       Fresh rusty-fork v0.3.1
-       Fresh zmij v1.0.23
+       Fresh serde v1.0.229
        Fresh thiserror v2.0.19
+       Fresh sha3 v0.10.9
+       Fresh rusty-fork v0.3.1
+       Fresh indexmap v2.14.0
+       Fresh bit-set v0.8.0
+       Fresh rand_chacha v0.9.0
+       Fresh zmij v1.0.23
        Fresh rand v0.9.5
        Fresh rand_xorshift v0.4.0
-       Fresh semver v1.0.28
        Fresh uuid v1.24.0
+       Fresh semver v1.0.28
+       Fresh itoa v1.0.18
        Fresh unarray v0.1.4
        Fresh regex-syntax v0.8.11
        Fresh memchr v2.8.3
-       Fresh itoa v1.0.18
-       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core): the file `crates/casm-core/src/relationship.rs` has changed (1785933993.830690209s, 4s after last build at 1785933989.607939728s)
-   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core)
        Fresh proptest v1.11.0
        Fresh serde_json v1.0.151
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.10s
-  Executable `/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-dwRvdI.tmp/crates/casm-core): the file `crates/casm-core/src/relationship.rs` has changed (1785940365.242743002s, 3s after last build at 1785940362.026762540s)
+   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-dwRvdI.tmp/crates/casm-core)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.24s
+  Executable `/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
 *** result: Success
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-core@0.3.0
     Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
-       Fresh libc v0.2.189
        Fresh cfg-if v1.0.4
        Fresh unicode-ident v1.0.24
+       Fresh libc v0.2.189
        Fresh version_check v0.9.5
        Fresh proc-macro2 v1.0.107
        Fresh quote v1.0.47
        Fresh serde_core v1.0.229
        Fresh typenum v1.20.1
+       Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.1
        Fresh generic-array v0.14.7
-       Fresh syn v3.0.3
        Fresh getrandom v0.3.4
        Fresh getrandom v0.4.3
-       Fresh rand_core v0.9.5
-       Fresh autocfg v1.5.1
+       Fresh syn v3.0.3
        Fresh linux-raw-sys v0.12.1
-       Fresh bitflags v2.13.1
-       Fresh rustix v1.1.4
-       Fresh zerocopy v0.8.55
-       Fresh crypto-common v0.1.7
-       Fresh block-buffer v0.10.4
        Fresh once_cell v1.21.4
+       Fresh rand_core v0.9.5
+       Fresh zerocopy v0.8.55
+       Fresh block-buffer v0.10.4
+       Fresh rustix v1.1.4
+       Fresh crypto-common v0.1.7
        Fresh fastrand v2.5.0
-       Fresh tempfile v3.27.0
-       Fresh digest v0.10.7
        Fresh ppv-lite86 v0.2.21
+       Fresh digest v0.10.7
+       Fresh tempfile v3.27.0
        Fresh serde_derive v1.0.229
        Fresh thiserror-impl v2.0.19
        Fresh wait-timeout v0.2.1
        Fresh hashbrown v0.17.1
-       Fresh quick-error v1.2.3
-       Fresh keccak v0.1.6
-       Fresh bit-vec v0.8.0
-       Fresh equivalent v1.0.2
        Fresh fnv v1.0.7
+       Fresh bit-vec v0.8.0
+       Fresh keccak v0.1.6
+       Fresh quick-error v1.2.3
+       Fresh equivalent v1.0.2
+       Fresh thiserror v2.0.19
        Fresh rusty-fork v0.3.1
+       Fresh sha3 v0.10.9
        Fresh indexmap v2.14.0
        Fresh bit-set v0.8.0
-       Fresh sha3 v0.10.9
-       Fresh thiserror v2.0.19
        Fresh serde v1.0.229
+       Fresh zmij v1.0.23
        Fresh num-traits v0.2.19
        Fresh rand_chacha v0.9.0
-       Fresh zmij v1.0.23
        Fresh rand_xorshift v0.4.0
        Fresh rand v0.9.5
        Fresh uuid v1.24.0
        Fresh semver v1.0.28
        Fresh unarray v0.1.4
+       Fresh itoa v1.0.18
        Fresh memchr v2.8.3
        Fresh regex-syntax v0.8.11
-       Fresh itoa v1.0.18
        Fresh serde_json v1.0.151
        Fresh proptest v1.11.0
-       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
-     Running `/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-dwRvdI.tmp/crates/casm-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.34s
+     Running `/tmp/cargo-mutants-casm-dwRvdI.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
-running 188 tests
-test architecture::tests::build_applies_sensible_defaults ... ok
-test architecture::tests::a_dangling_source_is_rejected_and_named_as_such ... ok
-test architecture::tests::build_rejects_a_non_semver_version ... ok
-test architecture::tests::build_resolves_edges_declared_before_their_nodes ... ok
+running 205 tests
 test architecture::tests::an_identical_relationship_is_rejected ... ok
-test architecture::tests::degree_counts_both_directions ... ok
-test architecture::tests::duplicate_node_ids_are_rejected ... ok
-test architecture::tests::incoming_and_outgoing_partition_the_edges ... ok
-test architecture::tests::a_dangling_target_is_rejected_and_named_as_such ... ok
-test architecture::tests::a_conformance_claim_is_recorded_in_declaration_order ... ok
 test architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim ... ok
+test architecture::tests::a_conformance_claim_is_recorded_in_declaration_order ... ok
+test architecture::tests::a_dangling_source_is_rejected_and_named_as_such ... ok
 test architecture::tests::architecture_round_trips_through_json ... ok
-test architecture::tests::consuming_builders_compose ... ok
 test architecture::tests::a_binding_to_an_absent_node_is_rejected ... ok
+test architecture::tests::an_architecture_reports_what_it_was_built_with ... ok
+test architecture::tests::a_dangling_target_is_rejected_and_named_as_such ... ok
+test architecture::tests::build_applies_sensible_defaults ... ok
+test architecture::tests::build_resolves_edges_declared_before_their_nodes ... ok
+test architecture::tests::degree_counts_both_directions ... ok
 test architecture::tests::duplicate_node_names_are_rejected ... ok
-test architecture::tests::node_iteration_order_is_stable_across_runs ... ok
+test architecture::tests::build_rejects_a_non_semver_version ... ok
+test architecture::tests::consuming_builders_compose ... ok
+test architecture::tests::duplicate_node_ids_are_rejected ... ok
+test architecture::tests::isolated_nodes_are_identified ... ok
 test architecture::tests::removing_a_referenced_node_is_refused_with_a_count ... ok
 test architecture::tests::removing_an_absent_node_is_not_an_error ... ok
-test architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde ... ok
-test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... ok
-test architecture::tests::verify_invariants_passes_on_a_constructed_architecture ... ok
+test architecture::tests::incoming_and_outgoing_partition_the_edges ... ok
 test architecture::tests::removing_an_unreferenced_node_succeeds ... ok
-test conformance::tests::a_conforming_architecture_reports_nothing_unmet ... ok
-test conformance::tests::a_missing_control_type_is_reported ... ok
-test architecture::tests::isolated_nodes_are_identified ... ok
-test architecture::tests::lookup_works_by_id_and_by_name ... ok
-test architecture::tests::two_versions_of_one_pattern_may_both_be_claimed ... ok
-test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... ok
 test architecture::tests::the_same_pair_may_be_connected_with_different_semantics ... ok
 test architecture::tests::the_same_pattern_cannot_be_claimed_twice ... ok
-test conformance::tests::a_vacuous_pattern_is_satisfied_by_anything ... ok
-test conformance::tests::an_explicit_binding_resolves_the_ambiguity ... ok
-test conformance::tests::an_unfillable_role_does_not_also_report_its_relationships ... ok
-test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... ok
-test conformance::tests::checking_is_deterministic ... ok
-test conformance::tests::a_missing_protocol_is_reported ... ok
-test conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision ... ok
-test conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at ... ok
+test architecture::tests::two_versions_of_one_pattern_may_both_be_claimed ... ok
+test architecture::tests::lookup_works_by_id_and_by_name ... ok
 test conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound ... ok
-test control::tests::auditability_is_classified_per_control_type ... ok
-test conformance::tests::relationship_direction_matters ... ok
-test conformance::tests::too_few_security_controls_is_reported_with_both_counts ... ok
-test control::tests::control_round_trips_through_json ... ok
-test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... ok
-test conformance::tests::every_unmet_variant_renders_a_message_naming_its_role ... ok
-test control::tests::evidence_is_not_required_by_default ... ok
-test control::tests::has_tag_matches_exactly ... ok
-test control::tests::rejects_a_blank_standard ... ok
-test control::tests::requiring_evidence_sets_the_flag ... ok
-test control::tests::tags_are_deduplicated ... ok
-test error::tests::core_error_flattens_nested_sources ... ok
-test control::tests::control_type_serialises_as_kebab_case ... ok
+test architecture::tests::node_iteration_order_is_stable_across_runs ... ok
+test conformance::tests::a_conforming_architecture_reports_nothing_unmet ... ok
+test architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one ... ok
+test architecture::tests::verify_invariants_passes_on_a_constructed_architecture ... ok
 test conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes ... ok
+test conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at ... ok
+test conformance::tests::a_missing_control_type_is_reported ... ok
+test architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde ... ok
+test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... ok
+test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... ok
+test conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision ... ok
+test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... ok
+test conformance::tests::a_missing_protocol_is_reported ... ok
+test conformance::tests::checking_is_deterministic ... ok
+test conformance::tests::every_unmet_variant_renders_a_message_naming_its_role ... ok
+test conformance::tests::relationship_direction_matters ... ok
+test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... ok
+test conformance::tests::too_few_security_controls_is_reported_with_both_counts ... ok
+test control::tests::auditability_is_classified_per_control_type ... ok
+test control::tests::a_control_returns_the_standard_and_description_it_was_built_with ... ok
+test conformance::tests::a_vacuous_pattern_is_satisfied_by_anything ... ok
+test control::tests::control_type_serialises_as_kebab_case ... ok
+test control::tests::control_round_trips_through_json ... ok
+test control::tests::every_control_type_renders_its_own_label ... ok
+test conformance::tests::an_explicit_binding_resolves_the_ambiguity ... ok
 test control::tests::rejects_a_blank_description ... ok
-test hex::tests::decoding_accepts_an_algorithm_prefix ... ok
-test hex::tests::decoding_accepts_uppercase_digits ... ok
-test hex::tests::decoding_is_total_on_arbitrary_input ... ok
-test error::tests::errors_render_actionable_messages ... ok
-test hex::tests::decoding_rejects_the_wrong_length_and_says_what_it_wanted ... ok
+test control::tests::has_tag_matches_exactly ... ok
+test control::tests::evidence_is_not_required_by_default ... ok
+test control::tests::tags_are_deduplicated ... ok
+test control::tests::rejects_a_blank_standard ... ok
+test conformance::tests::an_unfillable_role_does_not_also_report_its_relationships ... ok
 test error::tests::errors_are_comparable_for_exact_assertions ... ok
-test hex::tests::decoding_round_trips_with_encoding ... ok
-test ids::tests::display_uses_canonical_hyphenated_form ... ok
-test ids::tests::generated_ids_are_unique ... ok
-test ids::tests::generated_ids_are_version_seven ... ok
+test hex::tests::decoding_is_total_on_arbitrary_input ... ok
+test control::tests::requiring_evidence_sets_the_flag ... ok
 test hex::tests::decoding_rejects_non_hexadecimal_input ... ok
-test hex::tests::encoding_is_lowercase ... ok
+test error::tests::core_error_flattens_nested_sources ... ok
+test error::tests::errors_render_actionable_messages ... ok
+test hex::tests::decoding_accepts_an_algorithm_prefix ... ok
+test hex::tests::decoding_rejects_the_wrong_length_and_says_what_it_wanted ... ok
+test hex::tests::decoding_round_trips_with_encoding ... ok
+test hex::tests::encoding_pads_every_byte_to_two_digits ... ok
+test ids::tests::generated_ids_are_unique ... ok
+test ids::tests::deserialisation_rejects_wrong_version ... ok
+test ids::tests::display_uses_canonical_hyphenated_form ... ok
+test ids::tests::generated_ids_are_version_seven ... ok
 test ids::tests::ids_sort_chronologically ... ok
 test ids::tests::parse_rejects_malformed_input ... ok
-test ids::tests::parse_rejects_version_four_uuids ... ok
 test ids::tests::parse_rejects_the_nil_uuid ... ok
 test ids::tests::serde_round_trips_through_json ... ok
-test interface::tests::compatibility_requires_matching_major_version ... ok
-test ids::tests::timestamp_is_recoverable_and_plausible ... ok
-test hex::tests::encoding_pads_every_byte_to_two_digits ... ok
-test interface::tests::compatibility_requires_matching_protocol ... ok
-test ids::tests::deserialisation_rejects_wrong_version ... ok
-test interface::tests::compatibility_allows_a_forward_minor_version ... ok
+test ids::tests::the_delegating_conversions_validate_as_parse_does ... ok
+test hex::tests::decoding_accepts_uppercase_digits ... ok
+test interface::tests::a_custom_protocol_is_accepted_when_its_label_is_not_blank ... ok
+test interface::tests::an_interfaces_description_is_returned_as_written ... ok
 test interface::tests::compatibility_rejects_a_backward_minor_version ... ok
+test interface::tests::compatibility_requires_matching_major_version ... ok
+test interface::tests::compatibility_requires_matching_protocol ... ok
+test ids::tests::parse_rejects_version_four_uuids ... ok
+test ids::tests::the_embedded_timestamp_is_milliseconds_not_some_other_unit ... ok
+test ids::tests::timestamp_is_recoverable_and_plausible ... ok
+test interface::tests::compatibility_allows_a_forward_minor_version ... ok
+test hex::tests::encoding_is_lowercase ... ok
 test interface::tests::interface_rejects_an_empty_custom_protocol ... ok
+test interface::tests::interface_rejects_unknown_fields ... ok
 test interface::tests::interface_rejects_a_non_semver_version ... ok
 test interface::tests::protocols_are_classified_by_synchrony ... ok
-test interface::tests::interface_rejects_unknown_fields ... ok
 test interface::tests::schema_hash_debug_is_abbreviated_not_full ... ok
-test interface::tests::schema_hash_changes_with_a_single_byte ... ok
-test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
 test interface::tests::interface_round_trips_through_json ... ok
-test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
-test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
-test merkle::tests::a_node_digest_never_collides_with_a_control_digest ... ok
-test interface::tests::schema_hash_is_deterministic_across_calls ... ok
-test interface::tests::schema_hash_round_trips_through_hex ... ok
 test interface::tests::schema_hash_matches_the_published_sha3_256_vector ... ok
+test interface::tests::schema_hash_is_deterministic_across_calls ... ok
+test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
+test interface::tests::schema_hash_round_trips_through_hex ... ok
+test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
+test interface::tests::protocols_and_hashes_render_the_text_they_are_read_back_from ... ok
+test interface::tests::schema_hash_changes_with_a_single_byte ... ok
+test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
 test merkle::tests::a_changed_latency_budget_changes_the_fingerprint ... ok
-test merkle::tests::an_absent_description_differs_from_an_empty_one ... ok
+test merkle::tests::a_node_digest_never_collides_with_a_control_digest ... ok
 test merkle::tests::a_renamed_node_changes_the_fingerprint ... ok
-test merkle::tests::an_empty_architecture_has_a_stable_fingerprint ... ok
 test merkle::tests::a_version_bump_changes_the_fingerprint ... ok
-test merkle::tests::adding_a_control_changes_the_fingerprint ... ok
-test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... ok
-test merkle::tests::changed_nodes_is_empty_for_identical_trees ... ok
 test merkle::tests::abbreviation_does_not_panic_on_an_over_long_width ... ok
-test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... ok
-test merkle::tests::control_order_within_a_node_does_not_matter ... ok
+test merkle::tests::a_boolean_field_is_part_of_the_digest ... ok
+test merkle::tests::an_absent_description_differs_from_an_empty_one ... ok
+test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... ok
+test merkle::tests::adding_a_control_changes_the_fingerprint ... ok
+test merkle::tests::an_empty_architecture_has_a_stable_fingerprint ... ok
+test merkle::tests::changed_nodes_is_empty_for_identical_trees ... ok
 test merkle::tests::changed_nodes_includes_additions_and_removals ... ok
-test merkle::tests::changed_nodes_reports_only_what_actually_differs ... ok
+test merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint ... ok
+test merkle::tests::control_order_within_a_node_does_not_matter ... ok
+test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... ok
 test merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text ... ok
 test merkle::tests::fingerprint_parsing_rejects_malformed_input ... ok
-test merkle::tests::fingerprints_render_and_parse_as_hex ... ok
-test merkle::tests::fingerprints_round_trip_through_json ... ok
-test merkle::tests::fingerprinting_is_stable_across_repeated_calls ... ok
+test merkle::tests::changed_nodes_reports_only_what_actually_differs ... ok
+test merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects ... ok
 test merkle::tests::declaration_order_does_not_affect_the_fingerprint ... ok
+test merkle::tests::fingerprints_round_trip_through_json ... ok
+test merkle::tests::fingerprints_render_and_parse_as_hex ... ok
 test merkle::tests::declaring_conformance_changes_the_fingerprint ... ok
+test merkle::tests::fingerprinting_is_stable_across_repeated_calls ... ok
 test merkle::tests::identical_architectures_fingerprint_identically ... ok
 test names::tests::accepts_a_name_exactly_at_the_ceiling ... ok
-test merkle::tests::the_tree_exposes_a_digest_per_node ... ok
-test names::tests::deserialisation_enforces_the_same_rules_as_construction ... ok
-test merkle::tests::rebinding_a_role_changes_the_fingerprint ... ok
-test merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole ... ok
 test names::tests::accepts_conventional_service_names ... ok
-test names::tests::rejects_diagram_and_shell_metacharacters ... ok
-test names::tests::rejects_empty_and_whitespace_only ... ok
+test names::tests::borrowing_a_name_as_a_string_yields_the_name ... ok
+test names::tests::deserialisation_enforces_the_same_rules_as_construction ... ok
+test merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole ... ok
 test merkle::tests::the_scheme_tag_is_mixed_into_the_root ... ok
+test names::tests::rejects_empty_and_whitespace_only ... ok
+test merkle::tests::the_tree_exposes_a_digest_per_node ... ok
+test names::tests::rejects_diagram_and_shell_metacharacters ... ok
+test merkle::tests::rebinding_a_role_changes_the_fingerprint ... ok
+test names::tests::serialises_transparently_as_a_plain_string ... ok
+test node::tests::build_accepts_distinct_interface_names ... ok
+test node::tests::build_fails_without_a_name ... ok
+test node::tests::build_fails_without_a_node_type ... ok
+test node::tests::build_generates_an_id_when_none_is_pinned ... ok
+test names::tests::rejects_non_alphanumeric_leading_character ... ok
+test node::tests::build_honours_a_pinned_id_for_reproducibility ... ok
 test names::tests::rejects_names_over_the_length_ceiling ... ok
 test names::tests::reports_the_byte_offset_of_an_illegal_character ... ok
-test names::tests::rejects_non_alphanumeric_leading_character ... ok
-test node::tests::build_accepts_distinct_interface_names ... ok
-test names::tests::serialises_transparently_as_a_plain_string ... ok
-test node::tests::build_fails_without_a_node_type ... ok
-test node::tests::build_fails_without_a_name ... ok
-test node::tests::build_generates_an_id_when_none_is_pinned ... ok
-test node::tests::build_rejects_an_invalid_name ... ok
 test node::tests::build_rejects_duplicate_interface_names ... ok
+test node::tests::controls_of_type_counts_only_the_requested_dimension ... ok
+test node::tests::build_rejects_an_invalid_name ... ok
+test node::tests::interface_lookup_is_by_exact_name ... ok
 test node::tests::has_control_tagged_searches_every_control ... ok
 test node::tests::metadata_serialises_in_deterministic_key_order ... ok
-test node::tests::node_round_trips_through_json ... ok
-test node::tests::interface_lookup_is_by_exact_name ... ok
-test node::tests::node_type_serialises_as_kebab_case ... ok
-test node::tests::node_types_are_classified_by_statefulness ... ok
 test node::tests::node_types_are_classified_by_control_boundary ... ok
+test node::tests::node_round_trips_through_json ... ok
+test node::tests::node_type_serialises_as_kebab_case ... ok
 test node::tests::serialisation_omits_empty_collections ... ok
+test node::tests::node_types_are_classified_by_statefulness ... ok
+test pattern::tests::a_conformance_claim_renders_the_pattern_it_names ... ok
 test node::tests::with_interface_rejects_a_duplicate_at_runtime ... ok
-test node::tests::controls_of_type_counts_only_the_requested_dimension ... ok
 test pattern::tests::a_fingerprint_distinguishes_relationship_direction ... ok
 test pattern::tests::a_fingerprint_changes_when_the_shape_changes ... ok
 test pattern::tests::a_fingerprint_distinguishes_the_compliance_claim ... ok
-test node::tests::build_honours_a_pinned_id_for_reproducibility ... ok
-test pattern::tests::a_fingerprint_ignores_declaration_order ... ok
+test pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with ... ok
 test pattern::tests::a_pattern_round_trips_through_json ... ok
 test pattern::tests::a_reference_is_name_at_version ... ok
-test ids::tests::parse_is_total ... ok
+test pattern::tests::a_reference_requires_an_exact_version ... ok
+test pattern::tests::a_reference_round_trips_as_a_bare_string ... ok
+test pattern::tests::a_fingerprint_ignores_declaration_order ... ok
 test pattern::tests::a_pattern_exposes_its_requirements_by_role ... ok
 test pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous ... ok
-test pattern::tests::a_reference_round_trips_as_a_bare_string ... ok
+test pattern::tests::a_reference_splits_on_the_last_at_sign ... ok
+test pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised ... ok
+test pattern::tests::build_defaults_the_version ... ok
 test pattern::tests::a_relationship_cannot_connect_a_role_to_itself ... ok
 test pattern::tests::build_names_which_endpoint_was_unknown ... ok
 test pattern::tests::build_rejects_a_duplicated_role ... ok
-test pattern::tests::build_defaults_the_version ... ok
-test pattern::tests::build_rejects_a_non_semver_version ... ok
 test pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role ... ok
+test pattern::tests::build_rejects_a_non_semver_version ... ok
 test pattern::tests::build_requires_a_name ... ok
 test pattern::tests::malformed_references_are_rejected_with_a_reason ... ok
-test pattern::tests::role_names_obey_the_casimir_alphabet ... ok
-test pattern::tests::a_reference_splits_on_the_last_at_sign ... ok
-test pattern::tests::requirement_builders_deduplicate ... ok
-test pattern::tests::a_reference_requires_an_exact_version ... ok
 test pattern::tests::references_parse_and_match ... ok
+test pattern::tests::requirement_builders_deduplicate ... ok
+test pattern::tests::role_names_obey_the_casimir_alphabet ... ok
+test pattern::tests::serialisation_omits_empty_collections ... ok
+test pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde ... ok
+test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... ok
+test relationship::tests::a_relationship_reports_what_it_was_built_with ... ok
+test pattern::tests::satisfied_standards_are_deduplicated ... ok
 test relationship::tests::async_edges_are_excluded_from_cycle_detection ... ok
 test relationship::tests::blocking_classification_matches_failure_propagation ... ok
 test relationship::tests::build_accepts_the_ceiling_itself ... ok
 test relationship::tests::build_fails_without_a_relationship_type ... ok
+test relationship::tests::build_rejects_a_self_edge ... ok
 test relationship::tests::build_fails_without_a_source ... ok
-test pattern::tests::serialisation_omits_empty_collections ... ok
-test pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde ... ok
-test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... ok
-test pattern::tests::satisfied_standards_are_deduplicated ... ok
 test relationship::tests::build_fails_without_a_target ... ok
-test relationship::tests::identity_distinguishes_edges_by_type ... ok
+test relationship::tests::build_rejects_a_budget_above_the_ceiling ... ok
 test relationship::tests::latency_budget_is_optional ... ok
+test relationship::tests::build_rejects_a_zero_latency_budget ... ok
+test relationship::tests::connects_is_direction_agnostic ... ok
+test relationship::tests::identity_distinguishes_edges_by_type ... ok
 test relationship::tests::only_quantum_entangled_edges_are_entangled ... FAILED
 test relationship::tests::relationship_round_trips_through_json ... ok
 test relationship::tests::relationship_type_serialises_as_kebab_case ... ok
-test relationship::tests::build_rejects_a_budget_above_the_ceiling ... ok
-test relationship::tests::build_rejects_a_self_edge ... ok
-test relationship::tests::build_rejects_a_zero_latency_budget ... ok
-test relationship::tests::connects_is_direction_agnostic ... ok
-test names::tests::validation_is_total ... ok
+test ids::tests::parse_is_total ... ok
 test ids::tests::generated_ids_round_trip_through_strings ... ok
+test names::tests::validation_is_total ... ok
 test names::tests::legal_names_round_trip ... ok
 
 failures:
 
 ---- relationship::tests::only_quantum_entangled_edges_are_entangled stdout ----
 
-thread 'relationship::tests::only_quantum_entangled_edges_are_entangled' (1249738) panicked at crates/casm-core/src/relationship.rs:454:9:
+thread 'relationship::tests::only_quantum_entangled_edges_are_entangled' (1913048) panicked at crates/casm-core/src/relationship.rs:454:9:
 assertion failed: RelationshipType::QuantumEntangled.is_entangled()
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
@@ -350,7 +369,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 failures:
     relationship::tests::only_quantum_entangled_edges_are_entangled
 
-test result: FAILED. 187 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+test result: FAILED. 204 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
 
 error: test failed, to rerun pass `-p casm-core --lib`
 

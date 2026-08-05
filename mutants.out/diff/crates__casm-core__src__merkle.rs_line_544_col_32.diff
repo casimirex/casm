@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ delete ! in MerkleTree::changed_nodes
+@@ -536,17 +536,17 @@
+             .filter(|(name, digest)| other.nodes.get(*name) != Some(digest))
+             .map(|(name, _)| name.clone())
+             .collect();
+ 
+         changed.extend(
+             other
+                 .nodes
+                 .keys()
+-                .filter(|name| !self.nodes.contains_key(*name))
++                .filter(|name|  /* ~ changed by cargo-mutants ~ */self.nodes.contains_key(*name))
+                 .cloned(),
+         );
+ 
+         changed.sort_unstable();
+         changed.dedup();
+         changed
+     }
+ }

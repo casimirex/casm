@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace <impl fmt::Debug for Fingerprint>::fmt -> fmt::Result with Ok(Default::default())
+@@ -134,17 +134,17 @@
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(&self.to_hex())
+     }
+ }
+ 
+ impl fmt::Debug for Fingerprint {
+     /// Abbreviated, so a log line stays readable.
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        write!(f, "Fingerprint({}…)", self.abbreviated(12))
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl TryFrom<String> for Fingerprint {
+     type Error = String;
+ 
+     fn try_from(value: String) -> Result<Self, Self::Error> {
+         Self::parse_hex(&value)

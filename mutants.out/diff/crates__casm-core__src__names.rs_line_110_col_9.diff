@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace <impl fmt::Display for Name>::fmt -> fmt::Result with Ok(Default::default())
+@@ -102,17 +102,17 @@
+     #[inline]
+     pub fn into_string(self) -> String {
+         self.0
+     }
+ }
+ 
+ impl fmt::Display for Name {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(&self.0)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl AsRef<str> for Name {
+     fn as_ref(&self) -> &str {
+         &self.0
+     }
+ }

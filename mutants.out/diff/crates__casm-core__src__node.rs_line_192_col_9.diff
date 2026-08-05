@@ -1,0 +1,37 @@
+--- crates/casm-core/src/node.rs
++++ replace NodeConfig::build -> Result<Node, NodeError> with Ok(Default::default())
+@@ -184,33 +184,17 @@
+     /// Phase 2: validates the configuration and produces an immutable [`Node`].
+     ///
+     /// # Errors
+     ///
+     /// - [`NodeError::MissingField`] if `name` or `node_type` was never set.
+     /// - [`NodeError::Name`] if the name violates the CASIMIR alphabet.
+     /// - [`NodeError::DuplicateInterface`] if two interfaces share a name.
+     pub fn build(self) -> Result<Node, NodeError> {
+-        let raw_name = self.name.ok_or(NodeError::MissingField { field: "name" })?;
+-        let name = Name::new(raw_name)?;
+-        let node_type = self
+-            .node_type
+-            .ok_or(NodeError::MissingField { field: "node_type" })?;
+-
+-        Self::reject_duplicate_interfaces(&name, &self.interfaces)?;
+-
+-        Ok(Node {
+-            id: self.id.unwrap_or_default(),
+-            name,
+-            node_type,
+-            description: self.description,
+-            interfaces: self.interfaces,
+-            controls: self.controls,
+-            metadata: self.metadata,
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Enforces the invariant that interface names are unique within a node.
+     fn reject_duplicate_interfaces(node: &Name, interfaces: &[Interface]) -> Result<(), NodeError> {
+         for (index, candidate) in interfaces.iter().enumerate() {
+             let is_duplicate = interfaces
+                 .iter()
+                 .take(index)

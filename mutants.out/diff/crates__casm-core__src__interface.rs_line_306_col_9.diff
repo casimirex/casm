@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::version -> &Version with Box::leak(Box::new(Default::default()))
+@@ -298,17 +298,17 @@
+     pub const fn protocol(&self) -> &Protocol {
+         &self.protocol
+     }
+ 
+     /// The contract's semantic version.
+     #[inline]
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+-        &self.version
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The content hash of the contract, if one was declared.
+     #[inline]
+     #[must_use]
+     pub const fn schema_hash(&self) -> Option<&SchemaHash> {
+         self.schema_hash.as_ref()
+     }

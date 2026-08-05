@@ -1,0 +1,24 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Requirement::requiring_protocol -> Self with Default::default()
+@@ -120,20 +120,17 @@
+             self.required_control_types.push(control_type);
+         }
+         self
+     }
+ 
+     /// Requires an interface speaking the given protocol.
+     #[must_use]
+     pub fn requiring_protocol(mut self, protocol: Protocol) -> Self {
+-        if !self.required_protocols.contains(&protocol) {
+-            self.required_protocols.push(protocol);
+-        }
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The role's name.
+     #[inline]
+     #[must_use]
+     pub const fn role(&self) -> &Name {
+         &self.role
+     }

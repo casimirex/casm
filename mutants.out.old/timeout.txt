@@ -1,2 +1,0 @@
-crates/casm-lsp/src/documents.rs:275:9: replace DocumentStore::least_recently_used -> Option<String> with Some(String::new())
-crates/casm-lsp/src/documents.rs:275:9: replace DocumentStore::least_recently_used -> Option<String> with Some("xyzzy".into())

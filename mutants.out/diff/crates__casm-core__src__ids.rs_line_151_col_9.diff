@@ -1,0 +1,22 @@
+--- crates/casm-core/src/ids.rs
++++ replace <impl Deserialize<'de> for NodeId>::deserialize -> Result<Self, D::Error> with Ok(Default::default())
+@@ -143,18 +143,17 @@
+ }
+ 
+ impl<'de> Deserialize<'de> for NodeId {
+     /// Deserialisation enforces the version-7 requirement, exactly as [`NodeId::parse`] does.
+     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+     where
+         D: Deserializer<'de>,
+     {
+-        let raw = String::deserialize(deserializer)?;
+-        Self::parse(&raw).map_err(serde::de::Error::custom)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,

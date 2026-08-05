@@ -1,0 +1,21 @@
+--- crates/casm-core/src/control.rs
++++ replace <impl fmt::Display for ControlType>::fmt -> fmt::Result with Ok(Default::default())
+@@ -50,17 +50,17 @@
+             Self::Compliance | Self::DataGovernance => true,
+             Self::Security | Self::Operational => false,
+         }
+     }
+ }
+ 
+ impl fmt::Display for ControlType {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(self.label())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A single constraint that an entity is asserted to satisfy.
+ ///
+ /// # Examples
+ ///
+ /// ```

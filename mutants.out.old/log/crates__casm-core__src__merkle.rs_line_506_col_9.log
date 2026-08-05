@@ -26,10 +26,6 @@
 
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-core@0.3.0
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
        Fresh cfg-if v1.0.4
        Fresh unicode-ident v1.0.24
        Fresh version_check v0.9.5
@@ -39,54 +35,54 @@
        Fresh typenum v1.20.1
        Fresh quote v1.0.47
        Fresh getrandom v0.4.3
-       Fresh getrandom v0.3.4
        Fresh generic-array v0.14.7
-       Fresh autocfg v1.5.1
+       Fresh getrandom v0.3.4
+       Fresh linux-raw-sys v0.12.1
        Fresh syn v3.0.3
        Fresh rand_core v0.9.5
-       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
        Fresh bitflags v2.13.1
+       Fresh zerocopy v0.8.55
        Fresh crypto-common v0.1.7
        Fresh rustix v1.1.4
-       Fresh zerocopy v0.8.55
        Fresh block-buffer v0.10.4
        Fresh once_cell v1.21.4
        Fresh fastrand v2.5.0
-       Fresh ppv-lite86 v0.2.21
-       Fresh digest v0.10.7
-       Fresh serde_derive v1.0.229
        Fresh tempfile v3.27.0
+       Fresh digest v0.10.7
+       Fresh ppv-lite86 v0.2.21
+       Fresh serde_derive v1.0.229
        Fresh thiserror-impl v2.0.19
        Fresh wait-timeout v0.2.1
+       Fresh hashbrown v0.17.1
+       Fresh quick-error v1.2.3
+       Fresh bit-vec v0.8.0
+       Fresh equivalent v1.0.2
        Fresh keccak v0.1.6
        Fresh fnv v1.0.7
-       Fresh equivalent v1.0.2
-       Fresh quick-error v1.2.3
-       Fresh hashbrown v0.17.1
-       Fresh bit-vec v0.8.0
-       Fresh thiserror v2.0.19
-       Fresh num-traits v0.2.19
-       Fresh sha3 v0.10.9
-       Fresh bit-set v0.8.0
-       Fresh rusty-fork v0.3.1
-       Fresh indexmap v2.14.0
        Fresh serde v1.0.229
+       Fresh thiserror v2.0.19
+       Fresh bit-set v0.8.0
+       Fresh indexmap v2.14.0
+       Fresh sha3 v0.10.9
+       Fresh rusty-fork v0.3.1
+       Fresh num-traits v0.2.19
        Fresh zmij v1.0.23
        Fresh rand_chacha v0.9.0
-       Fresh rand v0.9.5
        Fresh rand_xorshift v0.4.0
+       Fresh rand v0.9.5
        Fresh uuid v1.24.0
        Fresh semver v1.0.28
-       Fresh itoa v1.0.18
-       Fresh unarray v0.1.4
        Fresh regex-syntax v0.8.11
+       Fresh itoa v1.0.18
        Fresh memchr v2.8.3
-       Fresh proptest v1.11.0
-       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-core): the file `crates/casm-core/src/merkle.rs` has changed (1785931492.245884762s, 4s after last build at 1785931488.341870419s)
-   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-core)
+       Fresh unarray v0.1.4
        Fresh serde_json v1.0.151
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
+       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-6NFuQy.tmp/crates/casm-core): the file `crates/casm-core/src/merkle.rs` has changed (1785936142.840256270s, 4s after last build at 1785936138.357271285s)
+   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-6NFuQy.tmp/crates/casm-core)
+       Fresh proptest v1.11.0
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
 error[E0277]: the trait bound `Fingerprint: Default` is not satisfied
    --> crates/casm-core/src/merkle.rs:506:9
     |
@@ -103,7 +99,7 @@ For more information about this error, try `rustc --explain E0277`.
 error: could not compile `casm-core` (lib) due to 1 previous error
 
 Caused by:
-  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose` (exit status: 1)
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose` (exit status: 1)
 warning: build failed, waiting for other jobs to finish...
 error[E0277]: the trait bound `merkle::Fingerprint: Default` is not satisfied
    --> crates/casm-core/src/merkle.rs:506:9
@@ -120,6 +116,6 @@ help: consider annotating `merkle::Fingerprint` with `#[derive(Default)]`
 error: could not compile `casm-core` (lib test) due to 1 previous error
 
 Caused by:
-  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose` (exit status: 1)
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-6NFuQy.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose` (exit status: 1)
 
 *** result: Failure(101)

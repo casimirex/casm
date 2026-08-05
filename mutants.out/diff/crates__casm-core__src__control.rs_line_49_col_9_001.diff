@@ -1,0 +1,24 @@
+--- crates/casm-core/src/control.rs
++++ replace ControlType::is_auditable -> bool with false
+@@ -41,20 +41,17 @@
+             Self::Operational => "operational",
+             Self::DataGovernance => "data-governance",
+         }
+     }
+ 
+     /// Returns `true` if absence of this control is an audit finding rather than a risk.
+     #[must_use]
+     pub const fn is_auditable(self) -> bool {
+-        match self {
+-            Self::Compliance | Self::DataGovernance => true,
+-            Self::Security | Self::Operational => false,
+-        }
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for ControlType {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(self.label())
+     }
+ }

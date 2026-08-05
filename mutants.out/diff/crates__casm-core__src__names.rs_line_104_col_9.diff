@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace Name::into_string -> String with String::new()
+@@ -96,17 +96,17 @@
+     #[inline]
+     pub fn as_str(&self) -> &str {
+         &self.0
+     }
+ 
+     /// Consumes the `Name`, yielding the underlying `String`.
+     #[inline]
+     pub fn into_string(self) -> String {
+-        self.0
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Name {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(&self.0)
+     }
+ }

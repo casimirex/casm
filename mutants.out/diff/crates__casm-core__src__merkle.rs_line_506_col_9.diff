@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace MerkleTree::conformance_root -> Fingerprint with Default::default()
+@@ -498,17 +498,17 @@
+     pub const fn relationships_root(&self) -> Fingerprint {
+         self.relationships_root
+     }
+ 
+     /// The digest covering every conformance claim.
+     #[inline]
+     #[must_use]
+     pub const fn conformance_root(&self) -> Fingerprint {
+-        self.conformance_root
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The digest of one node, by name.
+     #[must_use]
+     pub fn node(&self, name: &str) -> Option<Fingerprint> {
+         self.nodes.get(name).copied()
+     }
+ 

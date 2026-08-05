@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace MerkleTree::node -> Option<Fingerprint> with None
+@@ -504,17 +504,17 @@
+     #[must_use]
+     pub const fn conformance_root(&self) -> Fingerprint {
+         self.conformance_root
+     }
+ 
+     /// The digest of one node, by name.
+     #[must_use]
+     pub fn node(&self, name: &str) -> Option<Fingerprint> {
+-        self.nodes.get(name).copied()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Every node digest, in name order.
+     #[must_use]
+     pub const fn nodes(&self) -> &BTreeMap<String, Fingerprint> {
+         &self.nodes
+     }
+ 

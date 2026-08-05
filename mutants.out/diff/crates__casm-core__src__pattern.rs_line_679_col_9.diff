@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Conformance::bound -> Option<NodeId> with None
+@@ -671,17 +671,17 @@
+     #[must_use]
+     pub const fn bindings(&self) -> &BTreeMap<Name, NodeId> {
+         &self.bindings
+     }
+ 
+     /// The node explicitly bound to `role`, if any.
+     #[must_use]
+     pub fn bound(&self, role: &Name) -> Option<NodeId> {
+-        self.bindings.get(role).copied()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Conformance {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         fmt::Display::fmt(&self.pattern, f)
+     }
+ }

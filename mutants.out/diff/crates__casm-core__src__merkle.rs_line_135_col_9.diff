@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace <impl fmt::Display for Fingerprint>::fmt -> fmt::Result with Ok(Default::default())
+@@ -127,17 +127,17 @@
+     #[must_use]
+     pub const fn as_bytes(&self) -> &[u8; DIGEST_LEN] {
+         &self.0
+     }
+ }
+ 
+ impl fmt::Display for Fingerprint {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(&self.to_hex())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Debug for Fingerprint {
+     /// Abbreviated, so a log line stays readable.
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         write!(f, "Fingerprint({}…)", self.abbreviated(12))
+     }

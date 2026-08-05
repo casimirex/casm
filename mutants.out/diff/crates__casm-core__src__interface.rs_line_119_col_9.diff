@@ -1,0 +1,26 @@
+--- crates/casm-core/src/interface.rs
++++ replace Protocol::validate -> Result<(), InterfaceError> with Ok(())
+@@ -111,22 +111,17 @@
+     }
+ 
+     /// Validates a [`Protocol::Custom`] label.
+     ///
+     /// # Errors
+     ///
+     /// Returns [`InterfaceError::EmptyCustomProtocol`] if a custom label is blank.
+     pub fn validate(&self) -> Result<(), InterfaceError> {
+-        match self {
+-            Self::Custom(label) if label.trim().is_empty() => {
+-                Err(InterfaceError::EmptyCustomProtocol)
+-            }
+-            _ => Ok(()),
+-        }
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Protocol {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(self.label())
+     }
+ }

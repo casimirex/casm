@@ -1,0 +1,50 @@
+--- crates/casm-core/src/merkle.rs
++++ replace pattern_digest -> Fingerprint with Default::default()
+@@ -347,46 +347,17 @@
+ /// [`fingerprint`]: two authors who wrote the same requirements in a different order
+ /// wrote the same shape, and a registry that treated them as distinct artefacts would be
+ /// distributing a distinction without a difference.
+ ///
+ /// `satisfies` and `metadata` are included — a pattern that claims to satisfy SOC2 is a
+ /// different compliance artefact from one that does not, even if it checks identically.
+ #[must_use]
+ pub fn pattern_digest(pattern: &Pattern) -> Fingerprint {
+-    let mut encoder = Encoder::default();
+-    encoder
+-        .text(pattern.name().as_str())
+-        .text(&pattern.version().to_string())
+-        .optional(pattern.description())
+-        .map(pattern.metadata());
+-
+-    encoder.text(&pattern.requirements().len().to_string());
+-    for digest in sorted_digests(pattern.requirements().iter().map(requirement_digest)) {
+-        encoder.text(&digest);
+-    }
+-
+-    encoder.text(&pattern.relationships().len().to_string());
+-    for digest in sorted_digests(
+-        pattern
+-            .relationships()
+-            .iter()
+-            .map(required_relationship_digest),
+-    ) {
+-        encoder.text(&digest);
+-    }
+-
+-    let mut standards: Vec<&str> = pattern.satisfies().iter().map(String::as_str).collect();
+-    standards.sort_unstable();
+-    encoder.text(&standards.len().to_string());
+-    for standard in standards {
+-        encoder.text(standard);
+-    }
+-
+-    encoder.finish("pattern")
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The digest of a conformance claim, with bound nodes named rather than identified.
+ ///
+ /// Naming rather than identifying is the same choice [`relationship_digest`] makes, and
+ /// for the same reason: a `NodeId` is generated, so including one would make the digest
+ /// depend on when the file was written rather than on what it says.
+ #[must_use]

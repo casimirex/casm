@@ -388,9 +388,18 @@ mod tests {
     fn schema_hash_debug_is_abbreviated_not_full() {
         let hash = SchemaHash::of(b"payload");
         let debug = format!("{hash:?}");
+
+        // Short *and* actually the hash. Asserting only the length let an impl that wrote
+        // nothing at all pass, because an empty string is admirably short.
         assert!(
             debug.len() < 32,
             "debug output must stay log-friendly: {debug}"
+        );
+        assert!(!debug.is_empty());
+        let prefix = hash.to_hex().get(..8).unwrap_or_default().to_owned();
+        assert!(
+            debug.contains(&prefix),
+            "debug output must abbreviate the real value: {debug} does not contain {prefix}"
         );
     }
 
@@ -404,6 +413,55 @@ mod tests {
     fn interface_rejects_an_empty_custom_protocol() {
         let err = Interface::new("api", Protocol::Custom("  ".into()), "1.0.0").unwrap_err();
         assert_eq!(err, InterfaceError::EmptyCustomProtocol);
+    }
+
+    #[test]
+    fn a_custom_protocol_is_accepted_when_its_label_is_not_blank() {
+        // The existing test only proves a *blank* label is refused, so replacing the
+        // guard with `true` — refusing every custom protocol — survived. Both sides of a
+        // guard need a case.
+        assert!(Protocol::Custom("amqp-1.0".to_owned()).validate().is_ok());
+        assert!(Protocol::Custom("x".to_owned()).validate().is_ok());
+
+        for blank in ["", " ", "\t", "\n  "] {
+            assert!(
+                matches!(
+                    Protocol::Custom(blank.to_owned()).validate(),
+                    Err(InterfaceError::EmptyCustomProtocol)
+                ),
+                "{blank:?} should be refused"
+            );
+        }
+
+        // And a built-in protocol is never subject to the guard at all.
+        assert!(Protocol::Http2.validate().is_ok());
+    }
+
+    #[test]
+    fn protocols_and_hashes_render_the_text_they_are_read_back_from() {
+        // `Display` feeds data paths, not only logs: an evidence register and a diagram
+        // both render these. An impl returning nothing survived until now.
+        assert_eq!(Protocol::Http2.to_string(), "http2");
+        assert_eq!(Protocol::Sql.to_string(), "sql");
+        assert_eq!(
+            Protocol::Custom("amqp-1.0".to_owned()).to_string(),
+            "amqp-1.0"
+        );
+
+        let hash = SchemaHash::of(b"payload");
+        assert_eq!(hash.to_string(), hash.to_hex());
+        assert_eq!(hash.to_string().len(), 64);
+    }
+
+    #[test]
+    fn an_interfaces_description_is_returned_as_written() {
+        let plain = Interface::new("rest", Protocol::Http2, "1.0.0").expect("valid");
+        assert_eq!(plain.description(), None);
+
+        let described = Interface::new("rest", Protocol::Http2, "1.0.0")
+            .expect("valid")
+            .with_description("The public API");
+        assert_eq!(described.description(), Some("The public API"));
     }
 
     #[test]

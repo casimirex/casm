@@ -1,0 +1,27 @@
+--- crates/casm-core/src/hex.rs
++++ replace encode -> String with "xyzzy".into()
+@@ -6,23 +6,17 @@
+ //!
+ //! CASIMIR has two content digests — [`crate::SchemaHash`] for interface contracts and
+ //! [`crate::Fingerprint`] for whole architectures — and both are SHA3-256 rendered as 64
+ //! lowercase hexadecimal characters. Two copies of that conversion would be two places to
+ //! get an off-by-one wrong, so it lives here.
+ 
+ /// Renders `bytes` as lowercase hexadecimal.
+ pub(crate) fn encode(bytes: &[u8]) -> String {
+-    let mut out = String::with_capacity(bytes.len().saturating_mul(2));
+-    for byte in bytes {
+-        // Two hex digits per byte. `from_digit` cannot fail for a value below 16.
+-        out.push(char::from_digit(u32::from(byte >> 4), 16).unwrap_or('0'));
+-        out.push(char::from_digit(u32::from(byte & 0x0f), 16).unwrap_or('0'));
+-    }
+-    out
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Parses exactly `N` bytes from a hexadecimal string.
+ ///
+ /// An optional `algorithm:` prefix is accepted and ignored, so `sha3-256:abcd…` and
+ /// `abcd…` both parse.
+ ///
+ /// # Errors

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace <impl fmt::Display for SchemaHash>::fmt -> fmt::Result with Ok(Default::default())
+@@ -175,17 +175,17 @@
+     #[must_use]
+     pub fn to_hex(&self) -> String {
+         crate::hex::encode(&self.0)
+     }
+ }
+ 
+ impl fmt::Display for SchemaHash {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(&self.to_hex())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Debug for SchemaHash {
+     /// Abbreviated for log readability; full digest available via [`SchemaHash::to_hex`].
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         let hex = self.to_hex();
+         let prefix = hex.get(..12).unwrap_or(&hex);

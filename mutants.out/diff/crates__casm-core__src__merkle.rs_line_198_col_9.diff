@@ -1,0 +1,22 @@
+--- crates/casm-core/src/merkle.rs
++++ replace Encoder::flag -> &mut Self with Box::leak(Box::new(Default::default()))
+@@ -190,18 +190,17 @@
+ 
+     /// Appends an optional number.
+     fn optional_number(&mut self, value: Option<u64>) -> &mut Self {
+         self.optional(value.map(|number| number.to_string()).as_deref())
+     }
+ 
+     /// Appends a boolean.
+     fn flag(&mut self, value: bool) -> &mut Self {
+-        self.buffer.push(if value { b'T' } else { b'F' });
+-        self
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Appends a sorted key/value map.
+     fn map(&mut self, entries: &BTreeMap<String, String>) -> &mut Self {
+         self.text(&entries.len().to_string());
+         for (key, value) in entries {
+             self.text(key).text(value);
+         }

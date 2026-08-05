@@ -912,6 +912,87 @@ mod tests {
     }
 
     #[test]
+    fn a_pattern_and_its_parts_report_what_they_were_built_with() {
+        let requirement = Requirement::new("edge", NodeType::Gateway)
+            .expect("valid")
+            .with_description("The single public entry point");
+        let required = RequiredRelationship::new("edge", "application", RelationshipType::Sync)
+            .expect("valid")
+            .with_description("The gateway calls the service");
+
+        assert_eq!(
+            requirement.description(),
+            Some("The single public entry point")
+        );
+        assert_eq!(
+            required.description(),
+            Some("The gateway calls the service")
+        );
+
+        // The absent case, which a constant accessor cannot also satisfy.
+        assert_eq!(
+            Requirement::new("plain", NodeType::Service)
+                .expect("valid")
+                .description(),
+            None
+        );
+
+        let pattern = Pattern::builder()
+            .name("secure-web-tier")
+            .version("1.0.0")
+            .description("One governed gateway")
+            .metadata("owner", "platform")
+            .requirement(requirement)
+            .build()
+            .expect("valid");
+
+        assert_eq!(pattern.name().as_str(), "secure-web-tier");
+        assert_eq!(pattern.description(), Some("One governed gateway"));
+        assert_eq!(
+            pattern.metadata().get("owner").map(String::as_str),
+            Some("platform")
+        );
+
+        assert_eq!(
+            Pattern::builder()
+                .name("bare")
+                .version("1.0.0")
+                .build()
+                .expect("valid")
+                .description(),
+            None
+        );
+    }
+
+    #[test]
+    fn a_conformance_claim_renders_the_pattern_it_names() {
+        let claim = Conformance::new(
+            PatternRef::parse("secure-web-tier@1.0.0").expect("a valid reference"),
+        );
+        assert_eq!(claim.to_string(), "secure-web-tier@1.0.0");
+    }
+
+    #[test]
+    fn a_requirement_omits_a_zero_control_minimum_when_serialised() {
+        // `is_zero` is the `skip_serializing_if` helper. Replacing it with `false` emits
+        // `min-security-controls: 0` on every requirement that never set one, which is
+        // noise in every pattern file the tool writes.
+        // The field is renamed on the way out, so the assertion has to use the name that
+        // actually appears. Checking for `min_security_controls` was true either way, and
+        // the mutant lived through it.
+        let plain = Requirement::new("edge", NodeType::Gateway).expect("valid");
+        let json = serde_json::to_string(&plain).expect("serialises");
+        assert_eq!(json, r#"{"role":"edge","type":"gateway"}"#);
+        assert!(!json.contains("min-security-controls"), "{json}");
+
+        let demanding = Requirement::new("edge", NodeType::Gateway)
+            .expect("valid")
+            .requiring_security_controls(2);
+        let json = serde_json::to_string(&demanding).expect("serialises");
+        assert!(json.contains(r#""min-security-controls":2"#), "{json}");
+    }
+
+    #[test]
     fn a_pattern_round_trips_through_json() {
         let original = web_tier();
         let json = serde_json::to_string(&original).unwrap();

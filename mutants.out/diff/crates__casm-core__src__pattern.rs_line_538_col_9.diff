@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace <impl fmt::Display for Pattern>::fmt -> fmt::Result with Ok(Default::default())
+@@ -530,17 +530,17 @@
+     pub fn verify_invariants(&self) -> Result<(), PatternError> {
+         PatternConfig::reject_duplicate_roles(&self.requirements)?;
+         PatternConfig::reject_unknown_roles(&self.requirements, &self.relationships)
+     }
+ }
+ 
+ impl fmt::Display for Pattern {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(&self.reference())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A reference to a pattern by name and exact version, as written in an architecture.
+ ///
+ /// Exact rather than a range: a pattern is a compliance claim, and "this architecture
+ /// satisfies some version of the secure web tier" is not a claim anybody can audit.
+ #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]

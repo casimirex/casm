@@ -1,0 +1,31 @@
+--- crates/casm-core/src/merkle.rs
++++ replace edge_key -> String with String::new()
+@@ -548,27 +548,17 @@
+         changed.sort_unstable();
+         changed.dedup();
+         changed
+     }
+ }
+ 
+ /// The name-based identity of a relationship.
+ fn edge_key(architecture: &Architecture, edge: &Relationship) -> String {
+-    let name_of = |id| {
+-        architecture
+-            .node(id)
+-            .map_or_else(|| "?".to_owned(), |node| node.name().as_str().to_owned())
+-    };
+-    format!(
+-        "{}->{}:{}",
+-        name_of(edge.source()),
+-        name_of(edge.target()),
+-        edge.relationship_type()
+-    )
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Combines child digests into a parent, independent of the order they arrive in.
+ fn combine(label: &str, children: impl Iterator<Item = Fingerprint>) -> Fingerprint {
+     let mut encoder = Encoder::default();
+     let sorted = sorted_digests(children);
+ 
+     encoder.text(&sorted.len().to_string());

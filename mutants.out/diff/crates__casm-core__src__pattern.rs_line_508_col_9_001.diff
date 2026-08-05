@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::reference -> String with "xyzzy".into()
+@@ -500,17 +500,17 @@
+     #[must_use]
+     pub fn requirement(&self, role: &str) -> Option<&Requirement> {
+         self.requirements.iter().find(|r| r.role().as_str() == role)
+     }
+ 
+     /// The `name@version` reference that identifies this pattern.
+     #[must_use]
+     pub fn reference(&self) -> String {
+-        format!("{}@{}", self.name, self.version)
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The pattern's content address.
+     ///
+     /// Independent of declaration order, so the same shape written in a different order
+     /// has the same address. This is what a registry would key on; see ADR-0012 on why
+     /// the registry is not a prerequisite for any of this.
+     #[must_use]

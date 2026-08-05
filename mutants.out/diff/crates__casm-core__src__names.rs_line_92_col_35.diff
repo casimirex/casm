@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace || with && in Name::is_legal
+@@ -84,17 +84,17 @@
+             });
+         }
+ 
+         Ok(Self(raw))
+     }
+ 
+     /// Returns `true` if `c` is permitted anywhere within a name.
+     const fn is_legal(c: char) -> bool {
+-        c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.')
++        c.is_ascii_alphanumeric() && /* ~ changed by cargo-mutants ~ */ matches!(c, '-' | '_' | '.')
+     }
+ 
+     /// Borrows the underlying string.
+     #[inline]
+     pub fn as_str(&self) -> &str {
+         &self.0
+     }
+ 

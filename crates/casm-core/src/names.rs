@@ -169,6 +169,20 @@ mod tests {
     }
 
     #[test]
+    fn borrowing_a_name_as_a_string_yields_the_name() {
+        // `AsRef<str>` is how a `Name` reaches anything generic over string-likes, and
+        // returning a constant from it survived: nothing used the impl.
+        let name = Name::new("orders-db").expect("a conventional name");
+
+        assert_eq!(name.as_ref(), "orders-db");
+        assert_eq!(AsRef::<str>::as_ref(&name), name.as_str());
+
+        // Reached through a generic bound, which is the only way most callers touch it.
+        let borrowed: &str = std::convert::AsRef::as_ref(&name);
+        assert_eq!(borrowed, "orders-db");
+    }
+
+    #[test]
     fn rejects_empty_and_whitespace_only() {
         assert_eq!(Name::new(""), Err(NameError::Empty));
         assert_eq!(Name::new("   "), Err(NameError::Empty));

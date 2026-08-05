@@ -1,0 +1,25 @@
+--- crates/casm-core/src/control.rs
++++ replace Control::with_tag -> Self with Default::default()
+@@ -128,21 +128,17 @@
+     pub const fn requiring_evidence(mut self) -> Self {
+         self.evidence_required = true;
+         self
+     }
+ 
+     /// Attaches a free-form tag used by policy rules for selection.
+     #[must_use]
+     pub fn with_tag(mut self, tag: impl Into<String>) -> Self {
+-        let tag = tag.into();
+-        if !self.tags.contains(&tag) {
+-            self.tags.push(tag);
+-        }
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The risk dimension this control addresses.
+     #[inline]
+     #[must_use]
+     pub const fn control_type(&self) -> ControlType {
+         self.control_type
+     }

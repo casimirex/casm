@@ -1,0 +1,38 @@
+--- crates/casm-core/src/merkle.rs
++++ replace MerkleTree::changed_nodes -> Vec<String> with vec![]
+@@ -525,34 +525,17 @@
+     }
+ 
+     /// Returns the names of nodes whose digests differ between two trees.
+     ///
+     /// Includes nodes present in only one of them. This is the primitive behind
+     /// "which nodes did this commit touch".
+     #[must_use]
+     pub fn changed_nodes(&self, other: &Self) -> Vec<String> {
+-        let mut changed: Vec<String> = self
+-            .nodes
+-            .iter()
+-            .filter(|(name, digest)| other.nodes.get(*name) != Some(digest))
+-            .map(|(name, _)| name.clone())
+-            .collect();
+-
+-        changed.extend(
+-            other
+-                .nodes
+-                .keys()
+-                .filter(|name| !self.nodes.contains_key(*name))
+-                .cloned(),
+-        );
+-
+-        changed.sort_unstable();
+-        changed.dedup();
+-        changed
++        vec![] /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The name-based identity of a relationship.
+ fn edge_key(architecture: &Architecture, edge: &Relationship) -> String {
+     let name_of = |id| {
+         architecture
+             .node(id)

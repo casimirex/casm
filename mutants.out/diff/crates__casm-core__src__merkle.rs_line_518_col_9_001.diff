@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace MerkleTree::nodes -> &BTreeMap<String, Fingerprint> with Box::leak(Box::new(BTreeMap::from_iter([(String::new(), Default::default())])))
+@@ -510,17 +510,17 @@
+     #[must_use]
+     pub fn node(&self, name: &str) -> Option<Fingerprint> {
+         self.nodes.get(name).copied()
+     }
+ 
+     /// Every node digest, in name order.
+     #[must_use]
+     pub const fn nodes(&self) -> &BTreeMap<String, Fingerprint> {
+-        &self.nodes
++        Box::leak(Box::new(BTreeMap::from_iter([(String::new(), Default::default())]))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Every relationship digest, keyed by `source->target:type`.
+     #[must_use]
+     pub const fn relationships(&self) -> &BTreeMap<String, Fingerprint> {
+         &self.relationships
+     }
+ 

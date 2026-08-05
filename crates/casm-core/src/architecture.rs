@@ -888,6 +888,46 @@ mod tests {
     }
 
     #[test]
+    fn an_architecture_reports_what_it_was_built_with() {
+        // Accessors returning a constant, and builder setters discarding everything set
+        // before them, both survived the mutation sweep: nothing asserted them.
+        let node = Node::builder()
+            .name("api")
+            .node_type(NodeType::Service)
+            .build()
+            .expect("valid");
+        let id = node.id();
+
+        let architecture = Architecture::builder()
+            .name("checkout")
+            .version("1.4.0")
+            .description("Order capture")
+            .metadata("owner", "platform")
+            .node(node)
+            .build()
+            .expect("valid");
+
+        // A setter that returned `Default::default()` would have dropped the name.
+        assert_eq!(architecture.name().as_str(), "checkout");
+        assert_eq!(architecture.version().to_string(), "1.4.0");
+        assert_eq!(architecture.description(), Some("Order capture"));
+        assert_eq!(
+            architecture.metadata().get("owner").map(String::as_str),
+            Some("platform")
+        );
+
+        assert!(architecture.contains(id), "a declared node is contained");
+        assert!(!architecture.contains(NodeId::new()), "a stranger is not");
+        assert!(!architecture.is_empty());
+
+        // And the absent case, which a constant accessor cannot also satisfy.
+        let bare = Architecture::builder().name("bare").build().expect("valid");
+        assert_eq!(bare.description(), None);
+        assert!(bare.is_empty());
+        assert!(!bare.contains(id));
+    }
+
+    #[test]
     fn architecture_round_trips_through_json() {
         let (original, _, _) = sample();
         let json = serde_json::to_string(&original).unwrap();

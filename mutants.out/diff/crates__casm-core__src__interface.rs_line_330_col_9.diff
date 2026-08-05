@@ -1,0 +1,23 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::is_compatible_with -> bool with true
+@@ -322,19 +322,17 @@
+ 
+     /// Returns `true` if a consumer pinned to `self` can safely talk to `other`.
+     ///
+     /// Compatibility is SemVer-major equality plus a minor-version floor, on the same
+     /// protocol. This is the check that turns "we upgraded the API" from a production
+     /// incident into a failed validation run.
+     #[must_use]
+     pub fn is_compatible_with(&self, other: &Self) -> bool {
+-        self.protocol == other.protocol
+-            && self.version.major == other.version.major
+-            && other.version.minor >= self.version.minor
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,

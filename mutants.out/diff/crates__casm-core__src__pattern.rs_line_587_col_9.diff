@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace PatternRef::name -> &str with ""
+@@ -579,17 +579,17 @@
+             version,
+         })
+     }
+ 
+     /// The referenced pattern's name.
+     #[inline]
+     #[must_use]
+     pub fn name(&self) -> &str {
+-        &self.name
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The referenced version.
+     #[inline]
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+         &self.version
+     }

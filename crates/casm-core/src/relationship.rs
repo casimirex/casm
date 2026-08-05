@@ -496,6 +496,44 @@ mod tests {
     }
 
     #[test]
+    fn a_relationship_reports_what_it_was_built_with() {
+        let (a, b) = (NodeId::new(), NodeId::new());
+
+        let plain = RelationshipConfig::new()
+            .source(a)
+            .target(b)
+            .relationship_type(RelationshipType::Sync)
+            .build()
+            .expect("valid");
+
+        assert_eq!(plain.description(), None);
+        assert_eq!(plain.protocol(), None);
+        assert!(plain.controls().is_empty());
+
+        let furnished = RelationshipConfig::new()
+            .source(a)
+            .target(b)
+            .relationship_type(RelationshipType::Sync)
+            .description("Order placement")
+            .protocol(Protocol::Grpc)
+            .control(
+                Control::new(crate::ControlType::Security, "mTLS", "Mutual TLS required")
+                    .expect("valid"),
+            )
+            .build()
+            .expect("valid");
+
+        // A setter returning `Default::default()` would have discarded the source and
+        // target set before it, so these assertions carry more than they appear to.
+        assert_eq!(furnished.source(), a);
+        assert_eq!(furnished.target(), b);
+        assert_eq!(furnished.description(), Some("Order placement"));
+        assert_eq!(furnished.protocol(), Some(&Protocol::Grpc));
+        assert_eq!(furnished.controls().len(), 1);
+        assert_eq!(furnished.controls()[0].standard(), "mTLS");
+    }
+
+    #[test]
     fn identity_distinguishes_edges_by_type() {
         let (a, b) = (NodeId::new(), NodeId::new());
         let build = |kind| {

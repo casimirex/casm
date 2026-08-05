@@ -1,0 +1,22 @@
+--- crates/casm-core/src/node.rs
++++ replace NodeConfig::metadata -> Self with Default::default()
+@@ -172,18 +172,17 @@
+         self
+     }
+ 
+     /// Attaches an arbitrary key/value annotation.
+     ///
+     /// Stored in a `BTreeMap` so serialisation order is deterministic (NASA Rule 8).
+     #[must_use]
+     pub fn metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+-        self.metadata.insert(key.into(), value.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Phase 2: validates the configuration and produces an immutable [`Node`].
+     ///
+     /// # Errors
+     ///
+     /// - [`NodeError::MissingField`] if `name` or `node_type` was never set.
+     /// - [`NodeError::Name`] if the name violates the CASIMIR alphabet.

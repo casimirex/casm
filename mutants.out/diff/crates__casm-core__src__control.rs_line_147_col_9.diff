@@ -1,0 +1,21 @@
+--- crates/casm-core/src/control.rs
++++ replace Control::control_type -> ControlType with Default::default()
+@@ -139,17 +139,17 @@
+         }
+         self
+     }
+ 
+     /// The risk dimension this control addresses.
+     #[inline]
+     #[must_use]
+     pub const fn control_type(&self) -> ControlType {
+-        self.control_type
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The external standard identifier, e.g. `"ISO27001-A.12.4"`.
+     #[inline]
+     #[must_use]
+     pub fn standard(&self) -> &str {
+         &self.standard
+     }

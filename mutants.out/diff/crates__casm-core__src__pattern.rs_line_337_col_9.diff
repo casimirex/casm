@@ -1,0 +1,44 @@
+--- crates/casm-core/src/pattern.rs
++++ replace PatternConfig::build -> Result<Pattern, PatternError> with Ok(Default::default())
+@@ -329,40 +329,17 @@
+     /// Phase 2: validates every invariant and produces an immutable [`Pattern`].
+     ///
+     /// # Errors
+     ///
+     /// Returns the first violated invariant: a missing or invalid name, a non-SemVer
+     /// version, a duplicated role, or a relationship naming a role the pattern does not
+     /// declare.
+     pub fn build(self) -> Result<Pattern, PatternError> {
+-        let raw_name = self
+-            .name
+-            .ok_or(PatternError::MissingField { field: "name" })?;
+-        let name = Name::new(raw_name)?;
+-
+-        let raw_version = self.version.unwrap_or_else(|| "0.1.0".to_owned());
+-        let version =
+-            Version::parse(&raw_version).map_err(|error| PatternError::InvalidVersion {
+-                version: raw_version,
+-                reason: error.to_string(),
+-            })?;
+-
+-        Self::reject_duplicate_roles(&self.requirements)?;
+-        Self::reject_unknown_roles(&self.requirements, &self.relationships)?;
+-
+-        Ok(Pattern {
+-            name,
+-            version,
+-            description: self.description,
+-            requirements: self.requirements,
+-            relationships: self.relationships,
+-            satisfies: self.satisfies,
+-            metadata: self.metadata,
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Enforces that role names are unique.
+     fn reject_duplicate_roles(requirements: &[Requirement]) -> Result<(), PatternError> {
+         for (index, candidate) in requirements.iter().enumerate() {
+             let duplicated = requirements
+                 .iter()
+                 .take(index)

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/ids.rs
++++ replace <impl core::str::FromStr for NodeId>::from_str -> Result<Self, Self::Err> with Ok(Default::default())
+@@ -117,17 +117,17 @@
+         write!(f, "{}", self.0.as_hyphenated())
+     }
+ }
+ 
+ impl core::str::FromStr for NodeId {
+     type Err = IdError;
+ 
+     fn from_str(s: &str) -> Result<Self, Self::Err> {
+-        Self::parse(s)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl TryFrom<&str> for NodeId {
+     type Error = IdError;
+ 
+     fn try_from(value: &str) -> Result<Self, Self::Error> {
+         Self::parse(value)

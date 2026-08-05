@@ -1,0 +1,21 @@
+--- crates/casm-core/src/control.rs
++++ delete ! in Control::with_tag
+@@ -129,17 +129,17 @@
+         self.evidence_required = true;
+         self
+     }
+ 
+     /// Attaches a free-form tag used by policy rules for selection.
+     #[must_use]
+     pub fn with_tag(mut self, tag: impl Into<String>) -> Self {
+         let tag = tag.into();
+-        if !self.tags.contains(&tag) {
++        if  /* ~ changed by cargo-mutants ~ */self.tags.contains(&tag) {
+             self.tags.push(tag);
+         }
+         self
+     }
+ 
+     /// The risk dimension this control addresses.
+     #[inline]
+     #[must_use]

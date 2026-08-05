@@ -1,0 +1,22 @@
+--- crates/casm-core/src/node.rs
++++ replace NodeConfig::node_type -> Self with Default::default()
+@@ -142,18 +142,17 @@
+     pub fn name(mut self, name: impl Into<String>) -> Self {
+         self.name = Some(name.into());
+         self
+     }
+ 
+     /// Sets the node's architectural role. Required.
+     #[must_use]
+     pub const fn node_type(mut self, node_type: NodeType) -> Self {
+-        self.node_type = Some(node_type);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Sets a human-readable description.
+     #[must_use]
+     pub fn description(mut self, description: impl Into<String>) -> Self {
+         self.description = Some(description.into());
+         self
+     }

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace ConformanceReport::unmet -> &[Unmet] with Vec::leak(vec![Default::default()])
+@@ -240,17 +240,17 @@
+     pub fn bindings(&self) -> &[(String, NodeId)] {
+         &self.bindings
+     }
+ 
+     /// Everything the architecture fails to satisfy.
+     #[inline]
+     #[must_use]
+     pub fn unmet(&self) -> &[Unmet] {
+-        &self.unmet
++        Vec::leak(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Whether the architecture conforms.
+     #[inline]
+     #[must_use]
+     pub fn conforms(&self) -> bool {
+         self.unmet.is_empty()
+     }

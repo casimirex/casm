@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::satisfies -> &[String] with Vec::leak(Vec::new())
+@@ -481,17 +481,17 @@
+     pub fn relationships(&self) -> &[RequiredRelationship] {
+         &self.relationships
+     }
+ 
+     /// The standards this pattern helps satisfy.
+     #[inline]
+     #[must_use]
+     pub fn satisfies(&self) -> &[String] {
+-        &self.satisfies
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The pattern's annotations.
+     #[inline]
+     #[must_use]
+     pub const fn metadata(&self) -> &BTreeMap<String, String> {
+         &self.metadata
+     }

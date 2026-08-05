@@ -236,6 +236,79 @@ mod tests {
     }
 
     #[test]
+    fn the_delegating_conversions_validate_as_parse_does() {
+        // `FromStr` and both `TryFrom` impls forward to `parse`, and none was tested:
+        // replacing any of them with `Ok(Default::default())` survived the mutation
+        // sweep. A caller writing `"...".parse::<NodeId>()` would then get a freshly
+        // generated identifier instead of a rejection — ADR-0003 calls this type a
+        // *validated* UUIDv7, and these are the validation.
+        let valid = NodeId::new().to_string();
+
+        assert_eq!(
+            valid
+                .parse::<NodeId>()
+                .expect("a generated id parses")
+                .to_string(),
+            valid
+        );
+        assert_eq!(
+            NodeId::try_from(valid.as_str())
+                .expect("a generated id converts")
+                .to_string(),
+            valid
+        );
+        assert_eq!(
+            NodeId::try_from(valid.clone())
+                .expect("a generated id converts")
+                .to_string(),
+            valid
+        );
+
+        // And every one of them must refuse what `parse` refuses.
+        for candidate in ["", "not-a-uuid", "f47ac10b-58cc-4372-a567-0e02b2c3d479"] {
+            assert!(
+                candidate.parse::<NodeId>().is_err(),
+                "FromStr accepted {candidate:?}"
+            );
+            assert!(
+                NodeId::try_from(candidate).is_err(),
+                "TryFrom<&str> accepted {candidate:?}"
+            );
+            assert!(
+                NodeId::try_from(candidate.to_owned()).is_err(),
+                "TryFrom<String> accepted {candidate:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn the_embedded_timestamp_is_milliseconds_not_some_other_unit() {
+        // A UUIDv7 carries its timestamp as 48 bits of milliseconds in the first twelve
+        // hexadecimal digits, so a known identifier pins a known answer exactly.
+        //
+        // A wall-clock tolerance cannot do this job, and the first version of this test
+        // tried: the sub-second part of a v7 timestamp is always a whole number of
+        // milliseconds, so replacing the `/ 1_000_000` with `%` is an error of at most
+        // 999 ms — invisible to any window generous enough not to be flaky.
+        // Both values carry a non-zero *sub-second* part, which is the whole point: a
+        // timestamp ending in `000` has nothing below the second, so `/`, `%`, and `*`
+        // all agree on it and the test proves nothing. The first version of this test
+        // picked two such values and let both mutants live.
+        let known = "018bcfe5-687b-7000-8000-000000000000"
+            .parse::<NodeId>()
+            .expect("a well-formed v7 identifier");
+
+        assert_eq!(known.timestamp_millis(), 1_700_000_000_123);
+
+        let later = "018bcfe6-1a6e-7000-8000-000000000000"
+            .parse::<NodeId>()
+            .expect("a well-formed v7 identifier");
+
+        assert_eq!(later.timestamp_millis(), 1_700_000_045_678);
+        assert!(later.timestamp_millis() > known.timestamp_millis());
+    }
+
+    #[test]
     fn serde_round_trips_through_json() {
         let id = NodeId::new();
         let json = serde_json::to_string(&id).unwrap();

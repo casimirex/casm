@@ -1,0 +1,21 @@
+--- crates/casm-core/src/node.rs
++++ replace Node::interfaces -> &[Interface] with Vec::leak(Vec::new())
+@@ -300,17 +300,17 @@
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }
+ 
+     /// The interfaces this node exposes.
+     #[inline]
+     #[must_use]
+     pub fn interfaces(&self) -> &[Interface] {
+-        &self.interfaces
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The controls this node is asserted to satisfy.
+     #[inline]
+     #[must_use]
+     pub fn controls(&self) -> &[Control] {
+         &self.controls
+     }

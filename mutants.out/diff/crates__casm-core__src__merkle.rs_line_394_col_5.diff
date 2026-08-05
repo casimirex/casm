@@ -1,0 +1,35 @@
+--- crates/casm-core/src/merkle.rs
++++ replace conformance_digest -> Fingerprint with Default::default()
+@@ -386,31 +386,17 @@
+ 
+ /// The digest of a conformance claim, with bound nodes named rather than identified.
+ ///
+ /// Naming rather than identifying is the same choice [`relationship_digest`] makes, and
+ /// for the same reason: a `NodeId` is generated, so including one would make the digest
+ /// depend on when the file was written rather than on what it says.
+ #[must_use]
+ pub fn conformance_digest(architecture: &Architecture, claim: &Conformance) -> Fingerprint {
+-    let mut encoder = Encoder::default();
+-    encoder.text(&claim.pattern().to_string());
+-
+-    let bindings: BTreeMap<String, String> = claim
+-        .bindings()
+-        .iter()
+-        .map(|(role, id)| {
+-            let node = architecture
+-                .node(*id)
+-                .map_or_else(|| "?".to_owned(), |node| node.name().as_str().to_owned());
+-            (role.as_str().to_owned(), node)
+-        })
+-        .collect();
+-
+-    encoder.map(&bindings).finish("conformance")
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders digests as hex and sorts them, making the combination order-independent.
+ fn sorted_digests(digests: impl Iterator<Item = Fingerprint>) -> Vec<String> {
+     let mut rendered: Vec<String> = digests.map(|digest| digest.to_hex()).collect();
+     rendered.sort_unstable();
+     rendered
+ }

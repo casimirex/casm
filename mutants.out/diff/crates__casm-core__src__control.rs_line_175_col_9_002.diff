@@ -1,0 +1,21 @@
+--- crates/casm-core/src/control.rs
++++ replace Control::tags -> &[String] with Vec::leak(vec!["xyzzy".into()])
+@@ -167,17 +167,17 @@
+     pub const fn evidence_required(&self) -> bool {
+         self.evidence_required
+     }
+ 
+     /// The tags attached to this control.
+     #[inline]
+     #[must_use]
+     pub fn tags(&self) -> &[String] {
+-        &self.tags
++        Vec::leak(vec!["xyzzy".into()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if this control carries `tag`.
+     #[must_use]
+     pub fn has_tag(&self, tag: &str) -> bool {
+         self.tags.iter().any(|candidate| candidate == tag)
+     }
+ }

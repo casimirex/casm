@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace == with != in PatternRef::matches
+@@ -592,17 +592,17 @@
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+         &self.version
+     }
+ 
+     /// Returns `true` if `pattern` is the one referenced.
+     #[must_use]
+     pub fn matches(&self, pattern: &Pattern) -> bool {
+-        pattern.name().as_str() == self.name && pattern.version() == &self.version
++        pattern.name().as_str() != /* ~ changed by cargo-mutants ~ */ self.name && pattern.version() == &self.version
+     }
+ }
+ 
+ impl fmt::Display for PatternRef {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         write!(f, "{}@{}", self.name, self.version)
+     }
+ }

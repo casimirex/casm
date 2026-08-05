@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace match guard label.trim().is_empty() with false in Protocol::validate
+@@ -112,17 +112,17 @@
+ 
+     /// Validates a [`Protocol::Custom`] label.
+     ///
+     /// # Errors
+     ///
+     /// Returns [`InterfaceError::EmptyCustomProtocol`] if a custom label is blank.
+     pub fn validate(&self) -> Result<(), InterfaceError> {
+         match self {
+-            Self::Custom(label) if label.trim().is_empty() => {
++            Self::Custom(label) if false /* ~ changed by cargo-mutants ~ */ => {
+                 Err(InterfaceError::EmptyCustomProtocol)
+             }
+             _ => Ok(()),
+         }
+     }
+ }
+ 
+ impl fmt::Display for Protocol {

@@ -1,0 +1,23 @@
+--- crates/casm-core/src/merkle.rs
++++ replace sorted_digests -> Vec<String> with vec![]
+@@ -405,19 +405,17 @@
+         })
+         .collect();
+ 
+     encoder.map(&bindings).finish("conformance")
+ }
+ 
+ /// Renders digests as hex and sorts them, making the combination order-independent.
+ fn sorted_digests(digests: impl Iterator<Item = Fingerprint>) -> Vec<String> {
+-    let mut rendered: Vec<String> = digests.map(|digest| digest.to_hex()).collect();
+-    rendered.sort_unstable();
+-    rendered
++    vec![] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The Merkle tree of an architecture: a root digest plus every subtree beneath it.
+ ///
+ /// The per-node digests are what make `casm blame` possible — attributing a change to a
+ /// single node means finding the commit where that node's subtree digest last differed.
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub struct MerkleTree {

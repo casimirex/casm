@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::version -> &Version with Box::leak(Box::new(Default::default()))
+@@ -453,17 +453,17 @@
+     pub const fn name(&self) -> &Name {
+         &self.name
+     }
+ 
+     /// The pattern's semantic version.
+     #[inline]
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+-        &self.version
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The human-readable description.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }

@@ -26,14 +26,10 @@
 
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-core@0.3.0
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
-    Blocking waiting for file lock on package cache
        Fresh libc v0.2.189
        Fresh cfg-if v1.0.4
-       Fresh unicode-ident v1.0.24
        Fresh version_check v0.9.5
+       Fresh unicode-ident v1.0.24
        Fresh proc-macro2 v1.0.107
        Fresh quote v1.0.47
        Fresh serde_core v1.0.229
@@ -50,623 +46,660 @@
        Fresh zerocopy v0.8.55
        Fresh block-buffer v0.10.4
        Fresh crypto-common v0.1.7
-       Fresh once_cell v1.21.4
        Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
        Fresh tempfile v3.27.0
        Fresh digest v0.10.7
        Fresh ppv-lite86 v0.2.21
        Fresh serde_derive v1.0.229
        Fresh thiserror-impl v2.0.19
        Fresh wait-timeout v0.2.1
+       Fresh quick-error v1.2.3
        Fresh keccak v0.1.6
-       Fresh bit-vec v0.8.0
        Fresh equivalent v1.0.2
        Fresh fnv v1.0.7
        Fresh hashbrown v0.17.1
-       Fresh quick-error v1.2.3
-       Fresh rusty-fork v0.3.1
-       Fresh indexmap v2.14.0
+       Fresh bit-vec v0.8.0
        Fresh bit-set v0.8.0
+       Fresh indexmap v2.14.0
+       Fresh rusty-fork v0.3.1
        Fresh sha3 v0.10.9
        Fresh thiserror v2.0.19
        Fresh serde v1.0.229
        Fresh num-traits v0.2.19
        Fresh rand_chacha v0.9.0
        Fresh zmij v1.0.23
-       Fresh rand_xorshift v0.4.0
        Fresh rand v0.9.5
+       Fresh rand_xorshift v0.4.0
        Fresh uuid v1.24.0
        Fresh semver v1.0.28
-       Fresh regex-syntax v0.8.11
        Fresh itoa v1.0.18
-       Fresh unarray v0.1.4
        Fresh memchr v2.8.3
-       Fresh serde_json v1.0.151
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
        Fresh proptest v1.11.0
-       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core): the file `crates/casm-core/src/relationship.rs` has changed (1785934001.965744886s, 2s after last build at 1785933999.217375103s)
-   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core)
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.44s
-  Executable `/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+       Fresh serde_json v1.0.151
+       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-F3LdqY.tmp/crates/casm-core): couldn't read metadata for file `target/debug/deps/libcasm_core-d00bbb705e8830ff.rlib`
+   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-F3LdqY.tmp/crates/casm-core)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.50s
+  Executable `/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
 *** result: Success
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-core@0.3.0
+       Fresh libc v0.2.189
        Fresh cfg-if v1.0.4
        Fresh version_check v0.9.5
        Fresh unicode-ident v1.0.24
-       Fresh libc v0.2.189
        Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
        Fresh serde_core v1.0.229
        Fresh typenum v1.20.1
-       Fresh quote v1.0.47
-       Fresh generic-array v0.14.7
-       Fresh getrandom v0.4.3
-       Fresh getrandom v0.3.4
-       Fresh bitflags v2.13.1
        Fresh syn v3.0.3
+       Fresh getrandom v0.3.4
+       Fresh getrandom v0.4.3
+       Fresh generic-array v0.14.7
        Fresh rand_core v0.9.5
        Fresh autocfg v1.5.1
+       Fresh bitflags v2.13.1
        Fresh linux-raw-sys v0.12.1
        Fresh crypto-common v0.1.7
-       Fresh zerocopy v0.8.55
-       Fresh rustix v1.1.4
        Fresh block-buffer v0.10.4
-       Fresh fastrand v2.5.0
+       Fresh rustix v1.1.4
+       Fresh zerocopy v0.8.55
        Fresh once_cell v1.21.4
+       Fresh fastrand v2.5.0
        Fresh digest v0.10.7
        Fresh tempfile v3.27.0
        Fresh ppv-lite86 v0.2.21
-       Fresh serde_derive v1.0.229
        Fresh thiserror-impl v2.0.19
+       Fresh serde_derive v1.0.229
        Fresh wait-timeout v0.2.1
        Fresh keccak v0.1.6
-       Fresh equivalent v1.0.2
-       Fresh fnv v1.0.7
        Fresh quick-error v1.2.3
-       Fresh bit-vec v0.8.0
        Fresh hashbrown v0.17.1
+       Fresh fnv v1.0.7
+       Fresh bit-vec v0.8.0
+       Fresh equivalent v1.0.2
+       Fresh bit-set v0.8.0
+       Fresh sha3 v0.10.9
+       Fresh indexmap v2.14.0
+       Fresh rusty-fork v0.3.1
        Fresh zmij v1.0.23
        Fresh serde v1.0.229
-       Fresh indexmap v2.14.0
-       Fresh bit-set v0.8.0
-       Fresh rusty-fork v0.3.1
-       Fresh sha3 v0.10.9
        Fresh thiserror v2.0.19
        Fresh rand_chacha v0.9.0
        Fresh num-traits v0.2.19
-       Fresh rand_xorshift v0.4.0
        Fresh rand v0.9.5
-       Fresh uuid v1.24.0
+       Fresh rand_xorshift v0.4.0
        Fresh semver v1.0.28
+       Fresh uuid v1.24.0
        Fresh itoa v1.0.18
-       Fresh memchr v2.8.3
        Fresh regex-syntax v0.8.11
        Fresh unarray v0.1.4
+       Fresh memchr v2.8.3
        Fresh serde_json v1.0.151
        Fresh proptest v1.11.0
-       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Tqtqh5.tmp/crates/casm-core)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
-     Running `/tmp/cargo-mutants-casm-Tqtqh5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-F3LdqY.tmp/crates/casm-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running `/tmp/cargo-mutants-casm-F3LdqY.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
-running 188 tests
-test architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim ... ok
-test architecture::tests::a_binding_to_an_absent_node_is_rejected ... FAILED
+running 205 tests
 test architecture::tests::a_dangling_source_is_rejected_and_named_as_such ... FAILED
 test architecture::tests::a_dangling_target_is_rejected_and_named_as_such ... FAILED
-test architecture::tests::an_identical_relationship_is_rejected ... FAILED
+test architecture::tests::an_architecture_reports_what_it_was_built_with ... ok
 test architecture::tests::architecture_round_trips_through_json ... FAILED
-test architecture::tests::build_rejects_a_non_semver_version ... ok
 test architecture::tests::build_applies_sensible_defaults ... ok
-test architecture::tests::build_resolves_edges_declared_before_their_nodes ... FAILED
-test architecture::tests::lookup_works_by_id_and_by_name ... FAILED
-test architecture::tests::node_iteration_order_is_stable_across_runs ... FAILED
+test architecture::tests::a_binding_to_an_absent_node_is_rejected ... FAILED
 test architecture::tests::degree_counts_both_directions ... FAILED
-test architecture::tests::duplicate_node_names_are_rejected ... ok
-test architecture::tests::consuming_builders_compose ... FAILED
-test architecture::tests::a_conformance_claim_is_recorded_in_declaration_order ... FAILED
 test architecture::tests::duplicate_node_ids_are_rejected ... ok
+test architecture::tests::build_rejects_a_non_semver_version ... ok
+test architecture::tests::duplicate_node_names_are_rejected ... ok
+test architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim ... ok
+test architecture::tests::a_conformance_claim_is_recorded_in_declaration_order ... FAILED
+test architecture::tests::build_resolves_edges_declared_before_their_nodes ... FAILED
+test architecture::tests::consuming_builders_compose ... FAILED
 test architecture::tests::isolated_nodes_are_identified ... FAILED
-test architecture::tests::incoming_and_outgoing_partition_the_edges ... FAILED
 test architecture::tests::removing_a_referenced_node_is_refused_with_a_count ... FAILED
+test architecture::tests::node_iteration_order_is_stable_across_runs ... FAILED
 test architecture::tests::removing_an_absent_node_is_not_an_error ... FAILED
+test architecture::tests::incoming_and_outgoing_partition_the_edges ... FAILED
+test architecture::tests::lookup_works_by_id_and_by_name ... FAILED
+test architecture::tests::an_identical_relationship_is_rejected ... FAILED
 test architecture::tests::removing_an_unreferenced_node_succeeds ... FAILED
-test architecture::tests::the_same_pair_may_be_connected_with_different_semantics ... FAILED
-test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... FAILED
-test conformance::tests::a_conforming_architecture_reports_nothing_unmet ... FAILED
 test architecture::tests::the_same_pattern_cannot_be_claimed_twice ... FAILED
 test architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde ... FAILED
+test architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one ... FAILED
 test conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound ... FAILED
+test conformance::tests::a_conforming_architecture_reports_nothing_unmet ... FAILED
 test architecture::tests::verify_invariants_passes_on_a_constructed_architecture ... FAILED
-test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... FAILED
-test conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes ... FAILED
-test conformance::tests::a_missing_protocol_is_reported ... FAILED
 test conformance::tests::a_missing_control_type_is_reported ... FAILED
-test architecture::tests::two_versions_of_one_pattern_may_both_be_claimed ... FAILED
+test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... FAILED
+test conformance::tests::a_missing_protocol_is_reported ... FAILED
 test conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at ... FAILED
 test conformance::tests::a_vacuous_pattern_is_satisfied_by_anything ... FAILED
-test conformance::tests::an_unfillable_role_does_not_also_report_its_relationships ... FAILED
-test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... FAILED
-test conformance::tests::checking_is_deterministic ... FAILED
-test conformance::tests::every_unmet_variant_renders_a_message_naming_its_role ... FAILED
+test conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes ... FAILED
 test conformance::tests::an_explicit_binding_resolves_the_ambiguity ... FAILED
+test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... FAILED
+test architecture::tests::the_same_pair_may_be_connected_with_different_semantics ... FAILED
+test architecture::tests::two_versions_of_one_pattern_may_both_be_claimed ... FAILED
+test conformance::tests::an_unfillable_role_does_not_also_report_its_relationships ... FAILED
+test conformance::tests::checking_is_deterministic ... FAILED
+test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... FAILED
+test conformance::tests::every_unmet_variant_renders_a_message_naming_its_role ... FAILED
+test conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision ... FAILED
 test conformance::tests::relationship_direction_matters ... FAILED
-test conformance::tests::too_few_security_controls_is_reported_with_both_counts ... FAILED
 test control::tests::control_round_trips_through_json ... ok
+test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... FAILED
+test conformance::tests::too_few_security_controls_is_reported_with_both_counts ... FAILED
+test control::tests::a_control_returns_the_standard_and_description_it_was_built_with ... ok
+test control::tests::every_control_type_renders_its_own_label ... ok
 test control::tests::evidence_is_not_required_by_default ... ok
 test control::tests::auditability_is_classified_per_control_type ... ok
-test conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision ... FAILED
-test control::tests::has_tag_matches_exactly ... ok
-test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... FAILED
 test control::tests::rejects_a_blank_standard ... ok
-test control::tests::control_type_serialises_as_kebab_case ... ok
 test control::tests::requiring_evidence_sets_the_flag ... ok
-test error::tests::core_error_flattens_nested_sources ... ok
-test hex::tests::decoding_accepts_uppercase_digits ... ok
+test control::tests::control_type_serialises_as_kebab_case ... ok
+test error::tests::errors_render_actionable_messages ... ok
+test control::tests::has_tag_matches_exactly ... ok
 test hex::tests::decoding_is_total_on_arbitrary_input ... ok
+test hex::tests::decoding_rejects_non_hexadecimal_input ... ok
 test hex::tests::decoding_rejects_the_wrong_length_and_says_what_it_wanted ... ok
 test hex::tests::decoding_round_trips_with_encoding ... ok
-test control::tests::rejects_a_blank_description ... ok
-test hex::tests::decoding_rejects_non_hexadecimal_input ... ok
 test hex::tests::encoding_is_lowercase ... ok
 test hex::tests::encoding_pads_every_byte_to_two_digits ... ok
 test ids::tests::deserialisation_rejects_wrong_version ... ok
 test ids::tests::display_uses_canonical_hyphenated_form ... ok
-test control::tests::tags_are_deduplicated ... ok
-test ids::tests::ids_sort_chronologically ... ok
-test error::tests::errors_are_comparable_for_exact_assertions ... ok
-test error::tests::errors_render_actionable_messages ... ok
+test ids::tests::generated_ids_are_unique ... ok
 test ids::tests::generated_ids_are_version_seven ... ok
+test control::tests::rejects_a_blank_description ... ok
+test hex::tests::decoding_accepts_uppercase_digits ... ok
+test error::tests::core_error_flattens_nested_sources ... ok
+test control::tests::tags_are_deduplicated ... ok
+test error::tests::errors_are_comparable_for_exact_assertions ... ok
 test hex::tests::decoding_accepts_an_algorithm_prefix ... ok
 test ids::tests::parse_rejects_malformed_input ... ok
-test ids::tests::parse_rejects_version_four_uuids ... ok
-test ids::tests::timestamp_is_recoverable_and_plausible ... ok
-test interface::tests::compatibility_rejects_a_backward_minor_version ... ok
 test ids::tests::parse_rejects_the_nil_uuid ... ok
-test ids::tests::serde_round_trips_through_json ... ok
+test ids::tests::parse_rejects_version_four_uuids ... ok
+test ids::tests::the_embedded_timestamp_is_milliseconds_not_some_other_unit ... ok
+test interface::tests::a_custom_protocol_is_accepted_when_its_label_is_not_blank ... ok
+test interface::tests::an_interfaces_description_is_returned_as_written ... ok
+test interface::tests::compatibility_allows_a_forward_minor_version ... ok
+test interface::tests::compatibility_rejects_a_backward_minor_version ... ok
+test ids::tests::ids_sort_chronologically ... ok
+test interface::tests::compatibility_requires_matching_major_version ... ok
 test interface::tests::compatibility_requires_matching_protocol ... ok
 test interface::tests::interface_rejects_a_non_semver_version ... ok
-test interface::tests::interface_rejects_unknown_fields ... ok
-test interface::tests::interface_rejects_an_empty_custom_protocol ... ok
-test ids::tests::generated_ids_are_unique ... ok
-test interface::tests::compatibility_allows_a_forward_minor_version ... ok
-test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
-test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
+test ids::tests::serde_round_trips_through_json ... ok
+test ids::tests::the_delegating_conversions_validate_as_parse_does ... ok
+test ids::tests::timestamp_is_recoverable_and_plausible ... ok
+test interface::tests::protocols_and_hashes_render_the_text_they_are_read_back_from ... ok
 test interface::tests::interface_round_trips_through_json ... ok
-test interface::tests::protocols_are_classified_by_synchrony ... ok
-test interface::tests::compatibility_requires_matching_major_version ... ok
+test interface::tests::interface_rejects_an_empty_custom_protocol ... ok
+test interface::tests::interface_rejects_unknown_fields ... ok
+test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
+test interface::tests::schema_hash_debug_is_abbreviated_not_full ... ok
 test interface::tests::schema_hash_is_deterministic_across_calls ... ok
 test interface::tests::schema_hash_matches_the_published_sha3_256_vector ... ok
-test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
-test interface::tests::schema_hash_changes_with_a_single_byte ... ok
 test interface::tests::schema_hash_round_trips_through_hex ... ok
+test interface::tests::protocols_are_classified_by_synchrony ... ok
 test merkle::tests::a_changed_latency_budget_changes_the_fingerprint ... FAILED
-test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... FAILED
-test interface::tests::schema_hash_debug_is_abbreviated_not_full ... ok
-test merkle::tests::abbreviation_does_not_panic_on_an_over_long_width ... FAILED
+test interface::tests::schema_hash_changes_with_a_single_byte ... ok
+test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
+test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
+test merkle::tests::a_boolean_field_is_part_of_the_digest ... ok
 test merkle::tests::a_version_bump_changes_the_fingerprint ... ok
-test merkle::tests::changed_nodes_includes_additions_and_removals ... FAILED
-test merkle::tests::adding_a_control_changes_the_fingerprint ... ok
+test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... FAILED
 test merkle::tests::a_node_digest_never_collides_with_a_control_digest ... ok
+test merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint ... FAILED
+test merkle::tests::a_renamed_node_changes_the_fingerprint ... FAILED
 test merkle::tests::changed_nodes_is_empty_for_identical_trees ... FAILED
 test merkle::tests::changed_nodes_reports_only_what_actually_differs ... FAILED
-test merkle::tests::a_renamed_node_changes_the_fingerprint ... FAILED
-test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... FAILED
+test merkle::tests::an_empty_architecture_has_a_stable_fingerprint ... ok
+test merkle::tests::changed_nodes_includes_additions_and_removals ... FAILED
 test merkle::tests::an_absent_description_differs_from_an_empty_one ... ok
+test merkle::tests::control_order_within_a_node_does_not_matter ... ok
+test merkle::tests::abbreviation_does_not_panic_on_an_over_long_width ... FAILED
+test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... FAILED
 test merkle::tests::declaration_order_does_not_affect_the_fingerprint ... FAILED
 test merkle::tests::declaring_conformance_changes_the_fingerprint ... FAILED
-test merkle::tests::control_order_within_a_node_does_not_matter ... ok
-test merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text ... ok
-test merkle::tests::fingerprints_round_trip_through_json ... FAILED
+test merkle::tests::adding_a_control_changes_the_fingerprint ... ok
+test merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects ... FAILED
+test merkle::tests::fingerprints_render_and_parse_as_hex ... FAILED
 test merkle::tests::identical_architectures_fingerprint_identically ... FAILED
-test merkle::tests::rebinding_a_role_changes_the_fingerprint ... FAILED
 test merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole ... FAILED
-test merkle::tests::an_empty_architecture_has_a_stable_fingerprint ... ok
-test merkle::tests::fingerprint_parsing_rejects_malformed_input ... ok
 test merkle::tests::the_scheme_tag_is_mixed_into_the_root ... FAILED
 test merkle::tests::the_tree_exposes_a_digest_per_node ... FAILED
-test names::tests::deserialisation_enforces_the_same_rules_as_construction ... ok
 test names::tests::accepts_a_name_exactly_at_the_ceiling ... ok
 test names::tests::accepts_conventional_service_names ... ok
+test names::tests::borrowing_a_name_as_a_string_yields_the_name ... ok
+test names::tests::deserialisation_enforces_the_same_rules_as_construction ... ok
+test merkle::tests::fingerprint_parsing_rejects_malformed_input ... ok
 test merkle::tests::fingerprinting_is_stable_across_repeated_calls ... FAILED
-test names::tests::rejects_diagram_and_shell_metacharacters ... ok
-test merkle::tests::fingerprints_render_and_parse_as_hex ... FAILED
-test names::tests::rejects_non_alphanumeric_leading_character ... ok
-test names::tests::rejects_empty_and_whitespace_only ... ok
+test merkle::tests::fingerprints_round_trip_through_json ... FAILED
 test names::tests::rejects_names_over_the_length_ceiling ... ok
+test names::tests::rejects_non_alphanumeric_leading_character ... ok
 test names::tests::reports_the_byte_offset_of_an_illegal_character ... ok
 test names::tests::serialises_transparently_as_a_plain_string ... ok
-test node::tests::build_accepts_distinct_interface_names ... ok
+test merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text ... ok
+test names::tests::rejects_diagram_and_shell_metacharacters ... ok
+test names::tests::rejects_empty_and_whitespace_only ... ok
 test node::tests::build_fails_without_a_name ... ok
+test node::tests::build_fails_without_a_node_type ... ok
 test node::tests::build_generates_an_id_when_none_is_pinned ... ok
 test node::tests::build_honours_a_pinned_id_for_reproducibility ... ok
 test node::tests::build_rejects_an_invalid_name ... ok
-test node::tests::build_fails_without_a_node_type ... ok
-test node::tests::interface_lookup_is_by_exact_name ... ok
+test node::tests::build_rejects_duplicate_interface_names ... ok
+test node::tests::controls_of_type_counts_only_the_requested_dimension ... ok
 test node::tests::has_control_tagged_searches_every_control ... ok
+test node::tests::interface_lookup_is_by_exact_name ... ok
 test node::tests::metadata_serialises_in_deterministic_key_order ... ok
 test node::tests::node_round_trips_through_json ... ok
-test node::tests::build_rejects_duplicate_interface_names ... ok
-test node::tests::node_types_are_classified_by_control_boundary ... ok
-test node::tests::controls_of_type_counts_only_the_requested_dimension ... ok
-test node::tests::with_interface_rejects_a_duplicate_at_runtime ... ok
-test node::tests::node_types_are_classified_by_statefulness ... ok
-test node::tests::serialisation_omits_empty_collections ... ok
 test node::tests::node_type_serialises_as_kebab_case ... ok
-test pattern::tests::a_fingerprint_distinguishes_the_compliance_claim ... ok
+test node::tests::node_types_are_classified_by_statefulness ... ok
+test node::tests::node_types_are_classified_by_control_boundary ... ok
+test merkle::tests::rebinding_a_role_changes_the_fingerprint ... FAILED
+test pattern::tests::a_conformance_claim_renders_the_pattern_it_names ... ok
+test node::tests::build_accepts_distinct_interface_names ... ok
+test node::tests::with_interface_rejects_a_duplicate_at_runtime ... ok
 test pattern::tests::a_fingerprint_changes_when_the_shape_changes ... ok
-test pattern::tests::a_fingerprint_ignores_declaration_order ... ok
-test pattern::tests::a_pattern_exposes_its_requirements_by_role ... ok
 test pattern::tests::a_fingerprint_distinguishes_relationship_direction ... ok
-test pattern::tests::a_reference_requires_an_exact_version ... ok
-test pattern::tests::a_pattern_round_trips_through_json ... ok
+test node::tests::serialisation_omits_empty_collections ... ok
+test pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with ... ok
+test pattern::tests::a_pattern_exposes_its_requirements_by_role ... ok
+test pattern::tests::a_fingerprint_distinguishes_the_compliance_claim ... ok
 test pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous ... ok
-test pattern::tests::a_reference_is_name_at_version ... ok
+test pattern::tests::a_pattern_round_trips_through_json ... ok
+test pattern::tests::a_fingerprint_ignores_declaration_order ... ok
 test pattern::tests::a_reference_round_trips_as_a_bare_string ... ok
-test pattern::tests::a_reference_splits_on_the_last_at_sign ... ok
+test pattern::tests::a_reference_requires_an_exact_version ... ok
 test pattern::tests::a_relationship_cannot_connect_a_role_to_itself ... ok
-test pattern::tests::build_rejects_a_duplicated_role ... ok
-test pattern::tests::build_defaults_the_version ... ok
-test pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role ... ok
-test pattern::tests::build_requires_a_name ... ok
+test pattern::tests::a_reference_is_name_at_version ... ok
+test pattern::tests::a_reference_splits_on_the_last_at_sign ... ok
+test pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised ... ok
 test pattern::tests::build_names_which_endpoint_was_unknown ... ok
+test pattern::tests::build_rejects_a_duplicated_role ... ok
+test pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role ... ok
+test pattern::tests::build_defaults_the_version ... ok
 test pattern::tests::build_rejects_a_non_semver_version ... ok
+test pattern::tests::build_requires_a_name ... ok
+test pattern::tests::references_parse_and_match ... ok
 test pattern::tests::malformed_references_are_rejected_with_a_reason ... ok
+test pattern::tests::requirement_builders_deduplicate ... ok
+test pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde ... ok
+test pattern::tests::serialisation_omits_empty_collections ... ok
 test pattern::tests::role_names_obey_the_casimir_alphabet ... ok
 test pattern::tests::satisfied_standards_are_deduplicated ... ok
-test pattern::tests::serialisation_omits_empty_collections ... ok
-test pattern::tests::references_parse_and_match ... ok
-test pattern::tests::requirement_builders_deduplicate ... ok
-test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... ok
-test pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde ... ok
-test relationship::tests::async_edges_are_excluded_from_cycle_detection ... ok
 test relationship::tests::blocking_classification_matches_failure_propagation ... ok
-test relationship::tests::build_fails_without_a_target ... ok
-test relationship::tests::build_rejects_a_budget_above_the_ceiling ... FAILED
-test relationship::tests::build_rejects_a_self_edge ... FAILED
+test relationship::tests::a_relationship_reports_what_it_was_built_with ... FAILED
+test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... ok
+test relationship::tests::async_edges_are_excluded_from_cycle_detection ... ok
+test relationship::tests::build_fails_without_a_source ... ok
 test relationship::tests::build_fails_without_a_relationship_type ... ok
 test relationship::tests::build_accepts_the_ceiling_itself ... FAILED
+test relationship::tests::build_rejects_a_self_edge ... FAILED
+test relationship::tests::build_rejects_a_budget_above_the_ceiling ... FAILED
 test relationship::tests::build_rejects_a_zero_latency_budget ... FAILED
 test relationship::tests::connects_is_direction_agnostic ... FAILED
+test relationship::tests::only_quantum_entangled_edges_are_entangled ... ok
+test ids::tests::generated_ids_round_trip_through_strings ... ok
 test relationship::tests::identity_distinguishes_edges_by_type ... FAILED
 test relationship::tests::latency_budget_is_optional ... FAILED
-test relationship::tests::only_quantum_entangled_edges_are_entangled ... ok
 test relationship::tests::relationship_type_serialises_as_kebab_case ... ok
-test relationship::tests::build_fails_without_a_source ... ok
+test relationship::tests::build_fails_without_a_target ... ok
 test relationship::tests::relationship_round_trips_through_json ... FAILED
 test ids::tests::parse_is_total ... ok
 test names::tests::validation_is_total ... ok
-test ids::tests::generated_ids_round_trip_through_strings ... ok
 test names::tests::legal_names_round_trip ... ok
 
 failures:
 
----- architecture::tests::a_binding_to_an_absent_node_is_rejected stdout ----
-
-thread 'architecture::tests::a_binding_to_an_absent_node_is_rejected' (1253946) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d2-7af2-9c4b-8732111d69e9" }
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-
 ---- architecture::tests::a_dangling_source_is_rejected_and_named_as_such stdout ----
 
-thread 'architecture::tests::a_dangling_source_is_rejected_and_named_as_such' (1253949) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d2-7af2-9c4b-8770890ba2b0" }
+thread 'architecture::tests::a_dangling_source_is_rejected_and_named_as_such' (1916379) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fa2-7d90-b53c-fd54b33488d8" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 ---- architecture::tests::a_dangling_target_is_rejected_and_named_as_such stdout ----
 
-thread 'architecture::tests::a_dangling_target_is_rejected_and_named_as_such' (1253950) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d2-7af2-9c4b-8789d80838ec" }
-
----- architecture::tests::an_identical_relationship_is_rejected stdout ----
-
-thread 'architecture::tests::an_identical_relationship_is_rejected' (1253951) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d2-7af2-9c4b-87ad64931c50" }
+thread 'architecture::tests::a_dangling_target_is_rejected_and_named_as_such' (1916380) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fa2-7d90-b53c-fd62de3596cb" }
 
 ---- architecture::tests::architecture_round_trips_through_json stdout ----
 
-thread 'architecture::tests::architecture_round_trips_through_json' (1253952) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d2-7af2-9c4b-87c674b11ed6" }
+thread 'architecture::tests::architecture_round_trips_through_json' (1916383) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fa2-7d90-b53c-fdadabd063ce" }
 
----- architecture::tests::build_resolves_edges_declared_before_their_nodes stdout ----
+---- architecture::tests::a_binding_to_an_absent_node_is_rejected stdout ----
 
-thread 'architecture::tests::build_resolves_edges_declared_before_their_nodes' (1253955) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d9-75e2-9fa1-3729728fcbc4" }
-
----- architecture::tests::lookup_works_by_id_and_by_name stdout ----
-
-thread 'architecture::tests::lookup_works_by_id_and_by_name' (1253962) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41d9-75e2-9fa1-374b85604a42" }
-
----- architecture::tests::node_iteration_order_is_stable_across_runs stdout ----
-
-thread 'architecture::tests::node_iteration_order_is_stable_across_runs' (1253963) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-74ed03cea321" }
+thread 'architecture::tests::a_binding_to_an_absent_node_is_rejected' (1916376) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fa5-7b31-b519-480da2d7826c" }
 
 ---- architecture::tests::degree_counts_both_directions stdout ----
 
-thread 'architecture::tests::degree_counts_both_directions' (1253957) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-74df923d1235" }
-
----- architecture::tests::consuming_builders_compose stdout ----
-
-thread 'architecture::tests::consuming_builders_compose' (1253956) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-753fc9f662d5" }
+thread 'architecture::tests::degree_counts_both_directions' (1916388) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fa9-70f3-8f91-8cdddb2c5385" }
 
 ---- architecture::tests::a_conformance_claim_is_recorded_in_declaration_order stdout ----
 
-thread 'architecture::tests::a_conformance_claim_is_recorded_in_declaration_order' (1253948) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-755fd7caa4c8" }
+thread 'architecture::tests::a_conformance_claim_is_recorded_in_declaration_order' (1916378) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fb3-78b1-bfea-e7130032af7a" }
+
+---- architecture::tests::build_resolves_edges_declared_before_their_nodes stdout ----
+
+thread 'architecture::tests::build_resolves_edges_declared_before_their_nodes' (1916386) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fb4-7e50-bd1f-42e33289ae31" }
+
+---- architecture::tests::consuming_builders_compose stdout ----
+
+thread 'architecture::tests::consuming_builders_compose' (1916387) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fb4-7e50-bd1f-43028bc86dbc" }
 
 ---- architecture::tests::isolated_nodes_are_identified stdout ----
 
-thread 'architecture::tests::isolated_nodes_are_identified' (1253961) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-758239369f9d" }
-
----- architecture::tests::incoming_and_outgoing_partition_the_edges stdout ----
-
-thread 'architecture::tests::incoming_and_outgoing_partition_the_edges' (1253960) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41da-7ee1-9627-75994b2fd0e8" }
+thread 'architecture::tests::isolated_nodes_are_identified' (1916403) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a44fd449b899" }
 
 ---- architecture::tests::removing_a_referenced_node_is_refused_with_a_count stdout ----
 
-thread 'architecture::tests::removing_a_referenced_node_is_refused_with_a_count' (1253964) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3ee930bce76d" }
+thread 'architecture::tests::removing_a_referenced_node_is_refused_with_a_count' (1916406) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a46189661585" }
+
+---- architecture::tests::node_iteration_order_is_stable_across_runs stdout ----
+
+thread 'architecture::tests::node_iteration_order_is_stable_across_runs' (1916405) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a480e94eb824" }
 
 ---- architecture::tests::removing_an_absent_node_is_not_an_error stdout ----
 
-thread 'architecture::tests::removing_an_absent_node_is_not_an_error' (1253965) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3f0acabf7714" }
+thread 'architecture::tests::removing_an_absent_node_is_not_an_error' (1916407) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a4a6ddcca838" }
+
+---- architecture::tests::incoming_and_outgoing_partition_the_edges stdout ----
+
+thread 'architecture::tests::incoming_and_outgoing_partition_the_edges' (1916402) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a4c49052099f" }
+
+---- architecture::tests::lookup_works_by_id_and_by_name stdout ----
+
+thread 'architecture::tests::lookup_works_by_id_and_by_name' (1916404) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fbe-76a3-8b10-a4ef5891982b" }
+
+---- architecture::tests::an_identical_relationship_is_rejected stdout ----
+
+thread 'architecture::tests::an_identical_relationship_is_rejected' (1916382) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc2-7263-9513-013fc219f935" }
 
 ---- architecture::tests::removing_an_unreferenced_node_succeeds stdout ----
 
-thread 'architecture::tests::removing_an_unreferenced_node_succeeds' (1253966) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3f21a26d7ff6" }
-
----- architecture::tests::the_same_pair_may_be_connected_with_different_semantics stdout ----
-
-thread 'architecture::tests::the_same_pair_may_be_connected_with_different_semantics' (1253967) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3f5506f6a5af" }
-
----- architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde stdout ----
-
-thread 'architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde' (1253971) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3f414d2122af" }
-
----- conformance::tests::a_conforming_architecture_reports_nothing_unmet stdout ----
-
-thread 'conformance::tests::a_conforming_architecture_reports_nothing_unmet' (1253974) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3f8acc2cc39a" }
+thread 'architecture::tests::removing_an_unreferenced_node_succeeds' (1916408) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc2-7263-9513-0154e5f3db7f" }
 
 ---- architecture::tests::the_same_pattern_cannot_be_claimed_twice stdout ----
 
-thread 'architecture::tests::the_same_pattern_cannot_be_claimed_twice' (1253968) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3fa32b6e201a" }
+thread 'architecture::tests::the_same_pattern_cannot_be_claimed_twice' (1916410) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc6-7700-8062-3bf0d441cf06" }
 
 ---- architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde stdout ----
 
-thread 'architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde' (1253970) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3fc7dffef522" }
+thread 'architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde' (1916412) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc6-7700-8062-3c8221ff9f93" }
+
+---- architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one stdout ----
+
+thread 'architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one' (1916415) panicked at crates/casm-core/src/architecture.rs:1069:18:
+the fixture edge is valid: SelfEdge { node: "019fd257-8fc6-7700-8062-3c5949e4ec17" }
 
 ---- conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound stdout ----
 
-thread 'conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound' (1253973) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-3fe2c998a31f" }
+thread 'conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound' (1916416) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc6-7700-8062-3ca15d5b6d21" }
+
+---- conformance::tests::a_conforming_architecture_reports_nothing_unmet stdout ----
+
+thread 'conformance::tests::a_conforming_architecture_reports_nothing_unmet' (1916417) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc6-7700-8062-3cccd1d9c836" }
 
 ---- architecture::tests::verify_invariants_passes_on_a_constructed_architecture stdout ----
 
-thread 'architecture::tests::verify_invariants_passes_on_a_constructed_architecture' (1253972) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dc-7050-bbd5-400285dc5e71" }
-
----- conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate stdout ----
-
-thread 'conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate' (1253976) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-01bad741de2b" }
-
----- conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes stdout ----
-
-thread 'conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes' (1253978) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-01d93fb11ccc" }
-
----- conformance::tests::a_missing_protocol_is_reported stdout ----
-
-thread 'conformance::tests::a_missing_protocol_is_reported' (1253977) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-01f7a31c63e9" }
+thread 'architecture::tests::verify_invariants_passes_on_a_constructed_architecture' (1916414) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc6-7700-8062-3ceb1c69afb4" }
 
 ---- conformance::tests::a_missing_control_type_is_reported stdout ----
 
-thread 'conformance::tests::a_missing_control_type_is_reported' (1253975) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-01e65dff85b0" }
+thread 'conformance::tests::a_missing_control_type_is_reported' (1916418) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc6-7700-8062-3d082be31702" }
 
----- architecture::tests::two_versions_of_one_pattern_may_both_be_claimed stdout ----
+---- conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate stdout ----
 
-thread 'architecture::tests::two_versions_of_one_pattern_may_both_be_claimed' (1253969) panicked at crates/casm-core/src/architecture.rs:607:14:
-valid edge: SelfEdge { node: "019fd1f6-41dd-7561-9a43-023c33836125" }
+thread 'conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate' (1916419) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc7-7d01-8aae-3c10edae6631" }
+
+---- conformance::tests::a_missing_protocol_is_reported stdout ----
+
+thread 'conformance::tests::a_missing_protocol_is_reported' (1916420) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc7-7d01-8aae-3c273f657668" }
 
 ---- conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at stdout ----
 
-thread 'conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at' (1253979) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-02515df5be6f" }
+thread 'conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at' (1916422) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fc9-7111-a7a3-96739f235e23" }
 
 ---- conformance::tests::a_vacuous_pattern_is_satisfied_by_anything stdout ----
 
-thread 'conformance::tests::a_vacuous_pattern_is_satisfied_by_anything' (1253980) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-02705ed98d5c" }
+thread 'conformance::tests::a_vacuous_pattern_is_satisfied_by_anything' (1916423) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fca-7c72-be7e-8c7264e21348" }
 
----- conformance::tests::an_unfillable_role_does_not_also_report_its_relationships stdout ----
+---- conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes stdout ----
 
-thread 'conformance::tests::an_unfillable_role_does_not_also_report_its_relationships' (1253982) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-029c798956ba" }
-
----- conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported stdout ----
-
-thread 'conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported' (1253983) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-02b3c8065ecf" }
-
----- conformance::tests::checking_is_deterministic stdout ----
-
-thread 'conformance::tests::checking_is_deterministic' (1253984) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-02d986598238" }
-
----- conformance::tests::every_unmet_variant_renders_a_message_naming_its_role stdout ----
-
-thread 'conformance::tests::every_unmet_variant_renders_a_message_naming_its_role' (1253985) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41dd-7561-9a43-02ff0a6ecfea" }
+thread 'conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes' (1916421) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fca-7c72-be7e-8c64fb3c269d" }
 
 ---- conformance::tests::an_explicit_binding_resolves_the_ambiguity stdout ----
 
-thread 'conformance::tests::an_explicit_binding_resolves_the_ambiguity' (1253981) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41de-73c1-a54f-c17d3007419e" }
+thread 'conformance::tests::an_explicit_binding_resolves_the_ambiguity' (1916424) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fce-7e03-968a-e86f52f33510" }
 
----- conformance::tests::relationship_direction_matters stdout ----
+---- architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde stdout ----
 
-thread 'conformance::tests::relationship_direction_matters' (1253987) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41de-73c1-a54f-c18861b2011b" }
+thread 'architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde' (1916413) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc6-7700-8062-3c15ec78d3f2" }
 
----- conformance::tests::too_few_security_controls_is_reported_with_both_counts stdout ----
+---- architecture::tests::the_same_pair_may_be_connected_with_different_semantics stdout ----
 
-thread 'conformance::tests::too_few_security_controls_is_reported_with_both_counts' (1253989) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41de-73c1-a54f-c1b4668ffeb1" }
+thread 'architecture::tests::the_same_pair_may_be_connected_with_different_semantics' (1916409) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fce-7e03-968a-e880d9d4e500" }
+
+---- architecture::tests::two_versions_of_one_pattern_may_both_be_claimed stdout ----
+
+thread 'architecture::tests::two_versions_of_one_pattern_may_both_be_claimed' (1916411) panicked at crates/casm-core/src/architecture.rs:607:14:
+valid edge: SelfEdge { node: "019fd257-8fc6-7700-8062-3c23b7dc9ca6" }
+
+---- conformance::tests::an_unfillable_role_does_not_also_report_its_relationships stdout ----
+
+thread 'conformance::tests::an_unfillable_role_does_not_also_report_its_relationships' (1916425) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd5-74a0-ab15-b7e655a954d5" }
+
+---- conformance::tests::checking_is_deterministic stdout ----
+
+thread 'conformance::tests::checking_is_deterministic' (1916427) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd9-7340-8d86-258b5ce3ac19" }
+
+---- conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported stdout ----
+
+thread 'conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported' (1916426) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd9-7340-8d86-2593c2d1c298" }
+
+---- conformance::tests::every_unmet_variant_renders_a_message_naming_its_role stdout ----
+
+thread 'conformance::tests::every_unmet_variant_renders_a_message_naming_its_role' (1916428) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd9-7340-8d86-25c3267f93a9" }
 
 ---- conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision stdout ----
 
-thread 'conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision' (1253986) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41de-73c1-a54f-c1dcb9a668d0" }
+thread 'conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision' (1916429) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd9-7340-8d86-25f9bbf29410" }
+
+---- conformance::tests::relationship_direction_matters stdout ----
+
+thread 'conformance::tests::relationship_direction_matters' (1916430) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fd9-7340-8d86-25e454ce58a0" }
 
 ---- conformance::tests::roles_bind_automatically_when_exactly_one_node_fits stdout ----
 
-thread 'conformance::tests::roles_bind_automatically_when_exactly_one_node_fits' (1253988) panicked at crates/casm-core/src/conformance.rs:488:22:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41df-7ab3-8fa4-fd85083c74e8" }
+thread 'conformance::tests::roles_bind_automatically_when_exactly_one_node_fits' (1916431) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fdb-7f52-be9d-38ee3149c6cd" }
+
+---- conformance::tests::too_few_security_controls_is_reported_with_both_counts stdout ----
+
+thread 'conformance::tests::too_few_security_controls_is_reported_with_both_counts' (1916432) panicked at crates/casm-core/src/conformance.rs:488:22:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-8fe5-7411-b6ba-6572d0017dba" }
 
 ---- merkle::tests::a_changed_latency_budget_changes_the_fingerprint stdout ----
 
-thread 'merkle::tests::a_changed_latency_budget_changes_the_fingerprint' (1254039) panicked at crates/casm-core/src/merkle.rs:730:26:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-41e3-7303-a6a0-839d3f532974" }
+thread 'merkle::tests::a_changed_latency_budget_changes_the_fingerprint' (1916497) panicked at crates/casm-core/src/merkle.rs:866:26:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-9018-77f3-8703-f4846da5b910" }
 
 ---- merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them stdout ----
 
-thread 'merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them' (1254040) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e3-7303-a6a0-85083e9d0256" }
+thread 'merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them' (1916498) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9027-7d53-b34e-e1e197a7d8b6" }
 
----- merkle::tests::abbreviation_does_not_panic_on_an_over_long_width stdout ----
+---- merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint stdout ----
 
-thread 'merkle::tests::abbreviation_does_not_panic_on_an_over_long_width' (1254044) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e4-77e2-a06d-09d0e4091917" }
-
----- merkle::tests::changed_nodes_includes_additions_and_removals stdout ----
-
-thread 'merkle::tests::changed_nodes_includes_additions_and_removals' (1254048) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e4-77e2-a06d-0eada162b6f8" }
-
----- merkle::tests::changed_nodes_is_empty_for_identical_trees stdout ----
-
-thread 'merkle::tests::changed_nodes_is_empty_for_identical_trees' (1254049) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e5-7980-afca-0a8df5afffae" }
-
----- merkle::tests::changed_nodes_reports_only_what_actually_differs stdout ----
-
-thread 'merkle::tests::changed_nodes_reports_only_what_actually_differs' (1254050) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-66fc982880a5" }
+thread 'merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint' (1916500) panicked at crates/casm-core/src/merkle.rs:800:18:
+valid: SelfEdge { node: "019fd257-9028-7151-841f-6b4df7f45556" }
 
 ---- merkle::tests::a_renamed_node_changes_the_fingerprint stdout ----
 
-thread 'merkle::tests::a_renamed_node_changes_the_fingerprint' (1254042) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-6717317bfe50" }
+thread 'merkle::tests::a_renamed_node_changes_the_fingerprint' (1916501) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9028-7151-841f-6b7579e67286" }
+
+---- merkle::tests::changed_nodes_is_empty_for_identical_trees stdout ----
+
+thread 'merkle::tests::changed_nodes_is_empty_for_identical_trees' (1916508) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9029-7b12-aedf-c108ec4f64e2" }
+
+---- merkle::tests::changed_nodes_reports_only_what_actually_differs stdout ----
+
+thread 'merkle::tests::changed_nodes_reports_only_what_actually_differs' (1916509) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9029-7b12-aedf-c126eece74e6" }
+
+---- merkle::tests::changed_nodes_includes_additions_and_removals stdout ----
+
+thread 'merkle::tests::changed_nodes_includes_additions_and_removals' (1916507) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-902a-7131-8be4-014189a21636" }
+
+---- merkle::tests::abbreviation_does_not_panic_on_an_over_long_width stdout ----
+
+thread 'merkle::tests::abbreviation_does_not_panic_on_an_over_long_width' (1916503) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-902a-7131-8be4-016d0390deee" }
 
 ---- merkle::tests::debug_output_stays_short_enough_for_a_log_line stdout ----
 
-thread 'merkle::tests::debug_output_stays_short_enough_for_a_log_line' (1254052) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-675a103a857b" }
+thread 'merkle::tests::debug_output_stays_short_enough_for_a_log_line' (1916511) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9030-7881-9757-4175dcce102c" }
 
 ---- merkle::tests::declaration_order_does_not_affect_the_fingerprint stdout ----
 
-thread 'merkle::tests::declaration_order_does_not_affect_the_fingerprint' (1254053) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-687b802e3d55" }
+thread 'merkle::tests::declaration_order_does_not_affect_the_fingerprint' (1916512) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9031-7b51-956e-5190e17e01e1" }
 
 ---- merkle::tests::declaring_conformance_changes_the_fingerprint stdout ----
 
-thread 'merkle::tests::declaring_conformance_changes_the_fingerprint' (1254054) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-694e1f1b2dfb" }
+thread 'merkle::tests::declaring_conformance_changes_the_fingerprint' (1916513) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9031-7b51-956e-51b278c77375" }
 
----- merkle::tests::fingerprints_round_trip_through_json stdout ----
+---- merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects stdout ----
 
-thread 'merkle::tests::fingerprints_round_trip_through_json' (1254059) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-6c5f419d340a" }
-
----- merkle::tests::identical_architectures_fingerprint_identically stdout ----
-
-thread 'merkle::tests::identical_architectures_fingerprint_identically' (1254060) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e6-7652-8ff5-6c8939bbb6f9" }
-
----- merkle::tests::rebinding_a_role_changes_the_fingerprint stdout ----
-
-thread 'merkle::tests::rebinding_a_role_changes_the_fingerprint' (1254061) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e7-7220-a9b7-0a3de3e97c4c" }
-
----- merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole stdout ----
-
-thread 'merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole' (1254062) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e7-7220-a9b7-0b0fe6fb3070" }
-
----- merkle::tests::the_scheme_tag_is_mixed_into_the_root stdout ----
-
-thread 'merkle::tests::the_scheme_tag_is_mixed_into_the_root' (1254063) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e7-7220-a9b7-0c1928b4e2cf" }
-
----- merkle::tests::the_tree_exposes_a_digest_per_node stdout ----
-
-thread 'merkle::tests::the_tree_exposes_a_digest_per_node' (1254064) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e7-7220-a9b7-0cf2cd1146b1" }
-
----- merkle::tests::fingerprinting_is_stable_across_repeated_calls stdout ----
-
-thread 'merkle::tests::fingerprinting_is_stable_across_repeated_calls' (1254057) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e8-7de3-a5a8-146c506d0e34" }
+thread 'merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects' (1916514) panicked at crates/casm-core/src/merkle.rs:731:18:
+valid: SelfEdge { node: "019fd257-9034-7550-bcb4-1c1c0f16640d" }
 
 ---- merkle::tests::fingerprints_render_and_parse_as_hex stdout ----
 
-thread 'merkle::tests::fingerprints_render_and_parse_as_hex' (1254058) panicked at crates/casm-core/src/merkle.rs:643:14:
-valid: SelfEdge { node: "019fd1f6-41e8-7de3-a5a8-148843630a1b" }
+thread 'merkle::tests::fingerprints_render_and_parse_as_hex' (1916518) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9034-7550-bcb4-1eff770d1dd5" }
 
----- relationship::tests::build_rejects_a_budget_above_the_ceiling stdout ----
+---- merkle::tests::identical_architectures_fingerprint_identically stdout ----
 
-thread 'relationship::tests::build_rejects_a_budget_above_the_ceiling' (1254156) panicked at crates/casm-core/src/relationship.rs:423:9:
-assertion failed: matches!(err, RelationshipError::LatencyOutOfRange { .. })
+thread 'merkle::tests::identical_architectures_fingerprint_identically' (1916520) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9034-7550-bcb4-2139a38f1412" }
 
----- relationship::tests::build_rejects_a_self_edge stdout ----
+---- merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole stdout ----
 
-thread 'relationship::tests::build_rejects_a_self_edge' (1254158) panicked at crates/casm-core/src/relationship.rs:395:14:
-called `Result::unwrap_err()` on an `Ok` value: Relationship { source: NodeId(019fd1f6-4209-70c3-a005-20335ac98a4a), target: NodeId(019fd1f6-4209-70c3-a005-20335ac98a4a), relationship_type: Sync, protocol: None, description: None, controls: [], latency_budget_ms: None }
+thread 'merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole' (1916522) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9034-7550-bcb4-230d2b013b4a" }
+
+---- merkle::tests::the_scheme_tag_is_mixed_into_the_root stdout ----
+
+thread 'merkle::tests::the_scheme_tag_is_mixed_into_the_root' (1916523) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9034-7550-bcb4-25020aef67fc" }
+
+---- merkle::tests::the_tree_exposes_a_digest_per_node stdout ----
+
+thread 'merkle::tests::the_tree_exposes_a_digest_per_node' (1916524) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9035-7410-984a-eba599dae8b5" }
+
+---- merkle::tests::fingerprinting_is_stable_across_repeated_calls stdout ----
+
+thread 'merkle::tests::fingerprinting_is_stable_across_repeated_calls' (1916517) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9036-7cd2-9e89-c2a1c38113af" }
+
+---- merkle::tests::fingerprints_round_trip_through_json stdout ----
+
+thread 'merkle::tests::fingerprints_round_trip_through_json' (1916519) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9036-7cd2-9e89-c2cbfd67a441" }
+
+---- merkle::tests::rebinding_a_role_changes_the_fingerprint stdout ----
+
+thread 'merkle::tests::rebinding_a_role_changes_the_fingerprint' (1916521) panicked at crates/casm-core/src/merkle.rs:643:14:
+valid: SelfEdge { node: "019fd257-9042-75c2-9de9-98a58b12c429" }
+
+---- relationship::tests::a_relationship_reports_what_it_was_built_with stdout ----
+
+thread 'relationship::tests::a_relationship_reports_what_it_was_built_with' (1916586) panicked at crates/casm-core/src/relationship.rs:507:14:
+valid: SelfEdge { node: "019fd257-905a-77e2-a49e-f3610675f1ce" }
 
 ---- relationship::tests::build_accepts_the_ceiling_itself stdout ----
 
-thread 'relationship::tests::build_accepts_the_ceiling_itself' (1254150) panicked at crates/casm-core/src/relationship.rs:434:9:
+thread 'relationship::tests::build_accepts_the_ceiling_itself' (1916589) panicked at crates/casm-core/src/relationship.rs:434:9:
 the ceiling must be inclusive
+
+---- relationship::tests::build_rejects_a_self_edge stdout ----
+
+thread 'relationship::tests::build_rejects_a_self_edge' (1916595) panicked at crates/casm-core/src/relationship.rs:395:14:
+called `Result::unwrap_err()` on an `Ok` value: Relationship { source: NodeId(019fd257-9060-7d72-ae92-c4d2a059c600), target: NodeId(019fd257-9060-7d72-ae92-c4d2a059c600), relationship_type: Sync, protocol: None, description: None, controls: [], latency_budget_ms: None }
+
+---- relationship::tests::build_rejects_a_budget_above_the_ceiling stdout ----
+
+thread 'relationship::tests::build_rejects_a_budget_above_the_ceiling' (1916594) panicked at crates/casm-core/src/relationship.rs:423:9:
+assertion failed: matches!(err, RelationshipError::LatencyOutOfRange { .. })
 
 ---- relationship::tests::build_rejects_a_zero_latency_budget stdout ----
 
-thread 'relationship::tests::build_rejects_a_zero_latency_budget' (1254159) panicked at crates/casm-core/src/relationship.rs:408:9:
+thread 'relationship::tests::build_rejects_a_zero_latency_budget' (1916596) panicked at crates/casm-core/src/relationship.rs:408:9:
 assertion failed: matches!(err, RelationshipError::LatencyOutOfRange { value: 0, .. })
 
 ---- relationship::tests::connects_is_direction_agnostic stdout ----
 
-thread 'relationship::tests::connects_is_direction_agnostic' (1254162) panicked at crates/casm-core/src/relationship.rs:474:14:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-420a-76e3-97b6-338352043701" }
+thread 'relationship::tests::connects_is_direction_agnostic' (1916601) panicked at crates/casm-core/src/relationship.rs:474:14:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-9061-78e0-b600-ec13bca6a3d8" }
 
 ---- relationship::tests::identity_distinguishes_edges_by_type stdout ----
 
-thread 'relationship::tests::identity_distinguishes_edges_by_type' (1254163) panicked at crates/casm-core/src/relationship.rs:507:18:
-valid: SelfEdge { node: "019fd1f6-420a-76e3-97b6-33beb94bd2fb" }
+thread 'relationship::tests::identity_distinguishes_edges_by_type' (1916602) panicked at crates/casm-core/src/relationship.rs:545:18:
+valid: SelfEdge { node: "019fd257-9064-7453-ad44-73cf02d4cd7a" }
 
 ---- relationship::tests::latency_budget_is_optional stdout ----
 
-thread 'relationship::tests::latency_budget_is_optional' (1254164) panicked at crates/casm-core/src/relationship.rs:349:14:
-sample edge is valid: SelfEdge { node: "019fd1f6-420a-76e3-97b6-33de0aaf09a6" }
+thread 'relationship::tests::latency_budget_is_optional' (1916603) panicked at crates/casm-core/src/relationship.rs:349:14:
+sample edge is valid: SelfEdge { node: "019fd257-9064-7453-ad44-73e7f357e266" }
 
 ---- relationship::tests::relationship_round_trips_through_json stdout ----
 
-thread 'relationship::tests::relationship_round_trips_through_json' (1254166) panicked at crates/casm-core/src/relationship.rs:535:14:
-called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd1f6-420b-7c42-86e5-87c6cde0a14e" }
+thread 'relationship::tests::relationship_round_trips_through_json' (1916605) panicked at crates/casm-core/src/relationship.rs:573:14:
+called `Result::unwrap()` on an `Err` value: SelfEdge { node: "019fd257-9067-7052-80ae-e88ae5bfa105" }
 
 
 failures:
@@ -692,6 +725,7 @@ failures:
     architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde
     architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde
     architecture::tests::verify_invariants_passes_on_a_constructed_architecture
+    architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one
     conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound
     conformance::tests::a_conforming_architecture_reports_nothing_unmet
     conformance::tests::a_missing_control_type_is_reported
@@ -711,6 +745,7 @@ failures:
     conformance::tests::too_few_security_controls_is_reported_with_both_counts
     merkle::tests::a_changed_latency_budget_changes_the_fingerprint
     merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them
+    merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint
     merkle::tests::a_renamed_node_changes_the_fingerprint
     merkle::tests::abbreviation_does_not_panic_on_an_over_long_width
     merkle::tests::changed_nodes_includes_additions_and_removals
@@ -719,6 +754,7 @@ failures:
     merkle::tests::debug_output_stays_short_enough_for_a_log_line
     merkle::tests::declaration_order_does_not_affect_the_fingerprint
     merkle::tests::declaring_conformance_changes_the_fingerprint
+    merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects
     merkle::tests::fingerprinting_is_stable_across_repeated_calls
     merkle::tests::fingerprints_render_and_parse_as_hex
     merkle::tests::fingerprints_round_trip_through_json
@@ -727,6 +763,7 @@ failures:
     merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole
     merkle::tests::the_scheme_tag_is_mixed_into_the_root
     merkle::tests::the_tree_exposes_a_digest_per_node
+    relationship::tests::a_relationship_reports_what_it_was_built_with
     relationship::tests::build_accepts_the_ceiling_itself
     relationship::tests::build_rejects_a_budget_above_the_ceiling
     relationship::tests::build_rejects_a_self_edge
@@ -736,7 +773,7 @@ failures:
     relationship::tests::latency_budget_is_optional
     relationship::tests::relationship_round_trips_through_json
 
-test result: FAILED. 123 passed; 65 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: FAILED. 136 passed; 69 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
 
 error: test failed, to rerun pass `-p casm-core --lib`
 

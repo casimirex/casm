@@ -26,312 +26,330 @@
 
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-core@0.3.0
-       Fresh libc v0.2.189
+    Blocking waiting for file lock on package cache
        Fresh cfg-if v1.0.4
-       Fresh unicode-ident v1.0.24
        Fresh version_check v0.9.5
+       Fresh unicode-ident v1.0.24
+       Fresh libc v0.2.189
        Fresh typenum v1.20.1
-       Fresh autocfg v1.5.1
        Fresh proc-macro2 v1.0.107
        Fresh serde_core v1.0.229
-       Fresh getrandom v0.3.4
        Fresh getrandom v0.4.3
-       Fresh bitflags v2.13.1
-       Fresh linux-raw-sys v0.12.1
+       Fresh autocfg v1.5.1
        Fresh quote v1.0.47
+       Fresh getrandom v0.3.4
        Fresh generic-array v0.14.7
-       Fresh rand_core v0.9.5
-       Fresh zerocopy v0.8.55
-       Fresh rustix v1.1.4
-       Fresh fastrand v2.5.0
+       Fresh linux-raw-sys v0.12.1
+       Fresh bitflags v2.13.1
        Fresh syn v3.0.3
-       Fresh block-buffer v0.10.4
+       Fresh rand_core v0.9.5
+       Fresh rustix v1.1.4
        Fresh crypto-common v0.1.7
+       Fresh zerocopy v0.8.55
+       Fresh block-buffer v0.10.4
+       Fresh fastrand v2.5.0
        Fresh once_cell v1.21.4
+       Fresh digest v0.10.7
        Fresh ppv-lite86 v0.2.21
        Fresh serde_derive v1.0.229
        Fresh thiserror-impl v2.0.19
        Fresh tempfile v3.27.0
-       Fresh digest v0.10.7
        Fresh wait-timeout v0.2.1
-       Fresh bit-vec v0.8.0
        Fresh hashbrown v0.17.1
        Fresh keccak v0.1.6
-       Fresh quick-error v1.2.3
-       Fresh equivalent v1.0.2
        Fresh fnv v1.0.7
-       Fresh thiserror v2.0.19
-       Fresh bit-set v0.8.0
+       Fresh equivalent v1.0.2
+       Fresh bit-vec v0.8.0
+       Fresh quick-error v1.2.3
+       Fresh num-traits v0.2.19
        Fresh sha3 v0.10.9
+       Fresh thiserror v2.0.19
+       Fresh zmij v1.0.23
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.8.0
+       Fresh indexmap v2.14.0
        Fresh serde v1.0.229
        Fresh rand_chacha v0.9.0
-       Fresh rusty-fork v0.3.1
-       Fresh indexmap v2.14.0
-       Fresh zmij v1.0.23
-       Fresh num-traits v0.2.19
        Fresh rand v0.9.5
        Fresh rand_xorshift v0.4.0
-       Fresh uuid v1.24.0
        Fresh semver v1.0.28
+       Fresh uuid v1.24.0
+       Fresh itoa v1.0.18
        Fresh regex-syntax v0.8.11
        Fresh unarray v0.1.4
-       Fresh itoa v1.0.18
        Fresh memchr v2.8.3
-       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core): the file `crates/casm-core/src/names.rs` has changed (1785931504.965931557s, 2s after last build at 1785931502.947924127s)
-   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
        Fresh serde_json v1.0.151
        Fresh proptest v1.11.0
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
-     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.72s
-  Executable `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+       Dirty casm-core v0.3.0 (/tmp/cargo-mutants-casm-32sAIW.tmp/crates/casm-core): the file `crates/casm-core/src/merkle.rs` has changed (1785936156.338212387s, 4s after last build at 1785936152.261225433s)
+   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-32sAIW.tmp/crates/casm-core)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8ae482672b67b4ae -C extra-filename=-5bc0a3121f03060c --out-dir /tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rlib --extern proptest=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern semver=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rlib --extern serde=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern sha3=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libsha3-87752e9291d08871.rlib --extern thiserror=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern uuid=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=522ab9b8a1e8fed3 -C extra-filename=-d00bbb705e8830ff --out-dir /tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/libuuid-f64cac9d01e1e5a7.rmeta --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.32s
+  Executable `/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
 *** result: Success
 
 *** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-core@0.3.0
-       Fresh libc v0.2.189
        Fresh cfg-if v1.0.4
        Fresh version_check v0.9.5
        Fresh unicode-ident v1.0.24
-       Fresh proc-macro2 v1.0.107
-       Fresh quote v1.0.47
-       Fresh serde_core v1.0.229
+       Fresh libc v0.2.189
        Fresh typenum v1.20.1
-       Fresh generic-array v0.14.7
-       Fresh syn v3.0.3
-       Fresh getrandom v0.3.4
+       Fresh proc-macro2 v1.0.107
+       Fresh serde_core v1.0.229
        Fresh getrandom v0.4.3
-       Fresh rand_core v0.9.5
-       Fresh linux-raw-sys v0.12.1
        Fresh autocfg v1.5.1
+       Fresh quote v1.0.47
+       Fresh generic-array v0.14.7
+       Fresh getrandom v0.3.4
        Fresh bitflags v2.13.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh syn v3.0.3
+       Fresh rand_core v0.9.5
+       Fresh block-buffer v0.10.4
        Fresh rustix v1.1.4
        Fresh zerocopy v0.8.55
        Fresh crypto-common v0.1.7
-       Fresh block-buffer v0.10.4
        Fresh fastrand v2.5.0
        Fresh once_cell v1.21.4
-       Fresh tempfile v3.27.0
-       Fresh digest v0.10.7
-       Fresh ppv-lite86 v0.2.21
        Fresh serde_derive v1.0.229
+       Fresh ppv-lite86 v0.2.21
+       Fresh digest v0.10.7
        Fresh thiserror-impl v2.0.19
+       Fresh tempfile v3.27.0
        Fresh wait-timeout v0.2.1
+       Fresh bit-vec v0.8.0
+       Fresh fnv v1.0.7
+       Fresh quick-error v1.2.3
        Fresh keccak v0.1.6
        Fresh hashbrown v0.17.1
-       Fresh quick-error v1.2.3
        Fresh equivalent v1.0.2
-       Fresh fnv v1.0.7
-       Fresh bit-vec v0.8.0
        Fresh bit-set v0.8.0
+       Fresh num-traits v0.2.19
+       Fresh serde v1.0.229
+       Fresh sha3 v0.10.9
        Fresh rusty-fork v0.3.1
        Fresh indexmap v2.14.0
-       Fresh sha3 v0.10.9
-       Fresh thiserror v2.0.19
-       Fresh serde v1.0.229
-       Fresh num-traits v0.2.19
-       Fresh rand_chacha v0.9.0
        Fresh zmij v1.0.23
+       Fresh thiserror v2.0.19
+       Fresh rand_chacha v0.9.0
        Fresh rand_xorshift v0.4.0
        Fresh rand v0.9.5
-       Fresh uuid v1.24.0
        Fresh semver v1.0.28
-       Fresh memchr v2.8.3
+       Fresh uuid v1.24.0
+       Fresh regex-syntax v0.8.11
        Fresh unarray v0.1.4
        Fresh itoa v1.0.18
-       Fresh regex-syntax v0.8.11
+       Fresh memchr v2.8.3
        Fresh proptest v1.11.0
        Fresh serde_json v1.0.151
-       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-32sAIW.tmp/crates/casm-core)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
-     Running `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
+     Running `/tmp/cargo-mutants-casm-32sAIW.tmp/target/debug/deps/casm_core-5bc0a3121f03060c`
 
-running 188 tests
+running 205 tests
 test architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim ... FAILED
 test architecture::tests::a_binding_to_an_absent_node_is_rejected ... FAILED
-test architecture::tests::a_dangling_source_is_rejected_and_named_as_such ... FAILED
+test architecture::tests::an_architecture_reports_what_it_was_built_with ... FAILED
 test architecture::tests::an_identical_relationship_is_rejected ... FAILED
 test architecture::tests::architecture_round_trips_through_json ... FAILED
-test architecture::tests::a_dangling_target_is_rejected_and_named_as_such ... FAILED
 test architecture::tests::a_conformance_claim_is_recorded_in_declaration_order ... FAILED
-test architecture::tests::build_applies_sensible_defaults ... FAILED
 test architecture::tests::build_rejects_a_non_semver_version ... FAILED
+test architecture::tests::a_dangling_source_is_rejected_and_named_as_such ... FAILED
 test architecture::tests::build_resolves_edges_declared_before_their_nodes ... FAILED
+test architecture::tests::a_dangling_target_is_rejected_and_named_as_such ... FAILED
+test architecture::tests::build_applies_sensible_defaults ... FAILED
 test architecture::tests::consuming_builders_compose ... FAILED
-test architecture::tests::duplicate_node_ids_are_rejected ... FAILED
 test architecture::tests::degree_counts_both_directions ... FAILED
-test architecture::tests::duplicate_node_names_are_rejected ... FAILED
-test architecture::tests::lookup_works_by_id_and_by_name ... FAILED
+test architecture::tests::duplicate_node_ids_are_rejected ... FAILED
 test architecture::tests::incoming_and_outgoing_partition_the_edges ... FAILED
-test architecture::tests::node_iteration_order_is_stable_across_runs ... FAILED
 test architecture::tests::isolated_nodes_are_identified ... FAILED
-test architecture::tests::the_same_pattern_cannot_be_claimed_twice ... FAILED
-test architecture::tests::the_same_pair_may_be_connected_with_different_semantics ... FAILED
+test architecture::tests::node_iteration_order_is_stable_across_runs ... FAILED
+test architecture::tests::removing_a_referenced_node_is_refused_with_a_count ... FAILED
 test architecture::tests::removing_an_absent_node_is_not_an_error ... FAILED
+test architecture::tests::the_same_pair_may_be_connected_with_different_semantics ... FAILED
+test architecture::tests::the_same_pattern_cannot_be_claimed_twice ... FAILED
 test architecture::tests::two_versions_of_one_pattern_may_both_be_claimed ... FAILED
 test architecture::tests::verify_invariants_passes_on_a_constructed_architecture ... FAILED
-test architecture::tests::removing_a_referenced_node_is_refused_with_a_count ... FAILED
-test architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde ... FAILED
-test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... FAILED
+test architecture::tests::duplicate_node_names_are_rejected ... FAILED
 test conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound ... FAILED
+test architecture::tests::lookup_works_by_id_and_by_name ... FAILED
+test architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde ... FAILED
+test architecture::tests::removing_an_unreferenced_node_succeeds ... FAILED
+test architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde ... FAILED
 test conformance::tests::a_conforming_architecture_reports_nothing_unmet ... FAILED
 test conformance::tests::a_missing_control_type_is_reported ... FAILED
-test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... FAILED
-test architecture::tests::removing_an_unreferenced_node_succeeds ... FAILED
 test conformance::tests::a_missing_protocol_is_reported ... FAILED
+test conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate ... FAILED
+test architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one ... FAILED
 test conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes ... FAILED
-test conformance::tests::a_vacuous_pattern_is_satisfied_by_anything ... FAILED
 test conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at ... FAILED
+test conformance::tests::a_vacuous_pattern_is_satisfied_by_anything ... FAILED
+test conformance::tests::an_explicit_binding_resolves_the_ambiguity ... FAILED
 test conformance::tests::an_unfillable_role_does_not_also_report_its_relationships ... FAILED
-test conformance::tests::checking_is_deterministic ... FAILED
 test conformance::tests::every_unmet_variant_renders_a_message_naming_its_role ... FAILED
-test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... FAILED
-test control::tests::auditability_is_classified_per_control_type ... ok
-test control::tests::control_round_trips_through_json ... ok
 test conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision ... FAILED
 test conformance::tests::relationship_direction_matters ... FAILED
-test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... FAILED
-test conformance::tests::an_explicit_binding_resolves_the_ambiguity ... FAILED
-test control::tests::control_type_serialises_as_kebab_case ... ok
 test conformance::tests::too_few_security_controls_is_reported_with_both_counts ... FAILED
-test control::tests::requiring_evidence_sets_the_flag ... ok
+test conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported ... FAILED
+test control::tests::control_type_serialises_as_kebab_case ... ok
+test control::tests::control_round_trips_through_json ... ok
 test control::tests::evidence_is_not_required_by_default ... ok
 test control::tests::has_tag_matches_exactly ... ok
-test control::tests::rejects_a_blank_description ... ok
+test conformance::tests::checking_is_deterministic ... FAILED
 test control::tests::rejects_a_blank_standard ... ok
-test control::tests::tags_are_deduplicated ... ok
+test control::tests::auditability_is_classified_per_control_type ... ok
+test control::tests::requiring_evidence_sets_the_flag ... ok
+test control::tests::a_control_returns_the_standard_and_description_it_was_built_with ... ok
+test conformance::tests::roles_bind_automatically_when_exactly_one_node_fits ... FAILED
 test error::tests::core_error_flattens_nested_sources ... ok
-test error::tests::errors_are_comparable_for_exact_assertions ... ok
+test control::tests::every_control_type_renders_its_own_label ... ok
+test control::tests::rejects_a_blank_description ... ok
+test control::tests::tags_are_deduplicated ... ok
 test error::tests::errors_render_actionable_messages ... ok
 test hex::tests::decoding_accepts_an_algorithm_prefix ... ok
+test error::tests::errors_are_comparable_for_exact_assertions ... ok
 test hex::tests::decoding_accepts_uppercase_digits ... ok
-test hex::tests::decoding_rejects_non_hexadecimal_input ... ok
 test hex::tests::decoding_is_total_on_arbitrary_input ... ok
-test hex::tests::decoding_rejects_the_wrong_length_and_says_what_it_wanted ... ok
-test hex::tests::encoding_pads_every_byte_to_two_digits ... ok
-test hex::tests::encoding_is_lowercase ... ok
+test hex::tests::decoding_rejects_non_hexadecimal_input ... ok
 test hex::tests::decoding_round_trips_with_encoding ... ok
+test hex::tests::encoding_is_lowercase ... ok
+test hex::tests::encoding_pads_every_byte_to_two_digits ... ok
 test ids::tests::deserialisation_rejects_wrong_version ... ok
-test ids::tests::generated_ids_are_version_seven ... ok
 test ids::tests::display_uses_canonical_hyphenated_form ... ok
 test ids::tests::generated_ids_are_unique ... ok
-test ids::tests::parse_rejects_malformed_input ... ok
+test ids::tests::generated_ids_are_version_seven ... ok
 test ids::tests::parse_rejects_the_nil_uuid ... ok
+test ids::tests::ids_sort_chronologically ... ok
+test ids::tests::the_delegating_conversions_validate_as_parse_does ... ok
+test hex::tests::decoding_rejects_the_wrong_length_and_says_what_it_wanted ... ok
+test ids::tests::parse_rejects_malformed_input ... ok
 test ids::tests::parse_rejects_version_four_uuids ... ok
-test ids::tests::serde_round_trips_through_json ... ok
+test ids::tests::timestamp_is_recoverable_and_plausible ... ok
+test interface::tests::an_interfaces_description_is_returned_as_written ... FAILED
+test interface::tests::a_custom_protocol_is_accepted_when_its_label_is_not_blank ... ok
 test interface::tests::compatibility_allows_a_forward_minor_version ... FAILED
 test interface::tests::compatibility_rejects_a_backward_minor_version ... FAILED
-test interface::tests::interface_rejects_a_non_semver_version ... FAILED
-test ids::tests::timestamp_is_recoverable_and_plausible ... ok
-test interface::tests::interface_rejects_an_empty_custom_protocol ... FAILED
 test interface::tests::compatibility_requires_matching_major_version ... FAILED
 test interface::tests::interface_rejects_unknown_fields ... ok
-test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
-test interface::tests::interface_round_trips_through_json ... FAILED
-test interface::tests::schema_hash_changes_with_a_single_byte ... ok
-test interface::tests::schema_hash_debug_is_abbreviated_not_full ... ok
-test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
-test ids::tests::ids_sort_chronologically ... ok
-test interface::tests::schema_hash_is_deterministic_across_calls ... ok
 test interface::tests::compatibility_requires_matching_protocol ... FAILED
+test interface::tests::interface_rejects_a_non_semver_version ... FAILED
+test ids::tests::the_embedded_timestamp_is_milliseconds_not_some_other_unit ... ok
+test interface::tests::interface_rejects_an_empty_custom_protocol ... FAILED
+test ids::tests::serde_round_trips_through_json ... ok
+test interface::tests::interface_round_trips_through_json ... FAILED
+test interface::tests::protocol_deserialises_from_friendly_yaml_aliases ... ok
+test interface::tests::schema_hash_accepts_an_algorithm_prefix ... ok
+test interface::tests::protocols_and_hashes_render_the_text_they_are_read_back_from ... ok
 test interface::tests::protocols_are_classified_by_synchrony ... ok
-test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
+test interface::tests::schema_hash_changes_with_a_single_byte ... ok
+test interface::tests::schema_hash_is_deterministic_across_calls ... ok
 test interface::tests::schema_hash_matches_the_published_sha3_256_vector ... ok
-test interface::tests::schema_hash_round_trips_through_hex ... ok
-test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... FAILED
-test merkle::tests::a_version_bump_changes_the_fingerprint ... FAILED
+test interface::tests::schema_hash_rejects_wrong_length_and_non_hex ... ok
 test merkle::tests::a_changed_latency_budget_changes_the_fingerprint ... FAILED
-test merkle::tests::adding_a_control_changes_the_fingerprint ... FAILED
+test merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them ... FAILED
+test merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint ... FAILED
 test merkle::tests::a_node_digest_never_collides_with_a_control_digest ... FAILED
-test merkle::tests::an_absent_description_differs_from_an_empty_one ... FAILED
 test merkle::tests::a_renamed_node_changes_the_fingerprint ... FAILED
+test merkle::tests::a_version_bump_changes_the_fingerprint ... FAILED
 test merkle::tests::abbreviation_does_not_panic_on_an_over_long_width ... FAILED
+test merkle::tests::adding_a_control_changes_the_fingerprint ... FAILED
+test merkle::tests::an_absent_description_differs_from_an_empty_one ... FAILED
 test merkle::tests::an_empty_architecture_has_a_stable_fingerprint ... FAILED
-test merkle::tests::changed_nodes_reports_only_what_actually_differs ... FAILED
-test merkle::tests::control_order_within_a_node_does_not_matter ... FAILED
 test merkle::tests::changed_nodes_includes_additions_and_removals ... FAILED
-test merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text ... FAILED
-test merkle::tests::fingerprint_parsing_rejects_malformed_input ... ok
-test merkle::tests::fingerprinting_is_stable_across_repeated_calls ... FAILED
-test merkle::tests::declaring_conformance_changes_the_fingerprint ... FAILED
-test merkle::tests::fingerprints_render_and_parse_as_hex ... FAILED
 test merkle::tests::changed_nodes_is_empty_for_identical_trees ... FAILED
-test merkle::tests::identical_architectures_fingerprint_identically ... FAILED
-test merkle::tests::rebinding_a_role_changes_the_fingerprint ... FAILED
-test merkle::tests::the_scheme_tag_is_mixed_into_the_root ... FAILED
-test merkle::tests::the_tree_exposes_a_digest_per_node ... FAILED
-test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... FAILED
-test names::tests::accepts_a_name_exactly_at_the_ceiling ... FAILED
+test merkle::tests::changed_nodes_reports_only_what_actually_differs ... FAILED
 test merkle::tests::declaration_order_does_not_affect_the_fingerprint ... FAILED
-test names::tests::rejects_diagram_and_shell_metacharacters ... ok
-test names::tests::accepts_conventional_service_names ... FAILED
+test interface::tests::schema_hash_debug_is_abbreviated_not_full ... ok
+test merkle::tests::control_order_within_a_node_does_not_matter ... FAILED
+test merkle::tests::debug_output_stays_short_enough_for_a_log_line ... FAILED
+test merkle::tests::declaring_conformance_changes_the_fingerprint ... FAILED
+test interface::tests::schema_hash_round_trips_through_hex ... ok
+test merkle::tests::a_boolean_field_is_part_of_the_digest ... FAILED
+test merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects ... FAILED
+test merkle::tests::fingerprinting_is_stable_across_repeated_calls ... FAILED
+test merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text ... FAILED
+test merkle::tests::fingerprints_render_and_parse_as_hex ... FAILED
 test merkle::tests::fingerprints_round_trip_through_json ... FAILED
-test names::tests::rejects_empty_and_whitespace_only ... ok
+test merkle::tests::fingerprint_parsing_rejects_malformed_input ... ok
+test merkle::tests::the_scheme_tag_is_mixed_into_the_root ... FAILED
+test merkle::tests::identical_architectures_fingerprint_identically ... FAILED
+test merkle::tests::the_tree_exposes_a_digest_per_node ... FAILED
+test names::tests::accepts_a_name_exactly_at_the_ceiling ... FAILED
+test names::tests::borrowing_a_name_as_a_string_yields_the_name ... FAILED
+test names::tests::accepts_conventional_service_names ... FAILED
+test merkle::tests::rebinding_a_role_changes_the_fingerprint ... FAILED
 test merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole ... FAILED
-test names::tests::rejects_names_over_the_length_ceiling ... ok
 test names::tests::deserialisation_enforces_the_same_rules_as_construction ... FAILED
+test names::tests::rejects_empty_and_whitespace_only ... ok
+test names::tests::rejects_names_over_the_length_ceiling ... ok
 test names::tests::rejects_non_alphanumeric_leading_character ... ok
 test names::tests::reports_the_byte_offset_of_an_illegal_character ... FAILED
 test names::tests::serialises_transparently_as_a_plain_string ... FAILED
-test node::tests::build_fails_without_a_node_type ... FAILED
-test node::tests::build_generates_an_id_when_none_is_pinned ... FAILED
-test node::tests::build_rejects_an_invalid_name ... ok
-test node::tests::build_honours_a_pinned_id_for_reproducibility ... FAILED
-test names::tests::legal_names_round_trip ... FAILED
-test node::tests::build_accepts_distinct_interface_names ... FAILED
 test node::tests::build_fails_without_a_name ... ok
-test node::tests::build_rejects_duplicate_interface_names ... FAILED
-test node::tests::has_control_tagged_searches_every_control ... FAILED
+test names::tests::legal_names_round_trip ... FAILED
+test names::tests::rejects_diagram_and_shell_metacharacters ... ok
+test node::tests::build_accepts_distinct_interface_names ... FAILED
+test node::tests::build_fails_without_a_node_type ... FAILED
+test node::tests::build_rejects_an_invalid_name ... ok
 test node::tests::controls_of_type_counts_only_the_requested_dimension ... FAILED
-test node::tests::node_round_trips_through_json ... FAILED
+test node::tests::build_generates_an_id_when_none_is_pinned ... FAILED
+test node::tests::has_control_tagged_searches_every_control ... FAILED
+test node::tests::build_honours_a_pinned_id_for_reproducibility ... FAILED
+test node::tests::build_rejects_duplicate_interface_names ... FAILED
 test node::tests::interface_lookup_is_by_exact_name ... FAILED
-test node::tests::node_types_are_classified_by_control_boundary ... ok
-test node::tests::serialisation_omits_empty_collections ... FAILED
-test node::tests::with_interface_rejects_a_duplicate_at_runtime ... FAILED
-test node::tests::node_type_serialises_as_kebab_case ... ok
-test pattern::tests::a_fingerprint_distinguishes_relationship_direction ... FAILED
+test node::tests::node_round_trips_through_json ... FAILED
 test node::tests::metadata_serialises_in_deterministic_key_order ... FAILED
-test pattern::tests::a_fingerprint_distinguishes_the_compliance_claim ... FAILED
-test pattern::tests::a_pattern_round_trips_through_json ... FAILED
-test pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous ... FAILED
-test pattern::tests::a_pattern_exposes_its_requirements_by_role ... FAILED
+test node::tests::node_type_serialises_as_kebab_case ... ok
+test node::tests::node_types_are_classified_by_control_boundary ... ok
 test node::tests::node_types_are_classified_by_statefulness ... ok
-test pattern::tests::a_reference_round_trips_as_a_bare_string ... FAILED
-test pattern::tests::a_fingerprint_ignores_declaration_order ... FAILED
-test pattern::tests::a_reference_splits_on_the_last_at_sign ... FAILED
-test pattern::tests::a_reference_is_name_at_version ... FAILED
-test pattern::tests::a_reference_requires_an_exact_version ... FAILED
+test node::tests::with_interface_rejects_a_duplicate_at_runtime ... FAILED
+test pattern::tests::a_fingerprint_distinguishes_relationship_direction ... FAILED
+test node::tests::serialisation_omits_empty_collections ... FAILED
+test pattern::tests::a_conformance_claim_renders_the_pattern_it_names ... FAILED
 test pattern::tests::a_fingerprint_changes_when_the_shape_changes ... FAILED
-test pattern::tests::a_relationship_cannot_connect_a_role_to_itself ... FAILED
-test pattern::tests::build_rejects_a_duplicated_role ... FAILED
-test pattern::tests::build_names_which_endpoint_was_unknown ... FAILED
-test pattern::tests::build_rejects_a_non_semver_version ... FAILED
+test pattern::tests::a_fingerprint_distinguishes_the_compliance_claim ... FAILED
+test pattern::tests::a_fingerprint_ignores_declaration_order ... FAILED
+test pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with ... FAILED
+test pattern::tests::a_pattern_exposes_its_requirements_by_role ... FAILED
+test pattern::tests::a_reference_is_name_at_version ... FAILED
+test pattern::tests::a_pattern_round_trips_through_json ... FAILED
+test pattern::tests::a_reference_requires_an_exact_version ... FAILED
+test pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous ... FAILED
+test pattern::tests::a_reference_splits_on_the_last_at_sign ... FAILED
 test pattern::tests::build_defaults_the_version ... FAILED
+test pattern::tests::a_relationship_cannot_connect_a_role_to_itself ... FAILED
+test pattern::tests::a_reference_round_trips_as_a_bare_string ... FAILED
+test pattern::tests::build_names_which_endpoint_was_unknown ... FAILED
+test pattern::tests::build_rejects_a_duplicated_role ... FAILED
+test pattern::tests::build_rejects_a_non_semver_version ... FAILED
+test pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role ... FAILED
 test pattern::tests::build_requires_a_name ... ok
-test pattern::tests::references_parse_and_match ... FAILED
 test pattern::tests::malformed_references_are_rejected_with_a_reason ... ok
 test pattern::tests::role_names_obey_the_casimir_alphabet ... FAILED
-test pattern::tests::requirement_builders_deduplicate ... FAILED
-test pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role ... FAILED
-test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... FAILED
-test pattern::tests::serialisation_omits_empty_collections ... FAILED
-test relationship::tests::async_edges_are_excluded_from_cycle_detection ... ok
+test pattern::tests::references_parse_and_match ... FAILED
 test pattern::tests::satisfied_standards_are_deduplicated ... FAILED
+test pattern::tests::requirement_builders_deduplicate ... FAILED
+test pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised ... FAILED
+test pattern::tests::serialisation_omits_empty_collections ... FAILED
 test pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde ... FAILED
+test pattern::tests::verify_invariants_passes_on_a_constructed_pattern ... FAILED
+test relationship::tests::a_relationship_reports_what_it_was_built_with ... ok
+test relationship::tests::async_edges_are_excluded_from_cycle_detection ... ok
 test relationship::tests::blocking_classification_matches_failure_propagation ... ok
 test relationship::tests::build_accepts_the_ceiling_itself ... ok
+test relationship::tests::build_fails_without_a_relationship_type ... ok
+test relationship::tests::build_fails_without_a_source ... ok
 test relationship::tests::build_fails_without_a_target ... ok
 test relationship::tests::build_rejects_a_budget_above_the_ceiling ... ok
-test relationship::tests::build_fails_without_a_relationship_type ... ok
-test relationship::tests::connects_is_direction_agnostic ... ok
-test relationship::tests::identity_distinguishes_edges_by_type ... ok
-test relationship::tests::only_quantum_entangled_edges_are_entangled ... ok
-test relationship::tests::latency_budget_is_optional ... ok
-test relationship::tests::relationship_round_trips_through_json ... ok
-test relationship::tests::build_fails_without_a_source ... ok
 test relationship::tests::build_rejects_a_self_edge ... ok
-test relationship::tests::build_rejects_a_zero_latency_budget ... ok
+test relationship::tests::identity_distinguishes_edges_by_type ... ok
+test relationship::tests::latency_budget_is_optional ... ok
+test relationship::tests::only_quantum_entangled_edges_are_entangled ... ok
 test relationship::tests::relationship_type_serialises_as_kebab_case ... ok
+test relationship::tests::relationship_round_trips_through_json ... ok
+test relationship::tests::build_rejects_a_zero_latency_budget ... ok
+test relationship::tests::connects_is_direction_agnostic ... ok
 test ids::tests::parse_is_total ... ok
 test ids::tests::generated_ids_round_trip_through_strings ... ok
 test names::tests::validation_is_total ... ok
@@ -340,517 +358,502 @@ failures:
 
 ---- architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim stdout ----
 
-thread 'architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim' (457830) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::a_bound_node_cannot_be_removed_without_revisiting_the_claim' (1641088) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "cache", found: 'c', index: 0 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 ---- architecture::tests::a_binding_to_an_absent_node_is_rejected stdout ----
 
-thread 'architecture::tests::a_binding_to_an_absent_node_is_rejected' (457829) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::a_binding_to_an_absent_node_is_rejected' (1641087) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
----- architecture::tests::a_dangling_source_is_rejected_and_named_as_such stdout ----
+---- architecture::tests::an_architecture_reports_what_it_was_built_with stdout ----
 
-thread 'architecture::tests::a_dangling_source_is_rejected_and_named_as_such' (457832) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "db", found: 'd', index: 0 })
+thread 'architecture::tests::an_architecture_reports_what_it_was_built_with' (1641092) panicked at crates/casm-core/src/architecture.rs:898:14:
+valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::an_identical_relationship_is_rejected stdout ----
 
-thread 'architecture::tests::an_identical_relationship_is_rejected' (457834) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::an_identical_relationship_is_rejected' (1641093) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::architecture_round_trips_through_json stdout ----
 
-thread 'architecture::tests::architecture_round_trips_through_json' (457835) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::a_dangling_target_is_rejected_and_named_as_such stdout ----
-
-thread 'architecture::tests::a_dangling_target_is_rejected_and_named_as_such' (457833) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::architecture_round_trips_through_json' (1641094) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::a_conformance_claim_is_recorded_in_declaration_order stdout ----
 
-thread 'architecture::tests::a_conformance_claim_is_recorded_in_declaration_order' (457831) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::a_conformance_claim_is_recorded_in_declaration_order' (1641089) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::build_rejects_a_non_semver_version stdout ----
+
+thread 'architecture::tests::build_rejects_a_non_semver_version' (1641096) panicked at crates/casm-core/src/architecture.rs:643:9:
+assertion failed: matches!(err, ArchitectureError::InvalidVersion { .. })
+
+---- architecture::tests::a_dangling_source_is_rejected_and_named_as_such stdout ----
+
+thread 'architecture::tests::a_dangling_source_is_rejected_and_named_as_such' (1641090) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "db", found: 'd', index: 0 })
+
+---- architecture::tests::build_resolves_edges_declared_before_their_nodes stdout ----
+
+thread 'architecture::tests::build_resolves_edges_declared_before_their_nodes' (1641097) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::a_dangling_target_is_rejected_and_named_as_such stdout ----
+
+thread 'architecture::tests::a_dangling_target_is_rejected_and_named_as_such' (1641091) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::build_applies_sensible_defaults stdout ----
 
-thread 'architecture::tests::build_applies_sensible_defaults' (457836) panicked at crates/casm-core/src/architecture.rs:630:62:
+thread 'architecture::tests::build_applies_sensible_defaults' (1641095) panicked at crates/casm-core/src/architecture.rs:630:62:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "unnamed-architecture", found: 'u', index: 0 })
-
----- architecture::tests::build_rejects_a_non_semver_version stdout ----
-
-thread 'architecture::tests::build_rejects_a_non_semver_version' (457837) panicked at crates/casm-core/src/architecture.rs:643:9:
-assertion failed: matches!(err, ArchitectureError::InvalidVersion { .. })
-
----- architecture::tests::build_resolves_edges_declared_before_their_nodes stdout ----
-
-thread 'architecture::tests::build_resolves_edges_declared_before_their_nodes' (457838) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::consuming_builders_compose stdout ----
 
-thread 'architecture::tests::consuming_builders_compose' (457839) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::consuming_builders_compose' (1641098) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::degree_counts_both_directions stdout ----
+
+thread 'architecture::tests::degree_counts_both_directions' (1641099) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::duplicate_node_ids_are_rejected stdout ----
 
-thread 'architecture::tests::duplicate_node_ids_are_rejected' (457841) panicked at crates/casm-core/src/architecture.rs:697:21:
+thread 'architecture::tests::duplicate_node_ids_are_rejected' (1641100) panicked at crates/casm-core/src/architecture.rs:697:21:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
-
----- architecture::tests::degree_counts_both_directions stdout ----
-
-thread 'architecture::tests::degree_counts_both_directions' (457840) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::duplicate_node_names_are_rejected stdout ----
-
-thread 'architecture::tests::duplicate_node_names_are_rejected' (457842) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::lookup_works_by_id_and_by_name stdout ----
-
-thread 'architecture::tests::lookup_works_by_id_and_by_name' (457845) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::incoming_and_outgoing_partition_the_edges stdout ----
 
-thread 'architecture::tests::incoming_and_outgoing_partition_the_edges' (457843) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::node_iteration_order_is_stable_across_runs stdout ----
-
-thread 'architecture::tests::node_iteration_order_is_stable_across_runs' (457846) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::incoming_and_outgoing_partition_the_edges' (1641102) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::isolated_nodes_are_identified stdout ----
 
-thread 'architecture::tests::isolated_nodes_are_identified' (457844) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::isolated_nodes_are_identified' (1641103) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
----- architecture::tests::the_same_pattern_cannot_be_claimed_twice stdout ----
+---- architecture::tests::node_iteration_order_is_stable_across_runs stdout ----
 
-thread 'architecture::tests::the_same_pattern_cannot_be_claimed_twice' (457851) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::the_same_pair_may_be_connected_with_different_semantics stdout ----
-
-thread 'architecture::tests::the_same_pair_may_be_connected_with_different_semantics' (457850) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::removing_an_absent_node_is_not_an_error stdout ----
-
-thread 'architecture::tests::removing_an_absent_node_is_not_an_error' (457848) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::two_versions_of_one_pattern_may_both_be_claimed stdout ----
-
-thread 'architecture::tests::two_versions_of_one_pattern_may_both_be_claimed' (457852) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- architecture::tests::verify_invariants_passes_on_a_constructed_architecture stdout ----
-
-thread 'architecture::tests::verify_invariants_passes_on_a_constructed_architecture' (457855) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::node_iteration_order_is_stable_across_runs' (1641105) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- architecture::tests::removing_a_referenced_node_is_refused_with_a_count stdout ----
 
-thread 'architecture::tests::removing_a_referenced_node_is_refused_with_a_count' (457847) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::removing_a_referenced_node_is_refused_with_a_count' (1641106) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
----- architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde stdout ----
+---- architecture::tests::removing_an_absent_node_is_not_an_error stdout ----
 
-thread 'architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde' (457853) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::removing_an_absent_node_is_not_an_error' (1641107) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
----- architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde stdout ----
+---- architecture::tests::the_same_pair_may_be_connected_with_different_semantics stdout ----
 
-thread 'architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde' (457854) panicked at crates/casm-core/src/architecture.rs:598:14:
+thread 'architecture::tests::the_same_pair_may_be_connected_with_different_semantics' (1641109) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::the_same_pattern_cannot_be_claimed_twice stdout ----
+
+thread 'architecture::tests::the_same_pattern_cannot_be_claimed_twice' (1641110) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::two_versions_of_one_pattern_may_both_be_claimed stdout ----
+
+thread 'architecture::tests::two_versions_of_one_pattern_may_both_be_claimed' (1641111) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::verify_invariants_passes_on_a_constructed_architecture stdout ----
+
+thread 'architecture::tests::verify_invariants_passes_on_a_constructed_architecture' (1641114) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::duplicate_node_names_are_rejected stdout ----
+
+thread 'architecture::tests::duplicate_node_names_are_rejected' (1641101) panicked at crates/casm-core/src/architecture.rs:598:14:
 valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound stdout ----
 
-thread 'conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound' (457856) panicked at crates/casm-core/src/conformance.rs:466:75:
+thread 'conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound' (1641116) panicked at crates/casm-core/src/conformance.rs:466:75:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
+
+---- architecture::tests::lookup_works_by_id_and_by_name stdout ----
+
+thread 'architecture::tests::lookup_works_by_id_and_by_name' (1641104) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde stdout ----
+
+thread 'architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde' (1641113) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::removing_an_unreferenced_node_succeeds stdout ----
+
+thread 'architecture::tests::removing_an_unreferenced_node_succeeds' (1641108) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde stdout ----
+
+thread 'architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde' (1641112) panicked at crates/casm-core/src/architecture.rs:598:14:
+valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- conformance::tests::a_conforming_architecture_reports_nothing_unmet stdout ----
 
-thread 'conformance::tests::a_conforming_architecture_reports_nothing_unmet' (457857) panicked at crates/casm-core/src/conformance.rs:466:75:
+thread 'conformance::tests::a_conforming_architecture_reports_nothing_unmet' (1641117) panicked at crates/casm-core/src/conformance.rs:466:75:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
 
 ---- conformance::tests::a_missing_control_type_is_reported stdout ----
 
-thread 'conformance::tests::a_missing_control_type_is_reported' (457858) panicked at crates/casm-core/src/conformance.rs:664:22:
+thread 'conformance::tests::a_missing_control_type_is_reported' (1641118) panicked at crates/casm-core/src/conformance.rs:664:22:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- conformance::tests::a_missing_protocol_is_reported stdout ----
+
+thread 'conformance::tests::a_missing_protocol_is_reported' (1641120) panicked at crates/casm-core/src/conformance.rs:683:22:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate stdout ----
 
-thread 'conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate' (457859) panicked at crates/casm-core/src/conformance.rs:590:72:
+thread 'conformance::tests::a_missing_node_type_is_reported_as_having_no_candidate' (1641119) panicked at crates/casm-core/src/conformance.rs:590:72:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "store", found: 's', index: 0 })
 
----- architecture::tests::removing_an_unreferenced_node_succeeds stdout ----
+---- architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one stdout ----
 
-thread 'architecture::tests::removing_an_unreferenced_node_succeeds' (457849) panicked at crates/casm-core/src/architecture.rs:598:14:
-valid node: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
----- conformance::tests::a_missing_protocol_is_reported stdout ----
-
-thread 'conformance::tests::a_missing_protocol_is_reported' (457860) panicked at crates/casm-core/src/conformance.rs:683:22:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+thread 'architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one' (1641115) panicked at crates/casm-core/src/architecture.rs:1061:18:
+the fixture node is valid: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
 
 ---- conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes stdout ----
 
-thread 'conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes' (457861) panicked at crates/casm-core/src/conformance.rs:700:70:
+thread 'conformance::tests::a_missing_relationship_is_reported_with_both_roles_and_both_nodes' (1641121) panicked at crates/casm-core/src/conformance.rs:700:70:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- conformance::tests::a_vacuous_pattern_is_satisfied_by_anything stdout ----
-
-thread 'conformance::tests::a_vacuous_pattern_is_satisfied_by_anything' (457863) panicked at crates/casm-core/src/conformance.rs:767:66:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "empty", found: 'e', index: 0 })
 
 ---- conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at stdout ----
 
-thread 'conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at' (457862) panicked at crates/casm-core/src/conformance.rs:466:75:
+thread 'conformance::tests::a_role_two_nodes_could_fill_is_reported_rather_than_guessed_at' (1641122) panicked at crates/casm-core/src/conformance.rs:466:75:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
+
+---- conformance::tests::a_vacuous_pattern_is_satisfied_by_anything stdout ----
+
+thread 'conformance::tests::a_vacuous_pattern_is_satisfied_by_anything' (1641123) panicked at crates/casm-core/src/conformance.rs:767:66:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "empty", found: 'e', index: 0 })
+
+---- conformance::tests::an_explicit_binding_resolves_the_ambiguity stdout ----
+
+thread 'conformance::tests::an_explicit_binding_resolves_the_ambiguity' (1641124) panicked at crates/casm-core/src/conformance.rs:466:75:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
 
 ---- conformance::tests::an_unfillable_role_does_not_also_report_its_relationships stdout ----
 
-thread 'conformance::tests::an_unfillable_role_does_not_also_report_its_relationships' (457865) panicked at crates/casm-core/src/conformance.rs:752:70:
+thread 'conformance::tests::an_unfillable_role_does_not_also_report_its_relationships' (1641125) panicked at crates/casm-core/src/conformance.rs:752:70:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- conformance::tests::checking_is_deterministic stdout ----
-
-thread 'conformance::tests::checking_is_deterministic' (457867) panicked at crates/casm-core/src/conformance.rs:466:75:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
 
 ---- conformance::tests::every_unmet_variant_renders_a_message_naming_its_role stdout ----
 
-thread 'conformance::tests::every_unmet_variant_renders_a_message_naming_its_role' (457868) panicked at crates/casm-core/src/conformance.rs:802:22:
+thread 'conformance::tests::every_unmet_variant_renders_a_message_naming_its_role' (1641128) panicked at crates/casm-core/src/conformance.rs:802:22:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported stdout ----
-
-thread 'conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported' (457866) panicked at crates/casm-core/src/conformance.rs:466:75:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
 
 ---- conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision stdout ----
 
-thread 'conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision' (457869) panicked at crates/casm-core/src/conformance.rs:779:22:
+thread 'conformance::tests::mechanical_failures_are_separated_from_ones_needing_a_decision' (1641129) panicked at crates/casm-core/src/conformance.rs:779:22:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- conformance::tests::relationship_direction_matters stdout ----
 
-thread 'conformance::tests::relationship_direction_matters' (457870) panicked at crates/casm-core/src/conformance.rs:731:70:
+thread 'conformance::tests::relationship_direction_matters' (1641130) panicked at crates/casm-core/src/conformance.rs:731:70:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- conformance::tests::roles_bind_automatically_when_exactly_one_node_fits stdout ----
-
-thread 'conformance::tests::roles_bind_automatically_when_exactly_one_node_fits' (457871) panicked at crates/casm-core/src/conformance.rs:466:75:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
-
----- conformance::tests::an_explicit_binding_resolves_the_ambiguity stdout ----
-
-thread 'conformance::tests::an_explicit_binding_resolves_the_ambiguity' (457864) panicked at crates/casm-core/src/conformance.rs:466:75:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
 
 ---- conformance::tests::too_few_security_controls_is_reported_with_both_counts stdout ----
 
-thread 'conformance::tests::too_few_security_controls_is_reported_with_both_counts' (457872) panicked at crates/casm-core/src/conformance.rs:641:22:
+thread 'conformance::tests::too_few_security_controls_is_reported_with_both_counts' (1641132) panicked at crates/casm-core/src/conformance.rs:641:22:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported stdout ----
+
+thread 'conformance::tests::binding_a_role_the_pattern_does_not_require_is_reported' (1641126) panicked at crates/casm-core/src/conformance.rs:466:75:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
+
+---- conformance::tests::checking_is_deterministic stdout ----
+
+thread 'conformance::tests::checking_is_deterministic' (1641127) panicked at crates/casm-core/src/conformance.rs:466:75:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
+
+---- conformance::tests::roles_bind_automatically_when_exactly_one_node_fits stdout ----
+
+thread 'conformance::tests::roles_bind_automatically_when_exactly_one_node_fits' (1641131) panicked at crates/casm-core/src/conformance.rs:466:75:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public", found: 'p', index: 0 })
+
+---- interface::tests::an_interfaces_description_is_returned_as_written stdout ----
+
+thread 'interface::tests::an_interfaces_description_is_returned_as_written' (1641170) panicked at crates/casm-core/src/interface.rs:449:70:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- interface::tests::compatibility_allows_a_forward_minor_version stdout ----
 
-thread 'interface::tests::compatibility_allows_a_forward_minor_version' (457905) panicked at crates/casm-core/src/interface.rs:418:72:
+thread 'interface::tests::compatibility_allows_a_forward_minor_version' (1641171) panicked at crates/casm-core/src/interface.rs:467:72:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- interface::tests::compatibility_rejects_a_backward_minor_version stdout ----
 
-thread 'interface::tests::compatibility_rejects_a_backward_minor_version' (457906) panicked at crates/casm-core/src/interface.rs:425:72:
+thread 'interface::tests::compatibility_rejects_a_backward_minor_version' (1641172) panicked at crates/casm-core/src/interface.rs:474:72:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- interface::tests::compatibility_requires_matching_major_version stdout ----
+
+thread 'interface::tests::compatibility_requires_matching_major_version' (1641173) panicked at crates/casm-core/src/interface.rs:460:72:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- interface::tests::compatibility_requires_matching_protocol stdout ----
+
+thread 'interface::tests::compatibility_requires_matching_protocol' (1641174) panicked at crates/casm-core/src/interface.rs:484:72:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- interface::tests::interface_rejects_a_non_semver_version stdout ----
 
-thread 'interface::tests::interface_rejects_a_non_semver_version' (457909) panicked at crates/casm-core/src/interface.rs:400:9:
+thread 'interface::tests::interface_rejects_a_non_semver_version' (1641175) panicked at crates/casm-core/src/interface.rs:400:9:
 assertion failed: matches!(err, InterfaceError::InvalidVersion { .. })
 
 ---- interface::tests::interface_rejects_an_empty_custom_protocol stdout ----
 
-thread 'interface::tests::interface_rejects_an_empty_custom_protocol' (457910) panicked at crates/casm-core/src/interface.rs:406:9:
+thread 'interface::tests::interface_rejects_an_empty_custom_protocol' (1641176) panicked at crates/casm-core/src/interface.rs:406:9:
 assertion `left == right` failed
   left: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
  right: EmptyCustomProtocol
 
----- interface::tests::compatibility_requires_matching_major_version stdout ----
-
-thread 'interface::tests::compatibility_requires_matching_major_version' (457907) panicked at crates/casm-core/src/interface.rs:411:72:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
-
 ---- interface::tests::interface_round_trips_through_json stdout ----
 
-thread 'interface::tests::interface_round_trips_through_json' (457912) panicked at crates/casm-core/src/interface.rs:463:14:
+thread 'interface::tests::interface_round_trips_through_json' (1641178) panicked at crates/casm-core/src/interface.rs:512:14:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "public-api", found: 'p', index: 0 })
 
----- interface::tests::compatibility_requires_matching_protocol stdout ----
+---- merkle::tests::a_changed_latency_budget_changes_the_fingerprint stdout ----
 
-thread 'interface::tests::compatibility_requires_matching_protocol' (457908) panicked at crates/casm-core/src/interface.rs:435:72:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+thread 'merkle::tests::a_changed_latency_budget_changes_the_fingerprint' (1641190) panicked at crates/casm-core/src/merkle.rs:848:18:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
 
 ---- merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them stdout ----
 
-thread 'merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them' (457923) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them' (1641191) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint stdout ----
+
+thread 'merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint' (1641193) panicked at crates/casm-core/src/merkle.rs:783:18:
+valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- merkle::tests::a_node_digest_never_collides_with_a_control_digest stdout ----
+
+thread 'merkle::tests::a_node_digest_never_collides_with_a_control_digest' (1641192) panicked at crates/casm-core/src/merkle.rs:997:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "x", found: 'x', index: 0 })
+
+---- merkle::tests::a_renamed_node_changes_the_fingerprint stdout ----
+
+thread 'merkle::tests::a_renamed_node_changes_the_fingerprint' (1641194) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::a_version_bump_changes_the_fingerprint stdout ----
 
-thread 'merkle::tests::a_version_bump_changes_the_fingerprint' (457926) panicked at crates/casm-core/src/merkle.rs:700:44:
+thread 'merkle::tests::a_version_bump_changes_the_fingerprint' (1641195) panicked at crates/casm-core/src/merkle.rs:700:44:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "x", found: 'x', index: 0 })
-
----- merkle::tests::a_changed_latency_budget_changes_the_fingerprint stdout ----
-
-thread 'merkle::tests::a_changed_latency_budget_changes_the_fingerprint' (457922) panicked at crates/casm-core/src/merkle.rs:712:18:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
-
----- merkle::tests::adding_a_control_changes_the_fingerprint stdout ----
-
-thread 'merkle::tests::adding_a_control_changes_the_fingerprint' (457928) panicked at crates/casm-core/src/merkle.rs:744:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
-
----- merkle::tests::a_node_digest_never_collides_with_a_control_digest stdout ----
-
-thread 'merkle::tests::a_node_digest_never_collides_with_a_control_digest' (457924) panicked at crates/casm-core/src/merkle.rs:821:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "x", found: 'x', index: 0 })
-
----- merkle::tests::an_absent_description_differs_from_an_empty_one stdout ----
-
-thread 'merkle::tests::an_absent_description_differs_from_an_empty_one' (457929) panicked at crates/casm-core/src/merkle.rs:785:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
-
----- merkle::tests::a_renamed_node_changes_the_fingerprint stdout ----
-
-thread 'merkle::tests::a_renamed_node_changes_the_fingerprint' (457925) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::abbreviation_does_not_panic_on_an_over_long_width stdout ----
 
-thread 'merkle::tests::abbreviation_does_not_panic_on_an_over_long_width' (457927) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::abbreviation_does_not_panic_on_an_over_long_width' (1641196) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::adding_a_control_changes_the_fingerprint stdout ----
+
+thread 'merkle::tests::adding_a_control_changes_the_fingerprint' (1641197) panicked at crates/casm-core/src/merkle.rs:880:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
+
+---- merkle::tests::an_absent_description_differs_from_an_empty_one stdout ----
+
+thread 'merkle::tests::an_absent_description_differs_from_an_empty_one' (1641198) panicked at crates/casm-core/src/merkle.rs:961:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
 
 ---- merkle::tests::an_empty_architecture_has_a_stable_fingerprint stdout ----
 
-thread 'merkle::tests::an_empty_architecture_has_a_stable_fingerprint' (457930) panicked at crates/casm-core/src/merkle.rs:918:69:
+thread 'merkle::tests::an_empty_architecture_has_a_stable_fingerprint' (1641199) panicked at crates/casm-core/src/merkle.rs:1094:69:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "empty", found: 'e', index: 0 })
-
----- merkle::tests::changed_nodes_reports_only_what_actually_differs stdout ----
-
-thread 'merkle::tests::changed_nodes_reports_only_what_actually_differs' (457933) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- merkle::tests::control_order_within_a_node_does_not_matter stdout ----
-
-thread 'merkle::tests::control_order_within_a_node_does_not_matter' (457934) panicked at crates/casm-core/src/merkle.rs:766:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
 
 ---- merkle::tests::changed_nodes_includes_additions_and_removals stdout ----
 
-thread 'merkle::tests::changed_nodes_includes_additions_and_removals' (457931) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text stdout ----
-
-thread 'merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text' (457938) panicked at crates/casm-core/src/merkle.rs:804:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "ab", found: 'a', index: 0 })
-
----- merkle::tests::fingerprinting_is_stable_across_repeated_calls stdout ----
-
-thread 'merkle::tests::fingerprinting_is_stable_across_repeated_calls' (457940) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- merkle::tests::declaring_conformance_changes_the_fingerprint stdout ----
-
-thread 'merkle::tests::declaring_conformance_changes_the_fingerprint' (457937) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- merkle::tests::fingerprints_render_and_parse_as_hex stdout ----
-
-thread 'merkle::tests::fingerprints_render_and_parse_as_hex' (457941) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::changed_nodes_includes_additions_and_removals' (1641200) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::changed_nodes_is_empty_for_identical_trees stdout ----
 
-thread 'merkle::tests::changed_nodes_is_empty_for_identical_trees' (457932) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::changed_nodes_is_empty_for_identical_trees' (1641201) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
----- merkle::tests::identical_architectures_fingerprint_identically stdout ----
+---- merkle::tests::changed_nodes_reports_only_what_actually_differs stdout ----
 
-thread 'merkle::tests::identical_architectures_fingerprint_identically' (457943) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::changed_nodes_reports_only_what_actually_differs' (1641202) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
----- merkle::tests::rebinding_a_role_changes_the_fingerprint stdout ----
+---- merkle::tests::declaration_order_does_not_affect_the_fingerprint stdout ----
 
-thread 'merkle::tests::rebinding_a_role_changes_the_fingerprint' (457944) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::declaration_order_does_not_affect_the_fingerprint' (1641205) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::control_order_within_a_node_does_not_matter stdout ----
+
+thread 'merkle::tests::control_order_within_a_node_does_not_matter' (1641203) panicked at crates/casm-core/src/merkle.rs:942:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
+
+---- merkle::tests::debug_output_stays_short_enough_for_a_log_line stdout ----
+
+thread 'merkle::tests::debug_output_stays_short_enough_for_a_log_line' (1641204) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::declaring_conformance_changes_the_fingerprint stdout ----
+
+thread 'merkle::tests::declaring_conformance_changes_the_fingerprint' (1641206) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::a_boolean_field_is_part_of_the_digest stdout ----
+
+thread 'merkle::tests::a_boolean_field_is_part_of_the_digest' (1641189) panicked at crates/casm-core/src/merkle.rs:911:18:
+valid: Name(IllegalCharacter { name: "db", found: 'd', index: 0 })
+
+---- merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects stdout ----
+
+thread 'merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects' (1641207) panicked at crates/casm-core/src/merkle.rs:717:18:
+valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- merkle::tests::fingerprinting_is_stable_across_repeated_calls stdout ----
+
+thread 'merkle::tests::fingerprinting_is_stable_across_repeated_calls' (1641210) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text stdout ----
+
+thread 'merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text' (1641208) panicked at crates/casm-core/src/merkle.rs:980:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "ab", found: 'a', index: 0 })
+
+---- merkle::tests::fingerprints_render_and_parse_as_hex stdout ----
+
+thread 'merkle::tests::fingerprints_render_and_parse_as_hex' (1641211) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::fingerprints_round_trip_through_json stdout ----
+
+thread 'merkle::tests::fingerprints_round_trip_through_json' (1641212) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::the_scheme_tag_is_mixed_into_the_root stdout ----
 
-thread 'merkle::tests::the_scheme_tag_is_mixed_into_the_root' (457946) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::the_scheme_tag_is_mixed_into_the_root' (1641216) panicked at crates/casm-core/src/merkle.rs:625:73:
+valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- merkle::tests::identical_architectures_fingerprint_identically stdout ----
+
+thread 'merkle::tests::identical_architectures_fingerprint_identically' (1641213) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::the_tree_exposes_a_digest_per_node stdout ----
 
-thread 'merkle::tests::the_tree_exposes_a_digest_per_node' (457947) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- merkle::tests::debug_output_stays_short_enough_for_a_log_line stdout ----
-
-thread 'merkle::tests::debug_output_stays_short_enough_for_a_log_line' (457935) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::the_tree_exposes_a_digest_per_node' (1641217) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- names::tests::accepts_a_name_exactly_at_the_ceiling stdout ----
 
-thread 'names::tests::accepts_a_name_exactly_at_the_ceiling' (457948) panicked at crates/casm-core/src/names.rs:188:9:
+thread 'names::tests::accepts_a_name_exactly_at_the_ceiling' (1641218) panicked at crates/casm-core/src/names.rs:203:9:
 the ceiling itself must be inclusive
 
----- merkle::tests::declaration_order_does_not_affect_the_fingerprint stdout ----
+---- names::tests::borrowing_a_name_as_a_string_yields_the_name stdout ----
 
-thread 'merkle::tests::declaration_order_does_not_affect_the_fingerprint' (457936) panicked at crates/casm-core/src/merkle.rs:625:73:
-valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+thread 'names::tests::borrowing_a_name_as_a_string_yields_the_name' (1641220) panicked at crates/casm-core/src/names.rs:175:43:
+a conventional name: IllegalCharacter { name: "orders-db", found: 'o', index: 0 }
 
 ---- names::tests::accepts_conventional_service_names stdout ----
 
-thread 'names::tests::accepts_conventional_service_names' (457949) panicked at crates/casm-core/src/names.rs:164:13:
+thread 'names::tests::accepts_conventional_service_names' (1641219) panicked at crates/casm-core/src/names.rs:164:13:
 api should be accepted
 
----- merkle::tests::fingerprints_round_trip_through_json stdout ----
+---- merkle::tests::rebinding_a_role_changes_the_fingerprint stdout ----
 
-thread 'merkle::tests::fingerprints_round_trip_through_json' (457942) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::rebinding_a_role_changes_the_fingerprint' (1641214) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole stdout ----
 
-thread 'merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole' (457945) panicked at crates/casm-core/src/merkle.rs:625:73:
+thread 'merkle::tests::the_roots_are_distinct_from_each_other_and_from_the_whole' (1641215) panicked at crates/casm-core/src/merkle.rs:625:73:
 valid: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- names::tests::deserialisation_enforces_the_same_rules_as_construction stdout ----
 
-thread 'names::tests::deserialisation_enforces_the_same_rules_as_construction' (457950) panicked at crates/casm-core/src/names.rs:231:9:
+thread 'names::tests::deserialisation_enforces_the_same_rules_as_construction' (1641221) panicked at crates/casm-core/src/names.rs:246:9:
 assertion failed: ok.is_ok()
 
 ---- names::tests::reports_the_byte_offset_of_an_illegal_character stdout ----
 
-thread 'names::tests::reports_the_byte_offset_of_an_illegal_character' (457956) panicked at crates/casm-core/src/names.rs:210:17:
+thread 'names::tests::reports_the_byte_offset_of_an_illegal_character' (1641227) panicked at crates/casm-core/src/names.rs:225:17:
 assertion `left == right` failed
   left: 'a'
  right: ' '
 
 ---- names::tests::serialises_transparently_as_a_plain_string stdout ----
 
-thread 'names::tests::serialises_transparently_as_a_plain_string' (457957) panicked at crates/casm-core/src/names.rs:239:37:
+thread 'names::tests::serialises_transparently_as_a_plain_string' (1641228) panicked at crates/casm-core/src/names.rs:254:37:
 called `Result::unwrap()` on an `Err` value: IllegalCharacter { name: "api", found: 'a', index: 0 }
-
----- node::tests::build_fails_without_a_node_type stdout ----
-
-thread 'node::tests::build_fails_without_a_node_type' (457961) panicked at crates/casm-core/src/node.rs:407:9:
-assertion `left == right` failed
-  left: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
- right: MissingField { field: "node_type" }
-
----- node::tests::build_generates_an_id_when_none_is_pinned stdout ----
-
-thread 'node::tests::build_generates_an_id_when_none_is_pinned' (457962) panicked at crates/casm-core/src/node.rs:392:14:
-sample service is valid: Name(IllegalCharacter { name: "alpha", found: 'a', index: 0 })
-
----- node::tests::build_honours_a_pinned_id_for_reproducibility stdout ----
-
-thread 'node::tests::build_honours_a_pinned_id_for_reproducibility' (457963) panicked at crates/casm-core/src/node.rs:434:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- names::tests::legal_names_round_trip stdout ----
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "VKWPOa4zDRl_7.9I.biT-", found: 'V', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "3-kI_d-T.j_.8", found: '3', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "KKWPOa4zDRl_7.9I.biT-", found: 'K', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "1-kI_d-T.j_.8", found: '1', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "FKWPOa4zDRl_7.9I.biT-", found: 'F', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0-kI_d-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "CKWPOa4zDRl_7.9I.biT-", found: 'C', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0kI_d-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "BKWPOa4zDRl_7.9I.biT-", found: 'B', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0I_d-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AKWPOa4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0_d-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AWPOa4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0d-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "APOa4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0-T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AOa4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0T.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "Aa4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0.j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A4zDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0j_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AzDRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0_.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "ADRl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0.8", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "ARl_7.9I.biT-", found: 'A', index: 0 }
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "08", found: '0', index: 0 }
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "Al_7.9I.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A_7.9I.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A7.9I.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A.9I.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A9I.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AI.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A.biT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AbiT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AiT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "AT-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A-", found: 'A', index: 0 }
-
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:248:47:
-generated name is legal by construction: IllegalCharacter { name: "A", found: 'A', index: 0 }
-proptest: Saving this and future failures in /tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core/proptest-regressions/names.txt
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:263:47:
+generated name is legal by construction: IllegalCharacter { name: "0", found: '0', index: 0 }
+proptest: Saving this and future failures in /tmp/cargo-mutants-casm-32sAIW.tmp/crates/casm-core/proptest-regressions/names.txt
 proptest: If this test was run on a CI system, you may wish to add the following line to your copy of the file. (You may need to create it.)
-cc 2f820c45eac1a4920cf78ae2c7863d2828c1fa7630657d7d19f75c2287a042c5
+cc bb67ce39488f00763caa7f029c2062db24a187541a05041cf56b930cca93a245
 
-thread 'names::tests::legal_names_round_trip' (457951) panicked at crates/casm-core/src/names.rs:243:5:
-Test failed: generated name is legal by construction: IllegalCharacter { name: "A", found: 'A', index: 0 }.
-minimal failing input: raw = "A"
+thread 'names::tests::legal_names_round_trip' (1641222) panicked at crates/casm-core/src/names.rs:258:5:
+Test failed: generated name is legal by construction: IllegalCharacter { name: "0", found: '0', index: 0 }.
+minimal failing input: raw = "0"
 	successes: 0
 	local rejects: 0
 	global rejects: 0
@@ -858,169 +861,201 @@ minimal failing input: raw = "A"
 
 ---- node::tests::build_accepts_distinct_interface_names stdout ----
 
-thread 'node::tests::build_accepts_distinct_interface_names' (457959) panicked at crates/casm-core/src/node.rs:461:73:
+thread 'node::tests::build_accepts_distinct_interface_names' (1641230) panicked at crates/casm-core/src/node.rs:461:73:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
----- node::tests::build_rejects_duplicate_interface_names stdout ----
+---- node::tests::build_fails_without_a_node_type stdout ----
 
-thread 'node::tests::build_rejects_duplicate_interface_names' (457965) panicked at crates/casm-core/src/node.rs:443:73:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
-
----- node::tests::has_control_tagged_searches_every_control stdout ----
-
-thread 'node::tests::has_control_tagged_searches_every_control' (457967) panicked at crates/casm-core/src/node.rs:392:14:
-sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+thread 'node::tests::build_fails_without_a_node_type' (1641232) panicked at crates/casm-core/src/node.rs:407:9:
+assertion `left == right` failed
+  left: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+ right: MissingField { field: "node_type" }
 
 ---- node::tests::controls_of_type_counts_only_the_requested_dimension stdout ----
 
-thread 'node::tests::controls_of_type_counts_only_the_requested_dimension' (457966) panicked at crates/casm-core/src/node.rs:392:14:
+thread 'node::tests::controls_of_type_counts_only_the_requested_dimension' (1641237) panicked at crates/casm-core/src/node.rs:392:14:
 sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
----- node::tests::node_round_trips_through_json stdout ----
+---- node::tests::build_generates_an_id_when_none_is_pinned stdout ----
 
-thread 'node::tests::node_round_trips_through_json' (457970) panicked at crates/casm-core/src/node.rs:566:73:
+thread 'node::tests::build_generates_an_id_when_none_is_pinned' (1641233) panicked at crates/casm-core/src/node.rs:392:14:
+sample service is valid: Name(IllegalCharacter { name: "alpha", found: 'a', index: 0 })
+
+---- node::tests::has_control_tagged_searches_every_control stdout ----
+
+thread 'node::tests::has_control_tagged_searches_every_control' (1641238) panicked at crates/casm-core/src/node.rs:392:14:
+sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- node::tests::build_honours_a_pinned_id_for_reproducibility stdout ----
+
+thread 'node::tests::build_honours_a_pinned_id_for_reproducibility' (1641234) panicked at crates/casm-core/src/node.rs:434:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- node::tests::build_rejects_duplicate_interface_names stdout ----
+
+thread 'node::tests::build_rejects_duplicate_interface_names' (1641236) panicked at crates/casm-core/src/node.rs:443:73:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
 
 ---- node::tests::interface_lookup_is_by_exact_name stdout ----
 
-thread 'node::tests::interface_lookup_is_by_exact_name' (457968) panicked at crates/casm-core/src/node.rs:392:14:
+thread 'node::tests::interface_lookup_is_by_exact_name' (1641239) panicked at crates/casm-core/src/node.rs:392:14:
 sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
----- node::tests::serialisation_omits_empty_collections stdout ----
+---- node::tests::node_round_trips_through_json stdout ----
 
-thread 'node::tests::serialisation_omits_empty_collections' (457982) panicked at crates/casm-core/src/node.rs:392:14:
-sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+thread 'node::tests::node_round_trips_through_json' (1641241) panicked at crates/casm-core/src/node.rs:566:73:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "rest", found: 'r', index: 0 })
+
+---- node::tests::metadata_serialises_in_deterministic_key_order stdout ----
+
+thread 'node::tests::metadata_serialises_in_deterministic_key_order' (1641240) panicked at crates/casm-core/src/node.rs:551:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- node::tests::with_interface_rejects_a_duplicate_at_runtime stdout ----
 
-thread 'node::tests::with_interface_rejects_a_duplicate_at_runtime' (457983) panicked at crates/casm-core/src/node.rs:392:14:
+thread 'node::tests::with_interface_rejects_a_duplicate_at_runtime' (1641246) panicked at crates/casm-core/src/node.rs:392:14:
 sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
 
 ---- pattern::tests::a_fingerprint_distinguishes_relationship_direction stdout ----
 
-thread 'pattern::tests::a_fingerprint_distinguishes_relationship_direction' (457985) panicked at crates/casm-core/src/pattern.rs:1017:71:
+thread 'pattern::tests::a_fingerprint_distinguishes_relationship_direction' (1641249) panicked at crates/casm-core/src/pattern.rs:1094:71:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "a", found: 'a', index: 0 })
 
----- node::tests::metadata_serialises_in_deterministic_key_order stdout ----
+---- node::tests::serialisation_omits_empty_collections stdout ----
 
-thread 'node::tests::metadata_serialises_in_deterministic_key_order' (457969) panicked at crates/casm-core/src/node.rs:551:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+thread 'node::tests::serialisation_omits_empty_collections' (1641245) panicked at crates/casm-core/src/node.rs:392:14:
+sample service is valid: Name(IllegalCharacter { name: "api", found: 'a', index: 0 })
+
+---- pattern::tests::a_conformance_claim_renders_the_pattern_it_names stdout ----
+
+thread 'pattern::tests::a_conformance_claim_renders_the_pattern_it_names' (1641247) panicked at crates/casm-core/src/pattern.rs:970:56:
+a valid reference: MalformedReference { reference: "secure-web-tier@1.0.0", reason: "name 'secure-web-tier' contains illegal character 's' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
+
+---- pattern::tests::a_fingerprint_changes_when_the_shape_changes stdout ----
+
+thread 'pattern::tests::a_fingerprint_changes_when_the_shape_changes' (1641248) panicked at crates/casm-core/src/pattern.rs:1062:22:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::a_fingerprint_distinguishes_the_compliance_claim stdout ----
 
-thread 'pattern::tests::a_fingerprint_distinguishes_the_compliance_claim' (457986) panicked at crates/casm-core/src/pattern.rs:1003:64:
+thread 'pattern::tests::a_fingerprint_distinguishes_the_compliance_claim' (1641250) panicked at crates/casm-core/src/pattern.rs:1080:64:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
-
----- pattern::tests::a_pattern_round_trips_through_json stdout ----
-
-thread 'pattern::tests::a_pattern_round_trips_through_json' (457989) panicked at crates/casm-core/src/pattern.rs:706:22:
-valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous stdout ----
-
-thread 'pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous' (457990) panicked at crates/casm-core/src/pattern.rs:1033:66:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "empty", found: 'e', index: 0 })
-
----- pattern::tests::a_pattern_exposes_its_requirements_by_role stdout ----
-
-thread 'pattern::tests::a_pattern_exposes_its_requirements_by_role' (457988) panicked at crates/casm-core/src/pattern.rs:706:22:
-valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
-
----- pattern::tests::a_reference_round_trips_as_a_bare_string stdout ----
-
-thread 'pattern::tests::a_reference_round_trips_as_a_bare_string' (457993) panicked at crates/casm-core/src/pattern.rs:925:57:
-called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "tier@1.2.3", reason: "name 'tier' contains illegal character 't' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
 
 ---- pattern::tests::a_fingerprint_ignores_declaration_order stdout ----
 
-thread 'pattern::tests::a_fingerprint_ignores_declaration_order' (457987) panicked at crates/casm-core/src/pattern.rs:960:77:
+thread 'pattern::tests::a_fingerprint_ignores_declaration_order' (1641251) panicked at crates/casm-core/src/pattern.rs:1037:77:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "application", found: 'a', index: 0 })
 
----- pattern::tests::a_reference_splits_on_the_last_at_sign stdout ----
+---- pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with stdout ----
 
-thread 'pattern::tests::a_reference_splits_on_the_last_at_sign' (457994) panicked at crates/casm-core/src/pattern.rs:891:57:
-called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "tier@2.0.0", reason: "name 'tier' contains illegal character 't' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
+thread 'pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with' (1641252) panicked at crates/casm-core/src/pattern.rs:917:14:
+valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- pattern::tests::a_pattern_exposes_its_requirements_by_role stdout ----
+
+thread 'pattern::tests::a_pattern_exposes_its_requirements_by_role' (1641253) panicked at crates/casm-core/src/pattern.rs:706:22:
+valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::a_reference_is_name_at_version stdout ----
 
-thread 'pattern::tests::a_reference_is_name_at_version' (457991) panicked at crates/casm-core/src/pattern.rs:706:22:
+thread 'pattern::tests::a_reference_is_name_at_version' (1641256) panicked at crates/casm-core/src/pattern.rs:706:22:
+valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- pattern::tests::a_pattern_round_trips_through_json stdout ----
+
+thread 'pattern::tests::a_pattern_round_trips_through_json' (1641254) panicked at crates/casm-core/src/pattern.rs:706:22:
 valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::a_reference_requires_an_exact_version stdout ----
 
-thread 'pattern::tests::a_reference_requires_an_exact_version' (457992) panicked at crates/casm-core/src/pattern.rs:863:68:
+thread 'pattern::tests::a_reference_requires_an_exact_version' (1641257) panicked at crates/casm-core/src/pattern.rs:863:68:
 called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "secure-web-tier@1.1.0", reason: "name 'secure-web-tier' contains illegal character 's' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
 
----- pattern::tests::a_fingerprint_changes_when_the_shape_changes stdout ----
+---- pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous stdout ----
 
-thread 'pattern::tests::a_fingerprint_changes_when_the_shape_changes' (457984) panicked at crates/casm-core/src/pattern.rs:985:22:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+thread 'pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous' (1641255) panicked at crates/casm-core/src/pattern.rs:1110:66:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "empty", found: 'e', index: 0 })
+
+---- pattern::tests::a_reference_splits_on_the_last_at_sign stdout ----
+
+thread 'pattern::tests::a_reference_splits_on_the_last_at_sign' (1641259) panicked at crates/casm-core/src/pattern.rs:891:57:
+called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "tier@2.0.0", reason: "name 'tier' contains illegal character 't' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
+
+---- pattern::tests::build_defaults_the_version stdout ----
+
+thread 'pattern::tests::build_defaults_the_version' (1641262) panicked at crates/casm-core/src/pattern.rs:733:62:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
 
 ---- pattern::tests::a_relationship_cannot_connect_a_role_to_itself stdout ----
 
-thread 'pattern::tests::a_relationship_cannot_connect_a_role_to_itself' (457995) panicked at crates/casm-core/src/pattern.rs:819:9:
+thread 'pattern::tests::a_relationship_cannot_connect_a_role_to_itself' (1641260) panicked at crates/casm-core/src/pattern.rs:819:9:
 assertion `left == right` failed
   left: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
  right: SelfRelationship { role: "edge" }
 
----- pattern::tests::build_rejects_a_duplicated_role stdout ----
+---- pattern::tests::a_reference_round_trips_as_a_bare_string stdout ----
 
-thread 'pattern::tests::build_rejects_a_duplicated_role' (457998) panicked at crates/casm-core/src/pattern.rs:761:70:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+thread 'pattern::tests::a_reference_round_trips_as_a_bare_string' (1641258) panicked at crates/casm-core/src/pattern.rs:1002:57:
+called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "tier@1.2.3", reason: "name 'tier' contains illegal character 't' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
 
 ---- pattern::tests::build_names_which_endpoint_was_unknown stdout ----
 
-thread 'pattern::tests::build_names_which_endpoint_was_unknown' (457997) panicked at crates/casm-core/src/pattern.rs:800:69:
+thread 'pattern::tests::build_names_which_endpoint_was_unknown' (1641263) panicked at crates/casm-core/src/pattern.rs:800:69:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "app", found: 'a', index: 0 })
+
+---- pattern::tests::build_rejects_a_duplicated_role stdout ----
+
+thread 'pattern::tests::build_rejects_a_duplicated_role' (1641264) panicked at crates/casm-core/src/pattern.rs:761:70:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::build_rejects_a_non_semver_version stdout ----
 
-thread 'pattern::tests::build_rejects_a_non_semver_version' (457999) panicked at crates/casm-core/src/pattern.rs:752:9:
+thread 'pattern::tests::build_rejects_a_non_semver_version' (1641265) panicked at crates/casm-core/src/pattern.rs:752:9:
 assertion failed: matches!(error, PatternError::InvalidVersion { .. })
-
----- pattern::tests::build_defaults_the_version stdout ----
-
-thread 'pattern::tests::build_defaults_the_version' (457996) panicked at crates/casm-core/src/pattern.rs:733:62:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
-
----- pattern::tests::references_parse_and_match stdout ----
-
-thread 'pattern::tests::references_parse_and_match' (458003) panicked at crates/casm-core/src/pattern.rs:855:68:
-called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "secure-web-tier@1.0.0", reason: "name 'secure-web-tier' contains illegal character 's' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
-
----- pattern::tests::role_names_obey_the_casimir_alphabet stdout ----
-
-thread 'pattern::tests::role_names_obey_the_casimir_alphabet' (458005) panicked at crates/casm-core/src/pattern.rs:831:9:
-assertion failed: Requirement::new("edge-tier.v2", NodeType::Service).is_ok()
-
----- pattern::tests::requirement_builders_deduplicate stdout ----
-
-thread 'pattern::tests::requirement_builders_deduplicate' (458004) panicked at crates/casm-core/src/pattern.rs:837:14:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role stdout ----
 
-thread 'pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role' (458000) panicked at crates/casm-core/src/pattern.rs:780:70:
+thread 'pattern::tests::build_rejects_a_relationship_naming_an_undeclared_role' (1641266) panicked at crates/casm-core/src/pattern.rs:780:70:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
----- pattern::tests::verify_invariants_passes_on_a_constructed_pattern stdout ----
+---- pattern::tests::role_names_obey_the_casimir_alphabet stdout ----
 
-thread 'pattern::tests::verify_invariants_passes_on_a_constructed_pattern' (458009) panicked at crates/casm-core/src/pattern.rs:706:22:
+thread 'pattern::tests::role_names_obey_the_casimir_alphabet' (1641271) panicked at crates/casm-core/src/pattern.rs:831:9:
+assertion failed: Requirement::new("edge-tier.v2", NodeType::Service).is_ok()
+
+---- pattern::tests::references_parse_and_match stdout ----
+
+thread 'pattern::tests::references_parse_and_match' (1641269) panicked at crates/casm-core/src/pattern.rs:855:68:
+called `Result::unwrap()` on an `Err` value: MalformedReference { reference: "secure-web-tier@1.0.0", reason: "name 'secure-web-tier' contains illegal character 's' at byte 0; permitted: ASCII alphanumeric, '-', '_', '.'" }
+
+---- pattern::tests::satisfied_standards_are_deduplicated stdout ----
+
+thread 'pattern::tests::satisfied_standards_are_deduplicated' (1641272) panicked at crates/casm-core/src/pattern.rs:1026:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
+
+---- pattern::tests::requirement_builders_deduplicate stdout ----
+
+thread 'pattern::tests::requirement_builders_deduplicate' (1641270) panicked at crates/casm-core/src/pattern.rs:837:14:
+called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised stdout ----
+
+thread 'pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised' (1641261) panicked at crates/casm-core/src/pattern.rs:980:65:
 valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 ---- pattern::tests::serialisation_omits_empty_collections stdout ----
 
-thread 'pattern::tests::serialisation_omits_empty_collections' (458007) panicked at crates/casm-core/src/pattern.rs:936:82:
-called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
-
----- pattern::tests::satisfied_standards_are_deduplicated stdout ----
-
-thread 'pattern::tests::satisfied_standards_are_deduplicated' (458006) panicked at crates/casm-core/src/pattern.rs:949:14:
+thread 'pattern::tests::serialisation_omits_empty_collections' (1641273) panicked at crates/casm-core/src/pattern.rs:1013:82:
 called `Result::unwrap()` on an `Err` value: Name(IllegalCharacter { name: "p", found: 'p', index: 0 })
 
 ---- pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde stdout ----
 
-thread 'pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde' (458008) panicked at crates/casm-core/src/pattern.rs:706:22:
+thread 'pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde' (1641274) panicked at crates/casm-core/src/pattern.rs:706:22:
+valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
+
+---- pattern::tests::verify_invariants_passes_on_a_constructed_pattern stdout ----
+
+thread 'pattern::tests::verify_invariants_passes_on_a_constructed_pattern' (1641275) panicked at crates/casm-core/src/pattern.rs:706:22:
 valid: Name(IllegalCharacter { name: "edge", found: 'e', index: 0 })
 
 
@@ -1030,6 +1065,7 @@ failures:
     architecture::tests::a_conformance_claim_is_recorded_in_declaration_order
     architecture::tests::a_dangling_source_is_rejected_and_named_as_such
     architecture::tests::a_dangling_target_is_rejected_and_named_as_such
+    architecture::tests::an_architecture_reports_what_it_was_built_with
     architecture::tests::an_identical_relationship_is_rejected
     architecture::tests::architecture_round_trips_through_json
     architecture::tests::build_applies_sensible_defaults
@@ -1052,6 +1088,7 @@ failures:
     architecture::tests::verify_invariants_catches_a_binding_smuggled_in_via_serde
     architecture::tests::verify_invariants_catches_a_dangling_edge_smuggled_in_via_serde
     architecture::tests::verify_invariants_passes_on_a_constructed_architecture
+    architecture::tests::verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one
     conformance::tests::a_binding_to_the_wrong_type_is_reported_rather_than_rebound
     conformance::tests::a_conforming_architecture_reports_nothing_unmet
     conformance::tests::a_missing_control_type_is_reported
@@ -1069,6 +1106,7 @@ failures:
     conformance::tests::relationship_direction_matters
     conformance::tests::roles_bind_automatically_when_exactly_one_node_fits
     conformance::tests::too_few_security_controls_is_reported_with_both_counts
+    interface::tests::an_interfaces_description_is_returned_as_written
     interface::tests::compatibility_allows_a_forward_minor_version
     interface::tests::compatibility_rejects_a_backward_minor_version
     interface::tests::compatibility_requires_matching_major_version
@@ -1076,9 +1114,11 @@ failures:
     interface::tests::interface_rejects_a_non_semver_version
     interface::tests::interface_rejects_an_empty_custom_protocol
     interface::tests::interface_round_trips_through_json
+    merkle::tests::a_boolean_field_is_part_of_the_digest
     merkle::tests::a_changed_latency_budget_changes_the_fingerprint
     merkle::tests::a_conformance_digest_names_bound_nodes_rather_than_identifying_them
     merkle::tests::a_node_digest_never_collides_with_a_control_digest
+    merkle::tests::a_relationships_endpoints_and_type_are_part_of_the_fingerprint
     merkle::tests::a_renamed_node_changes_the_fingerprint
     merkle::tests::a_version_bump_changes_the_fingerprint
     merkle::tests::abbreviation_does_not_panic_on_an_over_long_width
@@ -1092,6 +1132,7 @@ failures:
     merkle::tests::debug_output_stays_short_enough_for_a_log_line
     merkle::tests::declaration_order_does_not_affect_the_fingerprint
     merkle::tests::declaring_conformance_changes_the_fingerprint
+    merkle::tests::every_relationship_gets_its_own_entry_keyed_by_what_it_connects
     merkle::tests::field_boundaries_cannot_be_forged_by_shifting_text
     merkle::tests::fingerprinting_is_stable_across_repeated_calls
     merkle::tests::fingerprints_render_and_parse_as_hex
@@ -1103,6 +1144,7 @@ failures:
     merkle::tests::the_tree_exposes_a_digest_per_node
     names::tests::accepts_a_name_exactly_at_the_ceiling
     names::tests::accepts_conventional_service_names
+    names::tests::borrowing_a_name_as_a_string_yields_the_name
     names::tests::deserialisation_enforces_the_same_rules_as_construction
     names::tests::legal_names_round_trip
     names::tests::reports_the_byte_offset_of_an_illegal_character
@@ -1119,10 +1161,12 @@ failures:
     node::tests::node_round_trips_through_json
     node::tests::serialisation_omits_empty_collections
     node::tests::with_interface_rejects_a_duplicate_at_runtime
+    pattern::tests::a_conformance_claim_renders_the_pattern_it_names
     pattern::tests::a_fingerprint_changes_when_the_shape_changes
     pattern::tests::a_fingerprint_distinguishes_relationship_direction
     pattern::tests::a_fingerprint_distinguishes_the_compliance_claim
     pattern::tests::a_fingerprint_ignores_declaration_order
+    pattern::tests::a_pattern_and_its_parts_report_what_they_were_built_with
     pattern::tests::a_pattern_exposes_its_requirements_by_role
     pattern::tests::a_pattern_round_trips_through_json
     pattern::tests::a_pattern_with_no_requirements_is_valid_but_vacuous
@@ -1131,6 +1175,7 @@ failures:
     pattern::tests::a_reference_round_trips_as_a_bare_string
     pattern::tests::a_reference_splits_on_the_last_at_sign
     pattern::tests::a_relationship_cannot_connect_a_role_to_itself
+    pattern::tests::a_requirement_omits_a_zero_control_minimum_when_serialised
     pattern::tests::build_defaults_the_version
     pattern::tests::build_names_which_endpoint_was_unknown
     pattern::tests::build_rejects_a_duplicated_role
@@ -1144,7 +1189,7 @@ failures:
     pattern::tests::verify_invariants_catches_an_unknown_role_smuggled_in_via_serde
     pattern::tests::verify_invariants_passes_on_a_constructed_pattern
 
-test result: FAILED. 70 passed; 118 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: FAILED. 77 passed; 128 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
 
 error: test failed, to rerun pass `-p casm-core --lib`
 

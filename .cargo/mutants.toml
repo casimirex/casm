@@ -32,6 +32,12 @@ exclude_re = [
     # redundant assignment, never a different answer. Unkillable by construction, and
     # chasing it would mean contorting a test around a distinction that does not exist.
     "replace > with >= in check",
+
+    # `X::builder()` is defined as `XConfig::new()`, and every `XConfig::new()` is defined
+    # as `Self::default()`. The mutant substitutes `Default::default()` — which is not
+    # merely equivalent behaviour but the identical expression, reached one call deeper.
+    # Verified for all four: Architecture, Node, Pattern, Relationship.
+    "replace [A-Za-z]+::builder -> [A-Za-z]+Config with Default::default\\(\\)",
 ]
 
 # A generous ceiling. The suite runs in seconds; anything approaching this is a mutant that

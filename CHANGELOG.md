@@ -23,9 +23,20 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   - `casm_git::DateTime` had no test for dates before its own epoch shift, so the branch
     that handles them could be arbitrarily wrong — and it renders the dates in `casm log`,
     `casm blame`, and an evidence register's provenance.
+  - `casm-core` is now clean: 295 mutants caught, none missed, down from 55 survivors.
+    Three of those were load-bearing rather than cosmetic. `merkle::edge_key` files each
+    relationship's digest under a name-based key, and a constant key collapses two
+    relationships into one entry — an architecture with two edges would have fingerprinted
+    as though it had one. `NodeId`'s `FromStr` and both `TryFrom` impls could have accepted
+    anything, turning a malformed identifier into a freshly generated one, which is the
+    validation ADR-0003 is named after. And `NodeId::timestamp_millis` recovers the time
+    UUIDv7 was chosen for.
   - `.cargo/mutants.toml` records what is deliberately not mutated and why. Prose-printing
     functions are excluded: a survivor there means "no test asserts the exact wording",
-    which is intended, since the machine-readable output is what the tests pin.
+    which is intended, since the machine-readable output is what the tests pin. So are two
+    provably unkillable classes — folding a maximum with `>=` instead of `>`, and
+    `X::builder()` against `Default::default()`, which is the identical expression one call
+    deeper.
 
 ### Added
 

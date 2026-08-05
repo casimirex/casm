@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace == with != in PatternConfig::reject_duplicate_roles
+@@ -361,17 +361,17 @@
+     }
+ 
+     /// Enforces that role names are unique.
+     fn reject_duplicate_roles(requirements: &[Requirement]) -> Result<(), PatternError> {
+         for (index, candidate) in requirements.iter().enumerate() {
+             let duplicated = requirements
+                 .iter()
+                 .take(index)
+-                .any(|earlier| earlier.role() == candidate.role());
++                .any(|earlier| earlier.role() != /* ~ changed by cargo-mutants ~ */ candidate.role());
+             if duplicated {
+                 return Err(PatternError::DuplicateRole {
+                     role: candidate.role().as_str().to_owned(),
+                 });
+             }
+         }
+         Ok(())
+     }

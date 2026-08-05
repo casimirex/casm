@@ -214,6 +214,58 @@ mod tests {
     }
 
     #[test]
+    fn a_control_returns_the_standard_and_description_it_was_built_with() {
+        // Both accessors could have returned a constant, and did survive as such: an
+        // evidence register groups by `standard` and prints `description`, so a constant
+        // would have collapsed every claim into one heading.
+        let control = Control::new(
+            ControlType::Compliance,
+            "ISO27001-A.10.1",
+            "Encrypted at rest with a customer-managed key",
+        )
+        .expect("valid");
+
+        assert_eq!(control.standard(), "ISO27001-A.10.1");
+        assert_eq!(
+            control.description(),
+            "Encrypted at rest with a customer-managed key"
+        );
+
+        // A second, different control: one case can be satisfied by a constant.
+        let other =
+            Control::new(ControlType::Security, "TLS1.3", "Terminated at the edge").expect("valid");
+        assert_eq!(other.standard(), "TLS1.3");
+        assert_eq!(other.description(), "Terminated at the edge");
+        assert_ne!(control.standard(), other.standard());
+    }
+
+    #[test]
+    fn every_control_type_renders_its_own_label() {
+        // `Display` here is a data path: an evidence register writes
+        // `control.control_type().to_string()` into its table.
+        assert_eq!(ControlType::Security.to_string(), "security");
+        assert_eq!(ControlType::Compliance.to_string(), "compliance");
+        assert_eq!(ControlType::Operational.to_string(), "operational");
+        assert_eq!(ControlType::DataGovernance.to_string(), "data-governance");
+
+        let rendered = [
+            ControlType::Security,
+            ControlType::Compliance,
+            ControlType::Operational,
+            ControlType::DataGovernance,
+        ]
+        .map(|kind| kind.to_string());
+        assert_eq!(
+            rendered
+                .iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .len(),
+            4,
+            "two control types sharing a label would make a register ambiguous"
+        );
+    }
+
+    #[test]
     fn evidence_is_not_required_by_default() {
         assert!(!sample().evidence_required());
     }

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace RequiredRelationship::relationship_type -> RelationshipType with Default::default()
+@@ -239,17 +239,17 @@
+     pub const fn target(&self) -> &Name {
+         &self.target
+     }
+ 
+     /// The required edge semantics.
+     #[inline]
+     #[must_use]
+     pub const fn relationship_type(&self) -> RelationshipType {
+-        self.relationship_type
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// What the edge is for.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }

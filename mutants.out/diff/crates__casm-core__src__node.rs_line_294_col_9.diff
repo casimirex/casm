@@ -1,0 +1,21 @@
+--- crates/casm-core/src/node.rs
++++ replace Node::node_type -> NodeType with Default::default()
+@@ -286,17 +286,17 @@
+     pub const fn name(&self) -> &Name {
+         &self.name
+     }
+ 
+     /// The node's architectural role.
+     #[inline]
+     #[must_use]
+     pub const fn node_type(&self) -> NodeType {
+-        self.node_type
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The human-readable description, if any.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }

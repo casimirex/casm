@@ -703,6 +703,142 @@ mod tests {
     }
 
     #[test]
+    fn every_relationship_gets_its_own_entry_keyed_by_what_it_connects() {
+        // `edge_key` is the map key each relationship's digest is filed under, and the
+        // root combines the *values*. So a constant key does not corrupt a digest — it
+        // collapses two relationships into one entry, and an architecture with two edges
+        // fingerprints as though it had one. Replacing it with a constant survived the
+        // first version of this test, which only ever built one relationship.
+        let node = |name: &str, kind: NodeType| {
+            NodeConfig::new()
+                .name(name)
+                .node_type(kind)
+                .build()
+                .expect("valid")
+        };
+
+        let api = node("api", NodeType::Service);
+        let db = node("db", NodeType::Database);
+        let cache = node("cache", NodeType::Cache);
+        let (api_id, db_id, cache_id) = (api.id(), db.id(), cache.id());
+
+        let edge = |from, to| {
+            RelationshipConfig::new()
+                .source(from)
+                .target(to)
+                .relationship_type(RelationshipType::Sync)
+                .build()
+                .expect("valid")
+        };
+
+        let two = ArchitectureConfig::new()
+            .name("checkout")
+            .version("1.0.0")
+            .node(api.clone())
+            .node(db.clone())
+            .node(cache.clone())
+            .relationship(edge(api_id, db_id))
+            .relationship(edge(api_id, cache_id))
+            .build()
+            .expect("valid");
+
+        let tree = MerkleTree::of(&two);
+        assert_eq!(
+            tree.relationships().len(),
+            2,
+            "two relationships must occupy two entries, not collide into one: {:?}",
+            tree.relationships().keys().collect::<Vec<_>>()
+        );
+
+        // The keys must name what each edge connects, so a reader can tell them apart.
+        let keys: Vec<&str> = tree.relationships().keys().map(String::as_str).collect();
+        assert!(keys.iter().any(|key| key.contains("api->db")), "{keys:?}");
+        assert!(
+            keys.iter().any(|key| key.contains("api->cache")),
+            "{keys:?}"
+        );
+
+        // And dropping one edge must change the fingerprint.
+        let one = ArchitectureConfig::new()
+            .name("checkout")
+            .version("1.0.0")
+            .node(api)
+            .node(db)
+            .node(cache)
+            .relationship(edge(api_id, db_id))
+            .build()
+            .expect("valid");
+
+        assert_ne!(fingerprint(&two), fingerprint(&one));
+    }
+
+    #[test]
+    fn a_relationships_endpoints_and_type_are_part_of_the_fingerprint() {
+        // The digest itself, as distinct from the key above.
+        let node = |name: &str, kind: NodeType| {
+            NodeConfig::new()
+                .name(name)
+                .node_type(kind)
+                .build()
+                .expect("valid")
+        };
+
+        let build = |from: &str, to: &str, kind: RelationshipType| {
+            let a = node("api", NodeType::Service);
+            let b = node("db", NodeType::Database);
+            let c = node("cache", NodeType::Cache);
+            let by_name = |wanted: &str| match wanted {
+                "api" => a.id(),
+                "db" => b.id(),
+                _ => c.id(),
+            };
+            let edge = RelationshipConfig::new()
+                .source(by_name(from))
+                .target(by_name(to))
+                .relationship_type(kind)
+                .build()
+                .expect("valid");
+
+            ArchitectureConfig::new()
+                .name("checkout")
+                .version("1.0.0")
+                .node(a)
+                .node(b)
+                .node(c)
+                .relationship(edge)
+                .build()
+                .expect("valid")
+        };
+
+        let baseline = fingerprint(&build("api", "db", RelationshipType::Sync));
+
+        assert_ne!(
+            baseline,
+            fingerprint(&build("api", "cache", RelationshipType::Sync)),
+            "the target is part of a relationship's identity"
+        );
+        assert_ne!(
+            baseline,
+            fingerprint(&build("cache", "db", RelationshipType::Sync)),
+            "the source is part of a relationship's identity"
+        );
+        assert_ne!(
+            baseline,
+            fingerprint(&build("db", "api", RelationshipType::Sync)),
+            "direction is part of a relationship's identity"
+        );
+        assert_ne!(
+            baseline,
+            fingerprint(&build("api", "db", RelationshipType::Async)),
+            "the type is part of a relationship's identity"
+        );
+        assert_eq!(
+            baseline,
+            fingerprint(&build("api", "db", RelationshipType::Sync))
+        );
+    }
+
+    #[test]
     fn a_changed_latency_budget_changes_the_fingerprint() {
         let build = |budget| {
             let a = NodeConfig::new()
@@ -750,6 +886,46 @@ mod tests {
             .unwrap();
 
         assert_ne!(node_digest(&plain), node_digest(&controlled));
+    }
+
+    #[test]
+    fn a_boolean_field_is_part_of_the_digest() {
+        // `Encoder::flag` writes the single byte that distinguishes `true` from `false`.
+        // Replacing it with a fresh encoder survived, which would have meant
+        // `evidence-required` — the flag an entire compliance register is built around —
+        // contributing nothing to an architecture's identity.
+        let with_flag = |required: bool| {
+            let control =
+                Control::new(ControlType::Compliance, "ISO27001", "encrypted").expect("valid");
+            let control = if required {
+                control.requiring_evidence()
+            } else {
+                control
+            };
+
+            let node = NodeConfig::new()
+                .name("db")
+                .node_type(NodeType::Database)
+                .control(control)
+                .build()
+                .expect("valid");
+
+            fingerprint(
+                &ArchitectureConfig::new()
+                    .name("checkout")
+                    .version("1.0.0")
+                    .node(node)
+                    .build()
+                    .expect("valid"),
+            )
+        };
+
+        assert_ne!(
+            with_flag(true),
+            with_flag(false),
+            "evidence-required must change the fingerprint"
+        );
+        assert_eq!(with_flag(true), with_flag(true));
     }
 
     #[test]
@@ -977,7 +1153,17 @@ mod tests {
     #[test]
     fn debug_output_stays_short_enough_for_a_log_line() {
         let digest = fingerprint(&sample(false));
-        assert!(format!("{digest:?}").len() < 32);
+        let debug = format!("{digest:?}");
+
+        // Short *and* actually the digest: an impl writing nothing passed the length
+        // check alone, which is how it survived the mutation sweep.
+        assert!(debug.len() < 32, "{debug}");
+        assert!(!debug.is_empty());
+        let prefix = digest.to_hex().get(..8).unwrap_or_default().to_owned();
+        assert!(
+            debug.contains(&prefix),
+            "debug output must abbreviate the real value: {debug} does not contain {prefix}"
+        );
     }
 
     #[test]
