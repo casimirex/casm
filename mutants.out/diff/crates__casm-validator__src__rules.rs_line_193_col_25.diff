@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace >= with < in <impl Rule for ServicesRequireSecurityControls>::check
+@@ -185,17 +185,17 @@
+         }
+ 
+         for node in context.architecture.nodes() {
+             if !matches!(node.node_type(), NodeType::Service | NodeType::Gateway) {
+                 continue;
+             }
+ 
+             let declared = node.controls_of_type(ControlType::Security);
+-            if declared >= required {
++            if declared < /* ~ changed by cargo-mutants ~ */ required {
+                 continue;
+             }
+ 
+             report.push(
+                 Diagnostic::new(
+                     self.id(),
+                     Severity::Warning,
+                     RuleContext::subject(node),

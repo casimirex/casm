@@ -1,0 +1,29 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Diagnostic::render -> String with "xyzzy".into()
+@@ -151,25 +151,17 @@
+     /// Renders the finding the way a compiler would.
+     ///
+     /// ```text
+     /// error[no-dependency-cycles]: nodes [a, b] form a blocking dependency cycle
+     ///   help: break the cycle by making one edge asynchronous
+     /// ```
+     #[must_use]
+     pub fn render(&self) -> String {
+-        let mut out = format!(
+-            "{}[{}]: {}: {}",
+-            self.severity, self.rule, self.subject, self.message
+-        );
+-        if let Some(hint) = &self.suggestion {
+-            out.push_str("\n  help: ");
+-            out.push_str(hint);
+-        }
+-        out
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The complete result of a validation run.
+ #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+ pub struct Report {
+     /// Every finding, in rule-execution order.
+     pub diagnostics: Vec<Diagnostic>,

@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace <impl core::fmt::Display for Severity>::fmt -> core::fmt::Result with Ok(Default::default())
+@@ -46,17 +46,17 @@
+             Self::Warning => "warning",
+             Self::Error => "error",
+         }
+     }
+ }
+ 
+ impl core::fmt::Display for Severity {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+-        f.write_str(self.label())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The architectural element a diagnostic is about.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(rename_all = "kebab-case", tag = "kind")]
+ // Not `#[non_exhaustive]`, per ADR-0005: every consumer that renders a finding must
+ // decide how to present each subject, and a wildcard arm is how a new one gets shown

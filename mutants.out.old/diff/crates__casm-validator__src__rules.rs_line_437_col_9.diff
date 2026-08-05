@@ -1,0 +1,52 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for PatternsAreSatisfied>::check with ()
+@@ -429,48 +429,17 @@
+         "patterns-are-satisfied"
+     }
+ 
+     fn description(&self) -> &'static str {
+         "every pattern the architecture claims conformance to must be satisfied"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+-        for claim in context.architecture.conformance() {
+-            let reference = claim.pattern().to_string();
+-            let subject = Subject::Pattern {
+-                reference: reference.clone(),
+-            };
+-
+-            let Some(pattern) = context
+-                .patterns
+-                .iter()
+-                .find(|pattern| claim.pattern().matches(pattern))
+-            else {
+-                report.push(unavailable(
+-                    self.id(),
+-                    subject,
+-                    &reference,
+-                    context.patterns,
+-                ));
+-                continue;
+-            };
+-
+-            for unmet in conformance::check(context.architecture, pattern, claim).unmet() {
+-                report.push(
+-                    Diagnostic::new(self.id(), Severity::Error, subject.clone(), unmet.message())
+-                        .with_suggestion(if unmet.is_mechanical() {
+-                            "run 'casm evolve' to see the change this needs, or drop the claim"
+-                        } else {
+-                            "this needs a decision rather than an edit: bind the role \
+-                         explicitly, or add the node the pattern requires"
+-                        }),
+-                );
+-            }
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Builds the finding for a claim naming a pattern nobody supplied.
+ ///
+ /// A warning rather than an error: the claim may be perfectly true, and the run simply
+ /// had no library to check it against. Reporting it as an error would make `casm
+ /// validate` fail for everyone who has not passed `--patterns`, which teaches people to

@@ -356,6 +356,24 @@ mod tests {
     }
 
     #[test]
+    fn a_validator_reports_the_pattern_library_it_was_given() {
+        // The accessor could have returned an empty slice regardless, which is exactly
+        // what an unloaded library looks like — so a caller checking "did my patterns
+        // arrive" would have been told no, always.
+        let pattern = casm_core::Pattern::builder()
+            .name("secure-web-tier")
+            .version("1.0.0")
+            .build()
+            .expect("the fixture pattern is valid");
+
+        assert!(Validator::new().patterns().is_empty());
+
+        let loaded = Validator::new().with_patterns(vec![pattern]);
+        assert_eq!(loaded.patterns().len(), 1);
+        assert_eq!(loaded.patterns()[0].name().as_str(), "secure-web-tier");
+    }
+
+    #[test]
     fn the_default_validator_exposes_its_rule_set() {
         let ids = Validator::new().rule_ids();
         assert!(ids.contains(&"no-dependency-cycles"));

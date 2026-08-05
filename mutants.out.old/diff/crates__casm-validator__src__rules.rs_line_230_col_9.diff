@@ -1,0 +1,41 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for StatefulNodesRequireControls>::check with ()
+@@ -222,37 +222,17 @@
+         "stateful-nodes-require-controls"
+     }
+ 
+     fn description(&self) -> &'static str {
+         "nodes that hold state must declare at least one control"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+-        for node in context.architecture.nodes() {
+-            if !node.node_type().is_stateful() || !node.controls().is_empty() {
+-                continue;
+-            }
+-
+-            report.push(
+-                Diagnostic::new(
+-                    self.id(),
+-                    Severity::Warning,
+-                    RuleContext::subject(node),
+-                    format!(
+-                        "is a {} holding persistent state but declares no controls",
+-                        node.node_type()
+-                    ),
+-                )
+-                .with_suggestion(
+-                    "declare controls covering encryption at rest, backup and restore, \
+-                     and access restriction",
+-                ),
+-            );
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The critical path's latency budget must stay within the configured ceiling.
+ pub struct CriticalPathWithinBudget;
+ 
+ impl Rule for CriticalPathWithinBudget {
+     fn id(&self) -> &'static str {

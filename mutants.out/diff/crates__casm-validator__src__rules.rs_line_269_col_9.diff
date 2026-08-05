@@ -1,0 +1,44 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for CriticalPathWithinBudget>::check with ()
+@@ -261,40 +261,17 @@
+ 
+     fn description(&self) -> &'static str {
+         "the summed latency budget along the longest blocking path must stay within the SLO"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         // A cyclic graph has no defined longest path. `NoDependencyCycles` already
+         // reports that, and stacking a second finding on the same cause is noise.
+-        let Some(critical_path) = context.graph.critical_path_ms() else {
+-            return;
+-        };
+-
+-        let ceiling = context.config.max_critical_path_ms;
+-        if critical_path <= ceiling {
+-            return;
+-        }
+-
+-        report.push(
+-            Diagnostic::new(
+-                self.id(),
+-                Severity::Warning,
+-                Subject::Architecture,
+-                format!(
+-                    "the critical path budget is {critical_path}ms, exceeding the {ceiling}ms \
+-                     ceiling; the end-to-end SLO is not arithmetically achievable"
+-                ),
+-            )
+-            .with_suggestion(
+-                "reduce a hop's latency budget, parallelise sequential calls, or convert a \
+-                 blocking hop to 'async'",
+-            ),
+-        );
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Edges crossing the control boundary must declare controls.
+ pub struct BoundaryCrossingsRequireControls;
+ 
+ impl Rule for BoundaryCrossingsRequireControls {
+     fn id(&self) -> &'static str {

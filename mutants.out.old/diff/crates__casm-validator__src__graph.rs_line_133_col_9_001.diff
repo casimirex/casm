@@ -1,0 +1,34 @@
+--- crates/casm-validator/src/graph.rs
++++ replace DependencyGraph::roots -> Vec<NodeId> with vec![Default::default()]
+@@ -125,30 +125,17 @@
+         }
+ 
+         Some(longest.values().copied().max().unwrap_or(0))
+     }
+ 
+     /// Returns the nodes nothing depends on: the entry points of the architecture.
+     #[must_use]
+     pub fn roots(&self) -> Vec<NodeId> {
+-        let mut roots: Vec<NodeId> = self
+-            .graph
+-            .node_indices()
+-            .filter(|index| {
+-                self.graph
+-                    .neighbors_directed(*index, petgraph::Direction::Incoming)
+-                    .next()
+-                    .is_none()
+-            })
+-            .filter_map(|index| self.graph.node_weight(index))
+-            .copied()
+-            .collect();
+-        roots.sort_unstable();
+-        roots
++        vec![Default::default()] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns the nodes that depend on nothing: the leaves of the architecture.
+     #[must_use]
+     pub fn leaves(&self) -> Vec<NodeId> {
+         let mut leaves: Vec<NodeId> = self
+             .graph
+             .node_indices()

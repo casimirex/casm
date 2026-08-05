@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for StatefulNodesRequireControls>::id -> &'static str with ""
+@@ -214,17 +214,17 @@
+ /// Stateful nodes must declare at least one control.
+ ///
+ /// A database with no declared controls is a database nobody has thought about backing
+ /// up, encrypting, or restricting.
+ pub struct StatefulNodesRequireControls;
+ 
+ impl Rule for StatefulNodesRequireControls {
+     fn id(&self) -> &'static str {
+-        "stateful-nodes-require-controls"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn description(&self) -> &'static str {
+         "nodes that hold state must declare at least one control"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for node in context.architecture.nodes() {

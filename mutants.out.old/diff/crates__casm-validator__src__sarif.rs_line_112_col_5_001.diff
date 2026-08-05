@@ -1,0 +1,39 @@
+--- crates/casm-validator/src/sarif.rs
++++ replace logical_locations -> Vec<Value> with vec![Default::default()]
+@@ -104,35 +104,17 @@
+ }
+ 
+ /// Maps a diagnostic subject onto SARIF logical locations.
+ ///
+ /// Logical locations are how SARIF expresses "this finding is about a named thing"
+ /// when there is no line number to point at — exactly the case for an architecture
+ /// element identified by name rather than position.
+ fn logical_locations(subject: &Subject) -> Vec<Value> {
+-    match subject {
+-        Subject::Architecture => {
+-            vec![json!({ "name": "architecture", "kind": "module" })]
+-        }
+-        Subject::Node { name, .. } => {
+-            vec![json!({ "name": name, "kind": "resource" })]
+-        }
+-        Subject::Relationship { source, target } => vec![json!({
+-            "name": format!("{source} -> {target}"),
+-            "kind": "member",
+-        })],
+-        Subject::NodeSet { names } => names
+-            .iter()
+-            .map(|name| json!({ "name": name, "kind": "resource" }))
+-            .collect(),
+-        Subject::Pattern { reference } => {
+-            vec![json!({ "name": reference, "kind": "namespace" })]
+-        }
+-    }
++    vec![Default::default()] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

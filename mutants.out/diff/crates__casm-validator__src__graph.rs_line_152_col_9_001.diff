@@ -1,0 +1,34 @@
+--- crates/casm-validator/src/graph.rs
++++ replace DependencyGraph::leaves -> Vec<NodeId> with vec![Default::default()]
+@@ -144,30 +144,17 @@
+             .collect();
+         roots.sort_unstable();
+         roots
+     }
+ 
+     /// Returns the nodes that depend on nothing: the leaves of the architecture.
+     #[must_use]
+     pub fn leaves(&self) -> Vec<NodeId> {
+-        let mut leaves: Vec<NodeId> = self
+-            .graph
+-            .node_indices()
+-            .filter(|index| {
+-                self.graph
+-                    .neighbors_directed(*index, petgraph::Direction::Outgoing)
+-                    .next()
+-                    .is_none()
+-            })
+-            .filter_map(|index| self.graph.node_weight(index))
+-            .copied()
+-            .collect();
+-        leaves.sort_unstable();
+-        leaves
++        vec![Default::default()] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if `id` participates in the blocking dependency graph at all.
+     #[must_use]
+     pub fn contains(&self, id: NodeId) -> bool {
+         self.index_of.contains_key(&id)
+     }
+ }

@@ -1,0 +1,22 @@
+--- crates/casm-validator/src/config.rs
++++ replace ValidatorConfig::max_critical_path_ms -> Self with Default::default()
+@@ -59,18 +59,17 @@
+     #[must_use]
+     pub fn new() -> Self {
+         Self::default()
+     }
+ 
+     /// Sets the critical-path latency ceiling.
+     #[must_use]
+     pub const fn max_critical_path_ms(mut self, ceiling: u64) -> Self {
+-        self.max_critical_path_ms = ceiling;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Sets how many security controls each service must declare.
+     #[must_use]
+     pub const fn min_security_controls_per_service(mut self, minimum: usize) -> Self {
+         self.min_security_controls_per_service = minimum;
+         self
+     }

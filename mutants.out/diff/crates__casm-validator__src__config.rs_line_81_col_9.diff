@@ -1,0 +1,25 @@
+--- crates/casm-validator/src/config.rs
++++ replace ValidatorConfig::allowing -> Self with Default::default()
+@@ -73,21 +73,17 @@
+     pub const fn min_security_controls_per_service(mut self, minimum: usize) -> Self {
+         self.min_security_controls_per_service = minimum;
+         self
+     }
+ 
+     /// Suppresses a rule by its identifier.
+     #[must_use]
+     pub fn allowing(mut self, rule_id: impl Into<String>) -> Self {
+-        let rule_id = rule_id.into();
+-        if !self.allow.contains(&rule_id) {
+-            self.allow.push(rule_id);
+-        }
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if `rule_id` has been suppressed.
+     #[must_use]
+     pub fn is_allowed(&self, rule_id: &str) -> bool {
+         self.allow.iter().any(|allowed| allowed == rule_id)
+     }
+ }

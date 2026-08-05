@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoIsolatedNodes>::id -> &'static str with "xyzzy"
+@@ -338,17 +338,17 @@
+     }
+ }
+ 
+ /// Nodes with no relationships at all are probably a mistake.
+ pub struct NoIsolatedNodes;
+ 
+ impl Rule for NoIsolatedNodes {
+     fn id(&self) -> &'static str {
+-        "no-isolated-nodes"
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn description(&self) -> &'static str {
+         "every node should participate in at least one relationship"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         // A single-node architecture is a legitimate starting point, not an error.

@@ -1,0 +1,25 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Report::render -> String with "xyzzy".into()
+@@ -246,21 +246,17 @@
+     /// Merges another report into this one.
+     pub fn extend(&mut self, other: Self) {
+         self.diagnostics.extend(other.diagnostics);
+     }
+ 
+     /// Renders every finding, one per stanza.
+     #[must_use]
+     pub fn render(&self) -> String {
+-        self.diagnostics
+-            .iter()
+-            .map(Diagnostic::render)
+-            .collect::<Vec<_>>()
+-            .join("\n")
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// A one-line summary suitable for the last line of CI output.
+     #[must_use]
+     pub fn summary(&self) -> String {
+         if self.is_clean() {
+             return "architecture is valid: 0 errors, 0 warnings".to_owned();
+         }

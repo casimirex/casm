@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <= with > in <impl Rule for CriticalPathWithinBudget>::check
+@@ -266,17 +266,17 @@
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         // A cyclic graph has no defined longest path. `NoDependencyCycles` already
+         // reports that, and stacking a second finding on the same cause is noise.
+         let Some(critical_path) = context.graph.critical_path_ms() else {
+             return;
+         };
+ 
+         let ceiling = context.config.max_critical_path_ms;
+-        if critical_path <= ceiling {
++        if critical_path > /* ~ changed by cargo-mutants ~ */ ceiling {
+             return;
+         }
+ 
+         report.push(
+             Diagnostic::new(
+                 self.id(),
+                 Severity::Warning,
+                 Subject::Architecture,

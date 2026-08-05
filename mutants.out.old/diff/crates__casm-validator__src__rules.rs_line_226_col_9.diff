@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for StatefulNodesRequireControls>::description -> &'static str with ""
+@@ -218,17 +218,17 @@
+ pub struct StatefulNodesRequireControls;
+ 
+ impl Rule for StatefulNodesRequireControls {
+     fn id(&self) -> &'static str {
+         "stateful-nodes-require-controls"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "nodes that hold state must declare at least one control"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for node in context.architecture.nodes() {
+             if !node.node_type().is_stateful() || !node.controls().is_empty() {
+                 continue;
+             }
+ 

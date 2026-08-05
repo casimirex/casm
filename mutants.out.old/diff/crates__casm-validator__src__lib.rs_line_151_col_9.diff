@@ -1,0 +1,37 @@
+--- crates/casm-validator/src/lib.rs
++++ replace Validator::validate -> Report with Default::default()
+@@ -143,33 +143,17 @@
+     }
+ 
+     /// Validates `architecture`, returning every finding.
+     ///
+     /// Suppressed rules are skipped entirely rather than run-and-filtered, so silencing
+     /// an expensive rule actually saves the work.
+     #[must_use]
+     pub fn validate(&self, architecture: &Architecture) -> Report {
+-        let graph = DependencyGraph::build(architecture);
+-        let context = RuleContext {
+-            architecture,
+-            graph: &graph,
+-            patterns: &self.patterns,
+-            config: &self.config,
+-        };
+-
+-        let mut report = Report::new();
+-        for rule in &self.rules {
+-            if self.config.is_allowed(rule.id()) {
+-                continue;
+-            }
+-            rule.check(&context, &mut report);
+-        }
+-
+-        report
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Default for Validator {
+     fn default() -> Self {
+         Self::new()
+     }
+ }

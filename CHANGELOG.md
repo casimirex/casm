@@ -31,6 +31,18 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
     anything, turning a malformed identifier into a freshly generated one, which is the
     validation ADR-0003 is named after. And `NodeId::timestamp_millis` recovers the time
     UUIDv7 was chosen for.
+  - `casm-validator` is now clean: 142 caught, none missed. Two findings were
+    contract-level. `RuleContext::name_of` resolves an identifier to a node name for every
+    message a rule emits, and could have returned a constant — every rule would still have
+    fired correctly and every finding would have named the wrong node. And only two of the
+    nine rule identifiers were pinned anywhere, despite `reference/rules.md` stating that
+    they are a public contract appearing in SARIF output and CI configuration; the rule
+    added in 0.2.0 was not pinned at all. Each rule's description must now mention its own
+    subject, which survives rewording but not replacement.
+  - `NoIsolatedNodes` exempts a single-node architecture with `node_count() < 2`. Relaxing
+    that to `<=` exempted two-node architectures as well — the smallest case where
+    isolation is a real finding — and no test covered it, because the existing one jumps
+    from one node to three.
   - `.cargo/mutants.toml` records what is deliberately not mutated and why. Prose-printing
     functions are excluded: a survivor there means "no test asserts the exact wording",
     which is intended, since the machine-readable output is what the tests pin. So are two

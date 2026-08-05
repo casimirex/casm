@@ -1,0 +1,38 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoIsolatedNodes>::check with ()
+@@ -347,34 +347,17 @@
+     }
+ 
+     fn description(&self) -> &'static str {
+         "every node should participate in at least one relationship"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         // A single-node architecture is a legitimate starting point, not an error.
+-        if context.architecture.node_count() < 2 {
+-            return;
+-        }
+-
+-        for node in context.architecture.isolated_nodes() {
+-            report.push(
+-                Diagnostic::new(
+-                    self.id(),
+-                    Severity::Warning,
+-                    RuleContext::subject(node),
+-                    "participates in no relationships",
+-                )
+-                .with_suggestion(
+-                    "connect it to the rest of the architecture, or remove it if it is no \
+-                     longer part of the system",
+-                ),
+-            );
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Targets of synchronous calls should declare the interface being called.
+ pub struct SyncTargetsShouldDeclareInterfaces;
+ 
+ impl Rule for SyncTargetsShouldDeclareInterfaces {
+     fn id(&self) -> &'static str {

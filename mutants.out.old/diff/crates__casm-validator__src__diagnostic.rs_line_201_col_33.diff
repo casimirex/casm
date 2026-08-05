@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace == with != in Report::has_errors
+@@ -193,17 +193,17 @@
+             .count()
+     }
+ 
+     /// Returns `true` if any finding is an [`Severity::Error`].
+     #[must_use]
+     pub fn has_errors(&self) -> bool {
+         self.diagnostics
+             .iter()
+-            .any(|d| d.severity == Severity::Error)
++            .any(|d| d.severity != /* ~ changed by cargo-mutants ~ */ Severity::Error)
+     }
+ 
+     /// Returns `true` if any finding is a [`Severity::Warning`].
+     #[must_use]
+     pub fn has_warnings(&self) -> bool {
+         self.diagnostics
+             .iter()
+             .any(|d| d.severity == Severity::Warning)

@@ -1,0 +1,25 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Severity::label -> &'static str with "xyzzy"
+@@ -26,21 +26,17 @@
+     /// A violation: the architecture is not fit to build against.
+     Error,
+ }
+ 
+ impl Severity {
+     /// Returns the canonical lowercase label.
+     #[must_use]
+     pub const fn label(self) -> &'static str {
+-        match self {
+-            Self::Info => "info",
+-            Self::Warning => "warning",
+-            Self::Error => "error",
+-        }
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The SARIF 2.1.0 level string for this severity.
+     #[must_use]
+     pub const fn sarif_level(self) -> &'static str {
+         match self {
+             Self::Info => "note",
+             Self::Warning => "warning",

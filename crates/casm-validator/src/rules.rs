@@ -801,6 +801,138 @@ mod tests {
     }
 
     #[test]
+    fn a_diagnostic_names_the_nodes_it_is_about() {
+        // `RuleContext::name_of` resolves an id to a name for every message a rule emits.
+        // Replacing it with a constant survived the mutation sweep: every rule still
+        // fired, and every finding would have read "xyzzy → xyzzy". The rules would be
+        // right and the report useless.
+        let (a, b) = (service("orders"), service("payments"));
+        let (a_id, b_id) = (a.id(), b.id());
+        let edge = |from, to| {
+            RelationshipConfig::new()
+                .source(from)
+                .target(to)
+                .relationship_type(RelationshipType::Sync)
+                .build()
+                .unwrap()
+        };
+
+        let cyclic = ArchitectureConfig::new()
+            .name("x")
+            .node(a)
+            .node(b)
+            .relationship(edge(a_id, b_id))
+            .relationship(edge(b_id, a_id))
+            .build()
+            .unwrap();
+
+        let report = Validator::new().validate(&cyclic);
+        let cycle = report
+            .diagnostics
+            .iter()
+            .find(|d| d.rule == "no-dependency-cycles")
+            .expect("the cycle is reported");
+
+        match &cycle.subject {
+            Subject::NodeSet { names } => {
+                assert!(names.contains(&"orders".to_owned()), "{names:?}");
+                assert!(names.contains(&"payments".to_owned()), "{names:?}");
+            }
+            other => panic!("expected a node set, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn two_isolated_nodes_are_reported_even_though_one_is_not() {
+        // `if node_count() < 2 { return }` — replacing `<` with `<=` makes a two-node
+        // architecture exempt, which is exactly the smallest case where isolation is a
+        // real finding. Nothing covered it: the existing test jumps from one node to
+        // three.
+        let two_orphans = ArchitectureConfig::new()
+            .name("x")
+            .node(service("a"))
+            .node(service("b"))
+            .build()
+            .unwrap();
+
+        assert!(
+            has(&two_orphans, "no-isolated-nodes"),
+            "two unconnected nodes are two isolated nodes"
+        );
+    }
+
+    #[test]
+    fn every_rule_describes_itself_rather_than_something_else() {
+        // Nine `description` implementations could each return a placeholder undetected.
+        // `casm rules` prints them and the WebAssembly `/rules` endpoint serves them; the
+        // JavaScript suite only checks they are truthy, which any string satisfies.
+        //
+        // Each description must mention its own subject. That survives rewording, and it
+        // does not survive being replaced by something unrelated.
+        let expectations = [
+            ("no-dependency-cycles", "acyclic"),
+            ("no-publicly-exposed-datastores", "database"),
+            ("services-require-security-controls", "security controls"),
+            ("stateful-nodes-require-controls", "state"),
+            ("critical-path-within-budget", "latency budget"),
+            ("boundary-crossings-require-controls", "trust boundary"),
+            ("no-isolated-nodes", "relationship"),
+            ("sync-targets-should-declare-interfaces", "interface"),
+            ("patterns-are-satisfied", "conformance"),
+        ];
+
+        let catalogue = built_in();
+        assert_eq!(
+            catalogue.len(),
+            expectations.len(),
+            "a rule was added or removed without updating this table"
+        );
+
+        for (id, keyword) in expectations {
+            let rule = catalogue
+                .iter()
+                .find(|rule| rule.id() == id)
+                .unwrap_or_else(|| panic!("no rule with id {id:?}"));
+
+            assert!(
+                rule.description().contains(keyword),
+                "{id}: description {:?} does not mention {keyword:?}",
+                rule.description()
+            );
+        }
+
+        // And no two rules may share a description, which a constant would guarantee.
+        let descriptions: std::collections::BTreeSet<&str> =
+            catalogue.iter().map(|rule| rule.description()).collect();
+        assert_eq!(descriptions.len(), catalogue.len());
+    }
+
+    #[test]
+    fn every_rule_identifier_is_pinned_because_it_is_a_public_contract() {
+        // `reference/rules.md`: "Rule identifiers are a public contract: they appear in
+        // SARIF output and in CI configuration, so renaming one is a breaking change."
+        // Only two were pinned anywhere, and both incidentally.
+        let ids: Vec<&str> = built_in().iter().map(|rule| rule.id()).collect();
+
+        assert_eq!(
+            ids,
+            [
+                "no-dependency-cycles",
+                "no-publicly-exposed-datastores",
+                "critical-path-within-budget",
+                "services-require-security-controls",
+                "stateful-nodes-require-controls",
+                "boundary-crossings-require-controls",
+                "no-isolated-nodes",
+                "sync-targets-should-declare-interfaces",
+                "patterns-are-satisfied",
+            ],
+            "the identifiers and the order they are reported in are both a contract: \
+             SARIF output and `casm rules` are read by machines"
+        );
+    }
+
+    #[test]
     fn an_uncontrolled_boundary_crossing_warns() {
         let external = typed("partner", NodeType::ExternalSystem);
         let api = service("api");

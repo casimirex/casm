@@ -1,7 +1,17 @@
-crates/casm-core/src/architecture.rs:212:9: replace Architecture::builder -> ArchitectureConfig with Default::default()
-crates/casm-core/src/interface.rs:190:9: replace <impl fmt::Debug for SchemaHash>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/merkle.rs:142:9: replace <impl fmt::Debug for Fingerprint>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/node.rs:273:9: replace Node::builder -> NodeConfig with Default::default()
-crates/casm-core/src/pattern.rs:82:5: replace is_zero -> bool with false
-crates/casm-core/src/pattern.rs:447:9: replace Pattern::builder -> PatternConfig with Default::default()
-crates/casm-core/src/relationship.rs:265:9: replace Relationship::builder -> RelationshipConfig with Default::default()
+crates/casm-validator/src/lib.rs:130:9: replace Validator::patterns -> &[Pattern] with Vec::leak(Vec::new())
+crates/casm-validator/src/graph.rs:121:30: replace > with >= in DependencyGraph::critical_path_ms
+crates/casm-validator/src/graph.rs:171:9: replace DependencyGraph::contains -> bool with true
+crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with String::new()
+crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with "xyzzy".into()
+crates/casm-validator/src/rules.rs:88:9: replace <impl Rule for NoDependencyCycles>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:128:9: replace <impl Rule for NoPubliclyExposedDatastores>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:178:9: replace <impl Rule for ServicesRequireSecurityControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:226:9: replace <impl Rule for StatefulNodesRequireControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:263:9: replace <impl Rule for CriticalPathWithinBudget>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:305:9: replace <impl Rule for BoundaryCrossingsRequireControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:350:9: replace <impl Rule for NoIsolatedNodes>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:355:46: replace < with <= in <impl Rule for NoIsolatedNodes>::check
+crates/casm-validator/src/rules.rs:385:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:433:9: replace <impl Rule for PatternsAreSatisfied>::description -> &'static str with "xyzzy"

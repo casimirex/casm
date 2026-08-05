@@ -1,0 +1,25 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Severity::sarif_level -> &'static str with ""
+@@ -36,21 +36,17 @@
+             Self::Warning => "warning",
+             Self::Error => "error",
+         }
+     }
+ 
+     /// The SARIF 2.1.0 level string for this severity.
+     #[must_use]
+     pub const fn sarif_level(self) -> &'static str {
+-        match self {
+-            Self::Info => "note",
+-            Self::Warning => "warning",
+-            Self::Error => "error",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl core::fmt::Display for Severity {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+         f.write_str(self.label())
+     }
+ }

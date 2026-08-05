@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace == with != in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+@@ -389,17 +389,17 @@
+         for node in context.architecture.nodes() {
+             if !node.interfaces().is_empty() || node.node_type().is_external() {
+                 continue;
+             }
+ 
+             let called_synchronously = context
+                 .architecture
+                 .incoming(node.id())
+-                .any(|edge| edge.relationship_type() == RelationshipType::Sync);
++                .any(|edge| edge.relationship_type() != /* ~ changed by cargo-mutants ~ */ RelationshipType::Sync);
+ 
+             if !called_synchronously {
+                 continue;
+             }
+ 
+             report.push(
+                 Diagnostic::new(
+                     self.id(),

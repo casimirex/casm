@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for CriticalPathWithinBudget>::description -> &'static str with ""
+@@ -255,17 +255,17 @@
+ pub struct CriticalPathWithinBudget;
+ 
+ impl Rule for CriticalPathWithinBudget {
+     fn id(&self) -> &'static str {
+         "critical-path-within-budget"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "the summed latency budget along the longest blocking path must stay within the SLO"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         // A cyclic graph has no defined longest path. `NoDependencyCycles` already
+         // reports that, and stacking a second finding on the same cause is noise.
+         let Some(critical_path) = context.graph.critical_path_ms() else {
+             return;
+         };

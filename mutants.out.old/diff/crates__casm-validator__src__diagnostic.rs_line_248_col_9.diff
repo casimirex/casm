@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Report::extend with ()
+@@ -240,17 +240,17 @@
+ 
+     /// Appends a finding.
+     pub fn push(&mut self, diagnostic: Diagnostic) {
+         self.diagnostics.push(diagnostic);
+     }
+ 
+     /// Merges another report into this one.
+     pub fn extend(&mut self, other: Self) {
+-        self.diagnostics.extend(other.diagnostics);
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders every finding, one per stanza.
+     #[must_use]
+     pub fn render(&self) -> String {
+         self.diagnostics
+             .iter()
+             .map(Diagnostic::render)

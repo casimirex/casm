@@ -1,0 +1,37 @@
+--- crates/casm-validator/src/sarif.rs
++++ replace result -> Value with Default::default()
+@@ -79,33 +79,17 @@
+         "version": env!("CARGO_PKG_VERSION"),
+         "informationUri": "https://github.com/casimirex/casimir",
+         "rules": rules,
+     })
+ }
+ 
+ /// Builds a single SARIF result from a diagnostic.
+ fn result(diagnostic: &Diagnostic, artifact: &str) -> Value {
+-    let mut message = diagnostic.message.clone();
+-    if let Some(hint) = &diagnostic.suggestion {
+-        message.push_str("\n\nSuggestion: ");
+-        message.push_str(hint);
+-    }
+-
+-    json!({
+-        "ruleId": diagnostic.rule,
+-        "level": diagnostic.severity.sarif_level(),
+-        "message": { "text": message },
+-        "locations": [{
+-            "physicalLocation": {
+-                "artifactLocation": { "uri": artifact },
+-            },
+-            "logicalLocations": logical_locations(&diagnostic.subject),
+-        }],
+-    })
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Maps a diagnostic subject onto SARIF logical locations.
+ ///
+ /// Logical locations are how SARIF expresses "this finding is about a named thing"
+ /// when there is no line number to point at — exactly the case for an architecture
+ /// element identified by name rather than position.
+ fn logical_locations(subject: &Subject) -> Vec<Value> {

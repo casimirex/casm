@@ -1,0 +1,23 @@
+--- crates/casm-validator/src/rules.rs
++++ replace RuleContext<'_>::name_of -> String with String::new()
+@@ -50,19 +50,17 @@
+         Subject::Node {
+             id: node.id(),
+             name: node.name().as_str().to_owned(),
+         }
+     }
+ 
+     /// Resolves a node's name for diagnostic text, falling back to its id.
+     fn name_of(&self, id: casm_core::NodeId) -> String {
+-        self.architecture
+-            .node(id)
+-            .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned())
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A single validation rule.
+ pub trait Rule {
+     /// The rule's stable, kebab-case identifier. Part of the public contract.
+     fn id(&self) -> &'static str;
+ 

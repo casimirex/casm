@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoPubliclyExposedDatastores>::description -> &'static str with ""
+@@ -120,17 +120,17 @@
+ pub struct NoPubliclyExposedDatastores;
+ 
+ impl Rule for NoPubliclyExposedDatastores {
+     fn id(&self) -> &'static str {
+         "no-publicly-exposed-datastores"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "external systems and humans must not connect directly to a database, queue, or store"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for edge in context.architecture.relationships() {
+             let (Some(source), Some(target)) = (
+                 context.architecture.node(edge.source()),
+                 context.architecture.node(edge.target()),
+             ) else {

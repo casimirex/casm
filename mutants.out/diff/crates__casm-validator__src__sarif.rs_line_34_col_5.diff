@@ -1,0 +1,28 @@
+--- crates/casm-validator/src/sarif.rs
++++ replace to_value -> Value with Default::default()
+@@ -26,24 +26,17 @@
+ pub const SARIF_SCHEMA: &str = "https://json.schemastore.org/sarif-2.1.0.json";
+ 
+ /// Renders a report as a SARIF 2.1.0 document.
+ ///
+ /// `artifact` is the path recorded against every result — the architecture file the run
+ /// was about.
+ #[must_use]
+ pub fn to_value(report: &Report, artifact: &str) -> Value {
+-    json!({
+-        "$schema": SARIF_SCHEMA,
+-        "version": SARIF_VERSION,
+-        "runs": [{
+-            "tool": { "driver": driver() },
+-            "results": report.diagnostics.iter().map(|d| result(d, artifact)).collect::<Vec<_>>(),
+-        }],
+-    })
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders a report as pretty-printed SARIF JSON.
+ ///
+ /// # Errors
+ ///
+ /// Returns a message if serialisation fails, which for a `Value` built here means an
+ /// allocator failure rather than a data problem.

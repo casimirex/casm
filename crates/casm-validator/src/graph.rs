@@ -321,6 +321,34 @@ mod tests {
     }
 
     #[test]
+    fn the_graph_contains_every_declared_node_and_nothing_else() {
+        // `contains` could have answered `true` for anything. The distinguishing case is
+        // not an isolated node — the graph deliberately includes those, so that a rule can
+        // see them — but an identifier the architecture never declared.
+        let architecture = architecture_of(
+            &["a", "b", "orphan"],
+            &[("a", "b", RelationshipType::Sync, Some(10))],
+        );
+        let graph = DependencyGraph::build(&architecture);
+
+        for name in ["a", "b", "orphan"] {
+            let id = architecture
+                .node_by_name(name)
+                .map(Node::id)
+                .expect("the fixture declares it");
+            assert!(
+                graph.contains(id),
+                "{name} is declared, and an isolated node is still in the graph"
+            );
+        }
+
+        assert!(
+            !graph.contains(NodeId::new()),
+            "an identifier the architecture never declared is not in the graph"
+        );
+    }
+
+    #[test]
     fn critical_path_sums_the_longest_chain() {
         let architecture = architecture_of(
             &["a", "b", "c"],

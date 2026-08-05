@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace || with && in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+@@ -382,17 +382,17 @@
+     }
+ 
+     fn description(&self) -> &'static str {
+         "a node called synchronously should declare the interface that is being called"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for node in context.architecture.nodes() {
+-            if !node.interfaces().is_empty() || node.node_type().is_external() {
++            if !node.interfaces().is_empty() && /* ~ changed by cargo-mutants ~ */ node.node_type().is_external() {
+                 continue;
+             }
+ 
+             let called_synchronously = context
+                 .architecture
+                 .incoming(node.id())
+                 .any(|edge| edge.relationship_type() == RelationshipType::Sync);
+ 

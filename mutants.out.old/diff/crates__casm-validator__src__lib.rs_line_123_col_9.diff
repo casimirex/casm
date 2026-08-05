@@ -1,0 +1,22 @@
+--- crates/casm-validator/src/lib.rs
++++ replace Validator::with_patterns -> Self with Default::default()
+@@ -115,18 +115,17 @@
+ 
+     /// Supplies the patterns that conformance claims are checked against.
+     ///
+     /// Loading them is the caller's job — `casm-validator` reads no files, and a
+     /// validator handed no patterns still runs: a claim it cannot check is reported as
+     /// unchecked rather than assumed true.
+     #[must_use]
+     pub fn with_patterns(mut self, patterns: Vec<Pattern>) -> Self {
+-        self.patterns = patterns;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The patterns this validator will check claims against.
+     #[must_use]
+     pub fn patterns(&self) -> &[Pattern] {
+         &self.patterns
+     }
+ 

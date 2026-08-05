@@ -1,295 +1,142 @@
-crates/casm-core/src/architecture.rs:68:9: replace ArchitectureConfig::name -> Self with Default::default()
-crates/casm-core/src/architecture.rs:96:9: replace ArchitectureConfig::relationship -> Self with Default::default()
-crates/casm-core/src/architecture.rs:103:9: replace ArchitectureConfig::conformance -> Self with Default::default()
-crates/casm-core/src/architecture.rs:110:9: replace ArchitectureConfig::metadata -> Self with Default::default()
-crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with None
-crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with Some("")
-crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/architecture.rs:82:9: replace ArchitectureConfig::description -> Self with Default::default()
-crates/casm-core/src/architecture.rs:247:9: replace Architecture::node_count -> usize with 0
-crates/casm-core/src/architecture.rs:247:9: replace Architecture::node_count -> usize with 1
-crates/casm-core/src/architecture.rs:254:9: replace Architecture::relationship_count -> usize with 0
-crates/casm-core/src/architecture.rs:254:9: replace Architecture::relationship_count -> usize with 1
-crates/casm-core/src/architecture.rs:89:9: replace ArchitectureConfig::node -> Self with Default::default()
-crates/casm-core/src/architecture.rs:261:9: replace Architecture::is_empty -> bool with true
-crates/casm-core/src/architecture.rs:261:9: replace Architecture::is_empty -> bool with false
-crates/casm-core/src/architecture.rs:75:9: replace ArchitectureConfig::version -> Self with Default::default()
-crates/casm-core/src/architecture.rs:266:9: replace Architecture::nodes -> impl Iterator<Item =&Node> with ::std::iter::empty()
-crates/casm-core/src/architecture.rs:271:9: replace Architecture::relationships -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
-crates/casm-core/src/architecture.rs:276:9: replace Architecture::conformance -> impl Iterator<Item =&Conformance> with ::std::iter::empty()
-crates/casm-core/src/architecture.rs:283:9: replace Architecture::conformance_count -> usize with 0
-crates/casm-core/src/architecture.rs:283:9: replace Architecture::conformance_count -> usize with 1
-crates/casm-core/src/architecture.rs:289:9: replace Architecture::node -> Option<&Node> with None
-crates/casm-core/src/architecture.rs:300:47: replace == with != in Architecture::node_by_name
-crates/casm-core/src/architecture.rs:298:9: replace Architecture::node_by_name -> Option<&Node> with None
-crates/casm-core/src/architecture.rs:306:9: replace Architecture::contains -> bool with true
-crates/casm-core/src/architecture.rs:306:9: replace Architecture::contains -> bool with false
-crates/casm-core/src/architecture.rs:311:9: replace Architecture::outgoing -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
-crates/casm-core/src/architecture.rs:313:47: replace == with != in Architecture::outgoing
-crates/casm-core/src/architecture.rs:318:9: replace Architecture::incoming -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
-crates/casm-core/src/architecture.rs:320:47: replace == with != in Architecture::incoming
-crates/casm-core/src/architecture.rs:326:9: replace Architecture::degree -> usize with 0
-crates/casm-core/src/architecture.rs:326:9: replace Architecture::degree -> usize with 1
-crates/casm-core/src/architecture.rs:328:48: replace || with && in Architecture::degree
-crates/casm-core/src/architecture.rs:328:42: replace == with != in Architecture::degree
-crates/casm-core/src/architecture.rs:328:65: replace == with != in Architecture::degree
-crates/casm-core/src/architecture.rs:338:9: replace Architecture::isolated_nodes -> Vec<&Node> with vec![]
-crates/casm-core/src/architecture.rs:340:51: replace == with != in Architecture::isolated_nodes
-crates/casm-core/src/architecture.rs:351:9: replace Architecture::add_node -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/architecture.rs:380:9: replace Architecture::add_relationship -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/architecture.rs:387:49: replace == with != in Architecture::add_relationship
-crates/casm-core/src/architecture.rs:412:9: replace Architecture::add_conformance -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/architecture.rs:438:16: delete ! in Architecture::check_conformance
-crates/casm-core/src/architecture.rs:437:9: replace Architecture::check_conformance -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/architecture.rs:452:46: replace == with != in Architecture::check_conformance
-crates/casm-core/src/architecture.rs:474:9: replace Architecture::remove_node -> Result<Option<Node>, ArchitectureError> with Ok(None)
-crates/casm-core/src/architecture.rs:478:37: replace == with != in Architecture::remove_node
-crates/casm-core/src/architecture.rs:481:42: replace + with - in Architecture::remove_node
-crates/casm-core/src/architecture.rs:481:42: replace + with * in Architecture::remove_node
-crates/casm-core/src/architecture.rs:482:23: replace > with < in Architecture::remove_node
-crates/casm-core/src/architecture.rs:482:23: replace > with == in Architecture::remove_node
-crates/casm-core/src/architecture.rs:482:23: replace > with >= in Architecture::remove_node
-crates/casm-core/src/architecture.rs:531:47: replace == with != in Architecture::verify_invariants
-crates/casm-core/src/architecture.rs:526:9: replace Architecture::verify_invariants -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/architecture.rs:549:51: replace == with != in Architecture::verify_invariants
-crates/casm-core/src/architecture.rs:569:9: replace Architecture::require_node -> Result<(), ArchitectureError> with Ok(())
-crates/casm-core/src/conformance.rs:138:9: replace Unmet::message -> String with String::new()
-crates/casm-core/src/conformance.rs:138:9: replace Unmet::message -> String with "xyzzy".into()
-crates/casm-core/src/conformance.rs:205:9: replace Unmet::is_mechanical -> bool with false
-crates/casm-core/src/conformance.rs:205:9: replace Unmet::is_mechanical -> bool with true
-crates/casm-core/src/conformance.rs:231:9: replace ConformanceReport::reference -> &str with ""
-crates/casm-core/src/conformance.rs:231:9: replace ConformanceReport::reference -> &str with "xyzzy"
-crates/casm-core/src/conformance.rs:241:9: replace ConformanceReport::bindings -> &[(String, NodeId)] with Vec::leak(Vec::new())
-crates/casm-core/src/conformance.rs:241:9: replace ConformanceReport::bindings -> &[(String, NodeId)] with Vec::leak(vec![(String::new(), Default::default())])
-crates/casm-core/src/conformance.rs:248:9: replace ConformanceReport::unmet -> &[Unmet] with Vec::leak(Vec::new())
-crates/casm-core/src/conformance.rs:241:9: replace ConformanceReport::bindings -> &[(String, NodeId)] with Vec::leak(vec![("xyzzy".into(), Default::default())])
-crates/casm-core/src/conformance.rs:255:9: replace ConformanceReport::conforms -> bool with true
-crates/casm-core/src/conformance.rs:255:9: replace ConformanceReport::conforms -> bool with false
-crates/casm-core/src/conformance.rs:260:9: replace ConformanceReport::mechanical -> impl Iterator<Item =&Unmet> with ::std::iter::empty()
-crates/casm-core/src/conformance.rs:323:29: replace != with == in resolve_role
-crates/casm-core/src/conformance.rs:336:41: replace == with != in resolve_role
-crates/casm-core/src/conformance.rs:358:5: replace check_node with ()
-crates/casm-core/src/conformance.rs:362:17: replace < with == in check_node
-crates/casm-core/src/conformance.rs:362:17: replace < with > in check_node
-crates/casm-core/src/conformance.rs:362:17: replace < with <= in check_node
-crates/casm-core/src/conformance.rs:372:49: replace == with != in check_node
-crates/casm-core/src/conformance.rs:385:51: replace == with != in check_node
-crates/casm-core/src/conformance.rs:386:12: delete ! in check_node
-crates/casm-core/src/conformance.rs:407:5: replace check_relationships with ()
-crates/casm-core/src/conformance.rs:410:38: replace == with != in check_relationships
-crates/casm-core/src/conformance.rs:423:17: replace && with || in check_relationships
-crates/casm-core/src/conformance.rs:422:17: replace && with || in check_relationships
-crates/casm-core/src/conformance.rs:421:27: replace == with != in check_relationships
-crates/casm-core/src/conformance.rs:422:34: replace == with != in check_relationships
-crates/casm-core/src/conformance.rs:423:45: replace == with != in check_relationships
-crates/casm-core/src/conformance.rs:426:12: delete ! in check_relationships
-crates/casm-core/src/conformance.rs:440:5: replace name_of -> String with String::new()
-crates/casm-core/src/conformance.rs:440:5: replace name_of -> String with "xyzzy".into()
-crates/casm-core/src/control.rs:38:9: replace ControlType::label -> &'static str with ""
-crates/casm-core/src/control.rs:38:9: replace ControlType::label -> &'static str with "xyzzy"
-crates/casm-core/src/control.rs:49:9: replace ControlType::is_auditable -> bool with true
-crates/casm-core/src/control.rs:49:9: replace ControlType::is_auditable -> bool with false
-crates/casm-core/src/control.rs:58:9: replace <impl fmt::Display for ControlType>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/control.rs:154:9: replace Control::standard -> &str with "xyzzy"
-crates/casm-core/src/control.rs:137:12: delete ! in Control::with_tag
-crates/casm-core/src/control.rs:154:9: replace Control::standard -> &str with ""
-crates/casm-core/src/control.rs:161:9: replace Control::description -> &str with ""
-crates/casm-core/src/control.rs:161:9: replace Control::description -> &str with "xyzzy"
-crates/casm-core/src/control.rs:168:9: replace Control::evidence_required -> bool with false
-crates/casm-core/src/control.rs:168:9: replace Control::evidence_required -> bool with true
-crates/casm-core/src/control.rs:175:9: replace Control::tags -> &[String] with Vec::leak(Vec::new())
-crates/casm-core/src/control.rs:175:9: replace Control::tags -> &[String] with Vec::leak(vec![String::new()])
-crates/casm-core/src/control.rs:181:9: replace Control::has_tag -> bool with true
-crates/casm-core/src/control.rs:175:9: replace Control::tags -> &[String] with Vec::leak(vec!["xyzzy".into()])
-crates/casm-core/src/control.rs:181:9: replace Control::has_tag -> bool with false
-crates/casm-core/src/control.rs:181:52: replace == with != in Control::has_tag
-crates/casm-core/src/hex.rs:14:5: replace encode -> String with String::new()
-crates/casm-core/src/hex.rs:17:50: replace >> with << in encode
-crates/casm-core/src/hex.rs:14:5: replace encode -> String with "xyzzy".into()
-crates/casm-core/src/hex.rs:18:50: replace & with | in encode
-crates/casm-core/src/hex.rs:18:50: replace & with ^ in encode
-crates/casm-core/src/hex.rs:32:5: replace decode -> Result<[u8; N], String> with Ok([0; N])
-crates/casm-core/src/hex.rs:32:5: replace decode -> Result<[u8; N], String> with Ok([1; N])
-crates/casm-core/src/hex.rs:35:18: replace != with == in decode
-crates/casm-core/src/ids.rs:72:9: replace NodeId::parse -> Result<Self, IdError> with Ok(Default::default())
-crates/casm-core/src/ids.rs:77:20: replace != with == in NodeId::parse
-crates/casm-core/src/ids.rs:101:9: replace NodeId::timestamp_millis -> u64 with 1
-crates/casm-core/src/ids.rs:101:9: replace NodeId::timestamp_millis -> u64 with 0
-crates/casm-core/src/ids.rs:104:50: replace / with * in NodeId::timestamp_millis
-crates/casm-core/src/ids.rs:104:50: replace / with % in NodeId::timestamp_millis
-crates/casm-core/src/ids.rs:125:9: replace <impl core::str::FromStr for NodeId>::from_str -> Result<Self, Self::Err> with Ok(Default::default())
-crates/casm-core/src/ids.rs:117:9: replace <impl fmt::Display for NodeId>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/ids.rs:141:9: replace <impl TryFrom<String> for NodeId>::try_from -> Result<Self, Self::Error> with Ok(Default::default())
-crates/casm-core/src/ids.rs:133:9: replace <impl TryFrom<&str> for NodeId>::try_from -> Result<Self, Self::Error> with Ok(Default::default())
-crates/casm-core/src/ids.rs:151:9: replace <impl Deserialize<'de> for NodeId>::deserialize -> Result<Self, D::Error> with Ok(Default::default())
-crates/casm-core/src/interface.rs:73:9: replace Protocol::label -> &str with ""
-crates/casm-core/src/interface.rs:73:9: replace Protocol::label -> &str with "xyzzy"
-crates/casm-core/src/interface.rs:98:9: replace Protocol::is_synchronous -> bool with true
-crates/casm-core/src/interface.rs:119:9: replace Protocol::validate -> Result<(), InterfaceError> with Ok(())
-crates/casm-core/src/interface.rs:120:36: replace match guard label.trim().is_empty() with true in Protocol::validate
-crates/casm-core/src/interface.rs:120:36: replace match guard label.trim().is_empty() with false in Protocol::validate
-crates/casm-core/src/interface.rs:98:9: replace Protocol::is_synchronous -> bool with false
-crates/casm-core/src/interface.rs:130:9: replace <impl fmt::Display for Protocol>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/interface.rs:177:9: replace SchemaHash::to_hex -> String with String::new()
-crates/casm-core/src/interface.rs:177:9: replace SchemaHash::to_hex -> String with "xyzzy".into()
-crates/casm-core/src/interface.rs:183:9: replace <impl fmt::Display for SchemaHash>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/interface.rs:190:9: replace <impl fmt::Debug for SchemaHash>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/interface.rs:206:9: replace <impl From<SchemaHash> for String>::from -> Self with Default::default()
-crates/casm-core/src/interface.rs:320:9: replace Interface::description -> Option<&str> with None
-crates/casm-core/src/interface.rs:320:9: replace Interface::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/interface.rs:313:9: replace Interface::schema_hash -> Option<&SchemaHash> with None
-crates/casm-core/src/interface.rs:320:9: replace Interface::description -> Option<&str> with Some("")
-crates/casm-core/src/interface.rs:330:9: replace Interface::is_compatible_with -> bool with true
-crates/casm-core/src/interface.rs:330:9: replace Interface::is_compatible_with -> bool with false
-crates/casm-core/src/interface.rs:332:13: replace && with || in Interface::is_compatible_with
-crates/casm-core/src/interface.rs:331:13: replace && with || in Interface::is_compatible_with
-crates/casm-core/src/interface.rs:330:23: replace == with != in Interface::is_compatible_with
-crates/casm-core/src/interface.rs:332:36: replace >= with < in Interface::is_compatible_with
-crates/casm-core/src/interface.rs:331:35: replace == with != in Interface::is_compatible_with
-crates/casm-core/src/merkle.rs:112:9: replace Fingerprint::to_hex -> String with String::new()
-crates/casm-core/src/merkle.rs:112:9: replace Fingerprint::to_hex -> String with "xyzzy".into()
-crates/casm-core/src/merkle.rs:121:9: replace Fingerprint::abbreviated -> String with String::new()
-crates/casm-core/src/merkle.rs:121:9: replace Fingerprint::abbreviated -> String with "xyzzy".into()
-crates/casm-core/src/merkle.rs:142:9: replace <impl fmt::Debug for Fingerprint>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/merkle.rs:135:9: replace <impl fmt::Display for Fingerprint>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/merkle.rs:156:9: replace <impl From<Fingerprint> for String>::from -> Self with Default::default()
-crates/casm-core/src/merkle.rs:174:9: replace Encoder::text -> &mut Self with Box::leak(Box::new(Default::default()))
-crates/casm-core/src/merkle.rs:183:9: replace Encoder::optional -> &mut Self with Box::leak(Box::new(Default::default()))
-crates/casm-core/src/merkle.rs:193:9: replace Encoder::optional_number -> &mut Self with Box::leak(Box::new(Default::default()))
-crates/casm-core/src/merkle.rs:198:9: replace Encoder::flag -> &mut Self with Box::leak(Box::new(Default::default()))
-crates/casm-core/src/merkle.rs:204:9: replace Encoder::map -> &mut Self with Box::leak(Box::new(Default::default()))
-crates/casm-core/src/merkle.rs:413:5: replace sorted_digests -> Vec<String> with vec![]
-crates/casm-core/src/merkle.rs:413:5: replace sorted_digests -> Vec<String> with vec![String::new()]
-crates/casm-core/src/merkle.rs:413:5: replace sorted_digests -> Vec<String> with vec!["xyzzy".into()]
-crates/casm-core/src/merkle.rs:512:9: replace MerkleTree::node -> Option<Fingerprint> with None
-crates/casm-core/src/merkle.rs:533:9: replace MerkleTree::changed_nodes -> Vec<String> with vec!["xyzzy".into()]
-crates/casm-core/src/merkle.rs:533:9: replace MerkleTree::changed_nodes -> Vec<String> with vec![String::new()]
-crates/casm-core/src/merkle.rs:533:9: replace MerkleTree::changed_nodes -> Vec<String> with vec![]
-crates/casm-core/src/merkle.rs:536:61: replace != with == in MerkleTree::changed_nodes
-crates/casm-core/src/merkle.rs:556:5: replace edge_key -> String with String::new()
-crates/casm-core/src/merkle.rs:544:32: delete ! in MerkleTree::changed_nodes
-crates/casm-core/src/merkle.rs:556:5: replace edge_key -> String with "xyzzy".into()
-crates/casm-core/src/names.rs:92:9: replace Name::is_legal -> bool with true
-crates/casm-core/src/names.rs:92:35: replace || with && in Name::is_legal
-crates/casm-core/src/names.rs:98:9: replace Name::as_str -> &str with ""
-crates/casm-core/src/names.rs:92:9: replace Name::is_legal -> bool with false
-crates/casm-core/src/names.rs:98:9: replace Name::as_str -> &str with "xyzzy"
-crates/casm-core/src/names.rs:104:9: replace Name::into_string -> String with String::new()
-crates/casm-core/src/names.rs:110:9: replace <impl fmt::Display for Name>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/names.rs:104:9: replace Name::into_string -> String with "xyzzy".into()
-crates/casm-core/src/names.rs:116:9: replace <impl AsRef<str> for Name>::as_ref -> &str with ""
-crates/casm-core/src/names.rs:116:9: replace <impl AsRef<str> for Name>::as_ref -> &str with "xyzzy"
-crates/casm-core/src/node.rs:56:9: replace NodeType::label -> &'static str with ""
-crates/casm-core/src/node.rs:56:9: replace NodeType::label -> &'static str with "xyzzy"
-crates/casm-core/src/node.rs:75:9: replace NodeType::is_stateful -> bool with true
-crates/casm-core/src/node.rs:75:9: replace NodeType::is_stateful -> bool with false
-crates/casm-core/src/node.rs:89:9: replace NodeType::is_external -> bool with true
-crates/casm-core/src/node.rs:89:9: replace NodeType::is_external -> bool with false
-crates/casm-core/src/node.rs:105:9: replace <impl fmt::Display for NodeType>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/node.rs:143:9: replace NodeConfig::name -> Self with Default::default()
-crates/casm-core/src/node.rs:164:9: replace NodeConfig::interface -> Self with Default::default()
-crates/casm-core/src/node.rs:157:9: replace NodeConfig::description -> Self with Default::default()
-crates/casm-core/src/node.rs:171:9: replace NodeConfig::control -> Self with Default::default()
-crates/casm-core/src/node.rs:180:9: replace NodeConfig::metadata -> Self with Default::default()
-crates/casm-core/src/node.rs:213:9: replace NodeConfig::reject_duplicate_interfaces -> Result<(), NodeError> with Ok(())
-crates/casm-core/src/node.rs:217:47: replace == with != in NodeConfig::reject_duplicate_interfaces
-crates/casm-core/src/node.rs:301:9: replace Node::description -> Option<&str> with None
-crates/casm-core/src/node.rs:301:9: replace Node::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/node.rs:301:9: replace Node::description -> Option<&str> with Some("")
-crates/casm-core/src/node.rs:308:9: replace Node::interfaces -> &[Interface] with Vec::leak(Vec::new())
-crates/casm-core/src/node.rs:315:9: replace Node::controls -> &[Control] with Vec::leak(Vec::new())
-crates/casm-core/src/node.rs:330:49: replace == with != in Node::interface
-crates/casm-core/src/node.rs:328:9: replace Node::interface -> Option<&Interface> with None
-crates/casm-core/src/node.rs:339:9: replace Node::controls_of_type -> usize with 0
-crates/casm-core/src/node.rs:339:9: replace Node::controls_of_type -> usize with 1
-crates/casm-core/src/node.rs:341:42: replace == with != in Node::controls_of_type
-crates/casm-core/src/node.rs:348:9: replace Node::has_control_tagged -> bool with true
-crates/casm-core/src/node.rs:348:9: replace Node::has_control_tagged -> bool with false
-crates/casm-core/src/pattern.rs:82:5: replace is_zero -> bool with true
-crates/casm-core/src/pattern.rs:82:5: replace is_zero -> bool with false
-crates/casm-core/src/pattern.rs:82:12: replace == with != in is_zero
-crates/casm-core/src/pattern.rs:119:12: delete ! in Requirement::requiring_control_type
-crates/casm-core/src/pattern.rs:128:12: delete ! in Requirement::requiring_protocol
-crates/casm-core/src/pattern.rs:152:9: replace Requirement::description -> Option<&str> with None
-crates/casm-core/src/pattern.rs:152:9: replace Requirement::description -> Option<&str> with Some("")
-crates/casm-core/src/pattern.rs:152:9: replace Requirement::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/pattern.rs:159:9: replace Requirement::min_security_controls -> usize with 0
-crates/casm-core/src/pattern.rs:159:9: replace Requirement::min_security_controls -> usize with 1
-crates/casm-core/src/pattern.rs:166:9: replace Requirement::required_control_types -> &[ControlType] with Vec::leak(Vec::new())
-crates/casm-core/src/pattern.rs:173:9: replace Requirement::required_protocols -> &[Protocol] with Vec::leak(Vec::new())
-crates/casm-core/src/pattern.rs:254:9: replace RequiredRelationship::description -> Option<&str> with Some("")
-crates/casm-core/src/pattern.rs:254:9: replace RequiredRelationship::description -> Option<&str> with None
-crates/casm-core/src/pattern.rs:254:9: replace RequiredRelationship::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/pattern.rs:280:9: replace PatternConfig::name -> Self with Default::default()
-crates/casm-core/src/pattern.rs:287:9: replace PatternConfig::version -> Self with Default::default()
-crates/casm-core/src/pattern.rs:294:9: replace PatternConfig::description -> Self with Default::default()
-crates/casm-core/src/pattern.rs:301:9: replace PatternConfig::requirement -> Self with Default::default()
-crates/casm-core/src/pattern.rs:308:9: replace PatternConfig::relationship -> Self with Default::default()
-crates/casm-core/src/pattern.rs:325:9: replace PatternConfig::metadata -> Self with Default::default()
-crates/casm-core/src/pattern.rs:316:12: delete ! in PatternConfig::satisfies
-crates/casm-core/src/pattern.rs:315:9: replace PatternConfig::satisfies -> Self with Default::default()
-crates/casm-core/src/pattern.rs:365:9: replace PatternConfig::reject_duplicate_roles -> Result<(), PatternError> with Ok(())
-crates/casm-core/src/pattern.rs:369:47: replace == with != in PatternConfig::reject_duplicate_roles
-crates/casm-core/src/pattern.rs:387:55: replace == with != in PatternConfig::reject_unknown_roles
-crates/casm-core/src/pattern.rs:384:9: replace PatternConfig::reject_unknown_roles -> Result<(), PatternError> with Ok(())
-crates/casm-core/src/pattern.rs:395:20: delete ! in PatternConfig::reject_unknown_roles
-crates/casm-core/src/pattern.rs:468:9: replace Pattern::description -> Option<&str> with Some("")
-crates/casm-core/src/pattern.rs:468:9: replace Pattern::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/pattern.rs:468:9: replace Pattern::description -> Option<&str> with None
-crates/casm-core/src/pattern.rs:475:9: replace Pattern::requirements -> &[Requirement] with Vec::leak(Vec::new())
-crates/casm-core/src/pattern.rs:482:9: replace Pattern::relationships -> &[RequiredRelationship] with Vec::leak(Vec::new())
-crates/casm-core/src/pattern.rs:489:9: replace Pattern::satisfies -> &[String] with Vec::leak(Vec::new())
-crates/casm-core/src/pattern.rs:489:9: replace Pattern::satisfies -> &[String] with Vec::leak(vec![String::new()])
-crates/casm-core/src/pattern.rs:489:9: replace Pattern::satisfies -> &[String] with Vec::leak(vec!["xyzzy".into()])
-crates/casm-core/src/pattern.rs:502:9: replace Pattern::requirement -> Option<&Requirement> with None
-crates/casm-core/src/pattern.rs:508:9: replace Pattern::reference -> String with String::new()
-crates/casm-core/src/pattern.rs:502:61: replace == with != in Pattern::requirement
-crates/casm-core/src/pattern.rs:508:9: replace Pattern::reference -> String with "xyzzy".into()
-crates/casm-core/src/pattern.rs:538:9: replace <impl fmt::Display for Pattern>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/pattern.rs:531:9: replace Pattern::verify_invariants -> Result<(), PatternError> with Ok(())
-crates/casm-core/src/pattern.rs:587:9: replace PatternRef::name -> &str with ""
-crates/casm-core/src/pattern.rs:587:9: replace PatternRef::name -> &str with "xyzzy"
-crates/casm-core/src/pattern.rs:600:9: replace PatternRef::matches -> bool with false
-crates/casm-core/src/pattern.rs:600:9: replace PatternRef::matches -> bool with true
-crates/casm-core/src/pattern.rs:600:46: replace && with || in PatternRef::matches
-crates/casm-core/src/pattern.rs:600:33: replace == with != in PatternRef::matches
-crates/casm-core/src/pattern.rs:600:67: replace == with != in PatternRef::matches
-crates/casm-core/src/pattern.rs:606:9: replace <impl fmt::Display for PatternRef>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/pattern.rs:685:9: replace <impl fmt::Display for Conformance>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/pattern.rs:679:9: replace Conformance::bound -> Option<NodeId> with Some(Default::default())
-crates/casm-core/src/pattern.rs:679:9: replace Conformance::bound -> Option<NodeId> with None
-crates/casm-core/src/relationship.rs:57:9: replace RelationshipType::label -> &'static str with ""
-crates/casm-core/src/relationship.rs:57:9: replace RelationshipType::label -> &'static str with "xyzzy"
-crates/casm-core/src/relationship.rs:74:9: replace RelationshipType::is_blocking -> bool with true
-crates/casm-core/src/relationship.rs:74:9: replace RelationshipType::is_blocking -> bool with false
-crates/casm-core/src/relationship.rs:83:9: replace RelationshipType::is_entangled -> bool with true
-crates/casm-core/src/relationship.rs:83:9: replace RelationshipType::is_entangled -> bool with false
-crates/casm-core/src/relationship.rs:98:9: replace <impl fmt::Display for RelationshipType>::fmt -> fmt::Result with Ok(Default::default())
-crates/casm-core/src/relationship.rs:92:9: replace RelationshipType::forms_dependency_cycle -> bool with false
-crates/casm-core/src/relationship.rs:92:9: replace RelationshipType::forms_dependency_cycle -> bool with true
-crates/casm-core/src/relationship.rs:145:9: replace RelationshipConfig::protocol -> Self with Default::default()
-crates/casm-core/src/relationship.rs:152:9: replace RelationshipConfig::description -> Self with Default::default()
-crates/casm-core/src/relationship.rs:159:9: replace RelationshipConfig::control -> Self with Default::default()
-crates/casm-core/src/relationship.rs:191:19: replace == with != in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:198:24: replace == with != in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:198:29: replace || with && in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:198:39: replace > with == in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:198:39: replace > with < in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:198:39: replace > with >= in RelationshipConfig::build
-crates/casm-core/src/relationship.rs:293:9: replace Relationship::protocol -> Option<&Protocol> with None
-crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with None
-crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with Some("")
-crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with Some("xyzzy")
-crates/casm-core/src/relationship.rs:307:9: replace Relationship::controls -> &[Control] with Vec::leak(Vec::new())
-crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with None
-crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with Some(0)
-crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with Some(1)
-crates/casm-core/src/relationship.rs:320:9: replace Relationship::connects -> bool with true
-crates/casm-core/src/relationship.rs:320:9: replace Relationship::connects -> bool with false
-crates/casm-core/src/relationship.rs:320:48: replace || with && in Relationship::connects
-crates/casm-core/src/relationship.rs:320:27: replace && with || in Relationship::connects
-crates/casm-core/src/relationship.rs:320:22: replace == with != in Relationship::connects
-crates/casm-core/src/relationship.rs:320:69: replace && with || in Relationship::connects
-crates/casm-core/src/relationship.rs:320:64: replace == with != in Relationship::connects
-crates/casm-core/src/relationship.rs:320:42: replace == with != in Relationship::connects
-crates/casm-core/src/relationship.rs:320:84: replace == with != in Relationship::connects
+crates/casm-validator/src/lib.rs:92:9: replace Validator::with_config -> Self with Default::default()
+crates/casm-validator/src/lib.rs:102:9: replace Validator::empty -> Self with Default::default()
+crates/casm-validator/src/lib.rs:142:9: replace Validator::rule_ids -> Vec<&'static str> with vec![]
+crates/casm-validator/src/lib.rs:142:9: replace Validator::rule_ids -> Vec<&'static str> with vec![""]
+crates/casm-validator/src/lib.rs:142:9: replace Validator::rule_ids -> Vec<&'static str> with vec!["xyzzy"]
+crates/casm-validator/src/lib.rs:151:9: replace Validator::validate -> Report with Default::default()
+crates/casm-validator/src/config.rs:81:9: replace ValidatorConfig::allowing -> Self with Default::default()
+crates/casm-validator/src/config.rs:82:12: delete ! in ValidatorConfig::allowing
+crates/casm-validator/src/config.rs:91:9: replace ValidatorConfig::is_allowed -> bool with true
+crates/casm-validator/src/config.rs:91:9: replace ValidatorConfig::is_allowed -> bool with false
+crates/casm-validator/src/config.rs:91:49: replace == with != in ValidatorConfig::is_allowed
+crates/casm-validator/src/lib.rs:130:9: replace Validator::patterns -> &[Pattern] with Vec::leak(Vec::new())
+crates/casm-validator/src/lib.rs:112:9: replace Validator::with_rule -> Self with Default::default()
+crates/casm-validator/src/lib.rs:123:9: replace Validator::with_patterns -> Self with Default::default()
+crates/casm-validator/src/diagnostic.rs:34:9: replace Severity::label -> &'static str with ""
+crates/casm-validator/src/diagnostic.rs:44:9: replace Severity::sarif_level -> &'static str with ""
+crates/casm-validator/src/diagnostic.rs:44:9: replace Severity::sarif_level -> &'static str with "xyzzy"
+crates/casm-validator/src/diagnostic.rs:34:9: replace Severity::label -> &'static str with "xyzzy"
+crates/casm-validator/src/diagnostic.rs:54:9: replace <impl core::fmt::Display for Severity>::fmt -> core::fmt::Result with Ok(Default::default())
+crates/casm-validator/src/diagnostic.rs:95:9: replace <impl core::fmt::Display for Subject>::fmt -> core::fmt::Result with Ok(Default::default())
+crates/casm-validator/src/diagnostic.rs:159:9: replace Diagnostic::render -> String with String::new()
+crates/casm-validator/src/diagnostic.rs:190:9: replace Report::count -> usize with 0
+crates/casm-validator/src/diagnostic.rs:159:9: replace Diagnostic::render -> String with "xyzzy".into()
+crates/casm-validator/src/diagnostic.rs:192:36: replace == with != in Report::count
+crates/casm-validator/src/diagnostic.rs:190:9: replace Report::count -> usize with 1
+crates/casm-validator/src/diagnostic.rs:199:9: replace Report::has_errors -> bool with true
+crates/casm-validator/src/diagnostic.rs:199:9: replace Report::has_errors -> bool with false
+crates/casm-validator/src/diagnostic.rs:201:33: replace == with != in Report::has_errors
+crates/casm-validator/src/diagnostic.rs:207:9: replace Report::has_warnings -> bool with true
+crates/casm-validator/src/diagnostic.rs:207:9: replace Report::has_warnings -> bool with false
+crates/casm-validator/src/diagnostic.rs:209:33: replace == with != in Report::has_warnings
+crates/casm-validator/src/diagnostic.rs:215:9: replace Report::is_clean -> bool with true
+crates/casm-validator/src/diagnostic.rs:215:9: replace Report::is_clean -> bool with false
+crates/casm-validator/src/diagnostic.rs:221:9: replace Report::at -> Vec<&Diagnostic> with vec![]
+crates/casm-validator/src/diagnostic.rs:223:36: replace == with != in Report::at
+crates/casm-validator/src/diagnostic.rs:234:9: replace Report::exit_code -> i32 with 1
+crates/casm-validator/src/diagnostic.rs:234:9: replace Report::exit_code -> i32 with 0
+crates/casm-validator/src/diagnostic.rs:243:9: replace Report::push with ()
+crates/casm-validator/src/diagnostic.rs:234:9: replace Report::exit_code -> i32 with -1
+crates/casm-validator/src/diagnostic.rs:248:9: replace Report::extend with ()
+crates/casm-validator/src/diagnostic.rs:254:9: replace Report::render -> String with String::new()
+crates/casm-validator/src/diagnostic.rs:264:9: replace Report::summary -> String with String::new()
+crates/casm-validator/src/diagnostic.rs:254:9: replace Report::render -> String with "xyzzy".into()
+crates/casm-validator/src/diagnostic.rs:264:9: replace Report::summary -> String with "xyzzy".into()
+crates/casm-validator/src/graph.rs:51:16: delete ! in DependencyGraph::build
+crates/casm-validator/src/graph.rs:73:9: replace DependencyGraph::cycles -> Vec<Vec<NodeId>> with vec![]
+crates/casm-validator/src/graph.rs:73:9: replace DependencyGraph::cycles -> Vec<Vec<NodeId>> with vec![vec![]]
+crates/casm-validator/src/graph.rs:75:49: replace > with == in DependencyGraph::cycles
+crates/casm-validator/src/graph.rs:73:9: replace DependencyGraph::cycles -> Vec<Vec<NodeId>> with vec![vec![Default::default()]]
+crates/casm-validator/src/graph.rs:75:49: replace > with < in DependencyGraph::cycles
+crates/casm-validator/src/graph.rs:94:9: replace DependencyGraph::is_acyclic -> bool with true
+crates/casm-validator/src/graph.rs:75:49: replace > with >= in DependencyGraph::cycles
+crates/casm-validator/src/graph.rs:94:9: replace DependencyGraph::is_acyclic -> bool with false
+crates/casm-validator/src/graph.rs:108:9: replace DependencyGraph::critical_path_ms -> Option<u64> with None
+crates/casm-validator/src/graph.rs:108:9: replace DependencyGraph::critical_path_ms -> Option<u64> with Some(1)
+crates/casm-validator/src/graph.rs:108:9: replace DependencyGraph::critical_path_ms -> Option<u64> with Some(0)
+crates/casm-validator/src/graph.rs:121:30: replace > with == in DependencyGraph::critical_path_ms
+crates/casm-validator/src/graph.rs:121:30: replace > with < in DependencyGraph::critical_path_ms
+crates/casm-validator/src/graph.rs:133:9: replace DependencyGraph::roots -> Vec<NodeId> with vec![Default::default()]
+crates/casm-validator/src/graph.rs:133:9: replace DependencyGraph::roots -> Vec<NodeId> with vec![]
+crates/casm-validator/src/graph.rs:152:9: replace DependencyGraph::leaves -> Vec<NodeId> with vec![]
+crates/casm-validator/src/graph.rs:152:9: replace DependencyGraph::leaves -> Vec<NodeId> with vec![Default::default()]
+crates/casm-validator/src/graph.rs:171:9: replace DependencyGraph::contains -> bool with true
+crates/casm-validator/src/graph.rs:171:9: replace DependencyGraph::contains -> bool with false
+crates/casm-validator/src/graph.rs:181:5: replace blocking_budget_out_of -> u64 with 0
+crates/casm-validator/src/graph.rs:181:5: replace blocking_budget_out_of -> u64 with 1
+crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with String::new()
+crates/casm-validator/src/rules.rs:84:9: replace <impl Rule for NoDependencyCycles>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with "xyzzy".into()
+crates/casm-validator/src/rules.rs:84:9: replace <impl Rule for NoDependencyCycles>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:88:9: replace <impl Rule for NoDependencyCycles>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:88:9: replace <impl Rule for NoDependencyCycles>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:92:9: replace <impl Rule for NoDependencyCycles>::check with ()
+crates/casm-validator/src/rules.rs:124:9: replace <impl Rule for NoPubliclyExposedDatastores>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:128:9: replace <impl Rule for NoPubliclyExposedDatastores>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:124:9: replace <impl Rule for NoPubliclyExposedDatastores>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:128:9: replace <impl Rule for NoPubliclyExposedDatastores>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:140:50: replace || with && in <impl Rule for NoPubliclyExposedDatastores>::check
+crates/casm-validator/src/rules.rs:140:16: delete ! in <impl Rule for NoPubliclyExposedDatastores>::check
+crates/casm-validator/src/rules.rs:132:9: replace <impl Rule for NoPubliclyExposedDatastores>::check with ()
+crates/casm-validator/src/rules.rs:174:9: replace <impl Rule for ServicesRequireSecurityControls>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:140:53: delete ! in <impl Rule for NoPubliclyExposedDatastores>::check
+crates/casm-validator/src/rules.rs:174:9: replace <impl Rule for ServicesRequireSecurityControls>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:178:9: replace <impl Rule for ServicesRequireSecurityControls>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:183:21: replace == with != in <impl Rule for ServicesRequireSecurityControls>::check
+crates/casm-validator/src/rules.rs:178:9: replace <impl Rule for ServicesRequireSecurityControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:188:16: delete ! in <impl Rule for ServicesRequireSecurityControls>::check
+crates/casm-validator/src/rules.rs:182:9: replace <impl Rule for ServicesRequireSecurityControls>::check with ()
+crates/casm-validator/src/rules.rs:193:25: replace >= with < in <impl Rule for ServicesRequireSecurityControls>::check
+crates/casm-validator/src/rules.rs:222:9: replace <impl Rule for StatefulNodesRequireControls>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:222:9: replace <impl Rule for StatefulNodesRequireControls>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:226:9: replace <impl Rule for StatefulNodesRequireControls>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:226:9: replace <impl Rule for StatefulNodesRequireControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:231:16: delete ! in <impl Rule for StatefulNodesRequireControls>::check
+crates/casm-validator/src/rules.rs:230:9: replace <impl Rule for StatefulNodesRequireControls>::check with ()
+crates/casm-validator/src/rules.rs:231:48: replace || with && in <impl Rule for StatefulNodesRequireControls>::check
+crates/casm-validator/src/rules.rs:231:51: delete ! in <impl Rule for StatefulNodesRequireControls>::check
+crates/casm-validator/src/rules.rs:263:9: replace <impl Rule for CriticalPathWithinBudget>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:259:9: replace <impl Rule for CriticalPathWithinBudget>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:259:9: replace <impl Rule for CriticalPathWithinBudget>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:274:26: replace <= with > in <impl Rule for CriticalPathWithinBudget>::check
+crates/casm-validator/src/rules.rs:263:9: replace <impl Rule for CriticalPathWithinBudget>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:301:9: replace <impl Rule for BoundaryCrossingsRequireControls>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:269:9: replace <impl Rule for CriticalPathWithinBudget>::check with ()
+crates/casm-validator/src/rules.rs:301:9: replace <impl Rule for BoundaryCrossingsRequireControls>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:305:9: replace <impl Rule for BoundaryCrossingsRequireControls>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:305:9: replace <impl Rule for BoundaryCrossingsRequireControls>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:309:9: replace <impl Rule for BoundaryCrossingsRequireControls>::check with ()
+crates/casm-validator/src/rules.rs:317:60: replace != with == in <impl Rule for BoundaryCrossingsRequireControls>::check
+crates/casm-validator/src/rules.rs:318:25: replace || with && in <impl Rule for BoundaryCrossingsRequireControls>::check
+crates/casm-validator/src/rules.rs:318:16: delete ! in <impl Rule for BoundaryCrossingsRequireControls>::check
+crates/casm-validator/src/rules.rs:318:28: delete ! in <impl Rule for BoundaryCrossingsRequireControls>::check
+crates/casm-validator/src/rules.rs:346:9: replace <impl Rule for NoIsolatedNodes>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:350:9: replace <impl Rule for NoIsolatedNodes>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:350:9: replace <impl Rule for NoIsolatedNodes>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:346:9: replace <impl Rule for NoIsolatedNodes>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:355:46: replace < with <= in <impl Rule for NoIsolatedNodes>::check
+crates/casm-validator/src/rules.rs:355:46: replace < with == in <impl Rule for NoIsolatedNodes>::check
+crates/casm-validator/src/rules.rs:355:46: replace < with > in <impl Rule for NoIsolatedNodes>::check
+crates/casm-validator/src/rules.rs:355:9: replace <impl Rule for NoIsolatedNodes>::check with ()
+crates/casm-validator/src/rules.rs:381:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:381:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:385:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:385:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:390:16: delete ! in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+crates/casm-validator/src/rules.rs:390:46: replace || with && in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+crates/casm-validator/src/rules.rs:389:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::check with ()
+crates/casm-validator/src/rules.rs:397:54: replace == with != in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with ""
+crates/casm-validator/src/rules.rs:399:16: delete ! in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+crates/casm-validator/src/rules.rs:433:9: replace <impl Rule for PatternsAreSatisfied>::description -> &'static str with ""
+crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:433:9: replace <impl Rule for PatternsAreSatisfied>::description -> &'static str with "xyzzy"
+crates/casm-validator/src/rules.rs:437:9: replace <impl Rule for PatternsAreSatisfied>::check with ()
+crates/casm-validator/src/rules.rs:509:5: replace built_in -> Vec<Box<dyn Rule>> with vec![]
+crates/casm-validator/src/sarif.rs:34:5: replace to_value -> Value with Default::default()
+crates/casm-validator/src/sarif.rs:51:5: replace to_string -> Result<String, String> with Ok(String::new())
+crates/casm-validator/src/sarif.rs:51:5: replace to_string -> Result<String, String> with Ok("xyzzy".into())
+crates/casm-validator/src/sarif.rs:65:5: replace driver -> Value with Default::default()
+crates/casm-validator/src/sarif.rs:87:5: replace result -> Value with Default::default()
+crates/casm-validator/src/sarif.rs:112:5: replace logical_locations -> Vec<Value> with vec![]
+crates/casm-validator/src/sarif.rs:112:5: replace logical_locations -> Vec<Value> with vec![Default::default()]

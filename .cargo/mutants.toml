@@ -31,7 +31,10 @@ exclude_re = [
     # `>` and `>=` are interchangeable when folding a maximum — the mutant produces a
     # redundant assignment, never a different answer. Unkillable by construction, and
     # chasing it would mean contorting a test around a distinction that does not exist.
+    # Two places fold a maximum this way: the worst exit code across a directory sweep,
+    # and the longest blocking path through the dependency graph.
     "replace > with >= in check",
+    "replace > with >= in DependencyGraph::critical_path_ms",
 
     # `X::builder()` is defined as `XConfig::new()`, and every `XConfig::new()` is defined
     # as `Self::default()`. The mutant substitutes `Default::default()` — which is not

@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ delete ! in <impl Rule for NoPubliclyExposedDatastores>::check
+@@ -132,17 +132,17 @@
+         for edge in context.architecture.relationships() {
+             let (Some(source), Some(target)) = (
+                 context.architecture.node(edge.source()),
+                 context.architecture.node(edge.target()),
+             ) else {
+                 continue;
+             };
+ 
+-            if !source.node_type().is_external() || !target.node_type().is_stateful() {
++            if !source.node_type().is_external() ||  /* ~ changed by cargo-mutants ~ */target.node_type().is_stateful() {
+                 continue;
+             }
+ 
+             report.push(
+                 Diagnostic::new(
+                     self.id(),
+                     Severity::Error,
+                     Subject::Relationship {
