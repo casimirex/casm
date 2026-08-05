@@ -11,12 +11,15 @@
 //! boundary sharp is what makes the rest of CASIMIR testable without a filesystem.
 
 use casm_core::{Architecture, Pattern, conformance};
+use casm_evidence::{Attribution, Pack, Provenance, render::Format as RenderFormat};
 use casm_parser::{Format, Library, emit_str, parse_file};
+use casm_telemetry::{Outcome, Recorder};
 use casm_validator::{Report, Validator, ValidatorConfig, sarif};
 use std::path::{Path, PathBuf};
 
 use crate::cli::{
-    DiagramFormat, DocumentFormat, FormalTarget, HookAction, InventorySource, OutputFormat,
+    DiagramFormat, DocumentFormat, EvidenceFormat, FormalTarget, HookAction, InventorySource,
+    OutputFormat,
 };
 use crate::exit::ExitCode;
 use crate::hook;
@@ -245,7 +248,12 @@ pub(crate) fn diff(old: &Path, new: &Path, fail_on_breaking: bool) -> CommandRes
 }
 
 /// Validates every architecture file found under a directory.
-pub(crate) fn check(directory: &Path, strict: bool, patterns: Option<&Path>) -> CommandResult {
+pub(crate) fn check(
+    directory: &Path,
+    strict: bool,
+    patterns: Option<&Path>,
+    recorder: &mut Recorder,
+) -> CommandResult {
     let files = discover(directory)?;
 
     if files.is_empty() {
@@ -261,10 +269,26 @@ pub(crate) fn check(directory: &Path, strict: bool, patterns: Option<&Path>) -> 
     let mut checked = 0_usize;
 
     for file in &files {
-        match parse_file(file) {
+        // A span per file: this is the sweep where a slow document is worth finding, and
+        // an aggregate over the whole directory would hide it.
+        let span = recorder
+            .start("check-file")
+            .with_attribute("casm.file", file.display().to_string());
+        let parsed = parse_file(file);
+        recorder.finish(
+            span,
+            if parsed.is_ok() {
+                Outcome::Ok
+            } else {
+                Outcome::Error
+            },
+        );
+
+        match parsed {
             Ok(architecture) => {
                 let report = validator.validate(&architecture);
                 checked = checked.saturating_add(1);
+                recorder.count("casm.documents.checked", 1);
                 println!("{}: {}", file.display(), report.summary());
 
                 for diagnostic in &report.diagnostics {
@@ -625,6 +649,91 @@ fn repository_for(file: &Path) -> Result<casm_git::Repository, CommandError> {
         .map_err(|error| CommandError(error.to_string()))
 }
 
+/// Assembles a register of the control claims an architecture makes.
+///
+/// Reports claims, never satisfaction. A control flagged `evidence-required` is listed as
+/// outstanding, because CASIMIR does not hold the artefact behind it and saying otherwise
+/// would launder an assertion into evidence — see ADR-0013.
+pub(crate) fn evidence(
+    file: &Path,
+    format: EvidenceFormat,
+    patterns: Option<&Path>,
+    no_history: bool,
+    strict: bool,
+) -> CommandResult {
+    let architecture = parse_file(file)?;
+    let patterns = load_patterns(patterns)?;
+
+    let provenance = if no_history {
+        Provenance::unknown().from_source(file.display().to_string())
+    } else {
+        provenance_of(file)
+    };
+
+    let pack = Pack::assemble(&architecture, &patterns, provenance);
+
+    match format {
+        EvidenceFormat::Human => print!(
+            "{}",
+            casm_evidence::render::render(&pack, RenderFormat::Human)
+        ),
+        EvidenceFormat::Markdown => {
+            print!(
+                "{}",
+                casm_evidence::render::render(&pack, RenderFormat::Markdown)
+            );
+        }
+        EvidenceFormat::Json => {
+            let json = serde_json::to_string_pretty(&pack)
+                .map_err(|error| CommandError(format!("cannot serialise the register: {error}")))?;
+            println!("{json}");
+        }
+    }
+
+    if strict && pack.outstanding() > 0 {
+        return Ok(ExitCode::ValidationErrors);
+    }
+    Ok(ExitCode::Success)
+}
+
+/// Reads whatever Git can tell us about where an architecture came from.
+///
+/// A file outside a repository, or one Git cannot read, yields
+/// [`Provenance::unknown`] rather than an error: a register without attribution is still
+/// worth having, and refusing to produce one would be the wrong trade.
+fn provenance_of(file: &Path) -> Provenance {
+    let base = Provenance::unknown().from_source(file.display().to_string());
+
+    let Ok(repository) = repository_for(file) else {
+        return base;
+    };
+    let Ok(revisions) = repository.semantic_history(file, casm_git::HistoryOptions::default())
+    else {
+        return base;
+    };
+
+    let base = base.with_semantic_revisions(revisions.len());
+    let latest = revisions.first().map(attribution_of);
+    let first = revisions.last().map(attribution_of);
+
+    match (latest, first) {
+        (Some(latest), Some(first)) => base.at(latest).introduced_by(first),
+        (Some(latest), None) => base.at(latest),
+        (None, _) => base,
+    }
+}
+
+/// Projects a revision onto the attribution an evidence register carries.
+fn attribution_of(revision: &casm_git::Revision) -> Attribution {
+    Attribution {
+        commit: revision.commit.clone(),
+        author: revision.author.clone(),
+        email: revision.email.clone(),
+        date: revision.dated().to_date(),
+        summary: revision.summary.clone(),
+    }
+}
+
 /// Shows the commits at which the architecture's meaning changed.
 pub(crate) fn log(file: &Path, limit: usize, format: OutputFormat) -> CommandResult {
     let repository = repository_for(file)?;
@@ -983,7 +1092,11 @@ mod tests {
     #[test]
     fn check_returns_success_when_nothing_is_found() {
         let dir = temp_dir("empty");
-        assert_eq!(check(&dir, false, None).map_or(-1, ExitCode::code), 0);
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        assert_eq!(
+            check(&dir, false, None, &mut recorder).map_or(-1, ExitCode::code),
+            0
+        );
         std::fs::remove_dir_all(&dir).ok();
     }
 
@@ -996,7 +1109,8 @@ mod tests {
         )
         .unwrap();
 
-        let code = check(&dir, false, None).map_or(-1, ExitCode::code);
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        let code = check(&dir, false, None, &mut recorder).map_or(-1, ExitCode::code);
         assert_eq!(code, ExitCode::Failure.code());
 
         std::fs::remove_dir_all(&dir).ok();
@@ -1220,5 +1334,151 @@ nodes:
         assert_eq!(bound, 0, "the 1.0.0 binding should carry over to 2.0.0");
 
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// An architecture with one flagged and one unflagged control.
+    const CLAIMING: &str = "\
+name: audited
+version: 1.0.0
+nodes:
+  - name: orders-db
+    type: database
+    controls:
+      - type: compliance
+        standard: ISO27001-A.10.1
+        description: Encrypted at rest
+        evidence-required: true
+      - type: operational
+        standard: PITR-35D
+        description: Point-in-time recovery for 35 days
+";
+
+    fn write_architecture(label: &str, source: &str) -> (PathBuf, PathBuf) {
+        let dir = temp_dir(label);
+        let file = dir.join("architecture.yaml");
+        std::fs::write(&file, source).expect("write the fixture");
+        (dir, file)
+    }
+
+    #[test]
+    fn the_evidence_register_lists_claims_and_counts_what_is_outstanding() {
+        let (dir, file) = write_architecture("evidence", CLAIMING);
+
+        let code = evidence(&file, EvidenceFormat::Human, None, true, false)
+            .expect("assembling a register cannot fail");
+
+        assert_eq!(code, ExitCode::Success);
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn strict_evidence_fails_when_a_claim_is_outstanding() {
+        // The CI use: a control that says an artefact exists, which nobody has produced,
+        // should be able to fail a pipeline.
+        let (dir, file) = write_architecture("evidence-strict", CLAIMING);
+
+        let code = evidence(&file, EvidenceFormat::Json, None, true, true)
+            .expect("assembling a register cannot fail");
+
+        assert_eq!(code, ExitCode::ValidationErrors);
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn strict_evidence_passes_when_nothing_is_flagged() {
+        let quiet = CLAIMING.replace("        evidence-required: true\n", "");
+        let (dir, file) = write_architecture("evidence-quiet", &quiet);
+
+        let code = evidence(&file, EvidenceFormat::Human, None, true, true)
+            .expect("assembling a register cannot fail");
+
+        assert_eq!(code, ExitCode::Success);
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn an_architecture_outside_a_repository_still_produces_a_register() {
+        // Provenance is unavailable, which is a fact to report rather than a failure.
+        let (dir, file) = write_architecture("evidence-nogit", CLAIMING);
+
+        let provenance = provenance_of(&file);
+        assert_eq!(
+            provenance.source.as_deref(),
+            Some(file.display().to_string().as_str())
+        );
+
+        let code = evidence(&file, EvidenceFormat::Markdown, None, false, false)
+            .expect("a missing repository is not an error");
+        assert_eq!(code, ExitCode::Success);
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn no_history_skips_git_entirely() {
+        let (dir, file) = write_architecture("evidence-nohistory", CLAIMING);
+
+        let code = evidence(&file, EvidenceFormat::Json, None, true, false)
+            .expect("assembling a register cannot fail");
+
+        assert_eq!(code, ExitCode::Success);
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn an_unreadable_architecture_fails_rather_than_producing_an_empty_register() {
+        // A register assembled from nothing would be the most dangerous possible output.
+        let (dir, file) = write_architecture(
+            "evidence-broken",
+            "name: x\nnodes:\n  - name: a\n    type: srvice\n",
+        );
+
+        assert!(evidence(&file, EvidenceFormat::Human, None, true, false).is_err());
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn the_check_sweep_records_a_span_for_every_file() {
+        let dir = temp_dir("check-telemetry");
+        for name in ["a.yaml", "b.yaml"] {
+            std::fs::write(dir.join(name), CLAIMING).expect("write the fixture");
+        }
+
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        let code = check(&dir, false, None, &mut recorder).expect("the sweep runs");
+
+        assert_eq!(code, ExitCode::Success);
+        assert_eq!(recorder.spans().len(), 2, "one span per file");
+        assert!(
+            recorder
+                .spans()
+                .iter()
+                .all(|span| span.name == "check-file")
+        );
+        assert_eq!(
+            recorder
+                .metrics()
+                .iter()
+                .find(|m| m.name == "casm.documents.checked")
+                .map(|m| m.sum),
+            Some(2.0)
+        );
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn a_file_that_does_not_parse_is_an_error_outcome_on_its_span() {
+        let dir = temp_dir("check-telemetry-broken");
+        std::fs::write(
+            dir.join("broken.yaml"),
+            "name: x\nnodes:\n  - name: a\n    type: srvice\n",
+        )
+        .expect("write the fixture");
+
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        let _ = check(&dir, false, None, &mut recorder);
+
+        assert_eq!(recorder.spans().len(), 1);
+        assert_eq!(recorder.spans()[0].outcome, Outcome::Error);
+        std::fs::remove_dir_all(dir).ok();
     }
 }

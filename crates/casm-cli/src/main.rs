@@ -22,6 +22,12 @@
 //! Rule 3 (no panics): `main` never unwraps. Every failure path returns a
 //! [`commands::CommandError`] carrying a message already formatted for the user, which
 //! is printed to standard error before the process exits with code `3`.
+//!
+//! Rule 10 (observability): every run is instrumented, whether or not anybody asked for
+//! the telemetry. Recording costs a timestamp and a push; deciding at the top of `main`
+//! whether to instrument would mean two code paths, one of which is never exercised.
+//! `--telemetry <format>` chooses what to do with what was collected, not whether to
+//! collect it.
 
 #![forbid(unsafe_code)]
 
@@ -30,6 +36,7 @@ mod commands;
 mod exit;
 mod hook;
 
+use casm_telemetry::{Outcome, Recorder, Resource, sink};
 use clap::Parser as _;
 
 use cli::{Cli, Command};
@@ -38,13 +45,45 @@ use exit::ExitCode;
 
 fn main() -> std::process::ExitCode {
     let cli = Cli::parse();
+    let telemetry = cli.telemetry;
+    let name = cli.command.name();
 
-    match dispatch(cli) {
+    let mut recorder = Recorder::new(
+        Resource::new("casm", env!("CARGO_PKG_VERSION")).with_attribute("casm.command", name),
+    );
+
+    let span = recorder.start(name);
+    let result = dispatch(cli, &mut recorder);
+    recorder.finish(span, outcome_of(&result));
+
+    if let Some(format) = telemetry {
+        // Stderr: stdout carries the command's output, and a pipeline parsing it must not
+        // receive timing data mixed in. A telemetry write that fails is reported and does
+        // not change the command's own exit code — the work succeeded either way.
+        if let Err(error) = sink::write(&recorder, format.as_sink_format(), &mut std::io::stderr())
+        {
+            eprintln!("warning: could not write telemetry: {error}");
+        }
+    }
+
+    match result {
         Ok(code) => std::process::ExitCode::from(clamp(code.code())),
         Err(error) => {
             eprintln!("error: {}", error.0);
             std::process::ExitCode::from(clamp(ExitCode::Failure.code()))
         }
+    }
+}
+
+/// How a command's result reads as a span outcome.
+///
+/// Validation findings are *not* an error: the command did its job and reported what it
+/// found. Only a command that could not run is an error, which keeps a trace searchable
+/// for real failures rather than for architectures that need work.
+fn outcome_of(result: &CommandResult) -> Outcome {
+    match result {
+        Ok(_) => Outcome::Ok,
+        Err(_) => Outcome::Error,
     }
 }
 
@@ -57,7 +96,7 @@ fn clamp(code: i32) -> u8 {
 }
 
 /// Routes a parsed command line to its implementation.
-fn dispatch(cli: Cli) -> CommandResult {
+fn dispatch(cli: Cli, recorder: &mut Recorder) -> CommandResult {
     match cli.command {
         Command::Init {
             name,
@@ -99,7 +138,7 @@ fn dispatch(cli: Cli) -> CommandResult {
             directory,
             strict,
             patterns,
-        } => commands::check(&directory, strict, patterns.as_deref()),
+        } => commands::check(&directory, strict, patterns.as_deref(), recorder),
 
         Command::Evolve {
             file,
@@ -147,6 +186,14 @@ fn dispatch(cli: Cli) -> CommandResult {
             output,
         } => commands::formal(&file, target, output.as_deref()),
 
+        Command::Evidence {
+            file,
+            format,
+            patterns,
+            no_history,
+            strict,
+        } => commands::evidence(&file, format, patterns.as_deref(), no_history, strict),
+
         Command::Hook { action } => commands::manage_hook(&action),
 
         Command::Rules { json } => commands::rules(json),
@@ -184,9 +231,53 @@ mod tests {
         assert_eq!(clamp(0), 0);
     }
 
+    fn recorder() -> Recorder {
+        Recorder::new(Resource::new("casm", "test"))
+    }
+
     #[test]
     fn dispatch_routes_the_rules_command() {
         let cli = Cli::try_parse_from(["casm", "rules"]).unwrap();
-        assert_eq!(dispatch(cli).map_or(-1, ExitCode::code), 0);
+        assert_eq!(dispatch(cli, &mut recorder()).map_or(-1, ExitCode::code), 0);
+    }
+
+    #[test]
+    fn every_run_is_instrumented_even_without_the_flag() {
+        // Instrumentation is unconditional; the flag only decides what is done with it.
+        // Two code paths, one of them never exercised, is how telemetry rots.
+        let cli = Cli::try_parse_from(["casm", "rules"]).unwrap();
+        assert!(cli.telemetry.is_none());
+
+        let mut recorder = recorder();
+        let span = recorder.start(cli.command.name());
+        let result = dispatch(cli, &mut recorder);
+        recorder.finish(span, outcome_of(&result));
+
+        assert_eq!(recorder.spans().len(), 1);
+        assert_eq!(recorder.spans()[0].name, "rules");
+    }
+
+    #[test]
+    fn the_telemetry_flag_is_accepted_before_or_after_the_subcommand() {
+        // `global = true`, so a user does not have to remember which side it goes on.
+        for arguments in [
+            ["casm", "--telemetry", "summary", "rules"],
+            ["casm", "rules", "--telemetry", "summary"],
+        ] {
+            let cli = Cli::try_parse_from(arguments).unwrap();
+            assert!(cli.telemetry.is_some(), "{arguments:?}");
+        }
+    }
+
+    #[test]
+    fn a_failing_command_is_an_error_outcome_but_findings_are_not() {
+        // A trace searched for failures must not surface every architecture that has
+        // warnings; those are the command working correctly.
+        assert_eq!(outcome_of(&Ok(ExitCode::Success)), Outcome::Ok);
+        assert_eq!(outcome_of(&Ok(ExitCode::ValidationErrors)), Outcome::Ok);
+        assert_eq!(
+            outcome_of(&Err(commands::CommandError("unreadable".to_owned()))),
+            Outcome::Error
+        );
     }
 }

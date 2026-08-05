@@ -3,7 +3,7 @@ resolver = "3"
 # The fuzz crate needs nightly and libFuzzer; it is built by `cargo fuzz`, not by
 # `cargo build --workspace`.
 exclude = ["fuzz"]
-members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm", "crates/casm-formal"]
+members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm", "crates/casm-formal", "crates/casm-telemetry", "crates/casm-evidence"]
 
 [workspace.package]
 version = "0.2.0"
@@ -27,6 +27,8 @@ casm-diff = { path = "crates/casm-diff", version = "0.2.0" }
 casm-git = { path = "crates/casm-git", version = "0.2.0" }
 casm-wasm = { path = "crates/casm-wasm", version = "0.2.0" }
 casm-formal = { path = "crates/casm-formal", version = "0.2.0" }
+casm-telemetry = { path = "crates/casm-telemetry", version = "0.2.0" }
+casm-evidence = { path = "crates/casm-evidence", version = "0.2.0" }
 
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -41,6 +43,7 @@ indexmap = { version = "2", features = ["serde"] }
 clap = { version = "4", features = ["derive", "wrap_help"] }
 schemars = "1"
 proptest = "1"
+criterion = { version = "0.7", default-features = false, features = ["cargo_bench_support"] }
 
 # NASA Rule 8: deterministic, reproducible builds. Optimise for auditability.
 [profile.release]

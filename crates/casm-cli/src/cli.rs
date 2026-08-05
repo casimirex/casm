@@ -31,6 +31,47 @@ pub(crate) struct Cli {
     /// The subcommand to run.
     #[command(subcommand)]
     pub(crate) command: Command,
+
+    /// Emit telemetry for this run on stderr.
+    ///
+    /// Stderr, not stdout: stdout carries the command's actual output — JSON, SARIF, a
+    /// diagram — and a pipeline parsing it must not receive timing data interleaved.
+    #[arg(long, value_enum, global = true, value_name = "FORMAT")]
+    pub(crate) telemetry: Option<TelemetryFormat>,
+}
+
+/// How telemetry should be rendered on the way out.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub(crate) enum TelemetryFormat {
+    /// A short human summary of where the time went.
+    Summary,
+    /// One JSON object per record, for a log pipeline.
+    Json,
+    /// An OTLP/HTTP JSON document per signal, ready to POST to a collector.
+    Otlp,
+}
+
+impl TelemetryFormat {
+    /// The sink format this selection maps onto.
+    #[must_use]
+    pub(crate) const fn as_sink_format(self) -> casm_telemetry::Format {
+        match self {
+            Self::Summary => casm_telemetry::Format::Summary,
+            Self::Json => casm_telemetry::Format::JsonLines,
+            Self::Otlp => casm_telemetry::Format::Otlp,
+        }
+    }
+}
+
+/// How an evidence register should be rendered.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub(crate) enum EvidenceFormat {
+    /// Aligned plain text for a terminal.
+    Human,
+    /// GitHub-flavoured Markdown, for a ticket or a wiki.
+    Markdown,
+    /// JSON, for a script or a dashboard.
+    Json,
 }
 
 /// How a command should present its results.
@@ -226,6 +267,37 @@ pub(crate) enum Command {
         strict: bool,
     },
 
+    /// Assemble a register of the control claims this architecture makes.
+    ///
+    /// Not evidence that the controls are implemented — a register of what the file
+    /// asserts, who asserted it, and which claims still need an artefact behind them.
+    /// See docs/adr/0013-evidence-is-assembled-not-asserted.md.
+    Evidence {
+        /// The architecture file to assemble a register for.
+        #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
+        file: PathBuf,
+
+        /// How to present the register.
+        #[arg(short, long, value_enum, default_value_t = EvidenceFormat::Human)]
+        format: EvidenceFormat,
+
+        /// A directory of pattern files, so conformance can corroborate a standard.
+        #[arg(long, value_name = "DIR")]
+        patterns: Option<PathBuf>,
+
+        /// Do not read Git history, so the register carries no provenance.
+        ///
+        /// History is read by default because attribution is most of what makes a claim
+        /// checkable. This exists for a file outside a repository, and for a run that must
+        /// not touch the object store.
+        #[arg(long)]
+        no_history: bool,
+
+        /// Exit with a failure code if any claim is outstanding.
+        #[arg(long)]
+        strict: bool,
+    },
+
     /// Reformat or convert an architecture file between YAML, JSON, and TOML.
     Fmt {
         /// The architecture file to reformat.
@@ -361,6 +433,34 @@ pub(crate) enum HookAction {
     Uninstall,
     /// Report whether the hook is installed.
     Status,
+}
+
+impl Command {
+    /// The subcommand's name, as a span and metric label.
+    ///
+    /// Spelled out rather than derived from `Debug`: these strings are the dimension a
+    /// telemetry backend groups by, so they are a contract, and a rename would silently
+    /// split one series into two.
+    #[must_use]
+    pub(crate) const fn name(&self) -> &'static str {
+        match self {
+            Self::Init { .. } => "init",
+            Self::Validate { .. } => "validate",
+            Self::Generate { .. } => "generate",
+            Self::Diff { .. } => "diff",
+            Self::Check { .. } => "check",
+            Self::Evolve { .. } => "evolve",
+            Self::Evidence { .. } => "evidence",
+            Self::Fmt { .. } => "fmt",
+            Self::Drift { .. } => "drift",
+            Self::Log { .. } => "log",
+            Self::Blame { .. } => "blame",
+            Self::Checkout { .. } => "checkout",
+            Self::Formal { .. } => "formal",
+            Self::Hook { .. } => "hook",
+            Self::Rules { .. } => "rules",
+        }
+    }
 }
 
 #[cfg(test)]
@@ -535,6 +635,19 @@ mod tests {
     #[test]
     fn an_unknown_subcommand_is_rejected() {
         assert!(Cli::try_parse_from(["casm", "teleport"]).is_err());
+    }
+
+    #[test]
+    fn every_subcommand_has_a_telemetry_name_matching_its_command_line_name() {
+        // The names are a metric dimension, so a drift between them would attribute a
+        // run to the wrong series.
+        for subcommand in Cli::command().get_subcommands() {
+            let expected = subcommand.get_name();
+            let parsed = Cli::try_parse_from(["casm", expected]);
+            if let Ok(cli) = parsed {
+                assert_eq!(cli.command.name(), expected);
+            }
+        }
     }
 
     #[test]

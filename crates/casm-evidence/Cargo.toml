@@ -1,0 +1,25 @@
+[package]
+name = "casm-evidence"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "CASIMIR compliance evidence: assemble the control claims an architecture makes, and their provenance"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+casm-core.workspace = true
+serde.workspace = true
+
+# Deliberately not `casm-git`. Provenance is an input this crate defines, so assembly stays
+# a pure function: no repository, no `gix`, and therefore reachable from the WebAssembly
+# build. See docs/adr/0013-evidence-is-assembled-not-asserted.md.
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints]
+workspace = true

@@ -133,6 +133,7 @@ warning-free architecture — CI validates it on every push.
 | `casm formal` | Export a TLA+ or Alloy specification |
 | `casm hook` | Install a pre-commit hook that validates before you commit |
 | `casm evolve` | Report what an architecture must change to conform to a pattern |
+| `casm evidence` | Assemble a register of the control claims the architecture makes |
 | `casm check` | Validate every architecture file under a directory |
 | `casm fmt` | Reformat or convert between YAML, JSON, and TOML |
 | `casm rules` | List the built-in rules |
@@ -456,6 +457,8 @@ casm-core         domain — entities and invariants, no I/O
   ├── casm-diff          domain × domain → semantic changes, and drift vs reality
   ├── casm-git           domain × Git history → what actually changed, and when
   ├── casm-formal        domain → TLA+ and Alloy specifications
+  ├── casm-evidence      domain × provenance → a register of control claims
+  ├── casm-telemetry     spans, counters, and events; OTLP on the way out
   ├── casm-cli           the `casm` binary
   ├── casm-lsp           the `casm-lsp` language server
   └── casm-wasm          the browser and edge runtime
@@ -477,6 +480,8 @@ Dependencies point strictly inward. Full reasoning in
 | [0009](docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
 | [0010](docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred, not abandoned |
 | [0011](docs/adr/0011-what-a-formal-model-of-an-architecture-means.md) | What a formal model of an architecture means |
+| [0012](docs/adr/0012-patterns-are-shapes-not-templates.md) | A pattern is a shape to conform to, not a template to stamp |
+| [0013](docs/adr/0013-evidence-is-assembled-not-asserted.md) | An evidence pack assembles claims; it does not assert they are true |
 
 ### Engineering rules
 
@@ -503,6 +508,46 @@ The parser is the surface most exposed to untrusted input, so it is fuzzed rathe
 merely tested. Four `cargo-fuzz` targets cover parsing, validation and rendering, the
 editor analysis, and the emit/parse round trip — the last asserting a *property*, not just
 the absence of a panic. CI runs a short campaign on every push.
+
+---
+
+## Compliance and observability
+
+`casm evidence` assembles a register of the controls your architecture **claims**, grouped
+by the standard each cites, with the commit and author behind it and a fingerprint the
+reader can recompute.
+
+```console
+$ casm evidence architecture.yaml --patterns patterns --strict
+```
+
+It is not evidence, and it says so in its first sentence. CASIMIR holds no log excerpt, no
+configuration export, no signed attestation — it has a file in which somebody wrote a
+control down. A control flagged `evidence-required: true` is reported as **outstanding**,
+never satisfied, because the gap between "we wrote it down" and "we can show it works" is
+the thing a compliance programme is actually managing. An architecture that flags nothing is
+reported as *silent* rather than complete.
+[ADR-0013](docs/adr/0013-evidence-is-assembled-not-asserted.md) records why generating a
+document labelled "SOC2 evidence" from assertions is the one thing this will not do.
+
+Every run is instrumented, and `--telemetry summary|json|otlp` decides what happens to what
+was collected:
+
+```console
+$ casm check examples --telemetry summary
+timings (18c8d7ce7b4800e3c70012de73eb1318)
+    check-file                       1.874 ms  ok
+  check                            2.622 ms  ok
+```
+
+Output goes to stderr, so a pipeline parsing stdout is unaffected. `otlp` emits the
+OTLP/HTTP JSON a collector expects — without the OpenTelemetry SDK, which would bring a
+hundred crates and an async runtime to a program that exits in milliseconds. A span costs
+about 60 ns against a 70 µs parse-and-validate: under a tenth of a percent, measured on
+every CI run rather than claimed.
+
+There is no audit-log implementation, because Git is one and `casm log` already reads it
+semantically.
 
 ---
 
@@ -537,7 +582,12 @@ files and demotes the registry from prerequisite to distribution mechanism. Sign
 content addressing, and a hub API remain open — a pattern already carries a fingerprint,
 which is what content addressing needs.
 
-Phase 11 (OpenTelemetry) remains documented direction, not shipped code.
+Phase 11 ships as `casm evidence`, `--telemetry`, and a benchmark suite. Three of its
+deliverables are deliberately absent rather than unfinished: the audit trail is Git, which
+`casm log` already reads; the durable telemetry queue is a bounded buffer that reports what
+it dropped, because a write-ahead log in a process that exits in milliseconds is machinery
+that can itself fail; and the risk heatmap and SIEM export are product surface for a hosted
+service that does not exist.
 
 ---
 

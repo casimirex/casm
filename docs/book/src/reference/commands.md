@@ -43,6 +43,16 @@ Validate every architecture file found, identified by content rather than filena
 
 `--strict` · `--patterns <dir>`
 
+## `casm evidence [file]`
+
+Assemble a register of the control claims the architecture makes, grouped by standard, with
+provenance from Git.
+
+Reports claims, never satisfaction: a control flagged `evidence-required` is listed as
+outstanding. See [ADR-0013](decisions.md).
+
+`--format human|markdown|json` · `--patterns <dir>` · `--no-history` · `--strict`
+
 ## `casm evolve [file]`
 
 Report what the architecture must change to conform to a pattern. Reports; does not

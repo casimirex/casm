@@ -7,6 +7,58 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+### Added
+
+- **Compliance evidence** (roadmap Phase 11). `casm evidence` assembles a register of the
+  controls an architecture *claims*, grouped by the standard each cites, with the commit
+  and author behind it and a fingerprint the reader can recompute.
+  - `casm-evidence` depends on `casm-core` and nothing else. Provenance is an input type
+    the crate defines rather than `casm_git::Revision`, so assembly is a pure function and
+    reaches the WebAssembly build.
+  - A control flagged `evidence-required: true` is reported as **outstanding**, never
+    satisfied. An architecture that flags nothing is reported as *silent* rather than
+    complete, because the two look identical in a tally and mean opposite things.
+  - Human, Markdown, and JSON output. Every rendering opens with one sentence stating that
+    CASIMIR verified the structure and not the reality, and no rendering says "satisfied",
+    "compliant", or "verified" of any control.
+  - `--strict` fails a pipeline while any claim is outstanding; `--no-history` skips Git
+    for a file outside a repository or a shallow checkout.
+  - See [ADR-0013](docs/adr/0013-evidence-is-assembled-not-asserted.md), which records why
+    generating a document labelled "SOC2 evidence" from assertions alone is the one thing
+    this will not do.
+
+- **Telemetry** (roadmap Phase 11). Every run is instrumented; `--telemetry
+  summary|json|otlp` decides what happens to what was collected, not whether to collect it.
+  - `casm-telemetry` provides spans, counters, histograms, and structured events with
+    nanosecond UTC timestamps, over a pluggable sink.
+  - OTLP/HTTP JSON is encoded directly rather than through the OpenTelemetry SDK, which
+    would add roughly a hundred transitive crates and an async runtime to a program that
+    exits in milliseconds. The cost is stated plainly: the encoding is verified against the
+    specification's field names, not against a live collector.
+  - Output goes to **stderr**, so a pipeline parsing stdout is unaffected.
+  - `casm check` opens a span per file, which is where a slow document is worth finding.
+
+- **Benchmarks.** Criterion benches for parse, validate, fingerprint, render, diff, emit,
+  and evidence assembly, plus a CI gate that compiles them and asserts the telemetry
+  overhead ceiling.
+
+### Changed
+
+- `casm_telemetry::Span::name` is a `Cow<'static, str>` and `span_id` a `SpanId` newtype
+  over `u64`, rendered to hexadecimal only when serialised. Removing four allocations per
+  span cut its cost from about 230 ns to about 60 ns.
+
+### Known limitations
+
+- The OTLP encoding is asserted by shape, not by acceptance. A CI job running a real
+  collector would close that gap and is not built.
+- There is no network exporter. An HTTP client, TLS, and a retry policy are three
+  dependencies and three failure modes inside a tool that validates a file; the payload is
+  what a collector expects, and delivering it is the caller's business.
+- Telemetry is retained in a bounded buffer rather than a durable queue. Records past the
+  ceiling are dropped and **counted**, and every format reports the count, so a truncated
+  run is never indistinguishable from a complete one.
+
 ## [0.2.0] — 2026-08-05
 
 Patterns, everywhere CASIMIR runs. Roadmap Phase 7, plus the editor and browser halves of

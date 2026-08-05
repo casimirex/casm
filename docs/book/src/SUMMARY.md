@@ -14,6 +14,8 @@
 - [Find when a node actually changed](how-to/read-history.md)
 - [Prove a property with a model checker](how-to/prove-a-property.md)
 - [Conform to a pattern](how-to/conform-to-a-pattern.md)
+- [Assemble a claims register for an auditor](how-to/assemble-an-evidence-pack.md)
+- [Collect telemetry from a run](how-to/collect-telemetry.md)
 - [Set up your editor](how-to/set-up-your-editor.md)
 
 # Explanation

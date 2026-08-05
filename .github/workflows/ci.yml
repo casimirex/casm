@@ -232,7 +232,25 @@ jobs:
       - run: mdbook build
         working-directory: docs/book
 
-  # Gate 14: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 14: the benchmarks must compile, and the telemetry overhead ceiling must hold.
+  #
+  # Not a gate on absolute timings. A shared runner's throughput varies by more than any
+  # regression worth catching, so a threshold tight enough to be useful would fail
+  # constantly. What is asserted is a *ratio* — the cost of a span against the cost of the
+  # operation it wraps — which survives a slow machine, and the fact that every benchmark
+  # still builds, which is what actually rots.
+  bench:
+    name: benchmarks (build + overhead)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo bench --workspace --no-run
+      - name: telemetry stays under the roadmap's 5% ceiling
+        run: cargo test -p casm-telemetry --release --test overhead
+
+  # Gate 15: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)
@@ -245,3 +263,6 @@ jobs:
       # The example claims conformance to the example pattern, so `evolve` reporting
       # anything unmet means one of the two drifted from the other.
       - run: cargo run -p casm-cli -- evolve examples/storefront.yaml --patterns patterns --strict
+      # The evidence register must assemble for the example. `--no-history` because the
+      # checkout is shallow, so provenance would be missing rather than wrong.
+      - run: cargo run -p casm-cli -- evidence examples/storefront.yaml --patterns patterns --no-history

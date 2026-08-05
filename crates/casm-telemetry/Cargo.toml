@@ -1,0 +1,37 @@
+[package]
+name = "casm-telemetry"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "CASIMIR observability: spans, counters, and structured events, exportable as OTLP JSON"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+
+# Deliberately not `opentelemetry`. The SDK brings roughly a hundred transitive crates and
+# an async runtime to a program that runs for milliseconds and exits; what makes telemetry
+# useful to anyone else is the OTLP *wire shape*, which this crate encodes directly. See
+# docs/adr/0013-evidence-is-assembled-not-asserted.md.
+
+[dev-dependencies]
+criterion.workspace = true
+serde_json.workspace = true
+
+# The overhead test measures instrumentation against *real* work — parsing and validating
+# an architecture — rather than a synthetic loop, which the optimiser is entitled to hoist
+# and which measures nothing when it does. Dev-only, so nothing here reaches a consumer.
+casm-parser.workspace = true
+casm-validator.workspace = true
+
+[[bench]]
+name = "telemetry"
+harness = false
+
+[lints]
+workspace = true

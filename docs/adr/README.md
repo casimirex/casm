@@ -17,6 +17,8 @@ with no downsides has not finished thinking.
 | [0009](0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity, not a byte identity | Accepted |
 | [0010](0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred, not abandoned | Accepted |
 | [0011](0011-what-a-formal-model-of-an-architecture-means.md) | An architecture models failure propagation; each tool proves a different class of property | Accepted |
+| [0012](0012-patterns-are-shapes-not-templates.md) | A pattern is a shape to conform to, not a template to stamp | Accepted |
+| [0013](0013-evidence-is-assembled-not-asserted.md) | An evidence pack assembles claims; it does not assert they are true | Accepted |
 
 ## Adding one
 
