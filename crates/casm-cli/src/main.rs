@@ -36,7 +36,7 @@ mod commands;
 mod exit;
 mod hook;
 
-use casm_telemetry::{Outcome, Recorder, Resource, sink};
+use casm_telemetry::{Outcome, Recorder, Resource, Severity, sink};
 use clap::Parser as _;
 
 use cli::{Cli, Command};
@@ -54,6 +54,10 @@ fn main() -> std::process::ExitCode {
 
     let span = recorder.start(name);
     let result = dispatch(cli, &mut recorder);
+
+    // Recorded before the span closes, so it carries the span id and a log pipeline can
+    // correlate the line with the trace.
+    recorder.event(severity_of(&result), summarise(name, &result));
     recorder.finish(span, outcome_of(&result));
 
     if let Some(format) = telemetry {
@@ -84,6 +88,28 @@ fn outcome_of(result: &CommandResult) -> Outcome {
     match result {
         Ok(_) => Outcome::Ok,
         Err(_) => Outcome::Error,
+    }
+}
+
+/// How a command's result reads as an event severity.
+///
+/// Deliberately different from [`outcome_of`]. The span outcome answers "did the tool
+/// work"; the event severity answers "what did it find", which is what somebody filtering
+/// a log stream is asking. An architecture with errors is a healthy run of `casm` and an
+/// `ERROR` line in the log, and both readings are correct.
+fn severity_of(result: &CommandResult) -> Severity {
+    match result {
+        Ok(ExitCode::Success) => Severity::Info,
+        Ok(ExitCode::Warnings) => Severity::Warn,
+        Ok(ExitCode::ValidationErrors | ExitCode::Failure) | Err(_) => Severity::Error,
+    }
+}
+
+/// One line describing how the command ended, for a log stream.
+fn summarise(name: &'static str, result: &CommandResult) -> String {
+    match result {
+        Ok(code) => format!("{name} finished with exit code {}", code.code()),
+        Err(error) => format!("{name} failed: {}", error.0),
     }
 }
 
@@ -267,6 +293,40 @@ mod tests {
             let cli = Cli::try_parse_from(arguments).unwrap();
             assert!(cli.telemetry.is_some(), "{arguments:?}");
         }
+    }
+
+    #[test]
+    fn every_run_records_one_event_correlated_with_its_span() {
+        // Without this the logs signal is empty, and "the collector accepted our logs"
+        // would be a vacuous claim — an OTLP receiver ignores unknown fields, so an empty
+        // request and a completely wrong encoding both answer 200.
+        let cli = Cli::try_parse_from(["casm", "rules"]).unwrap();
+        let mut recorder = recorder();
+
+        let span = recorder.start(cli.command.name());
+        let result = dispatch(cli, &mut recorder);
+        recorder.event(severity_of(&result), summarise("rules", &result));
+        recorder.finish(span, outcome_of(&result));
+
+        assert_eq!(recorder.events().len(), 1);
+        assert_eq!(
+            recorder.events()[0].span_id,
+            Some(recorder.spans()[0].span_id)
+        );
+        assert!(recorder.events()[0].message.contains("rules finished"));
+    }
+
+    #[test]
+    fn event_severity_reports_findings_where_the_span_outcome_reports_health() {
+        // The two answer different questions, and a run that found errors is a healthy
+        // run of the tool.
+        assert_eq!(severity_of(&Ok(ExitCode::Success)), Severity::Info);
+        assert_eq!(severity_of(&Ok(ExitCode::Warnings)), Severity::Warn);
+        assert_eq!(
+            severity_of(&Ok(ExitCode::ValidationErrors)),
+            Severity::Error
+        );
+        assert_eq!(outcome_of(&Ok(ExitCode::ValidationErrors)), Outcome::Ok);
     }
 
     #[test]

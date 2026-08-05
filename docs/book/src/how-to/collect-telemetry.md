@@ -48,6 +48,12 @@ There is **no network exporter**, deliberately. An HTTP client, TLS, and a retry
 three dependencies and three failure modes inside a tool whose job is to validate a file.
 The payload is exactly what a collector expects; delivering it is your pipeline's business.
 
+"Exactly what a collector expects" is checked rather than asserted: CI runs an
+OpenTelemetry Collector, posts each signal, and compares the collector's own counters
+against what was sent. The counter comparison is the point — an OTLP receiver ignores
+unknown fields, so a payload with entirely wrong field names decodes to an empty request
+and is answered with 200. Acceptance proves nothing on its own.
+
 ## It goes to stderr
 
 Always. Stdout carries the command's actual output — JSON, SARIF, a diagram — and a

@@ -12,13 +12,17 @@
 //! not the machinery that produces it — so the wire shape is what this crate implements.
 //! See `docs/adr/0013-evidence-is-assembled-not-asserted.md`.
 //!
-//! # What that costs, stated plainly
+//! # Verified against a real collector, not just against the specification
 //!
-//! These structures are checked against the OTLP specification's field names, not against
-//! a running collector. If the JSON encoding changes, nothing here will notice until
-//! somebody points it at a collector and it is rejected. The tests assert the shape; they
-//! cannot assert acceptance. A CI job running a real collector would close that gap and is
-//! not built.
+//! The tests below assert the shape — field names, string-encoded integers, the nesting a
+//! receiver requires. That alone could not catch an encoding a collector refuses, so
+//! `scripts/verify-otlp.sh` posts the output of a real `casm` run to an
+//! OpenTelemetry Collector on every CI run.
+//!
+//! It compares the collector's **own counters** against what was sent, which matters more
+//! than it sounds: an OTLP receiver ignores unknown fields, so a payload whose field names
+//! were entirely wrong decodes to an empty request and is answered with 200. Acceptance is
+//! not evidence of correctness; agreement about how many records arrived is.
 //!
 //! # The shape
 //!

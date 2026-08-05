@@ -95,10 +95,14 @@ the one the phase title promises.
 as "initial import" attributes every control to that commit and that author, which is true
 and unhelpful. CASIMIR cannot improve on the history it is given.
 
-**Bad.** Hand-rolling the OTLP encoding means it is verified against the specification's
-field names rather than against a live collector. If the OTLP JSON schema changes, nothing
-here will notice until somebody points it at a collector and it is rejected. The tests
-assert the shape; they cannot assert acceptance.
+**Mitigated.** Hand-rolling the OTLP encoding would have meant verifying it against the
+specification's field names rather than against a live collector, so `scripts/verify-otlp.sh`
+runs one in CI: it posts each signal from a real `casm` run and compares the collector's own
+counters against what was sent. The counter comparison is the load-bearing part — an OTLP
+receiver ignores unknown fields, so a wholly wrong payload is answered with 200, and
+acceptance alone would have proved nothing. What remains uncovered is a *future* collector
+changing its decoding; the check pins one version, and a newer one is only exercised when
+somebody bumps it.
 
 **Bad.** `evidence-required` is a per-control opt-in, so an architecture that never sets it
 produces a pack with nothing outstanding — which looks like completeness and is really

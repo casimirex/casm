@@ -250,7 +250,23 @@ jobs:
       - name: telemetry stays under the roadmap's 5% ceiling
         run: cargo test -p casm-telemetry --release --test overhead
 
-  # Gate 15: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 15: the OTLP output must be accepted by a real collector.
+  #
+  # `casm-telemetry` encodes OTLP by hand rather than through the SDK, so its unit tests
+  # can only assert the shape against the specification's field names. That cannot catch an
+  # encoding a collector refuses — and a 200 alone would not either, because an OTLP
+  # receiver ignores unknown fields and decodes a wholly wrong payload to an empty request.
+  # The script therefore compares the collector's own counters against what was sent.
+  otlp:
+    name: otlp (real collector)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: ./scripts/verify-otlp.sh
+
+  # Gate 16: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)

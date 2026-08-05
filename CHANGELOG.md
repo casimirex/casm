@@ -33,8 +33,13 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
     nanosecond UTC timestamps, over a pluggable sink.
   - OTLP/HTTP JSON is encoded directly rather than through the OpenTelemetry SDK, which
     would add roughly a hundred transitive crates and an async runtime to a program that
-    exits in milliseconds. The cost is stated plainly: the encoding is verified against the
-    specification's field names, not against a live collector.
+    exits in milliseconds. CI verifies the output against a real OpenTelemetry Collector —
+    posting each signal and comparing the collector's own counters against what was sent,
+    because an OTLP receiver ignores unknown fields and would answer 200 to a wholly wrong
+    payload.
+  - Every run records one event summarising how it ended, correlated with its span. The
+    span outcome answers "did the tool work"; the event severity answers "what did it
+    find", so an architecture with errors is a healthy run and an `ERROR` log line.
   - Output goes to **stderr**, so a pipeline parsing stdout is unaffected.
   - `casm check` opens a span per file, which is where a slow document is worth finding.
 
@@ -50,8 +55,6 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ### Known limitations
 
-- The OTLP encoding is asserted by shape, not by acceptance. A CI job running a real
-  collector would close that gap and is not built.
 - There is no network exporter. An HTTP client, TLS, and a retry policy are three
   dependencies and three failure modes inside a tool that validates a file; the payload is
   what a collector expects, and delivering it is the caller's business.

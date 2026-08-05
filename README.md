@@ -542,9 +542,12 @@ timings (18c8d7ce7b4800e3c70012de73eb1318)
 
 Output goes to stderr, so a pipeline parsing stdout is unaffected. `otlp` emits the
 OTLP/HTTP JSON a collector expects — without the OpenTelemetry SDK, which would bring a
-hundred crates and an async runtime to a program that exits in milliseconds. A span costs
-about 60 ns against a 70 µs parse-and-validate: under a tenth of a percent, measured on
-every CI run rather than claimed.
+hundred crates and an async runtime to a program that exits in milliseconds. CI posts that
+output to a real collector and compares its counters against what was sent, because an OTLP
+receiver ignores unknown fields and would answer 200 to a wholly wrong payload.
+
+A span costs about 60 ns against a 70 µs parse-and-validate: under a tenth of a percent,
+measured on every CI run rather than claimed.
 
 There is no audit-log implementation, because Git is one and `casm log` already reads it
 semantically.
