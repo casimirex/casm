@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace && with || in Library::load
+@@ -360,17 +360,17 @@
+         // Sorted, so that a duplicate-definition error names the same file every run.
+         let mut files: Vec<PathBuf> = Vec::new();
+         for entry in entries {
+             let entry = entry.map_err(|error| ParseError::Io {
+                 path: directory.to_path_buf(),
+                 message: error.to_string(),
+             })?;
+             let path = entry.path();
+-            if path.is_file() && Format::from_path(&path).is_some() {
++            if path.is_file() || /* ~ changed by cargo-mutants ~ */ Format::from_path(&path).is_some() {
+                 files.push(path);
+             }
+         }
+         files.sort();
+ 
+         if files.len() > MAX_LIBRARY_PATTERNS {
+             return Err(ParseError::TooManyPatterns {
+                 path: directory.to_path_buf(),

@@ -300,6 +300,23 @@ mod tests {
     }
 
     #[test]
+    fn a_syntax_error_reports_where_it_happened() {
+        // The existing accessor test only asserts the *absent* case, so `location`
+        // returning `None` for everything survived — and an editor anchors its squiggle
+        // on exactly this.
+        let err = ParseError::Syntax {
+            path: PathBuf::from("a.yaml"),
+            location: Location::new(7, 22),
+            message: "unexpected character".into(),
+            suggestion: None,
+        };
+
+        let location = err.location().expect("a syntax error knows its position");
+        assert_eq!(location.line, 7);
+        assert_eq!(location.column, 22);
+    }
+
+    #[test]
     fn accessors_agree_with_the_variant() {
         let err = ParseError::UnresolvedReference {
             path: PathBuf::from("a.yaml"),

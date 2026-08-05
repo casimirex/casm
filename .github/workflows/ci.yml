@@ -386,7 +386,11 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-mutants --locked
       - name: sweep
-        run: cargo mutants -j 4 --in-place --no-shuffle
+        # Not `--in-place`: it is mutually exclusive with `--jobs`, and parallelism is
+        # worth more than the disk a scratch copy costs on a forty-minute sweep. The first
+        # dispatch of this job failed on exactly that combination — flags that had never
+        # been run together, in a job that until then had never been run at all.
+        run: cargo mutants -j 4 --no-shuffle
       - uses: actions/upload-artifact@v4
         if: always()
         with:

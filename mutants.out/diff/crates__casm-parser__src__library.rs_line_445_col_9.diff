@@ -1,0 +1,24 @@
+--- crates/casm-parser/src/library.rs
++++ replace Library::source_of -> Option<&Path> with None
+@@ -437,20 +437,17 @@
+             .iter()
+             .find(|(pattern, _)| reference.matches(pattern))
+             .map(|(pattern, _)| pattern)
+     }
+ 
+     /// The file a pattern was loaded from, if it came from one.
+     #[must_use]
+     pub fn source_of(&self, reference: &PatternRef) -> Option<&Path> {
+-        self.patterns
+-            .iter()
+-            .find(|(pattern, _)| reference.matches(pattern))
+-            .map(|(_, path)| path.as_path())
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Every version of `name` the library holds, in load order.
+     pub fn versions_of<'a>(&'a self, name: &'a str) -> impl Iterator<Item = &'a Pattern> {
+         self.patterns()
+             .filter(move |pattern| pattern.name().as_str() == name)
+     }
+ 

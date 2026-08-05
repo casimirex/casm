@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/document.rs
++++ replace default_version -> String with "xyzzy".into()
+@@ -51,17 +51,17 @@
+ use std::collections::BTreeMap;
+ use std::path::Path;
+ 
+ use crate::error::ParseError;
+ use crate::suggest;
+ 
+ /// The default architecture version when a document omits one.
+ fn default_version() -> String {
+-    "0.1.0".to_owned()
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// An interface as written by a human.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct InterfaceDoc {
+     /// The interface's name, unique within its node.
+     pub name: String,

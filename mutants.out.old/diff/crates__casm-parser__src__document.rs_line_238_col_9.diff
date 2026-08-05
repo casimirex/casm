@@ -1,0 +1,53 @@
+--- crates/casm-parser/src/document.rs
++++ replace NodeDoc::resolve -> Result<Node, ParseError> with Ok(Default::default())
+@@ -230,49 +230,17 @@
+     /// Arbitrary key/value annotations.
+     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+     pub metadata: BTreeMap<String, String>,
+ }
+ 
+ impl NodeDoc {
+     /// Resolves this document fragment into a validated [`Node`].
+     fn resolve(&self, path: &Path) -> Result<Node, ParseError> {
+-        let mut config = NodeConfig::new()
+-            .name(self.name.clone())
+-            .node_type(self.node_type);
+-
+-        if let Some(raw_id) = &self.id {
+-            let id = NodeId::parse(raw_id).map_err(|error| ParseError::Semantic {
+-                path: path.to_path_buf(),
+-                message: format!("node '{}': {error}", self.name),
+-                suggestion: Some(
+-                    "omit 'id' to have CASIMIR generate a valid UUIDv7 for you".to_owned(),
+-                ),
+-            })?;
+-            config = config.id(id);
+-        }
+-
+-        if let Some(description) = &self.description {
+-            config = config.description(description.clone());
+-        }
+-        for interface in &self.interfaces {
+-            config = config.interface(interface.resolve(path, &self.name)?);
+-        }
+-        for control in &self.controls {
+-            config = config.control(control.resolve(path, &format!("node '{}'", self.name))?);
+-        }
+-        for (key, value) in &self.metadata {
+-            config = config.metadata(key.clone(), value.clone());
+-        }
+-
+-        config.build().map_err(|error| ParseError::Semantic {
+-            path: path.to_path_buf(),
+-            message: error.to_string(),
+-            suggestion: None,
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders a validated [`Node`] back into authoring form.
+     fn from_node(node: &Node) -> Self {
+         Self {
+             name: node.name().as_str().to_owned(),
+             node_type: node.node_type(),
+             // The id is always emitted: without it a round-trip would mint new ids and

@@ -1,17 +1,4 @@
-crates/casm-validator/src/lib.rs:130:9: replace Validator::patterns -> &[Pattern] with Vec::leak(Vec::new())
-crates/casm-validator/src/graph.rs:121:30: replace > with >= in DependencyGraph::critical_path_ms
-crates/casm-validator/src/graph.rs:171:9: replace DependencyGraph::contains -> bool with true
-crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with String::new()
-crates/casm-validator/src/rules.rs:58:9: replace RuleContext<'_>::name_of -> String with "xyzzy".into()
-crates/casm-validator/src/rules.rs:88:9: replace <impl Rule for NoDependencyCycles>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:128:9: replace <impl Rule for NoPubliclyExposedDatastores>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:178:9: replace <impl Rule for ServicesRequireSecurityControls>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:226:9: replace <impl Rule for StatefulNodesRequireControls>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:263:9: replace <impl Rule for CriticalPathWithinBudget>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:305:9: replace <impl Rule for BoundaryCrossingsRequireControls>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:350:9: replace <impl Rule for NoIsolatedNodes>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:355:46: replace < with <= in <impl Rule for NoIsolatedNodes>::check
-crates/casm-validator/src/rules.rs:385:9: replace <impl Rule for SyncTargetsShouldDeclareInterfaces>::description -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with ""
-crates/casm-validator/src/rules.rs:429:9: replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with "xyzzy"
-crates/casm-validator/src/rules.rs:433:9: replace <impl Rule for PatternsAreSatisfied>::description -> &'static str with "xyzzy"
+crates/casm-parser/src/document.rs:477:69: replace == with != in NodeIndex<'a>::lookup
+crates/casm-parser/src/library.rs:310:23: replace > with == in read_bounded
+crates/casm-parser/src/library.rs:310:23: replace > with >= in read_bounded
+crates/casm-parser/src/suggest.rs:46:23: replace + with * in edit_distance

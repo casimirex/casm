@@ -1,0 +1,40 @@
+--- crates/casm-parser/src/lib.rs
++++ replace deserialize_as -> Result<T> with Ok(Default::default())
+@@ -189,36 +189,17 @@
+ /// thing that differs between them is what `serde` is asked to build — the line/column
+ /// extraction and the "did you mean" inference are identical, and a second copy of them
+ /// would drift.
+ fn deserialize_as<T: serde::de::DeserializeOwned>(
+     source: &str,
+     path: &Path,
+     format: Format,
+ ) -> Result<T> {
+-    match format {
+-        Format::Yaml => serde_yaml_ng::from_str::<T>(source).map_err(|error| {
+-            let location = error.location().map_or_else(Location::start, |loc| {
+-                Location::new(loc.line(), loc.column())
+-            });
+-            syntax_error(path, location, &error.to_string())
+-        }),
+-
+-        Format::Json => serde_json::from_str::<T>(source).map_err(|error| {
+-            let location = Location::new(error.line(), error.column());
+-            syntax_error(path, location, &error.to_string())
+-        }),
+-
+-        Format::Toml => toml::from_str::<T>(source).map_err(|error| {
+-            let location = error.span().map_or_else(Location::start, |span| {
+-                offset_to_location(source, span.start)
+-            });
+-            syntax_error(path, location, error.message())
+-        }),
+-    }
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds a [`ParseError::Syntax`], inferring a fix hint from the serde message.
+ fn syntax_error(path: &Path, location: Location, message: &str) -> ParseError {
+     ParseError::Syntax {
+         path: path.to_path_buf(),
+         location,
+         message: message.to_owned(),

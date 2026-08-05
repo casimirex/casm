@@ -1,0 +1,27 @@
+--- crates/casm-parser/src/document.rs
++++ replace ControlDoc::from_control -> Self with Default::default()
+@@ -191,23 +191,17 @@
+             control = control.with_tag(tag.clone());
+         }
+ 
+         Ok(control)
+     }
+ 
+     /// Renders a validated [`Control`] back into authoring form.
+     fn from_control(control: &Control) -> Self {
+-        Self {
+-            control_type: control.control_type(),
+-            standard: control.standard().to_owned(),
+-            description: control.description().to_owned(),
+-            evidence_required: control.evidence_required(),
+-            tags: control.tags().to_vec(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A node as written by a human.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct NodeDoc {
+     /// The node's name, unique within the architecture.

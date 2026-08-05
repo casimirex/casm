@@ -1,0 +1,37 @@
+--- crates/casm-parser/src/library.rs
++++ replace PatternDoc::from_pattern -> Self with Default::default()
+@@ -231,33 +231,17 @@
+             message: error.to_string(),
+             suggestion: role_hint(&error, &self.requirements),
+         })
+     }
+ 
+     /// Renders a validated [`Pattern`] back into authoring form.
+     #[must_use]
+     pub fn from_pattern(pattern: &Pattern) -> Self {
+-        Self {
+-            name: pattern.name().as_str().to_owned(),
+-            version: pattern.version().to_string(),
+-            description: pattern.description().map(ToOwned::to_owned),
+-            requirements: pattern
+-                .requirements()
+-                .iter()
+-                .map(RequirementDoc::from_requirement)
+-                .collect(),
+-            relationships: pattern
+-                .relationships()
+-                .iter()
+-                .map(RequiredRelationshipDoc::from_relationship)
+-                .collect(),
+-            satisfies: pattern.satisfies().to_vec(),
+-            metadata: pattern.metadata().clone(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Suggests the intended role when a relationship names one that does not exist.
+ fn role_hint(
+     error: &casm_core::error::PatternError,
+     declared: &[RequirementDoc],
+ ) -> Option<String> {

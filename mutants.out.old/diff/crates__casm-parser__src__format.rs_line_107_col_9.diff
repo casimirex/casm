@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/format.rs
++++ replace Format::resolve -> Self with Default::default()
+@@ -99,17 +99,17 @@
+             .lines()
+             .map(str::trim)
+             .find(|line| !line.is_empty() && !line.starts_with('#') && !line.starts_with("---"))
+     }
+ 
+     /// Resolves the format for a path, falling back to sniffing its contents.
+     #[must_use]
+     pub fn resolve(path: &Path, source: &str) -> Self {
+-        Self::from_path(path).unwrap_or_else(|| Self::sniff(source))
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl core::fmt::Display for Format {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+         f.write_str(self.label())
+     }
+ }

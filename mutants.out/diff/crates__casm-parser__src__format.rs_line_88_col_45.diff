@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/format.rs
++++ replace && with || in Format::sniff
+@@ -80,17 +80,17 @@
+         // (`- item`) and a mapping (`key: value`) are not TOML at all.
+         if first.starts_with('[') && first.ends_with(']') {
+             return Self::Toml;
+         }
+ 
+         // `key = value` with no colon before the equals is TOML's assignment syntax.
+         if let Some(equals) = first.find('=') {
+             let before_equals = first.get(..equals).unwrap_or_default();
+-            if !before_equals.contains(':') && !before_equals.trim().is_empty() {
++            if !before_equals.contains(':') || /* ~ changed by cargo-mutants ~ */ !before_equals.trim().is_empty() {
+                 return Self::Toml;
+             }
+         }
+ 
+         Self::Yaml
+     }
+ 
+     /// Returns the first line that is neither blank nor a `#` comment.

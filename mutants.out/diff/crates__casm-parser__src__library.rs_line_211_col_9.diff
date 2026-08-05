@@ -1,0 +1,43 @@
+--- crates/casm-parser/src/library.rs
++++ replace PatternDoc::into_pattern -> Result<Pattern, ParseError> with Ok(Default::default())
+@@ -203,39 +203,17 @@
+     /// Resolves this document into a validated [`Pattern`].
+     ///
+     /// # Errors
+     ///
+     /// Returns [`ParseError::Semantic`] if any value violates a pattern invariant: a bad
+     /// name, a non-SemVer version, a duplicated role, or a relationship naming a role the
+     /// pattern does not require.
+     pub fn into_pattern(self, path: &Path) -> Result<Pattern, ParseError> {
+-        let mut config = PatternConfig::new().name(self.name).version(self.version);
+-
+-        if let Some(description) = self.description {
+-            config = config.description(description);
+-        }
+-        for requirement in &self.requirements {
+-            config = config.requirement(requirement.resolve(path)?);
+-        }
+-        for relationship in &self.relationships {
+-            config = config.relationship(relationship.resolve(path)?);
+-        }
+-        for standard in self.satisfies {
+-            config = config.satisfies(standard);
+-        }
+-        for (key, value) in self.metadata {
+-            config = config.metadata(key, value);
+-        }
+-
+-        config.build().map_err(|error| ParseError::Semantic {
+-            path: path.to_path_buf(),
+-            message: error.to_string(),
+-            suggestion: role_hint(&error, &self.requirements),
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders a validated [`Pattern`] back into authoring form.
+     #[must_use]
+     pub fn from_pattern(pattern: &Pattern) -> Self {
+         Self {
+             name: pattern.name().as_str().to_owned(),
+             version: pattern.version().to_string(),

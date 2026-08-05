@@ -156,6 +156,27 @@ mod tests {
     }
 
     #[test]
+    fn distance_accumulates_edits_rather_than_multiplying_them() {
+        // The inner recurrence adds one to a neighbouring cell. Replacing that `+` with
+        // `*` survived: for distances of zero and one, `n + 1` and `n * 1` frequently
+        // agree, and every existing case was one of those.
+        assert_eq!(edit_distance("service", "srvice"), 1);
+        assert_eq!(edit_distance("service", "srvic"), 2);
+        assert_eq!(edit_distance("kitten", "sitting"), 3);
+        assert_eq!(edit_distance("abcdef", "uvwxyz"), 6);
+        assert_eq!(edit_distance("", "abcd"), 4);
+
+        // The mutated cell is the leading column of each row, which is the running cost
+        // of deleting from the left string. It only shows when the left is *longer* than
+        // the right, and every case above had it shorter or equal — so the first version
+        // of this test left the mutant alive.
+        assert_eq!(edit_distance("abc", "b"), 2);
+        assert_eq!(edit_distance("abcd", "x"), 4);
+        assert_eq!(edit_distance("service", "a"), 7);
+        assert_eq!(edit_distance("ab", "b"), 1);
+    }
+
+    #[test]
     fn distance_is_symmetric() {
         assert_eq!(
             edit_distance("kitten", "sitting"),
@@ -179,6 +200,28 @@ mod tests {
     fn closest_finds_an_obvious_typo() {
         let candidates = ["orders-db", "payments", "gateway"];
         assert_eq!(closest("orders-bd", candidates), Some("orders-db"));
+    }
+
+    #[test]
+    fn the_suggestion_threshold_is_a_strict_comparison() {
+        // `closest` refuses an input longer than `MAX_NAME_LEN` with `>`. Replacing it
+        // with `>=` refuses one *at* the ceiling too, and with `==` refuses only that one
+        // exact length — both survived, because nothing tested the boundary itself.
+        let at_ceiling = "a".repeat(MAX_NAME_LEN);
+        let candidate = at_ceiling.clone();
+
+        assert_eq!(
+            closest(&at_ceiling, [candidate.as_str()]),
+            Some(candidate.as_str()),
+            "a name exactly at the ceiling is still worth a suggestion"
+        );
+
+        let over = "a".repeat(MAX_NAME_LEN + 1);
+        assert_eq!(
+            closest(&over, [candidate.as_str()]),
+            None,
+            "one character further is refused"
+        );
     }
 
     #[test]

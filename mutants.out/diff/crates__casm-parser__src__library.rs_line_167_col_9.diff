@@ -1,0 +1,26 @@
+--- crates/casm-parser/src/library.rs
++++ replace RequiredRelationshipDoc::from_relationship -> Self with Default::default()
+@@ -159,22 +159,17 @@
+         if let Some(description) = &self.description {
+             relationship = relationship.with_description(description.clone());
+         }
+         Ok(relationship)
+     }
+ 
+     /// Renders a validated required relationship back into authoring form.
+     fn from_relationship(relationship: &RequiredRelationship) -> Self {
+-        Self {
+-            source: relationship.source().as_str().to_owned(),
+-            target: relationship.target().as_str().to_owned(),
+-            relationship_type: relationship.relationship_type(),
+-            description: relationship.description().map(ToOwned::to_owned),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A CASIMIR pattern in authoring form: permissive, unvalidated, human-shaped.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct PatternDoc {
+     /// The pattern's name.

@@ -1,0 +1,43 @@
+--- crates/casm-parser/src/library.rs
++++ replace RequirementDoc::resolve -> Result<Requirement, ParseError> with Ok(Default::default())
+@@ -77,39 +77,17 @@
+     /// Protocols the filling node must expose an interface for.
+     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+     pub requires_protocols: Vec<Protocol>,
+ }
+ 
+ impl RequirementDoc {
+     /// Resolves this fragment into a validated [`Requirement`].
+     fn resolve(&self, path: &Path) -> Result<Requirement, ParseError> {
+-        let mut requirement =
+-            Requirement::new(self.role.clone(), self.node_type).map_err(|error| {
+-                ParseError::Semantic {
+-                    path: path.to_path_buf(),
+-                    message: format!("role '{}': {error}", self.role),
+-                    suggestion: None,
+-                }
+-            })?;
+-
+-        if let Some(description) = &self.description {
+-            requirement = requirement.with_description(description.clone());
+-        }
+-        if let Some(count) = self.min_security_controls {
+-            requirement = requirement.requiring_security_controls(count);
+-        }
+-        for control in &self.requires_controls {
+-            requirement = requirement.requiring_control_type(*control);
+-        }
+-        for protocol in &self.requires_protocols {
+-            requirement = requirement.requiring_protocol(protocol.clone());
+-        }
+-
+-        Ok(requirement)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders a validated requirement back into authoring form.
+     fn from_requirement(requirement: &Requirement) -> Self {
+         Self {
+             role: requirement.role().as_str().to_owned(),
+             node_type: requirement.node_type(),
+             description: requirement.description().map(ToOwned::to_owned),

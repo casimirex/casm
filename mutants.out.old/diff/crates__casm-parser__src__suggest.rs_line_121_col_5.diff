@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/suggest.rs
++++ replace did_you_mean -> String with String::new()
+@@ -113,17 +113,17 @@
+         }
+         _ => None,
+     }
+ }
+ 
+ /// Formats a "did you mean" hint for a misspelled reference.
+ #[must_use]
+ pub fn did_you_mean(candidate: &str) -> String {
+-    format!("did you mean `{candidate}`?")
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

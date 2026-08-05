@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/suggest.rs
++++ replace + with * in edit_distance
+@@ -44,17 +44,17 @@
+     for (i, left_char) in left.iter().enumerate() {
+         if let Some(slot) = current.first_mut() {
+             *slot = i + 1;
+         }
+ 
+         for (j, right_char) in right.iter().enumerate() {
+             let substitution_cost = usize::from(left_char != right_char);
+             let deletion = previous
+-                .get(j + 1)
++                .get(j * /* ~ changed by cargo-mutants ~ */ 1)
+                 .copied()
+                 .unwrap_or(usize::MAX)
+                 .saturating_add(1);
+             let insertion = current
+                 .get(j)
+                 .copied()
+                 .unwrap_or(usize::MAX)
+                 .saturating_add(1);

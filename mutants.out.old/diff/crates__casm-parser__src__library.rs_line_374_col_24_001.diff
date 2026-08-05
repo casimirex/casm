@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace > with < in Library::load
+@@ -366,17 +366,17 @@
+             })?;
+             let path = entry.path();
+             if path.is_file() && Format::from_path(&path).is_some() {
+                 files.push(path);
+             }
+         }
+         files.sort();
+ 
+-        if files.len() > MAX_LIBRARY_PATTERNS {
++        if files.len() < /* ~ changed by cargo-mutants ~ */ MAX_LIBRARY_PATTERNS {
+             return Err(ParseError::TooManyPatterns {
+                 path: directory.to_path_buf(),
+                 count: files.len(),
+                 limit: MAX_LIBRARY_PATTERNS,
+             });
+         }
+ 
+         let mut library = Self::new();

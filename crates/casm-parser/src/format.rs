@@ -167,6 +167,40 @@ mod tests {
     }
 
     #[test]
+    fn every_format_renders_its_own_label() {
+        // `label` feeds `Display`, which reaches error messages and `casm fmt --format`.
+        // Both could have returned a constant undetected.
+        assert_eq!(Format::Yaml.label(), "yaml");
+        assert_eq!(Format::Json.label(), "json");
+        assert_eq!(Format::Toml.label(), "toml");
+
+        assert_eq!(Format::Yaml.to_string(), "yaml");
+        assert_eq!(Format::Json.to_string(), "json");
+        assert_eq!(Format::Toml.to_string(), "toml");
+
+        let labels: std::collections::BTreeSet<&str> =
+            Format::ALL.iter().map(|format| format.label()).collect();
+        assert_eq!(labels.len(), Format::ALL.len(), "labels must be distinct");
+    }
+
+    #[test]
+    fn a_table_header_needs_both_brackets_to_be_toml() {
+        // `first.starts_with('[') && first.ends_with(']')` — replacing the `&&` with `||`
+        // claims a YAML sequence entry is TOML, because `- [a, b]` ends with a bracket
+        // and a flow sequence begins with one.
+        assert_eq!(Format::sniff("[package]\nname = \"x\"\n"), Format::Toml);
+
+        // Opening bracket only. `[a, b, c]` would not do: it satisfies *both* halves and
+        // is correctly read as a table header, which is how the first version of this
+        // test managed to fail against unmutated code.
+        assert_ne!(Format::sniff("[unterminated\n"), Format::Toml);
+
+        // Closing bracket only.
+        assert_ne!(Format::sniff("nodes: []\n"), Format::Toml);
+        assert_ne!(Format::sniff("name: x]\n"), Format::Toml);
+    }
+
+    #[test]
     fn sniff_detects_toml_by_a_table_header() {
         assert_eq!(Format::sniff("[architecture]\nname = \"x\""), Format::Toml);
     }

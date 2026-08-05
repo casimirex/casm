@@ -43,6 +43,12 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
     that to `<=` exempted two-node architectures as well — the smallest case where
     isolation is a real finding — and no test covered it, because the existing one jumps
     from one node to three.
+  - `casm-parser` is now clean: 119 caught, none missed. Both size ceilings were
+    unguarded at their boundary — `MAX_DOCUMENT_BYTES` was never asserted to be the number
+    it claims, and neither the architecture reader nor the pattern reader had a test at the
+    limit, so relaxing `>` to `>=` went unnoticed. `NodeIndex::lookup` filters a parsed
+    identifier by membership, and inverting that comparison resolved a reference to a node
+    the architecture does not declare. `MAX_LIBRARY_PATTERNS` had the same boundary gap.
   - `.cargo/mutants.toml` records what is deliberately not mutated and why. Prose-printing
     functions are excluded: a survivor there means "no test asserts the exact wording",
     which is intended, since the machine-readable output is what the tests pin. So are two
@@ -55,6 +61,10 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 - **Weekly scheduled CI.** A mutation sweep and an hour-per-target fuzz campaign, neither
   of which is worth paying for on every push. The fuzz job's comment had described the
   campaign as belonging "on a schedule" since it was written; no schedule existed.
+  - Both were dispatched manually once before being trusted, and the mutation job failed
+    immediately: `--jobs` and `--in-place` are mutually exclusive, and they had never been
+    run together. A weekly job that fails the first time it fires, months later, is the
+    same class of problem as the checks this release is mostly about.
 
 ## [0.3.0] — 2026-08-05
 

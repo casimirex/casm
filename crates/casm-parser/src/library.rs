@@ -616,6 +616,80 @@ relationships:
     }
 
     #[test]
+    fn a_pattern_file_at_the_ceiling_is_read_and_one_past_it_is_refused() {
+        // `read_bounded` guards pattern files with the same `>` the architecture reader
+        // uses, and had the same gap: `>=` refuses a file *at* the limit and `==` refuses
+        // only that exact size.
+        let dir = TempDir(
+            std::env::temp_dir().join(format!("casm-pattern-ceiling-{}", std::process::id())),
+        );
+        std::fs::create_dir_all(dir.path()).expect("temp dir");
+
+        let sparse = |name: &str, size: u64| {
+            let path = dir.path().join(name);
+            let file = std::fs::File::create(&path).expect("create");
+            file.set_len(size).expect("set length");
+            path
+        };
+
+        let over = sparse("over.yaml", crate::MAX_DOCUMENT_BYTES + 1);
+        assert!(
+            matches!(parse_pattern_file(&over), Err(ParseError::TooLarge { .. })),
+            "a pattern file past the ceiling must be refused"
+        );
+
+        let at = sparse("at.yaml", crate::MAX_DOCUMENT_BYTES);
+        assert!(
+            !matches!(parse_pattern_file(&at), Err(ParseError::TooLarge { .. })),
+            "a pattern file exactly at the ceiling is within it"
+        );
+    }
+
+    #[test]
+    fn a_library_at_the_pattern_ceiling_loads_and_one_past_it_does_not() {
+        // `files.len() > MAX_LIBRARY_PATTERNS` — `>=` refuses a library *at* the ceiling
+        // and `==` refuses only that exact count. Neither was covered.
+        let minimal = "name: p\nversion: 1.0.0\n";
+
+        let at = TempDir(std::env::temp_dir().join(format!("casm-lib-at-{}", std::process::id())));
+        std::fs::create_dir_all(at.path()).expect("temp dir");
+        for index in 0..MAX_LIBRARY_PATTERNS {
+            let body = minimal.replace("name: p", &format!("name: p{index}"));
+            std::fs::write(at.path().join(format!("p{index}.yaml")), body).expect("write");
+        }
+        assert_eq!(
+            Library::load(at.path()).map(|library| library.len()).ok(),
+            Some(MAX_LIBRARY_PATTERNS),
+            "a library exactly at the ceiling is within it"
+        );
+
+        let over =
+            TempDir(std::env::temp_dir().join(format!("casm-lib-over-{}", std::process::id())));
+        std::fs::create_dir_all(over.path()).expect("temp dir");
+        for index in 0..=MAX_LIBRARY_PATTERNS {
+            let body = minimal.replace("name: p", &format!("name: p{index}"));
+            std::fs::write(over.path().join(format!("p{index}.yaml")), body).expect("write");
+        }
+        assert!(
+            matches!(
+                Library::load(over.path()),
+                Err(ParseError::TooManyPatterns { .. })
+            ),
+            "one past the ceiling is refused"
+        );
+    }
+
+    #[test]
+    fn an_empty_library_reports_itself_as_empty_and_a_loaded_one_does_not() {
+        assert!(Library::new().is_empty());
+
+        let directory = library_dir(&[("p.yaml", "name: p\nversion: 1.0.0\n")]);
+        let library = Library::load(directory.path()).expect("loads");
+        assert!(!library.is_empty());
+        assert_eq!(library.len(), 1);
+    }
+
+    #[test]
     fn a_library_loads_every_pattern_file_in_a_directory() {
         let dir = library_dir(&[
             ("secure-web-tier.yaml", WEB_TIER),

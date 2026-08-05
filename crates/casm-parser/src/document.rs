@@ -728,6 +728,100 @@ mod tests {
     }
 
     #[test]
+    fn an_identifier_resolves_only_to_the_node_that_owns_it() {
+        // `lookup` matches a parsed identifier against the declared ones with `==`.
+        // Replacing it with `!=` resolves a reference to *some other* node — quietly, and
+        // to a real node, so nothing downstream would notice.
+        let first = NodeId::new();
+        let second = NodeId::new();
+
+        let mut doc = minimal_doc();
+        doc.nodes[0].id = Some(first.to_string());
+        doc.nodes[1].id = Some(second.to_string());
+
+        // Both endpoints written as identifiers, each naming a different node.
+        doc.relationships[0].source = first.to_string();
+        doc.relationships[0].target = second.to_string();
+
+        let architecture = doc.into_architecture(&path()).expect("resolves");
+        let edge = architecture
+            .relationships()
+            .next()
+            .expect("the fixture declares one");
+
+        assert_eq!(edge.source(), first, "the source resolves to its own node");
+        assert_eq!(edge.target(), second, "and the target to its own");
+        assert_ne!(edge.source(), edge.target());
+    }
+
+    #[test]
+    fn an_identifier_that_is_well_formed_but_undeclared_is_unresolvable() {
+        // `lookup` filters a parsed identifier by membership. Replacing `==` with `!=`
+        // passes any identifier the architecture does *not* declare — so a typo'd UUID
+        // resolves to a node that is not there. The failure still surfaces, but as a
+        // dangling-reference error from the domain rather than as the unresolved
+        // reference it is, and without the "did you mean" hint.
+        let stranger = NodeId::new();
+        let mut doc = minimal_doc();
+        doc.relationships[0].source = stranger.to_string();
+
+        let error = doc
+            .into_architecture(&path())
+            .expect_err("an undeclared identifier cannot resolve");
+
+        assert!(
+            matches!(error, ParseError::UnresolvedReference { .. }),
+            "expected an unresolved reference, got {error:?}"
+        );
+    }
+
+    #[test]
+    fn a_binding_resolves_to_the_node_it_names_or_fails_saying_so() {
+        // Binding resolution had no test at all, so `resolve_binding` could have returned
+        // a default identifier for anything: a claim binding a role to a node that does
+        // not exist would have silently bound it to a generated id, and the conformance
+        // check would then have reported the pattern unsatisfied for reasons no one could
+        // trace back to the typo.
+        let mut doc = minimal_doc();
+        doc.patterns = vec![ConformanceDoc {
+            pattern: "secure-web-tier@1.0.0".into(),
+            bind: [("edge".to_owned(), "api".to_owned())]
+                .into_iter()
+                .collect(),
+        }];
+
+        let architecture = doc.clone().into_architecture(&path()).expect("resolves");
+        let claim = architecture
+            .conformance()
+            .next()
+            .expect("the fixture claims one pattern");
+
+        let api = architecture
+            .node_by_name("api")
+            .map(casm_core::Node::id)
+            .expect("the fixture declares it");
+        assert_eq!(
+            claim.bound(&casm_core::Name::new("edge").expect("a valid role")),
+            Some(api),
+            "the binding must resolve to the node it names"
+        );
+
+        // And a binding naming nothing must fail rather than inventing an identifier.
+        let mut broken = doc;
+        broken.patterns[0].bind = [("edge".to_owned(), "apii".to_owned())]
+            .into_iter()
+            .collect();
+
+        let error = broken
+            .into_architecture(&path())
+            .expect_err("a dangling binding is an error");
+        assert!(
+            matches!(error, ParseError::UnresolvedBinding { .. }),
+            "{error:?}"
+        );
+    }
+
+    #[test]
     fn an_unresolvable_endpoint_reports_which_end_failed() {
         let mut doc = minimal_doc();
         doc.target_typo();

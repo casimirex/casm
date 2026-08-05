@@ -376,6 +376,47 @@ relationships:
     }
 
     #[test]
+    fn the_document_ceiling_is_the_value_it_claims_to_be() {
+        // `64 * 1024 * 1024` — replacing either `*` with `+` yields a wildly different
+        // ceiling, and nothing asserted the number. NASA Rule 5 is cited at its
+        // definition; a bound nobody checks is not a bound.
+        assert_eq!(MAX_DOCUMENT_BYTES, 67_108_864);
+        assert_eq!(MAX_DOCUMENT_BYTES, 64 * 1024 * 1024);
+    }
+
+    #[test]
+    fn a_file_at_the_ceiling_is_read_and_one_past_it_is_refused() {
+        // `metadata.len() > MAX_DOCUMENT_BYTES` — `>=` refuses a file *at* the limit and
+        // `==` refuses only that exact size. Both survived, because no test went near the
+        // boundary. Sparse files make it cheap to.
+        let dir = std::env::temp_dir().join(format!("casm-ceiling-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("temp dir");
+
+        let write_sparse = |name: &str, size: u64| {
+            let path = dir.join(name);
+            let file = std::fs::File::create(&path).expect("create");
+            file.set_len(size).expect("set length");
+            path
+        };
+
+        // One byte over: refused without being read.
+        let over = write_sparse("over.yaml", MAX_DOCUMENT_BYTES + 1);
+        assert!(
+            matches!(parse_file(&over), Err(ParseError::TooLarge { .. })),
+            "a file past the ceiling must be refused"
+        );
+
+        // Exactly at it: accepted by the bound, and then fails as the NUL bytes it is.
+        let at = write_sparse("at.yaml", MAX_DOCUMENT_BYTES);
+        assert!(
+            !matches!(parse_file(&at), Err(ParseError::TooLarge { .. })),
+            "a file exactly at the ceiling is within it"
+        );
+
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
     fn malformed_yaml_reports_a_line_and_column() {
         let source = "name: checkout\nnodes:\n  - name: api\n   type: service\n";
         match parse_str(source, &yaml_path()).unwrap_err() {

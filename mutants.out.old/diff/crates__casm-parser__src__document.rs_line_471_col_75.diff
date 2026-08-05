@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/document.rs
++++ replace == with != in NodeIndex<'a>::lookup
+@@ -463,17 +463,17 @@
+         }
+     }
+ 
+     /// Looks up a reference written as either a node name or a `NodeId`.
+     fn lookup(&self, reference: &str) -> Option<NodeId> {
+         // Names are tried first: they are the common case, and a name that happens to
+         // look like a UUID is impossible (the CASIMIR alphabet permits it, but a node so
+         // named would still be found here, which is the author's evident intent).
+-        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name == reference) {
++        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name != /* ~ changed by cargo-mutants ~ */ reference) {
+             return Some(*id);
+         }
+ 
+         NodeId::parse(reference)
+             .ok()
+             .filter(|id| self.by_name.iter().any(|(_, known)| known == id))
+     }
+ 

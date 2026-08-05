@@ -1,0 +1,22 @@
+--- crates/casm-parser/src/lib.rs
++++ replace parse_str_as -> Result<Architecture> with Ok(Default::default())
+@@ -106,18 +106,17 @@
+ }
+ 
+ /// Parses an architecture from an in-memory document in an explicitly chosen format.
+ ///
+ /// # Errors
+ ///
+ /// As [`parse_str`].
+ pub fn parse_str_as(source: &str, path: &Path, format: Format) -> Result<Architecture> {
+-    let document = deserialize(source, path, format)?;
+-    document.into_architecture(path)
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reads and parses an architecture from a file.
+ ///
+ /// # Errors
+ ///
+ /// - [`ParseError::Io`] if the file cannot be read.
+ /// - [`ParseError::TooLarge`] if it exceeds [`MAX_DOCUMENT_BYTES`].

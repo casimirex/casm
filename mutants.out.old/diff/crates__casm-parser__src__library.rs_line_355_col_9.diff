@@ -1,0 +1,53 @@
+--- crates/casm-parser/src/library.rs
++++ replace Library::load -> Result<Self, ParseError> with Ok(Default::default())
+@@ -347,49 +347,17 @@
+     ///
+     /// # Errors
+     ///
+     /// - [`ParseError::Io`] if the directory cannot be read, or if a pattern file cannot.
+     /// - [`ParseError::Syntax`] or [`ParseError::Semantic`] for a malformed pattern.
+     /// - [`ParseError::TooManyPatterns`] if the directory holds more than
+     ///   [`MAX_LIBRARY_PATTERNS`] pattern files.
+     pub fn load(directory: &Path) -> Result<Self, ParseError> {
+-        let entries = std::fs::read_dir(directory).map_err(|error| ParseError::Io {
+-            path: directory.to_path_buf(),
+-            message: error.to_string(),
+-        })?;
+-
+-        // Sorted, so that a duplicate-definition error names the same file every run.
+-        let mut files: Vec<PathBuf> = Vec::new();
+-        for entry in entries {
+-            let entry = entry.map_err(|error| ParseError::Io {
+-                path: directory.to_path_buf(),
+-                message: error.to_string(),
+-            })?;
+-            let path = entry.path();
+-            if path.is_file() && Format::from_path(&path).is_some() {
+-                files.push(path);
+-            }
+-        }
+-        files.sort();
+-
+-        if files.len() > MAX_LIBRARY_PATTERNS {
+-            return Err(ParseError::TooManyPatterns {
+-                path: directory.to_path_buf(),
+-                count: files.len(),
+-                limit: MAX_LIBRARY_PATTERNS,
+-            });
+-        }
+-
+-        let mut library = Self::new();
+-        for file in files {
+-            let pattern = parse_pattern_file(&file)?;
+-            library.insert(pattern, file)?;
+-        }
+-        Ok(library)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Adds a pattern, refusing a second definition of the same `name@version`.
+     ///
+     /// # Errors
+     ///
+     /// Returns [`ParseError::DuplicatePattern`] naming both files, because "which file
+     /// wins" is a question no ordering answers defensibly.

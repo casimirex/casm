@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/lib.rs
++++ replace * with /
+@@ -82,17 +82,17 @@
+     Library, MAX_LIBRARY_PATTERNS, PatternDoc, RequiredRelationshipDoc, RequirementDoc,
+     emit_pattern_str, parse_pattern_file, parse_pattern_str,
+ };
+ 
+ /// The largest document `casm-parser` will read from disk, in bytes.
+ ///
+ /// 64 MiB is roughly two orders of magnitude beyond the largest plausible hand-written
+ /// architecture, which makes it a generous ceiling that still bounds the blast radius.
+-pub const MAX_DOCUMENT_BYTES: u64 = 64 * 1024 * 1024;
++pub const MAX_DOCUMENT_BYTES: u64 = 64 * 1024 / /* ~ changed by cargo-mutants ~ */ 1024;
+ 
+ /// Parses an architecture from an in-memory document.
+ ///
+ /// The format is resolved from `path`'s extension, falling back to sniffing `source`.
+ /// `path` is used only for format detection and error attribution; nothing is read from
+ /// disk.
+ ///
+ /// # Errors

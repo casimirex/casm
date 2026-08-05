@@ -1,0 +1,28 @@
+--- crates/casm-parser/src/document.rs
++++ replace InterfaceDoc::from_interface -> Self with Default::default()
+@@ -135,24 +135,17 @@
+             interface = interface.with_description(description.clone());
+         }
+ 
+         Ok(interface)
+     }
+ 
+     /// Renders a validated [`Interface`] back into authoring form.
+     fn from_interface(interface: &Interface) -> Self {
+-        Self {
+-            name: interface.name().as_str().to_owned(),
+-            protocol: interface.protocol().clone(),
+-            version: interface.version().to_string(),
+-            schema: None,
+-            schema_hash: interface.schema_hash().map(SchemaHash::to_hex),
+-            description: interface.description().map(ToOwned::to_owned),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A control as written by a human.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct ControlDoc {
+     /// The risk dimension this control addresses.

@@ -35,6 +35,8 @@ exclude_re = [
     # and the longest blocking path through the dependency graph.
     "replace > with >= in check",
     "replace > with >= in DependencyGraph::critical_path_ms",
+    # `closest` folds the best edit distance the same way.
+    "replace > with >= in closest",
 
     # `X::builder()` is defined as `XConfig::new()`, and every `XConfig::new()` is defined
     # as `Self::default()`. The mutant substitutes `Default::default()` — which is not

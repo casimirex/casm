@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace Library::patterns -> impl Iterator<Item =&Pattern> with ::std::iter::once(Box::leak(Box::new(Default::default())))
+@@ -408,17 +408,17 @@
+         }
+ 
+         self.patterns.push((pattern, source));
+         Ok(())
+     }
+ 
+     /// Every pattern, in load order.
+     pub fn patterns(&self) -> impl Iterator<Item = &Pattern> {
+-        self.patterns.iter().map(|(pattern, _)| pattern)
++        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// How many patterns the library holds.
+     #[inline]
+     #[must_use]
+     pub fn len(&self) -> usize {
+         self.patterns.len()
+     }

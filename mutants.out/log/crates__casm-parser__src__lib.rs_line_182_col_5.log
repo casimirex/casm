@@ -1,0 +1,116 @@
+
+*** crates/casm-parser/src/lib.rs:182:5: replace deserialize -> Result<Document> with Ok(Default::default())
+
+*** mutation diff:
+--- crates/casm-parser/src/lib.rs
++++ replace deserialize -> Result<Document> with Ok(Default::default())
+@@ -174,17 +174,17 @@
+             format: "toml",
+             message: error.to_string(),
+         }),
+     }
+ }
+ 
+ /// Stage 1: bytes to [`Document`], with format-specific error positioning.
+ fn deserialize(source: &str, path: &Path, format: Format) -> Result<Document> {
+-    deserialize_as(source, path, format)
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Stage 1 for any authoring grammar: an architecture [`Document`] or a
+ /// [`library::PatternDoc`].
+ ///
+ /// Generic over the target type rather than duplicated per grammar, because the only
+ /// thing that differs between them is what `serde` is asked to build — the line/column
+ /// extraction and the "did you mean" inference are identical, and a second copy of them
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-parser@0.3.0
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh version_check v0.9.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh typenum v1.20.1
+       Fresh generic-array v0.14.7
+       Fresh getrandom v0.4.3
+       Fresh getrandom v0.3.4
+       Fresh rand_core v0.9.5
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh bitflags v2.13.1
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh equivalent v1.0.2
+       Fresh hashbrown v0.17.1
+       Fresh indexmap v2.14.0
+       Fresh rustix v1.1.4
+       Fresh serde v1.0.229
+       Fresh digest v0.10.7
+       Fresh zerocopy v0.8.55
+       Fresh thiserror-impl v2.0.19
+       Fresh keccak v0.1.6
+       Fresh winnow v1.0.4
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh itoa v1.0.18
+       Fresh tempfile v3.27.0
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh sha3 v0.10.9
+       Fresh thiserror v2.0.19
+       Fresh ppv-lite86 v0.2.21
+       Fresh zmij v1.0.23
+       Fresh uuid v1.24.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh semver v1.0.28
+       Fresh wait-timeout v0.2.1
+       Fresh memchr v2.8.3
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh bit-vec v0.8.0
+       Fresh fnv v1.0.7
+       Fresh winnow v0.7.15
+       Fresh unsafe-libyaml v0.2.11
+       Fresh quick-error v1.2.3
+       Fresh ryu v1.0.23
+       Fresh rusty-fork v0.3.1
+       Fresh serde_yaml_ng v0.10.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh bit-set v0.8.0
+       Fresh serde_json v1.0.151
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-IqbNZ7.tmp/crates/casm-core)
+       Fresh num-traits v0.2.19
+       Fresh rand_chacha v0.9.0
+       Fresh rand_xorshift v0.4.0
+       Fresh rand v0.9.5
+       Fresh regex-syntax v0.8.11
+       Fresh unarray v0.1.4
+   Compiling casm-parser v0.3.0 (/tmp/cargo-mutants-casm-IqbNZ7.tmp/crates/casm-parser)
+   Compiling proptest v1.11.0
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_parser --edition=2024 crates/casm-parser/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=446d2155f71a3e56 -C extra-filename=-327bf4b87971bca8 --out-dir /tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libcasm_core-be5421d115bf4420.rmeta --extern serde=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --extern serde_yaml_ng=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde_yaml_ng-716dab26a9d53256.rmeta --extern thiserror=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern toml=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libtoml-c5208f55489b08fa.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name proptest --edition=2021 /home/srinivasan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/proptest-1.11.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --cfg 'feature="bit-set"' --cfg 'feature="default"' --cfg 'feature="fork"' --cfg 'feature="regex-syntax"' --cfg 'feature="rusty-fork"' --cfg 'feature="std"' --cfg 'feature="tempfile"' --cfg 'feature="timeout"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("alloc", "atomic64bit", "attr-macro", "bit-set", "default", "default-code-coverage", "f16", "fork", "handle-panics", "hardware-rng", "no_std", "proptest-macro", "regex-syntax", "rusty-fork", "std", "tempfile", "timeout", "unstable", "x86"))' -C metadata=ce0000c6f25eb2b9 -C extra-filename=-9bb8168c60fe8945 --out-dir /tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps -L dependency=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps --extern bit_set=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libbit_set-bd5e7e223f2ff372.rmeta --extern bit_vec=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libbit_vec-58a86113f4761c7a.rmeta --extern bitflags=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libbitflags-9af264abf64e7262.rmeta --extern num_traits=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libnum_traits-136e362fe48ee124.rmeta --extern rand=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/librand-598d9e87c0706651.rmeta --extern rand_chacha=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/librand_chacha-6c2bdb70fd546960.rmeta --extern rand_xorshift=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/librand_xorshift-9b7db1f5fc95ad50.rmeta --extern regex_syntax=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libregex_syntax-d7e5d2ad42277dac.rmeta --extern rusty_fork=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/librusty_fork-cbf3a52f87f81ad2.rmeta --extern tempfile=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libtempfile-0dc95d37cbb705d4.rmeta --extern unarray=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libunarray-0f8cf2f69c5ca3c5.rmeta --cap-lints allow`
+error[E0277]: the trait bound `Document: Default` is not satisfied
+   --> crates/casm-parser/src/lib.rs:182:8
+    |
+182 |     Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+    |        ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `Document`
+    |
+help: consider annotating `Document` with `#[derive(Default)]`
+   --> crates/casm-parser/src/document.rs:531:1
+    |
+531 + #[derive(Default)]
+532 | pub struct Document {
+    |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `casm-parser` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_parser --edition=2024 crates/casm-parser/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=446d2155f71a3e56 -C extra-filename=-327bf4b87971bca8 --out-dir /tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libcasm_core-be5421d115bf4420.rmeta --extern serde=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --extern serde_yaml_ng=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libserde_yaml_ng-716dab26a9d53256.rmeta --extern thiserror=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern toml=/tmp/cargo-mutants-casm-IqbNZ7.tmp/target/debug/deps/libtoml-c5208f55489b08fa.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+
+*** result: Failure(101)

@@ -1,0 +1,32 @@
+--- crates/casm-parser/src/error.rs
++++ replace ParseError::suggestion -> Option<&str> with Some("xyzzy")
+@@ -206,28 +206,17 @@
+             | Self::Io { .. }
+             | Self::Emit { .. } => None,
+         }
+     }
+ 
+     /// The actionable fix hint, when one could be inferred.
+     #[must_use]
+     pub fn suggestion(&self) -> Option<&str> {
+-        match self {
+-            Self::Syntax { suggestion, .. }
+-            | Self::Semantic { suggestion, .. }
+-            | Self::UnresolvedReference { suggestion, .. }
+-            | Self::UnresolvedBinding { suggestion, .. } => suggestion.as_deref(),
+-            Self::UnknownFormat { .. }
+-            | Self::DuplicatePattern { .. }
+-            | Self::TooManyPatterns { .. }
+-            | Self::TooLarge { .. }
+-            | Self::Io { .. }
+-            | Self::Emit { .. } => None,
+-        }
++        Some("xyzzy") /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders the error the way a compiler would: location, message, then a hint.
+     ///
+     /// ```text
+     /// architecture.yaml:14:5: unknown variant `srvice`, expected one of `service`, …
+     ///   help: did you mean `service`?
+     /// ```

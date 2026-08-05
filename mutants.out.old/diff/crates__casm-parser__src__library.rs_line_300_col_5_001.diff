@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace emit_pattern_str -> Result<String, ParseError> with Ok("xyzzy".into())
+@@ -292,17 +292,17 @@
+ }
+ 
+ /// Serialises a pattern back into authoring form.
+ ///
+ /// # Errors
+ ///
+ /// Returns [`ParseError::Emit`] if the underlying serialiser fails.
+ pub fn emit_pattern_str(pattern: &Pattern, format: Format) -> Result<String, ParseError> {
+-    crate::serialize(&PatternDoc::from_pattern(pattern), format)
++    Ok("xyzzy".into()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reads a file, refusing one larger than [`MAX_DOCUMENT_BYTES`].
+ fn read_bounded(path: &Path) -> Result<String, ParseError> {
+     let metadata = std::fs::metadata(path).map_err(|error| ParseError::Io {
+         path: path.to_path_buf(),
+         message: error.to_string(),
+     })?;

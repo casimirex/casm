@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace Library::is_empty -> bool with true
+@@ -422,17 +422,17 @@
+     pub fn len(&self) -> usize {
+         self.patterns.len()
+     }
+ 
+     /// Returns `true` if the library holds no patterns.
+     #[inline]
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+-        self.patterns.is_empty()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Resolves a reference to the pattern it names.
+     #[must_use]
+     pub fn get(&self, reference: &PatternRef) -> Option<&Pattern> {
+         self.patterns
+             .iter()
+             .find(|(pattern, _)| reference.matches(pattern))

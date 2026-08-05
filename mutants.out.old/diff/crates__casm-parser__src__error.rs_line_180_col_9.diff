@@ -1,0 +1,32 @@
+--- crates/casm-parser/src/error.rs
++++ replace ParseError::path -> Option<&Path> with None
+@@ -172,28 +172,17 @@
+         message: String,
+     },
+ }
+ 
+ impl ParseError {
+     /// The file this error concerns, if it concerns one.
+     #[must_use]
+     pub fn path(&self) -> Option<&Path> {
+-        match self {
+-            Self::UnknownFormat { path }
+-            | Self::Syntax { path, .. }
+-            | Self::Semantic { path, .. }
+-            | Self::UnresolvedReference { path, .. }
+-            | Self::UnresolvedBinding { path, .. }
+-            | Self::DuplicatePattern { path, .. }
+-            | Self::TooManyPatterns { path, .. }
+-            | Self::TooLarge { path, .. }
+-            | Self::Io { path, .. } => Some(path),
+-            Self::Emit { .. } => None,
+-        }
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Where in the file the failure occurred, when that is known.
+     #[must_use]
+     pub const fn location(&self) -> Option<Location> {
+         match self {
+             Self::Syntax { location, .. } => Some(*location),
+             Self::UnknownFormat { .. }
