@@ -162,6 +162,89 @@ section("editor features");
   check("hover explains a node", hover.ok === true && hover.markdown.includes("**api**"));
 }
 
+section("patterns");
+{
+  const PATTERN = `name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+`;
+  const CLAIMING = `name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+  - name: orders
+    type: service
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+`;
+  const library = JSON.stringify([PATTERN]);
+
+  const unchecked = JSON.parse(casm.validate(CLAIMING));
+  check(
+    "without a library the claim is reported as unchecked",
+    unchecked.patternsLoaded === 0 &&
+      unchecked.diagnostics.some((d) => d.rule === "patterns-are-satisfied"),
+  );
+
+  const checked = JSON.parse(casm.validate_with_patterns(CLAIMING, library));
+  check("a supplied library is loaded", checked.patternsLoaded === 1);
+  check(
+    "a satisfied claim reports nothing",
+    !checked.diagnostics.some((d) => d.rule === "patterns-are-satisfied"),
+    JSON.stringify(checked.diagnostics),
+  );
+
+  const report = JSON.parse(casm.conformance(CLAIMING, library));
+  check("conformance resolves the bindings", report.conforms === true);
+  check("each role names its node", report.claims[0].bindings.edge === "edge-gateway");
+
+  const broken = CLAIMING.replace("type: gateway", "type: queue");
+  const unmet = JSON.parse(casm.conformance(broken, library));
+  check("an unfillable role does not conform", unmet.conforms === false);
+  check(
+    "what a human must decide is marked as such",
+    unmet.claims[0].unmet.some((u) => u.mechanical === false),
+    JSON.stringify(unmet.claims[0].unmet),
+  );
+
+  const nolib = JSON.parse(casm.conformance(CLAIMING, "[]"));
+  check("an unchecked claim does not count as conforming", nolib.conforms === false);
+  check("and says so explicitly", nolib.claims[0].checked === false);
+
+  const malformed = JSON.parse(casm.validate_with_patterns(CLAIMING, "not json"));
+  check("a malformed library is a value, not a trap", malformed.patternErrors.length === 1);
+
+  const completions = JSON.parse(casm.complete_with_patterns(CLAIMING, library, 12, 25));
+  check(
+    "completion offers references from the library",
+    completions.items.some((item) => item.label === "secure-web-tier@1.0.0"),
+    completions.context,
+  );
+
+  const tooltip = JSON.parse(casm.hover_with_patterns(CLAIMING, library, 12, 16));
+  check(
+    "hover explains a claimed pattern",
+    tooltip.ok === true && tooltip.markdown.includes("secure-web-tier"),
+    tooltip.markdown,
+  );
+}
+
 section("drift");
 {
   const state = JSON.stringify({
@@ -187,6 +270,11 @@ section("nothing traps");
     casm.complete(source, 0, 0);
     casm.hover(source, 0, 0);
     casm.complete(source, 4294967295, 4294967295);
+    casm.validate_with_patterns(source, source);
+    casm.conformance(source, source);
+    casm.conformance(source, "[]");
+    casm.complete_with_patterns(source, "not json", 0, 0);
+    casm.hover_with_patterns(source, "[]", 0, 0);
   }
   check("the module still works after hostile input", JSON.parse(casm.validate(VALID)).parsed === true);
 }

@@ -177,6 +177,7 @@ async fn the_registered_commands_are_advertised() {
     let response = exchange(&[INITIALIZE, SHUTDOWN]).await;
     assert!(response.contains("casm.generateDiagram"), "{response}");
     assert!(response.contains("casm.validateWorkspace"), "{response}");
+    assert!(response.contains("casm.reloadPatterns"), "{response}");
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
@@ -414,4 +415,180 @@ async fn the_server_survives_a_document_of_pathological_content() {
             "died on {source:?}"
         );
     }
+}
+
+/// A directory removed when the test ends, however it ends.
+struct TempDir(std::path::PathBuf);
+
+impl TempDir {
+    fn new(label: &str) -> Self {
+        let path =
+            std::env::temp_dir().join(format!("casm-lsp-protocol-{label}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&path);
+        std::fs::create_dir_all(&path).unwrap();
+        Self(path)
+    }
+}
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
+const PATTERN: &str = "\
+name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+";
+
+/// An architecture claiming the pattern above, which it satisfies.
+const CLAIMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+patterns:
+  - pattern: secure-web-tier@1.0.0
+";
+
+/// An `initialize` naming `root` as the single workspace folder.
+fn initialize_in(root: &std::path::Path) -> String {
+    let uri = format!("file://{}", root.display());
+    format!(
+        r#"{{"jsonrpc":"2.0","id":1,"method":"initialize","params":{{"capabilities":{{}},"workspaceFolders":[{{"uri":"{uri}","name":"w"}}]}}}}"#
+    )
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn a_workspace_library_is_discovered_and_the_claim_is_checked() {
+    // The whole point of the phase: no `--patterns` flag exists in an editor, so the
+    // server has to find the library itself.
+    let temp = TempDir::new("discovered");
+    let library = temp.0.join("patterns");
+    std::fs::create_dir_all(&library).unwrap();
+    std::fs::write(library.join("secure-web-tier.yaml"), PATTERN).unwrap();
+
+    let response = exchange(&[
+        &initialize_in(&temp.0),
+        INITIALIZED,
+        &did_open(CLAIMING),
+        SHUTDOWN,
+    ])
+    .await;
+
+    assert!(
+        response.contains("loaded 1 pattern(s)"),
+        "the library was not reported as loaded:\n{response}"
+    );
+    assert!(
+        !response.contains("patterns-are-satisfied"),
+        "a satisfied claim should report nothing:\n{response}"
+    );
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn without_a_library_the_claim_is_reported_as_unchecked() {
+    let temp = TempDir::new("bare");
+
+    let response = exchange(&[
+        &initialize_in(&temp.0),
+        INITIALIZED,
+        &did_open(CLAIMING),
+        SHUTDOWN,
+    ])
+    .await;
+
+    assert!(
+        response.contains("no pattern library found"),
+        "the server did not say where it looked:\n{response}"
+    );
+    assert!(
+        response.contains("patterns-are-satisfied"),
+        "the claim was not reported:\n{response}"
+    );
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn reloading_republishes_documents_the_client_never_touched() {
+    // The library appears *after* the document was opened — a `git checkout`, or the
+    // author writing their first pattern. Without a republish the file would keep showing
+    // findings computed against a library that no longer describes reality.
+    let temp = TempDir::new("reload");
+    let reload = r#"{"jsonrpc":"2.0","id":2,"method":"workspace/executeCommand","params":{"command":"casm.reloadPatterns","arguments":[]}}"#;
+
+    let (client, server) = tokio::io::duplex(1 << 20);
+    let (server_read, server_write) = tokio::io::split(server);
+    let (service, socket) = LspService::new(Backend::new);
+    let serving = tokio::spawn(async move {
+        Server::new(server_read, server_write, socket)
+            .serve(service)
+            .await;
+    });
+    let (client_read, mut client_write) = tokio::io::split(client);
+    let mut reader = BufReader::new(client_read);
+
+    client_write
+        .write_all(frame(&initialize_in(&temp.0)).as_bytes())
+        .await
+        .unwrap();
+    let _ = read_message(&mut reader).await;
+
+    for message in [INITIALIZED, &did_open(CLAIMING)] {
+        client_write
+            .write_all(frame(message).as_bytes())
+            .await
+            .unwrap();
+    }
+
+    let mut before = String::new();
+    while let Ok(message) = tokio::time::timeout(IDLE, read_message(&mut reader)).await {
+        if message.is_empty() {
+            break;
+        }
+        before.push_str(&message);
+    }
+    assert!(
+        before.contains("patterns-are-satisfied"),
+        "unchecked before the library exists:\n{before}"
+    );
+
+    // The library appears, and the client asks for a reload.
+    let library = temp.0.join("patterns");
+    std::fs::create_dir_all(&library).unwrap();
+    std::fs::write(library.join("secure-web-tier.yaml"), PATTERN).unwrap();
+
+    for message in [reload, SHUTDOWN] {
+        client_write
+            .write_all(frame(message).as_bytes())
+            .await
+            .unwrap();
+    }
+
+    let mut after = String::new();
+    while let Ok(message) = tokio::time::timeout(IDLE, read_message(&mut reader)).await {
+        if message.is_empty() {
+            break;
+        }
+        after.push_str(&message);
+    }
+
+    client_write.shutdown().await.unwrap();
+    let _ = serving.await;
+
+    assert!(
+        after.contains("loaded 1 pattern(s)"),
+        "the reload was not reported:\n{after}"
+    );
+    assert!(
+        after.contains("publishDiagnostics"),
+        "the open document was not republished:\n{after}"
+    );
+    assert!(
+        !after.contains("patterns-are-satisfied"),
+        "the republished diagnostics still report the claim as unchecked:\n{after}"
+    );
 }

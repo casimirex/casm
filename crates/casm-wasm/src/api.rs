@@ -94,20 +94,46 @@ pub struct ValidationResult {
     pub relationship_count: usize,
     /// Every finding, in rule order.
     pub diagnostics: Vec<WasmDiagnostic>,
+    /// How many patterns the supplied library held.
+    pub patterns_loaded: usize,
+    /// Every pattern source that could not be read, in the order supplied.
+    ///
+    /// A library the caller got wrong is not the document's fault, so it does not become
+    /// a diagnostic against the document — but it does change what was checked, and a
+    /// caller that never hears about it would read `valid: true` as more than it means.
+    pub pattern_errors: Vec<String>,
 }
 
 /// Validates a document, reporting findings with positions.
 ///
 /// Never fails: a document that cannot be parsed yields `parsed: false` and a syntax
 /// diagnostic.
+///
+/// Checks no conformance claim, because it is given no library to check one against — see
+/// [`validate_with_patterns`].
 #[must_use]
 pub fn validate(source: &str) -> String {
+    validate_with_patterns(source, "")
+}
+
+/// Validates a document against a pattern library.
+///
+/// `patterns` is a JSON array of pattern documents, each a string in YAML, JSON, or TOML —
+/// the same text a `patterns/` directory holds on disk. An empty string means no library,
+/// which is exactly what [`validate`] passes.
+///
+/// A browser has no filesystem to discover a library in, so the caller supplies one. That
+/// is the whole difference between this and the language server, which finds its own.
+#[must_use]
+pub fn validate_with_patterns(source: &str, patterns: &str) -> String {
+    let library = Library::read(patterns);
     let index = DocumentIndex::build(source);
     let analysis = casm_lsp::diagnostics::analyse(
         source,
         Path::new(VIRTUAL_PATH),
         &index,
         &ValidatorConfig::default(),
+        &library.patterns,
     );
 
     let diagnostics: Vec<WasmDiagnostic> = analysis
@@ -152,7 +178,58 @@ pub fn validate(source: &str) -> String {
         node_count: architecture.map_or(0, casm_core::Architecture::node_count),
         relationship_count: architecture.map_or(0, casm_core::Architecture::relationship_count),
         diagnostics,
+        patterns_loaded: library.patterns.len(),
+        pattern_errors: library.errors,
     })
+}
+
+/// A pattern library supplied across the ABI, and whatever failed to load.
+///
+/// Reading is total. A malformed source becomes an entry in `errors` and the rest of the
+/// library still loads — a page that stopped validating because one pattern had a typo
+/// would be worse than one that says which pattern.
+struct Library {
+    patterns: Vec<casm_core::Pattern>,
+    errors: Vec<String>,
+}
+
+impl Library {
+    /// Reads a JSON array of pattern documents.
+    ///
+    /// An empty or blank string is an empty library, not an error: it is what a caller
+    /// with no patterns passes, and what [`validate`] passes on their behalf.
+    fn read(supplied: &str) -> Self {
+        if supplied.trim().is_empty() {
+            return Self {
+                patterns: Vec::new(),
+                errors: Vec::new(),
+            };
+        }
+
+        let sources: Vec<String> = match serde_json::from_str(supplied) {
+            Ok(sources) => sources,
+            Err(error) => {
+                return Self {
+                    patterns: Vec::new(),
+                    errors: vec![format!(
+                        "the pattern library must be a JSON array of pattern documents: {error}"
+                    )],
+                };
+            }
+        };
+
+        let mut patterns = Vec::new();
+        let mut errors = Vec::new();
+        for (position, source) in sources.iter().enumerate() {
+            let path = format!("<pattern {position}>");
+            match casm_parser::library::parse_pattern_str(source, Path::new(&path)) {
+                Ok(pattern) => patterns.push(pattern),
+                Err(error) => errors.push(format!("pattern {position}: {}", error.render())),
+            }
+        }
+
+        Self { patterns, errors }
+    }
 }
 
 /// A rendered diagram, or the reason there is none.
@@ -366,10 +443,26 @@ pub struct CompletionResult {
 /// Returns completions for a zero-based cursor position.
 ///
 /// Works on documents that do not parse, which is when an editor needs it.
+///
+/// Offers no pattern references, having no library to draw them from — see
+/// [`complete_with_patterns`].
 #[must_use]
 pub fn complete(source: &str, line: u32, character: u32) -> String {
+    complete_with_patterns(source, "", line, character)
+}
+
+/// Returns completions for a cursor position, drawing pattern references from `patterns`.
+///
+/// `patterns` is a JSON array of pattern documents, as [`validate_with_patterns`] takes.
+#[must_use]
+pub fn complete_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+    let library = Library::read(patterns);
     let index = DocumentIndex::build(source);
-    let result = casm_lsp::completion::complete(&index, casm_lsp::Position::new(line, character));
+    let result = casm_lsp::completion::complete(
+        &index,
+        &library.patterns,
+        casm_lsp::Position::new(line, character),
+    );
 
     to_json(&CompletionResult {
         context: format!("{:?}", result.context),
@@ -400,12 +493,22 @@ pub struct HoverResult {
 /// Returns a hover tooltip for a zero-based cursor position.
 #[must_use]
 pub fn hover(source: &str, line: u32, character: u32) -> String {
+    hover_with_patterns(source, "", line, character)
+}
+
+/// Returns a hover tooltip, explaining a claimed pattern from `patterns`.
+///
+/// `patterns` is a JSON array of pattern documents, as [`validate_with_patterns`] takes.
+#[must_use]
+pub fn hover_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+    let library = Library::read(patterns);
     let index = DocumentIndex::build(source);
     let architecture = casm_parser::parse_str(source, Path::new(VIRTUAL_PATH)).ok();
 
     let found = casm_lsp::hover::hover(
         &index,
         architecture.as_ref(),
+        &library.patterns,
         casm_lsp::Position::new(line, character),
     );
 
@@ -478,6 +581,145 @@ pub fn drift(source: &str, inventory_json: &str, inventory_kind: &str) -> String
         drifts: report.drifts.iter().map(ToString::to_string).collect(),
         error: None,
     })
+}
+
+/// What one conformance claim came to.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClaimReport {
+    /// The `name@version` the document claims.
+    pub pattern: String,
+    /// `true` if the library held the pattern, so the claim was actually checked.
+    pub checked: bool,
+    /// `true` if the architecture satisfies it. Meaningless unless `checked`.
+    pub conforms: bool,
+    /// Which node fills each role, including roles bound automatically.
+    pub bindings: std::collections::BTreeMap<String, String>,
+    /// Everything unmet.
+    pub unmet: Vec<UnmetReport>,
+}
+
+/// One unmet requirement.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UnmetReport {
+    /// What is missing, in prose.
+    pub message: String,
+    /// `true` if a tool could satisfy it by adding to the architecture.
+    ///
+    /// The rest need a human to decide *which* node plays a role — the distinction
+    /// ADR-0012 rests on, carried across the ABI so a page can present the two differently.
+    pub mechanical: bool,
+}
+
+/// The outcome of checking every claim a document makes.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConformanceResult {
+    /// `true` if the document parsed.
+    pub ok: bool,
+    /// `true` if every claim was checked and satisfied.
+    ///
+    /// An unchecked claim makes this `false`: a claim nobody verified is not a claim met.
+    pub conforms: bool,
+    /// Why the document could not be checked, when it could not.
+    pub error: Option<String>,
+    /// How many patterns the supplied library held.
+    pub patterns_loaded: usize,
+    /// Every pattern source that could not be read.
+    pub pattern_errors: Vec<String>,
+    /// One entry per claim, in document order.
+    pub claims: Vec<ClaimReport>,
+}
+
+/// Reports what a document must change to satisfy the patterns it claims.
+///
+/// `patterns` is a JSON array of pattern documents, as [`validate_with_patterns`] takes.
+///
+/// This is `casm evolve` without a filesystem. It reports rather than rewrites, for the
+/// reason ADR-0012 gives: a pattern is a shape to conform to, not a template to stamp, so
+/// migrating to a new version is a computation over two sets and never a merge that could
+/// silently corrupt the document.
+///
+/// Never fails. A document that does not parse reports `ok: false` and the reason.
+#[must_use]
+pub fn conformance(source: &str, patterns: &str) -> String {
+    let library = Library::read(patterns);
+
+    let architecture = match casm_parser::parse_str(source, Path::new(VIRTUAL_PATH)) {
+        Ok(architecture) => architecture,
+        Err(error) => {
+            return to_json(&ConformanceResult {
+                ok: false,
+                conforms: false,
+                error: Some(error.render()),
+                patterns_loaded: library.patterns.len(),
+                pattern_errors: library.errors,
+                claims: Vec::new(),
+            });
+        }
+    };
+
+    let claims: Vec<ClaimReport> = architecture
+        .conformance()
+        .map(|claim| check_claim(&architecture, &library.patterns, claim))
+        .collect();
+
+    to_json(&ConformanceResult {
+        ok: true,
+        conforms: claims.iter().all(|claim| claim.checked && claim.conforms),
+        error: None,
+        patterns_loaded: library.patterns.len(),
+        pattern_errors: library.errors,
+        claims,
+    })
+}
+
+/// Checks one claim against the library, reporting an unheld pattern as unchecked.
+fn check_claim(
+    architecture: &casm_core::Architecture,
+    patterns: &[casm_core::Pattern],
+    claim: &casm_core::Conformance,
+) -> ClaimReport {
+    let reference = claim.pattern().to_string();
+
+    let Some(pattern) = patterns
+        .iter()
+        .find(|pattern| claim.pattern().matches(pattern))
+    else {
+        return ClaimReport {
+            pattern: reference,
+            checked: false,
+            conforms: false,
+            bindings: std::collections::BTreeMap::new(),
+            unmet: Vec::new(),
+        };
+    };
+
+    let report = casm_core::conformance::check(architecture, pattern, claim);
+    ClaimReport {
+        pattern: reference,
+        checked: true,
+        conforms: report.conforms(),
+        bindings: report
+            .bindings()
+            .iter()
+            .map(|(role, id)| {
+                let name = architecture
+                    .node(*id)
+                    .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+                (role.clone(), name)
+            })
+            .collect(),
+        unmet: report
+            .unmet()
+            .iter()
+            .map(|unmet| UnmetReport {
+                message: unmet.message(),
+                mechanical: unmet.is_mechanical(),
+            })
+            .collect(),
+    }
 }
 
 /// The rule catalogue, so a playground can explain itself.
@@ -862,6 +1104,13 @@ nodes:
             let _ = format(source, "json");
             let _ = drift(source, source, "native");
 
+            // The library is hostile too: a caller may pass anything at all.
+            for library in ["", "[]", "not json", "{}", "[1,2]"] {
+                let _ = validate_with_patterns(source, library);
+                let _ = conformance(source, library);
+            }
+            let _ = conformance(source, source);
+
             // Every position in the first few lines, including past the end.
             for line in 0..3 {
                 for character in 0..20 {
@@ -876,5 +1125,279 @@ nodes:
     fn extreme_positions_do_not_panic() {
         let _ = complete(VALID, u32::MAX, u32::MAX);
         let _ = hover(VALID, u32::MAX, u32::MAX);
+    }
+
+    /// The pattern the fixtures below claim.
+    const PATTERN: &str = "\
+name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+";
+
+    /// An architecture that claims, and satisfies, the pattern above.
+    const CLAIMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+  - name: orders
+    type: service
+    controls:
+      - type: security
+        standard: OIDC
+        description: authenticated
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+";
+
+    /// The library as a caller supplies it: a JSON array of pattern documents.
+    fn library() -> String {
+        serde_json::to_string(&[PATTERN]).expect("an array of strings serialises")
+    }
+
+    #[test]
+    fn a_claim_is_unchecked_without_a_library() {
+        let result = json(&validate(CLAIMING));
+
+        assert_eq!(result["patternsLoaded"], 0);
+        let rules: Vec<&str> = result["diagnostics"]
+            .as_array()
+            .expect("diagnostics is an array")
+            .iter()
+            .filter_map(|d| d["rule"].as_str())
+            .collect();
+        assert!(rules.contains(&"patterns-are-satisfied"), "{rules:?}");
+    }
+
+    #[test]
+    fn a_claim_is_checked_once_a_library_is_supplied() {
+        let result = json(&validate_with_patterns(CLAIMING, &library()));
+
+        assert_eq!(result["patternsLoaded"], 1);
+        assert_eq!(result["valid"], true);
+
+        let rules: Vec<&str> = result["diagnostics"]
+            .as_array()
+            .expect("diagnostics is an array")
+            .iter()
+            .filter_map(|d| d["rule"].as_str())
+            .collect();
+        assert!(
+            !rules.contains(&"patterns-are-satisfied"),
+            "a satisfied claim should report nothing: {rules:?}"
+        );
+    }
+
+    #[test]
+    fn an_unmet_requirement_is_an_error_across_the_boundary() {
+        let without_gateway = CLAIMING.replace("type: gateway", "type: queue");
+        let result = json(&validate_with_patterns(&without_gateway, &library()));
+
+        assert_eq!(result["valid"], false);
+        assert_eq!(result["exitCode"], 2);
+    }
+
+    #[test]
+    fn an_empty_library_is_not_an_error() {
+        // What `validate` passes on the caller's behalf.
+        for supplied in ["", "   ", "[]"] {
+            let result = json(&validate_with_patterns(CLAIMING, supplied));
+            assert_eq!(result["patternsLoaded"], 0);
+            assert_eq!(
+                result["patternErrors"].as_array().map(Vec::len),
+                Some(0),
+                "{supplied:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_malformed_library_is_reported_as_a_value_not_a_trap() {
+        let result = json(&validate_with_patterns(CLAIMING, "not json"));
+
+        assert_eq!(result["patternsLoaded"], 0);
+        assert_eq!(result["patternErrors"].as_array().map(Vec::len), Some(1));
+        assert!(
+            result["parsed"].as_bool().unwrap_or(false),
+            "the document still parsed"
+        );
+    }
+
+    #[test]
+    fn one_broken_pattern_does_not_discard_the_rest() {
+        let mixed = serde_json::to_string(&["name: [unclosed", PATTERN]).expect("serialises");
+        let result = json(&validate_with_patterns(CLAIMING, &mixed));
+
+        assert_eq!(result["patternsLoaded"], 1, "the good one still loaded");
+        assert_eq!(result["patternErrors"].as_array().map(Vec::len), Some(1));
+    }
+
+    #[test]
+    fn conformance_reports_the_bindings_it_resolved() {
+        let result = json(&conformance(CLAIMING, &library()));
+
+        assert_eq!(result["ok"], true);
+        assert_eq!(result["conforms"], true);
+        let claim = &result["claims"][0];
+        assert_eq!(claim["pattern"], "secure-web-tier@1.0.0");
+        assert_eq!(claim["checked"], true);
+        assert_eq!(claim["bindings"]["edge"], "edge-gateway");
+        assert_eq!(claim["bindings"]["application"], "orders");
+    }
+
+    #[test]
+    fn conformance_infers_a_binding_the_document_did_not_write() {
+        // Exactly one node has each required type, so the check resolves both roles
+        // without a `bind:` block — and reports what it decided.
+        let implicit = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+  - name: orders
+    type: service
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+patterns:
+  - pattern: secure-web-tier@1.0.0
+";
+        let result = json(&conformance(implicit, &library()));
+
+        assert_eq!(result["conforms"], true);
+        assert_eq!(result["claims"][0]["bindings"]["edge"], "edge-gateway");
+    }
+
+    #[test]
+    fn conformance_separates_what_a_tool_can_fix_from_what_a_human_must_decide() {
+        // The required edge is missing — mechanical. The `application` role has no
+        // candidate at all — not mechanical, because nothing can invent the node.
+        let lacking = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+patterns:
+  - pattern: secure-web-tier@1.0.0
+";
+        let result = json(&conformance(lacking, &library()));
+
+        assert_eq!(result["conforms"], false);
+        let unmet = result["claims"][0]["unmet"]
+            .as_array()
+            .expect("unmet is an array");
+        assert!(!unmet.is_empty());
+        assert!(
+            unmet.iter().any(|item| item["mechanical"] == false),
+            "{unmet:?}"
+        );
+    }
+
+    #[test]
+    fn an_unchecked_claim_does_not_count_as_conforming() {
+        // The difference between "we verified this" and "nobody looked".
+        let result = json(&conformance(CLAIMING, "[]"));
+
+        assert_eq!(result["ok"], true, "the document itself parsed");
+        assert_eq!(result["conforms"], false);
+        assert_eq!(result["claims"][0]["checked"], false);
+    }
+
+    #[test]
+    fn conformance_on_a_broken_document_is_a_value() {
+        let result = json(&conformance(BROKEN, &library()));
+
+        assert_eq!(result["ok"], false);
+        assert_eq!(result["conforms"], false);
+        assert!(
+            result["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("srvice")
+        );
+    }
+
+    #[test]
+    fn a_document_claiming_nothing_conforms_vacuously() {
+        let result = json(&conformance(VALID, &library()));
+
+        assert_eq!(result["conforms"], true);
+        assert_eq!(result["claims"].as_array().map(Vec::len), Some(0));
+    }
+
+    #[test]
+    fn completion_offers_pattern_references_from_the_library() {
+        // Line 16 is the `- pattern: ...` line; completing at its end offers the library.
+        let line = 16_u32;
+        let column = u32::try_from(
+            CLAIMING
+                .lines()
+                .nth(line as usize)
+                .expect("the claim line exists")
+                .chars()
+                .count(),
+        )
+        .unwrap_or(0);
+
+        let result = json(&complete_with_patterns(CLAIMING, &library(), line, column));
+        assert_eq!(result["context"], "PatternReferenceValue");
+        assert_eq!(result["items"][0]["label"], "secure-web-tier@1.0.0");
+
+        let without = json(&complete(CLAIMING, line, column));
+        assert_eq!(without["items"].as_array().map(Vec::len), Some(0));
+    }
+
+    #[test]
+    fn hover_explains_a_claimed_pattern_from_the_library() {
+        let result = json(&hover_with_patterns(CLAIMING, &library(), 16, 16));
+
+        assert_eq!(result["ok"], true);
+        let markdown = result["markdown"].as_str().unwrap_or_default();
+        assert!(markdown.contains("secure-web-tier"), "{markdown}");
+        assert!(markdown.contains("edge"), "{markdown}");
+    }
+
+    #[test]
+    fn the_pattern_aware_calls_are_deterministic() {
+        // Rule 8: the same inputs must give byte-identical output.
+        assert_eq!(
+            validate_with_patterns(CLAIMING, &library()),
+            validate_with_patterns(CLAIMING, &library())
+        );
+        assert_eq!(
+            conformance(CLAIMING, &library()),
+            conformance(CLAIMING, &library())
+        );
+    }
+
+    #[test]
+    fn supplying_no_library_matches_the_older_entry_points_exactly() {
+        // `validate` is defined as `validate_with_patterns(source, "")`, and the released
+        // ABI must not shift underneath a caller who never passed patterns.
+        assert_eq!(validate(CLAIMING), validate_with_patterns(CLAIMING, ""));
+        assert_eq!(
+            complete(VALID, 3, 10),
+            complete_with_patterns(VALID, "", 3, 10)
+        );
+        assert_eq!(hover(VALID, 3, 11), hover_with_patterns(VALID, "", 3, 11));
     }
 }

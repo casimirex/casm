@@ -1,6 +1,6 @@
 {
   "name": "casimir",
-  "displayName": "CASIMIR — Architecture as Code",
+  "displayName": "CASIMIR \u2014 Architecture as Code",
   "description": "Completion, validation, hover, and quick-fixes for CASIMIR architecture files.",
   "version": "0.1.0",
   "publisher": "casimirex",
@@ -66,6 +66,11 @@
         "category": "CASIMIR"
       },
       {
+        "command": "casm.reloadPatterns",
+        "title": "Reload the pattern library",
+        "category": "CASIMIR"
+      },
+      {
         "command": "casm.restartServer",
         "title": "Restart the language server",
         "category": "CASIMIR"
@@ -87,6 +92,11 @@
           "type": "string",
           "default": "casm-lsp",
           "markdownDescription": "Path to the `casm-lsp` executable. Leave as the default to use whatever is on `PATH`."
+        },
+        "casm.patterns": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Directory holding the pattern library, absolute or relative to the first workspace folder. Leave empty to look for `patterns/` and then `.casm/patterns/`. A conformance claim is reported as *unchecked* when no library holds the pattern it names."
         },
         "casm.trace.server": {
           "type": "string",

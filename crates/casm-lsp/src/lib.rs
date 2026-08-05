@@ -55,6 +55,8 @@ pub mod diagnostics;
 pub mod documents;
 pub mod hover;
 pub mod index;
+#[cfg(feature = "server")]
+pub mod library;
 pub mod navigation;
 pub mod schema;
 #[cfg(feature = "server")]

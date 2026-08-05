@@ -12,14 +12,31 @@
 //   POST /render?backend=dot  body: the architecture      -> diagram
 //   POST /fingerprint         body: the architecture      -> semantic identity
 //   POST /diff                body: {before, after}       -> semantic changes
+//   POST /conformance         body: {architecture, patterns} -> what each claim came to
 //   GET  /rules                                           -> the rule catalogue
 //   GET  /health                                          -> version and status
+//
+// A worker has no filesystem, so a caller who wants conformance claims *checked* has to
+// send the pattern library with the document. `/validate` and `/conformance` both accept
+// an envelope for that:
+//
+//   {"architecture": "<document>", "patterns": ["<pattern>", ...]}
+//
+// `/validate` still accepts a bare document, and tells the two apart by the top-level
+// `architecture` key — which the CASIMIR grammar does not have, so a document written in
+// JSON can never be mistaken for an envelope.
 
 /** The largest request body the worker will read, in bytes. */
 export const MAX_BODY_BYTES = 1024 * 1024;
 
 /** The routes that accept a document body. */
-export const POST_ROUTES = new Set(["/validate", "/render", "/fingerprint", "/diff"]);
+export const POST_ROUTES = new Set([
+  "/validate",
+  "/render",
+  "/fingerprint",
+  "/diff",
+  "/conformance",
+]);
 
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
@@ -62,6 +79,40 @@ async function readBody(request) {
 }
 
 /**
+ * Splits a body into a document and the pattern library sent with it.
+ *
+ * Anything that is not an envelope is the document itself, which is what keeps the bare
+ * form of `/validate` working unchanged. The library is handed onward as the JSON string
+ * the WebAssembly ABI takes, rather than re-serialised at each call site.
+ */
+function withPatterns(text) {
+  if (!text.trimStart().startsWith("{")) {
+    return { source: text, patterns: "" };
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    // Not JSON at all: a YAML document that happens to open with a brace. Let the parser
+    // be the one to complain, in its own vocabulary.
+    return { source: text, patterns: "" };
+  }
+
+  if (typeof payload?.architecture !== "string") {
+    return { source: text, patterns: "" };
+  }
+  if (payload.patterns !== undefined && !Array.isArray(payload.patterns)) {
+    return { error: "'patterns' must be an array of pattern documents" };
+  }
+
+  return {
+    source: payload.architecture,
+    patterns: JSON.stringify(payload.patterns ?? []),
+  };
+}
+
+/**
  * Handles one request.
  *
  * `casm` is the instantiated WebAssembly module. Passing it in rather than importing it
@@ -84,7 +135,8 @@ export async function handle(request, casm) {
   // entirely the wrong place.
   if (!POST_ROUTES.has(route)) {
     return fail(
-      `unknown route '${route}'; try /validate, /render, /fingerprint, /diff, /rules, or /health`,
+      `unknown route '${route}'; try /validate, /render, /fingerprint, /diff, ` +
+        "/conformance, /rules, or /health",
       404,
     );
   }
@@ -100,11 +152,27 @@ export async function handle(request, casm) {
 
   switch (route) {
     case "/validate": {
-      const result = casm.validate(body.text);
+      const envelope = withPatterns(body.text);
+      if (envelope.error) {
+        return fail(envelope.error, 400);
+      }
+      const result = casm.validate_with_patterns(envelope.source, envelope.patterns);
       // The HTTP status carries the verdict too, so a CI step can branch on it without
       // parsing the body — the same distinction `casm validate` makes with exit codes.
       const parsed = JSON.parse(result);
       return json(result, parsed.valid ? 200 : 422);
+    }
+
+    case "/conformance": {
+      const envelope = withPatterns(body.text);
+      if (envelope.error) {
+        return fail(envelope.error, 400);
+      }
+      const result = JSON.parse(casm.conformance(envelope.source, envelope.patterns));
+      // A claim nobody could check is not a claim met, so an unchecked claim is a 422
+      // exactly as an unmet one is. Sending no library and reading a 200 would be the
+      // worst possible outcome.
+      return json(result, result.ok && result.conforms ? 200 : 422);
     }
 
     case "/render": {

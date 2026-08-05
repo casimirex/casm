@@ -19,19 +19,24 @@ an HTTP origin. Any static server will do.
 - **Diagrams** in Mermaid, Graphviz DOT, and ASCII, generated in the browser.
 - **Fingerprints** — edit the document, reorder the nodes, and watch the fingerprint stay
   the same. That is the property `casm log` is built on ([ADR-0009](../docs/adr/0009-merkle-fingerprint-is-semantic.md)).
+- **Pattern conformance**, checked against a library the page carries as text. A browser
+  has no filesystem to discover a `patterns/` directory in, so the library crosses the ABI
+  exactly as an edge worker or a CI job would send it.
 
-The four example buttons load a clean architecture, a syntax error, a dependency cycle,
-and a database exposed to an external system.
+The five example buttons load a clean architecture, a syntax error, a dependency cycle, a
+database exposed to an external system, and an architecture claiming conformance to the
+page's pattern. Change that claim's version to `2.0.0` and it is reported as *unchecked* —
+never assumed satisfied.
 
 ## Size
 
 | | raw | gzip |
 |---|---|---|
-| `casm_wasm_bg.wasm` | 938 KB | 314 KB |
-| `casm_wasm.js` (glue) | 18 KB | 3 KB |
-| **total** | **956 KB** | **317 KB** |
+| `casm_wasm_bg.wasm` | 1,124,825 B | 375,937 B |
+| `casm_wasm.js` (glue) | 22,742 B | 3,968 B |
+| **total** | **1,147,567 B** | **379,905 B** |
 
-The roadmap's ceiling is 2 MiB; this is 45% of it. `scripts/build-wasm.sh` fails the build
+The roadmap's ceiling is 2 MiB; this is 53% of it. `scripts/build-wasm.sh` fails the build
 if that is ever exceeded.
 
 No `wasm-opt` pass is applied. Running one would likely take a further 10–20% off, and it

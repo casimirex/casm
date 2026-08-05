@@ -25,6 +25,7 @@
 //! not. That is a real difference, and the byte cap is what makes it acceptable: the
 //! ceiling holds whether the server is busy or idle.
 
+use casm_core::Pattern;
 use casm_validator::ValidatorConfig;
 use std::collections::HashMap;
 use std::path::Path;
@@ -90,17 +91,23 @@ pub struct DocumentStore {
     documents: HashMap<String, Document>,
     limits: Limits,
     config: ValidatorConfig,
+    patterns: Vec<Pattern>,
     clock: u64,
 }
 
 impl DocumentStore {
     /// A store with the given limits and validator configuration.
+    ///
+    /// The pattern library starts empty, which is the honest state before a workspace has
+    /// been resolved: every conformance claim is reported as unchecked until
+    /// [`Self::load_patterns`] supplies one.
     #[must_use]
     pub fn new(limits: Limits, config: ValidatorConfig) -> Self {
         Self {
             documents: HashMap::new(),
             limits,
             config,
+            patterns: Vec::new(),
             clock: 0,
         }
     }
@@ -111,6 +118,12 @@ impl DocumentStore {
         &self.config
     }
 
+    /// The pattern library in force.
+    #[must_use]
+    pub fn patterns(&self) -> &[Pattern] {
+        &self.patterns
+    }
+
     /// Replaces the validator configuration and re-analyses every open document.
     ///
     /// Called when the client changes settings. Re-analysing eagerly means the next
@@ -118,7 +131,21 @@ impl DocumentStore {
     /// ones.
     pub fn reconfigure(&mut self, config: ValidatorConfig) {
         self.config = config;
+        self.reanalyse_all();
+    }
 
+    /// Replaces the pattern library and re-analyses every open document.
+    ///
+    /// Called when the workspace is resolved and again whenever a pattern file changes.
+    /// Re-analysing matters more here than for a threshold change: editing a pattern moves
+    /// findings in every document that claims it, none of which the author has touched.
+    pub fn load_patterns(&mut self, patterns: Vec<Pattern>) {
+        self.patterns = patterns;
+        self.reanalyse_all();
+    }
+
+    /// Re-runs analysis over every open document, in place.
+    fn reanalyse_all(&mut self) {
         let uris: Vec<String> = self.documents.keys().cloned().collect();
         for uri in uris {
             let Some(existing) = self.documents.get(&uri) else {
@@ -138,7 +165,7 @@ impl DocumentStore {
     pub fn upsert(&mut self, uri: &str, text: String, version: i32) -> &Document {
         let index = DocumentIndex::build(&text);
         let path = uri_to_path(uri);
-        let analysis = analyse(&text, &path, &index, &self.config);
+        let analysis = analyse(&text, &path, &index, &self.config, &self.patterns);
 
         self.clock = self.clock.saturating_add(1);
         let accessed = self.clock;
@@ -177,6 +204,20 @@ impl DocumentStore {
         let document = self.documents.get_mut(uri)?;
         document.accessed = accessed;
         Some(document)
+    }
+
+    /// Retrieves a document together with the library its features need.
+    ///
+    /// Completion and hover both need the document *and* the pattern library, which live
+    /// on different fields; handing back a pair is what lets a caller holding one lock
+    /// borrow both.
+    pub fn get_with_patterns(&mut self, uri: &str) -> Option<(&Document, &[Pattern])> {
+        self.clock = self.clock.saturating_add(1);
+        let accessed = self.clock;
+
+        let document = self.documents.get_mut(uri)?;
+        document.accessed = accessed;
+        Some((document, &self.patterns))
     }
 
     /// Retrieves a document without affecting eviction order.
@@ -509,5 +550,72 @@ mod tests {
             store.upsert(&uri, text.to_owned(), 1);
             let _ = store.get(&uri);
         }
+    }
+
+    #[test]
+    fn a_store_starts_with_no_patterns() {
+        assert!(store().patterns().is_empty());
+    }
+
+    #[test]
+    fn loading_patterns_re_analyses_every_open_document() {
+        // The author has not touched these files; editing the library is what changed
+        // their findings, so publishing stale ones would be wrong.
+        const CLAIMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+patterns:
+  - pattern: secure-web-tier@1.0.0
+";
+        const PATTERN: &str = "\
+name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+";
+
+        let mut store = store();
+        store.upsert("file:///a.yaml", CLAIMING.to_owned(), 1);
+        assert!(
+            store
+                .peek("file:///a.yaml")
+                .expect("stored")
+                .diagnostics()
+                .iter()
+                .any(|d| d.code == "patterns-are-satisfied"),
+            "unchecked before the library loads"
+        );
+
+        let pattern = casm_parser::library::parse_pattern_str(PATTERN, Path::new("p.yaml"))
+            .expect("the fixture pattern parses");
+        store.load_patterns(vec![pattern]);
+
+        assert_eq!(store.patterns().len(), 1);
+        assert!(
+            !store
+                .peek("file:///a.yaml")
+                .expect("stored")
+                .diagnostics()
+                .iter()
+                .any(|d| d.code == "patterns-are-satisfied"),
+            "satisfied once it loads, without the client touching the file"
+        );
+    }
+
+    #[test]
+    fn a_document_and_the_library_are_retrieved_together() {
+        let mut store = store();
+        store.upsert("file:///a.yaml", DOC.to_owned(), 1);
+
+        let (document, patterns) = store
+            .get_with_patterns("file:///a.yaml")
+            .expect("the document is open");
+        assert_eq!(document.version, 1);
+        assert!(patterns.is_empty());
+        assert!(store.get_with_patterns("file:///missing.yaml").is_none());
     }
 }

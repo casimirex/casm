@@ -73,6 +73,10 @@ Pass `--patterns <dir>` to supply one. Without it the rule reports each claim as
 unchecked rather than assuming it true — and as a warning rather than an error, because
 failing every run that has not passed `--patterns` teaches people to silence the rule.
 
+The language server discovers its own library and the WebAssembly build takes one across
+the ABI, so this rule runs everywhere the others do. See
+[Conform to a pattern](../how-to/conform-to-a-pattern.md).
+
 ## Suppressing
 
 ```console

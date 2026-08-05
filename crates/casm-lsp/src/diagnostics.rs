@@ -19,13 +19,14 @@
 //! | a node | its `name:` value |
 //! | a relationship | its `source:` value |
 //! | a set of nodes (a cycle) | the first participant, with the rest as related locations |
+//! | a conformance claim | its `pattern:` value |
 //! | the architecture | line 1 |
 //!
 //! A finding whose subject cannot be located falls back to the first line rather than
 //! being dropped. A diagnostic in the wrong place is a nuisance; a diagnostic that
 //! silently vanishes is a correctness hole in the tool.
 
-use casm_core::Architecture;
+use casm_core::{Architecture, Pattern};
 use casm_validator::{Severity as RuleSeverity, Subject, Validator, ValidatorConfig};
 use std::path::Path;
 
@@ -89,14 +90,19 @@ impl Analysis {
 
 /// Parses and validates `source`, locating every finding in the text.
 ///
-/// `path` is used only for the parser's error attribution. Never fails: a document that
-/// cannot be parsed yields a syntax diagnostic and no architecture.
+/// `path` is used only for the parser's error attribution. `patterns` is the loaded
+/// library: a claim naming a pattern it does not hold is reported as unchecked, so an
+/// empty library is a valid input rather than an error.
+///
+/// Never fails: a document that cannot be parsed yields a syntax diagnostic and no
+/// architecture.
 #[must_use]
 pub fn analyse(
     source: &str,
     path: &Path,
     index: &DocumentIndex,
     config: &ValidatorConfig,
+    patterns: &[Pattern],
 ) -> Analysis {
     let architecture = match casm_parser::parse_str(source, path) {
         Ok(architecture) => architecture,
@@ -108,7 +114,9 @@ pub fn analyse(
         }
     };
 
-    let report = Validator::with_config(config.clone()).validate(&architecture);
+    let report = Validator::with_config(config.clone())
+        .with_patterns(patterns.to_vec())
+        .validate(&architecture);
     let diagnostics = report
         .diagnostics
         .iter()
@@ -185,10 +193,13 @@ fn unresolved_reference_span(error: &casm_parser::ParseError, index: &DocumentIn
 /// Finds the span a validator subject should be underlined at.
 fn anchor(index: &DocumentIndex, subject: &Subject) -> Span {
     match subject {
-        // The index tracks nodes and relationships, not the `patterns:` block, so a
-        // conformance finding anchors where a whole-architecture finding does, rather
-        // than at a line that would have to be guessed.
-        Subject::Architecture | Subject::Pattern { .. } => first_line_span(index),
+        Subject::Architecture => first_line_span(index),
+        // On the `pattern:` value itself. A conformance finding is about the claim, and
+        // the claim is a line the author wrote.
+        Subject::Pattern { reference } => index.claim_of(reference).map_or_else(
+            || first_line_span(index),
+            crate::index::ClaimEntry::anchor_span,
+        ),
         Subject::Node { name, .. } => index
             .node_named(name)
             .map_or_else(|| first_line_span(index), |node| node.name_span),
@@ -251,6 +262,7 @@ mod tests {
             Path::new("test.yaml"),
             &index,
             &ValidatorConfig::default(),
+            &[],
         )
     }
 
@@ -458,6 +470,7 @@ relationships:
             Path::new("t.yaml"),
             &index,
             &ValidatorConfig::default(),
+            &[],
         );
         assert!(
             strict
@@ -467,7 +480,7 @@ relationships:
         );
 
         let relaxed = ValidatorConfig::new().min_security_controls_per_service(0);
-        let quiet = analyse(source, Path::new("t.yaml"), &index, &relaxed);
+        let quiet = analyse(source, Path::new("t.yaml"), &index, &relaxed, &[]);
         assert!(
             !quiet
                 .diagnostics
@@ -482,7 +495,7 @@ relationships:
         let index = DocumentIndex::build(source);
         let config = ValidatorConfig::new().allowing("stateful-nodes-require-controls");
 
-        let analysis = analyse(source, Path::new("t.yaml"), &index, &config);
+        let analysis = analyse(source, Path::new("t.yaml"), &index, &config, &[]);
         assert!(
             analysis.diagnostics.is_empty(),
             "{:?}",
@@ -526,6 +539,7 @@ relationships:
             Path::new("t.yaml"),
             &index,
             &ValidatorConfig::default(),
+            &[],
         );
 
         for diagnostic in &analysis.diagnostics {
@@ -537,5 +551,145 @@ relationships:
                 index.line_count()
             );
         }
+    }
+
+    /// The pattern the fixtures below claim.
+    const PATTERN: &str = "\
+name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+";
+
+    /// An architecture that satisfies `secure-web-tier@1.0.0`.
+    const CONFORMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+  - name: orders
+    type: service
+    controls:
+      - type: security
+        standard: OIDC
+        description: authenticated
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+";
+
+    fn library() -> Vec<casm_core::Pattern> {
+        vec![
+            casm_parser::library::parse_pattern_str(PATTERN, Path::new("secure-web-tier.yaml"))
+                .expect("the fixture pattern parses"),
+        ]
+    }
+
+    fn analyse_with(source: &str, patterns: &[casm_core::Pattern]) -> (DocumentIndex, Analysis) {
+        let index = DocumentIndex::build(source);
+        let analysis = analyse(
+            source,
+            Path::new("t.yaml"),
+            &index,
+            &ValidatorConfig::default(),
+            patterns,
+        );
+        (index, analysis)
+    }
+
+    fn finding<'a>(analysis: &'a Analysis, code: &str) -> Option<&'a Diagnostic> {
+        analysis.diagnostics.iter().find(|d| d.code == code)
+    }
+
+    #[test]
+    fn a_claim_with_no_library_is_a_warning_not_an_error() {
+        // The state the editor is in before a workspace is resolved. Assuming a claim
+        // satisfied would be worse than saying it was never checked.
+        let (_, analysis) = analyse_with(CONFORMING, &[]);
+
+        let found = finding(&analysis, "patterns-are-satisfied").expect("the claim is reported");
+        assert_eq!(found.severity, Severity::Warning);
+        assert!(
+            found.message.contains("secure-web-tier@1.0.0"),
+            "{}",
+            found.message
+        );
+    }
+
+    #[test]
+    fn a_satisfied_claim_reports_nothing_once_the_library_is_loaded() {
+        let (_, analysis) = analyse_with(CONFORMING, &library());
+
+        assert!(
+            finding(&analysis, "patterns-are-satisfied").is_none(),
+            "{:?}",
+            analysis.diagnostics
+        );
+    }
+
+    #[test]
+    fn an_unmet_requirement_is_an_error_in_the_editor() {
+        // The gateway is gone, so the `edge` role has nothing to fill it.
+        let source = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: orders
+    type: service
+    controls:
+      - type: security
+        standard: OIDC
+        description: authenticated
+patterns:
+  - pattern: secure-web-tier@1.0.0
+";
+        let (_, analysis) = analyse_with(source, &library());
+
+        let found = finding(&analysis, "patterns-are-satisfied").expect("the claim is reported");
+        assert_eq!(found.severity, Severity::Error);
+        assert!(found.message.contains("edge"), "{}", found.message);
+    }
+
+    #[test]
+    fn a_conformance_finding_is_anchored_on_the_claim_not_on_line_one() {
+        let (index, analysis) = analyse_with(CONFORMING, &[]);
+
+        let found = finding(&analysis, "patterns-are-satisfied").expect("the claim is reported");
+        let claim = index
+            .claim_of("secure-web-tier@1.0.0")
+            .expect("the claim is indexed");
+        assert_eq!(found.span, claim.anchor_span());
+        assert_ne!(found.span.line, 0, "line 1 is the fallback, not the answer");
+    }
+
+    #[test]
+    fn a_claim_the_library_does_not_hold_still_anchors_on_the_claim() {
+        // The reference is a typo, so nothing in the library matches it; the squiggle
+        // still belongs on the line the author wrote.
+        let source = CONFORMING.replace("secure-web-tier@1.0.0", "secure-web-teir@1.0.0");
+        let (index, analysis) = analyse_with(&source, &library());
+
+        let found = finding(&analysis, "patterns-are-satisfied").expect("the claim is reported");
+        assert_eq!(
+            found.span,
+            index
+                .claim_of("secure-web-teir@1.0.0")
+                .expect("the claim is indexed")
+                .anchor_span()
+        );
     }
 }

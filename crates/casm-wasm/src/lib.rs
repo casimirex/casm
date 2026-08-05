@@ -76,10 +76,34 @@ pub fn start() {
 ///
 /// Never fails. A document that cannot be parsed reports `parsed: false` and a syntax
 /// diagnostic.
+///
+/// Reports every conformance claim as unchecked, having no library to check it against.
+/// Use [`validate_with_patterns`] to supply one.
 #[wasm_bindgen]
 #[must_use]
 pub fn validate(source: &str) -> String {
     api::validate(source)
+}
+
+/// Validates an architecture against a pattern library.
+///
+/// `patterns` is a JSON array of pattern documents — the text of the files a `patterns/`
+/// directory holds. A browser has no filesystem to find them in, so the caller supplies
+/// them; everything else is identical to [`validate`].
+#[wasm_bindgen]
+#[must_use]
+pub fn validate_with_patterns(source: &str, patterns: &str) -> String {
+    api::validate_with_patterns(source, patterns)
+}
+
+/// Reports what an architecture must change to satisfy the patterns it claims.
+///
+/// `casm evolve` without a filesystem: it reports rather than rewrites, because a pattern
+/// is a shape to conform to and not a template to stamp (ADR-0012).
+#[wasm_bindgen]
+#[must_use]
+pub fn conformance(source: &str, patterns: &str) -> String {
+    api::conformance(source, patterns)
 }
 
 /// Renders an architecture as a diagram.
@@ -119,11 +143,25 @@ pub fn complete(source: &str, line: u32, character: u32) -> String {
     api::complete(source, line, character)
 }
 
+/// Returns completions, offering pattern references from the supplied library.
+#[wasm_bindgen]
+#[must_use]
+pub fn complete_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+    api::complete_with_patterns(source, patterns, line, character)
+}
+
 /// Returns a hover tooltip for a zero-based cursor position.
 #[wasm_bindgen]
 #[must_use]
 pub fn hover(source: &str, line: u32, character: u32) -> String {
     api::hover(source, line, character)
+}
+
+/// Returns a hover tooltip, explaining a claimed pattern from the supplied library.
+#[wasm_bindgen]
+#[must_use]
+pub fn hover_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+    api::hover_with_patterns(source, patterns, line, character)
 }
 
 /// Compares an architecture against an inventory of real infrastructure.
@@ -166,6 +204,19 @@ mod tests {
         let source = "name: x\nnodes:\n  - name: api\n    type: service\n";
 
         assert_eq!(validate(source), api::validate(source));
+        assert_eq!(
+            validate_with_patterns(source, "[]"),
+            api::validate_with_patterns(source, "[]")
+        );
+        assert_eq!(conformance(source, "[]"), api::conformance(source, "[]"));
+        assert_eq!(
+            complete_with_patterns(source, "[]", 3, 10),
+            api::complete_with_patterns(source, "[]", 3, 10)
+        );
+        assert_eq!(
+            hover_with_patterns(source, "[]", 2, 11),
+            api::hover_with_patterns(source, "[]", 2, 11)
+        );
         assert_eq!(render(source, "mermaid"), api::render(source, "mermaid"));
         assert_eq!(fingerprint(source), api::fingerprint(source));
         assert_eq!(diff(source, source), api::diff(source, source));

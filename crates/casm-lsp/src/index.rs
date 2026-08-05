@@ -51,6 +51,8 @@ pub enum Section {
     Nodes,
     /// Inside the `relationships:` sequence.
     Relationships,
+    /// Inside the `patterns:` sequence of conformance claims.
+    Patterns,
     /// Inside the `metadata:` mapping.
     Metadata,
     /// Inside a top-level key CASIMIR does not recognise.
@@ -63,6 +65,7 @@ impl Section {
         match key {
             "nodes" => Self::Nodes,
             "relationships" => Self::Relationships,
+            "patterns" => Self::Patterns,
             "metadata" => Self::Metadata,
             "name" | "version" | "description" => Self::Root,
             _ => Self::Unknown,
@@ -80,6 +83,8 @@ pub enum Block {
     Interfaces,
     /// Inside a `controls:` sequence.
     Controls,
+    /// Inside a conformance claim's `bind:` mapping.
+    Bindings,
 }
 
 /// Which end of a relationship a node reference names.
@@ -117,6 +122,14 @@ pub enum SymbolKind {
     ControlTypeValue,
     /// A `protocol:` value, on an interface or a relationship.
     ProtocolValue,
+    /// The `pattern:` value of a conformance claim — a `name@version` reference.
+    PatternReference,
+    /// A node named on the right of a `bind:` entry.
+    ///
+    /// A binding's *key* is a role in the pattern, which the document cannot resolve on
+    /// its own; its value names a node in this document, so it is a reference like any
+    /// `source:` or `target:`.
+    BindingTarget,
 }
 
 /// A resolved element of the document, with its location.
@@ -224,6 +237,48 @@ impl RelationshipEntry {
     }
 }
 
+/// A conformance claim found in the document.
+///
+/// Like [`RelationshipEntry`], an entry begins at the `- ` of the sequence item rather
+/// than at the field that identifies it: a claim being typed has an opening dash before it
+/// has a `pattern:`, and a diagnostic still has to land somewhere.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ClaimEntry {
+    /// The `name@version` reference, if written yet.
+    pub reference: Option<String>,
+    /// Where the reference sits.
+    pub reference_span: Option<Span>,
+    /// Each `bind:` entry as a role name and the span of the node it names.
+    pub bindings: Vec<(String, Span)>,
+    /// The line the `- ` sequence entry begins on.
+    pub item_line: u32,
+    /// The last line belonging to this item.
+    pub last_line: u32,
+    /// The indent at which this claim's fields sit.
+    pub field_indent: usize,
+}
+
+impl ClaimEntry {
+    /// The best span to anchor a diagnostic about this claim on.
+    ///
+    /// Prefers the reference itself, falling back to the opening line for a claim whose
+    /// `pattern:` has not been written.
+    #[must_use]
+    pub fn anchor_span(&self) -> Span {
+        self.reference_span
+            .unwrap_or_else(|| Span::line_start(self.item_line))
+    }
+
+    /// Where the node bound to `role` is named, if the claim binds it.
+    #[must_use]
+    pub fn binding_span(&self, role: &str) -> Option<Span> {
+        self.bindings
+            .iter()
+            .find(|(name, _)| name == role)
+            .map(|(_, span)| *span)
+    }
+}
+
 /// A position-aware view of an architecture document.
 ///
 /// Construction never fails; a malformed document simply yields fewer symbols.
@@ -234,6 +289,7 @@ pub struct DocumentIndex {
     symbols: Vec<Symbol>,
     nodes: Vec<NodeEntry>,
     relationships: Vec<RelationshipEntry>,
+    claims: Vec<ClaimEntry>,
 }
 
 impl DocumentIndex {
@@ -294,6 +350,20 @@ impl DocumentIndex {
         &self.relationships
     }
 
+    /// Every conformance claim, in document order.
+    #[must_use]
+    pub fn claims(&self) -> &[ClaimEntry] {
+        &self.claims
+    }
+
+    /// Finds the claim naming `reference`, an exact `name@version`.
+    #[must_use]
+    pub fn claim_of(&self, reference: &str) -> Option<&ClaimEntry> {
+        self.claims
+            .iter()
+            .find(|claim| claim.reference.as_deref() == Some(reference))
+    }
+
     /// Finds the relationship declared between `source` and `target`.
     ///
     /// The same pair may be connected by several edges of different types; this returns
@@ -328,12 +398,18 @@ impl DocumentIndex {
     }
 
     /// Finds every reference to the node called `name`.
+    ///
+    /// A `bind:` entry counts: binding a node to a pattern role is a use of that node, and
+    /// renaming it without following the binding leaves a claim pointing at nothing.
     #[must_use]
     pub fn references_to(&self, name: &str) -> Vec<&Symbol> {
         self.symbols
             .iter()
             .filter(|symbol| {
-                matches!(symbol.kind, SymbolKind::NodeReference(_)) && symbol.text == name
+                matches!(
+                    symbol.kind,
+                    SymbolKind::NodeReference(_) | SymbolKind::BindingTarget
+                ) && symbol.text == name
             })
             .collect()
     }
@@ -347,6 +423,7 @@ struct Builder {
     symbols: Vec<Symbol>,
     nodes: Vec<NodeEntry>,
     relationships: Vec<RelationshipEntry>,
+    claims: Vec<ClaimEntry>,
     section: Section,
     block: Block,
     block_indent: Option<usize>,
@@ -414,6 +491,7 @@ impl Builder {
         self.record_symbol(&info);
         self.record_node(&info);
         self.record_relationship(&info);
+        self.record_claim(&info);
         self.lines.push(info);
     }
 
@@ -454,16 +532,18 @@ impl Builder {
         let block_of_this_line = self.block;
 
         // Entering a block, effective from the following line.
-        if self.block == Block::None
-            && matches!(self.section, Section::Nodes | Section::Relationships)
-        {
-            match key {
-                Some("interfaces") => {
+        if self.block == Block::None {
+            match (self.section, key) {
+                (Section::Nodes | Section::Relationships, Some("interfaces")) => {
                     self.block = Block::Interfaces;
                     self.block_indent = Some(indent);
                 }
-                Some("controls") => {
+                (Section::Nodes | Section::Relationships, Some("controls")) => {
                     self.block = Block::Controls;
+                    self.block_indent = Some(indent);
+                }
+                (Section::Patterns, Some("bind")) => {
+                    self.block = Block::Bindings;
                     self.block_indent = Some(indent);
                 }
                 _ => {}
@@ -491,6 +571,10 @@ impl Builder {
             (Section::Relationships, Block::None, "target") => {
                 SymbolKind::NodeReference(Endpoint::Target)
             }
+            (Section::Patterns, Block::None, "pattern") => SymbolKind::PatternReference,
+            // Every key inside `bind:` is a role name, so the *value* is the node
+            // reference regardless of what the key is called.
+            (Section::Patterns, Block::Bindings, _) => SymbolKind::BindingTarget,
             (_, Block::Controls, "type") => SymbolKind::ControlTypeValue,
             (_, _, "protocol") => SymbolKind::ProtocolValue,
             _ => return,
@@ -578,6 +662,40 @@ impl Builder {
         }
     }
 
+    /// Records or extends a conformance claim.
+    fn record_claim(&mut self, info: &LineInfo) {
+        if info.section != Section::Patterns {
+            return;
+        }
+
+        if info.is_list_item && info.block == Block::None {
+            self.claims.push(ClaimEntry {
+                item_line: info.number,
+                last_line: info.number,
+                field_indent: info.field_indent(),
+                ..ClaimEntry::default()
+            });
+        }
+
+        let Some(current) = self.claims.last_mut() else {
+            return;
+        };
+        if info.field_indent() < current.field_indent {
+            return;
+        }
+
+        current.last_line = info.number;
+        if info.block == Block::None && info.key.as_deref() == Some("pattern") {
+            current.reference.clone_from(&info.value);
+            current.reference_span = info.value_span;
+        }
+        if info.block == Block::Bindings
+            && let (Some(role), Some(span)) = (info.key.clone(), info.value_span)
+        {
+            current.bindings.push((role, span));
+        }
+    }
+
     /// Produces the finished index.
     fn finish(self) -> DocumentIndex {
         DocumentIndex {
@@ -586,6 +704,7 @@ impl Builder {
             symbols: self.symbols,
             nodes: self.nodes,
             relationships: self.relationships,
+            claims: self.claims,
         }
     }
 }
@@ -1136,5 +1255,83 @@ nodes:
         assert_eq!(index.line_count(), 24);
         assert!(index.line(9_999).is_none());
         assert!(index.raw_line(9_999).is_none());
+    }
+
+    /// A document that claims a pattern and binds one of its roles.
+    const CLAIMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+  - name: orders
+    type: service
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+";
+
+    #[test]
+    fn a_conformance_claim_is_indexed_with_its_reference() {
+        let index = DocumentIndex::build(CLAIMING);
+
+        assert_eq!(index.claims().len(), 1);
+        let claim = &index.claims()[0];
+        assert_eq!(claim.reference.as_deref(), Some("secure-web-tier@1.0.0"));
+        assert_eq!(claim.item_line, 8);
+        assert_eq!(claim.anchor_span().line, 8);
+    }
+
+    #[test]
+    fn a_claim_is_found_by_its_reference() {
+        let index = DocumentIndex::build(CLAIMING);
+
+        assert!(index.claim_of("secure-web-tier@1.0.0").is_some());
+        assert!(index.claim_of("secure-web-tier@2.0.0").is_none());
+    }
+
+    #[test]
+    fn bindings_are_indexed_by_role() {
+        let index = DocumentIndex::build(CLAIMING);
+        let claim = &index.claims()[0];
+
+        assert_eq!(claim.bindings.len(), 2);
+        assert_eq!(claim.binding_span("edge").map(|span| span.line), Some(10));
+        assert_eq!(
+            claim.binding_span("application").map(|span| span.line),
+            Some(11)
+        );
+        assert!(claim.binding_span("nonesuch").is_none());
+    }
+
+    #[test]
+    fn a_bound_node_is_a_reference_to_it() {
+        // Renaming `orders` has to follow the binding, so the binding must count as a use.
+        let index = DocumentIndex::build(CLAIMING);
+
+        let uses = index.references_to("orders");
+        assert_eq!(uses.len(), 1);
+        assert_eq!(uses[0].kind, SymbolKind::BindingTarget);
+    }
+
+    #[test]
+    fn a_claim_that_is_still_being_typed_still_anchors() {
+        let source = "name: x\npatterns:\n  - pattern:\n";
+        let index = DocumentIndex::build(source);
+
+        assert_eq!(index.claims().len(), 1);
+        assert!(index.claims()[0].reference.is_none());
+        assert_eq!(index.claims()[0].anchor_span().line, 2, "the opening dash");
+    }
+
+    #[test]
+    fn the_patterns_section_does_not_leak_into_the_next_one() {
+        let source = "name: x\npatterns:\n  - pattern: p@1.0.0\n    bind:\n      edge: a\nnodes:\n  - name: a\n    type: service\n";
+        let index = DocumentIndex::build(source);
+
+        assert_eq!(index.claims().len(), 1);
+        assert_eq!(index.node_names(), ["a"], "the node is still indexed");
     }
 }

@@ -240,11 +240,20 @@ merge silently corrupts the file — which is the failure this project exists to
 The registry is therefore optional rather than a prerequisite: patterns are files, and a
 directory works.
 
-Conformance is checked by `casm validate` and `casm check`. The language server and the
-browser build report claims as *unchecked* — neither has anywhere to load a library from
-yet. See
-[ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md), including what this costs
-— patterns cannot scaffold, and a shape can only require what the model can express.
+Conformance is checked everywhere CASIMIR runs. The CLI takes `--patterns <dir>`. The
+language server finds its own library — the `casm.patterns` setting, then `patterns/`,
+then `.casm/patterns/` — and republishes every open document when one changes. The browser
+and edge builds have no filesystem, so they take the library across the ABI as text:
+
+```javascript
+const result = JSON.parse(casm.validate_with_patterns(source, JSON.stringify([pattern])));
+const report = JSON.parse(casm.conformance(source, JSON.stringify([pattern])));
+```
+
+A claim naming a pattern nothing holds is reported as *unchecked* — never assumed
+satisfied. See [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md), including
+what this costs: patterns cannot scaffold, and a shape can only require what the model can
+express.
 
 ---
 
@@ -411,15 +420,18 @@ Zed all work. Setup for each is in [`editors/`](editors/).
 
 | Feature | Behaviour |
 |---|---|
-| Diagnostics | Parse errors and the rule library, on every keystroke |
-| Completion | Node types, relationship types, protocols, control types, field names, and the node names *this document* declares |
-| Hover | A node's interfaces, controls, and both directions of its edges; an explanation for every enum value and field |
-| Go to definition | From a `source:` or `target:` to the node's declaration |
-| Find references | Every mention of a node |
+| Diagnostics | Parse errors and the whole rule library, on every keystroke |
+| Completion | Node types, relationship types, protocols, control types, field names, the node names *this document* declares, and the patterns your library holds |
+| Hover | A node's interfaces, controls, and both directions of its edges; the shape a claimed pattern requires; an explanation for every enum value and field |
+| Go to definition | From a `source:`, `target:`, or `bind:` value to the node's declaration |
+| Find references | Every mention of a node, including the pattern roles it is bound to |
 | Quick fixes | Insert the controls a diagnostic asks for, matching your indentation |
 
-`patterns-are-satisfied` is the exception: the server has nowhere to load a pattern
-library from, so it reports conformance claims as unchecked rather than checking them.
+The server finds its pattern library itself, since there is no `--patterns` flag to give
+it: `casm.patterns` if you set it, otherwise `patterns/` and then `.casm/patterns/` at
+each workspace folder. Editing a pattern republishes every open document — a finding that
+moved because the library changed belongs on screen without you touching the file. Where
+it looked, and what it found, is in the CASIMIR output channel.
 
 The part that matters: **all of this works while the document is syntactically broken**,
 which is when you actually need it. The server reads the text through a line-oriented

@@ -77,6 +77,13 @@ pub const GENERATE_DIAGRAM: &str = "casm.generateDiagram";
 /// The command identifier for validating every architecture file in the workspace.
 pub const VALIDATE_WORKSPACE: &str = "casm.validateWorkspace";
 
+/// The command identifier for re-reading the pattern library from disk.
+///
+/// A client that watches files gets reloads for free. This exists for the ones that do
+/// not, and for the case a watcher cannot see: a library created, moved, or checked out
+/// after the session began.
+pub const RELOAD_PATTERNS: &str = "casm.reloadPatterns";
+
 /// Builds the quick-fixes available for `diagnostic`.
 #[must_use]
 pub fn quick_fixes(index: &DocumentIndex, diagnostic: &Diagnostic) -> Vec<CodeAction> {
@@ -124,6 +131,16 @@ pub fn source_actions() -> Vec<CodeAction> {
             command: Some(Command {
                 id: VALIDATE_WORKSPACE.to_owned(),
                 title: "Validate workspace".to_owned(),
+            }),
+            resolves: None,
+        },
+        CodeAction {
+            title: "CASIMIR: reload the pattern library".to_owned(),
+            kind: ActionKind::Source,
+            edits: Vec::new(),
+            command: Some(Command {
+                id: RELOAD_PATTERNS.to_owned(),
+                title: "Reload patterns".to_owned(),
             }),
             resolves: None,
         },
@@ -305,6 +322,7 @@ mod tests {
             Path::new("test.yaml"),
             &index,
             &ValidatorConfig::default(),
+            &[],
         );
         (index, analysis.diagnostics)
     }

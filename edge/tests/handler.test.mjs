@@ -63,6 +63,10 @@ console.log("routing");
   const unknown = await handle(request("/nope"), casm);
   check("an unknown route is a 404 naming the real ones", unknown.status === 404);
   check("the 404 suggests /validate", (await unknown.json()).error.includes("/validate"));
+  check(
+    "the 404 mentions /conformance too",
+    (await handle(request("/nope"), casm).then((r) => r.json())).error.includes("/conformance"),
+  );
 
   const unknownWithBody = await handle(request("/nope", { body: VALID }), casm);
   check("an unknown route is a 404 even with a body", unknownWithBody.status === 404);
@@ -126,6 +130,62 @@ console.log("\nfingerprint and diff");
 
   const wrongShape = await handle(request("/diff", { body: JSON.stringify({ before: 1 }) }), casm);
   check("a wrong-shaped diff body is 400", wrongShape.status === 400);
+}
+
+console.log("\npatterns");
+{
+  const PATTERN = `name: secure-web-tier
+version: 1.0.0
+requires:
+  - role: edge
+    type: gateway
+`;
+  const CLAIMING = `name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+patterns:
+  - pattern: secure-web-tier@1.0.0
+`;
+  const envelope = (patterns) =>
+    JSON.stringify({ architecture: CLAIMING, patterns });
+
+  // An unchecked claim is a warning, not an error, so `/validate` still answers 200 —
+  // the same call `casm validate` makes without `--strict`. `/conformance` is the route
+  // that treats "nobody looked" as a failure.
+  const bare = await handle(request("/validate", { body: CLAIMING }), casm);
+  const bareBody = await bare.json();
+  check("a claim with no library still validates", bare.status === 200);
+  check(
+    "but is reported as unchecked",
+    bareBody.patternsLoaded === 0 &&
+      bareBody.diagnostics.some((d) => d.rule === "patterns-are-satisfied"),
+  );
+
+  const supplied = await handle(request("/validate", { body: envelope([PATTERN]) }), casm);
+  check("the envelope supplies the library", supplied.status === 200, `got ${supplied.status}`);
+  check("and reports how much of it loaded", (await supplied.json()).patternsLoaded === 1);
+
+  const conforms = await handle(request("/conformance", { body: envelope([PATTERN]) }), casm);
+  check("a satisfied claim is a 200", conforms.status === 200);
+  const report = await conforms.json();
+  check("the resolved binding is reported", report.claims[0].bindings.edge === "edge-gateway");
+
+  const unchecked = await handle(request("/conformance", { body: envelope([]) }), casm);
+  check("an unchecked claim is a 422, not a pass", unchecked.status === 422);
+  check("and is marked unchecked", (await unchecked.json()).claims[0].checked === false);
+
+  const wrongShape = await handle(
+    request("/conformance", { body: JSON.stringify({ architecture: CLAIMING, patterns: 7 }) }),
+    casm,
+  );
+  check("a non-array library is a 400", wrongShape.status === 400);
+
+  // A JSON-format architecture opens with a brace and must not be read as an envelope.
+  const asJson = JSON.stringify({ name: "checkout", nodes: [{ name: "api", type: "service" }] });
+  const document = await handle(request("/validate", { body: asJson }), casm);
+  check("a JSON document is not mistaken for an envelope", (await document.json()).parsed === true);
 }
 
 console.log("\nlimits");

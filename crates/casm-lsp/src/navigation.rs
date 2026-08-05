@@ -43,10 +43,15 @@ pub fn definition(index: &DocumentIndex, position: Position) -> Option<Span> {
     let symbol = index.symbol_at(position)?;
 
     match symbol.kind {
-        SymbolKind::NodeReference(_) | SymbolKind::NodeDefinition => {
+        // A `bind:` value names a node exactly as `source:` does, so it resolves the
+        // same way.
+        SymbolKind::NodeReference(_) | SymbolKind::NodeDefinition | SymbolKind::BindingTarget => {
             index.node_named(&symbol.text).map(|node| node.name_span)
         }
-        SymbolKind::NodeTypeValue
+        // Vocabulary terms declare nothing, and a pattern is declared in another file
+        // this index does not cover.
+        SymbolKind::PatternReference
+        | SymbolKind::NodeTypeValue
         | SymbolKind::RelationshipTypeValue
         | SymbolKind::ControlTypeValue
         | SymbolKind::ProtocolValue => None,

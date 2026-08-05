@@ -37,6 +37,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   context.subscriptions.push(
     commands.registerCommand('casm.validateWorkspace', () => validateWorkspace()),
   );
+
+  context.subscriptions.push(
+    commands.registerCommand('casm.reloadPatterns', () => reloadPatterns()),
+  );
 }
 
 export async function deactivate(): Promise<void> {
@@ -52,11 +56,18 @@ async function start(context: ExtensionContext): Promise<void> {
     debug: { command, transport: TransportKind.stdio },
   };
 
+  // Sent at `initialize`. The server has no `--patterns` flag to be given, so this is
+  // the only way to point it at a library that is not in a conventional place.
+  const patterns = workspace.getConfiguration('casm').get<string>('patterns');
+
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: 'file', language: 'casm' }],
+    // The same watcher serves both purposes: the server filters the events down to the
+    // ones that could change what its pattern library holds.
     synchronize: {
       fileEvents: workspace.createFileSystemWatcher('**/*.{yaml,yml}'),
     },
+    initializationOptions: patterns && patterns.length > 0 ? { patterns } : undefined,
     outputChannelName: 'CASIMIR',
   };
 
@@ -116,4 +127,18 @@ async function validateWorkspace(): Promise<void> {
     arguments: [],
   });
   window.showInformationMessage(`CASIMIR: ${summary}`);
+}
+
+/** Asks the server to re-read the pattern library from disk. */
+async function reloadPatterns(): Promise<void> {
+  if (!client) {
+    window.showWarningMessage('CASIMIR: the language server is not running.');
+    return;
+  }
+
+  const note = await client.sendRequest<string>('workspace/executeCommand', {
+    command: 'casm.reloadPatterns',
+    arguments: [],
+  });
+  window.showInformationMessage(note);
 }

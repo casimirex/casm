@@ -15,12 +15,12 @@
 //! from the text. A tooltip that vanishes the moment the document is briefly invalid is a
 //! tooltip that feels broken, and the author is *always* mid-edit when they reach for it.
 
-use casm_core::{Architecture, Node, Relationship};
+use casm_core::{Architecture, Node, Pattern, Relationship};
 use core::fmt::Write as _;
 
 use crate::index::{Block, DocumentIndex, Section, Symbol, SymbolKind};
 use crate::schema::{
-    CONTROL_KEYS, CONTROL_TYPES, INTERFACE_KEYS, NODE_KEYS, NODE_TYPES, PROTOCOLS,
+    CLAIM_KEYS, CONTROL_KEYS, CONTROL_TYPES, INTERFACE_KEYS, NODE_KEYS, NODE_TYPES, PROTOCOLS,
     RELATIONSHIP_KEYS, RELATIONSHIP_TYPES, ROOT_KEYS, Term, find,
 };
 use crate::text::{Position, Span};
@@ -37,15 +37,18 @@ pub struct Hover {
 /// Produces a tooltip for `position`, if anything there can be explained.
 ///
 /// `architecture` is the last successful parse of this document, when there is one.
+/// `patterns` is the loaded library, which is what lets a `pattern:` reference show the
+/// requirements it stands for rather than only its own text.
 #[must_use]
 pub fn hover(
     index: &DocumentIndex,
     architecture: Option<&Architecture>,
+    patterns: &[Pattern],
     position: Position,
 ) -> Option<Hover> {
     if let Some(symbol) = index.symbol_at(position) {
         return Some(Hover {
-            markdown: describe_symbol(index, architecture, symbol),
+            markdown: describe_symbol(index, architecture, patterns, symbol),
             span: symbol.span,
         });
     }
@@ -73,7 +76,17 @@ fn key_table(section: Section, block: Block) -> &'static [Term] {
         (Section::Nodes, Block::Interfaces) => INTERFACE_KEYS,
         (Section::Nodes | Section::Relationships, Block::Controls) => CONTROL_KEYS,
         (Section::Relationships, Block::None | Block::Interfaces) => RELATIONSHIP_KEYS,
-        (Section::Metadata | Section::Unknown, _) => &[],
+        (Section::Patterns, Block::None) => CLAIM_KEYS,
+        // Inside `bind:` every key is a role name defined by the pattern, not by CASIMIR,
+        // so there is no fixed vocabulary to explain.
+        //
+        // The remaining pairs cannot arise — `crate::index` only opens `bind:` inside
+        // `patterns:` and `interfaces:`/`controls:` outside it — and are spelled out
+        // rather than caught by a wildcard so that adding a block or a section is a
+        // compile error here (ADR-0005).
+        (Section::Patterns, Block::Bindings | Block::Interfaces | Block::Controls)
+        | (Section::Nodes | Section::Relationships, Block::Bindings)
+        | (Section::Metadata | Section::Unknown, _) => &[],
     }
 }
 
@@ -81,12 +94,15 @@ fn key_table(section: Section, block: Block) -> &'static [Term] {
 fn describe_symbol(
     index: &DocumentIndex,
     architecture: Option<&Architecture>,
+    patterns: &[Pattern],
     symbol: &Symbol,
 ) -> String {
     match symbol.kind {
-        SymbolKind::NodeDefinition | SymbolKind::NodeReference(_) => {
+        // A `bind:` value names a node, so it gets the node's tooltip.
+        SymbolKind::NodeDefinition | SymbolKind::NodeReference(_) | SymbolKind::BindingTarget => {
             describe_node(index, architecture, &symbol.text)
         }
+        SymbolKind::PatternReference => describe_pattern(patterns, &symbol.text),
         SymbolKind::NodeTypeValue => describe_term(NODE_TYPES, &symbol.text, "node type"),
         SymbolKind::RelationshipTypeValue => {
             describe_term(RELATIONSHIP_TYPES, &symbol.text, "relationship type")
@@ -94,6 +110,54 @@ fn describe_symbol(
         SymbolKind::ControlTypeValue => describe_term(CONTROL_TYPES, &symbol.text, "control type"),
         SymbolKind::ProtocolValue => describe_protocol(&symbol.text),
     }
+}
+
+/// Renders a claimed pattern, from the library if it holds one.
+///
+/// Says plainly when the library does not, rather than showing an empty tooltip: "the
+/// library has no such pattern" is the answer the author needs, and it is the same thing
+/// `patterns-are-satisfied` reports as a warning.
+fn describe_pattern(patterns: &[Pattern], reference: &str) -> String {
+    let Some(pattern) = patterns
+        .iter()
+        .find(|pattern| pattern.reference() == reference)
+    else {
+        return format!(
+            "`{reference}` is not in the loaded pattern library, so this claim is \
+             **unchecked**.\n\nPoint the server at a library with the `casm.patterns` \
+             setting, or check the reference for a typo."
+        );
+    };
+
+    let mut out = format!("**{}** — _v{}_", pattern.name(), pattern.version());
+    if let Some(description) = pattern.description() {
+        let _ = write!(out, "\n\n{description}");
+    }
+
+    out.push_str("\n\n**Roles**");
+    for requirement in pattern.requirements() {
+        let _ = write!(
+            out,
+            "\n- `{}` — a {}",
+            requirement.role(),
+            requirement.node_type()
+        );
+    }
+
+    if !pattern.relationships().is_empty() {
+        out.push_str("\n\n**Required relationships**");
+        for required in pattern.relationships() {
+            let _ = write!(
+                out,
+                "\n- `{}` → `{}` ({})",
+                required.source(),
+                required.target(),
+                required.relationship_type()
+            );
+        }
+    }
+
+    out
 }
 
 /// Renders a vocabulary term, or says plainly that it is not one.
@@ -285,6 +349,7 @@ relationships:
         hover(
             index,
             arch,
+            &[],
             Position::new(line, span.start.saturating_add(1)),
         )
         .expect("something is under the cursor")
@@ -400,7 +465,7 @@ relationships:
     fn hovering_a_key_explains_the_field() {
         let (index, arch) = parts();
         // Column 6 on line 22 is inside the key `latency-budget-ms`.
-        let markdown = hover(&index, Some(&arch), Position::new(22, 6))
+        let markdown = hover(&index, Some(&arch), &[], Position::new(22, 6))
             .expect("the key is under the cursor")
             .markdown;
         assert!(markdown.contains("**latency-budget-ms**"), "{markdown}");
@@ -414,7 +479,7 @@ relationships:
     fn hovering_a_key_uses_the_vocabulary_of_the_enclosing_block() {
         let (index, arch) = parts();
         // `standard` exists only on controls; hovering it must find the control table.
-        let markdown = hover(&index, Some(&arch), Position::new(12, 10))
+        let markdown = hover(&index, Some(&arch), &[], Position::new(12, 10))
             .expect("the key is under the cursor")
             .markdown;
         assert!(markdown.contains("**standard**"), "{markdown}");
@@ -424,13 +489,13 @@ relationships:
     #[test]
     fn hovering_empty_space_produces_nothing() {
         let (index, arch) = parts();
-        assert!(hover(&index, Some(&arch), Position::new(2, 30)).is_none());
+        assert!(hover(&index, Some(&arch), &[], Position::new(2, 30)).is_none());
     }
 
     #[test]
     fn hovering_reports_the_span_so_the_editor_can_highlight_it() {
         let (index, arch) = parts();
-        let result = hover(&index, Some(&arch), Position::new(3, 11)).expect("on the name");
+        let result = hover(&index, Some(&arch), &[], Position::new(3, 11)).expect("on the name");
         assert_eq!(result.span.line, 3);
         assert_eq!(result.span.width(), 3, "just `api`, not the whole line");
     }
@@ -440,9 +505,92 @@ relationships:
         let (index, arch) = parts();
         for line in 0..index.line_count().saturating_add(2) {
             for character in 0..50 {
-                let _ = hover(&index, Some(&arch), Position::new(line, character));
-                let _ = hover(&index, None, Position::new(line, character));
+                let _ = hover(&index, Some(&arch), &[], Position::new(line, character));
+                let _ = hover(&index, None, &[], Position::new(line, character));
             }
         }
+    }
+
+    const PATTERN: &str = "\
+name: secure-web-tier
+version: 1.0.0
+description: One governed gateway in front of one service.
+requires:
+  - role: edge
+    type: gateway
+  - role: application
+    type: service
+relationships:
+  - source: edge
+    target: application
+    type: sync
+";
+
+    const CLAIMING: &str = "\
+name: checkout
+version: 1.0.0
+nodes:
+  - name: edge-gateway
+    type: gateway
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+";
+
+    fn library() -> Vec<Pattern> {
+        vec![
+            casm_parser::library::parse_pattern_str(
+                PATTERN,
+                std::path::Path::new("secure-web-tier.yaml"),
+            )
+            .expect("the fixture pattern parses"),
+        ]
+    }
+
+    #[test]
+    fn hovering_a_claimed_pattern_shows_what_it_requires() {
+        let index = DocumentIndex::build(CLAIMING);
+        let markdown = hover(&index, None, &library(), Position::new(6, 15))
+            .expect("the reference is under the cursor")
+            .markdown;
+
+        assert!(markdown.contains("**secure-web-tier**"), "{markdown}");
+        assert!(markdown.contains("One governed gateway"), "{markdown}");
+        assert!(markdown.contains("`edge` — a gateway"), "{markdown}");
+        assert!(markdown.contains("`edge` → `application`"), "{markdown}");
+    }
+
+    #[test]
+    fn hovering_a_pattern_the_library_lacks_says_so() {
+        // The same answer `patterns-are-satisfied` gives, in the place the author is
+        // looking when they wonder why nothing was checked.
+        let index = DocumentIndex::build(CLAIMING);
+        let markdown = hover(&index, None, &[], Position::new(6, 15))
+            .expect("the reference is under the cursor")
+            .markdown;
+
+        assert!(markdown.contains("unchecked"), "{markdown}");
+        assert!(markdown.contains("casm.patterns"), "{markdown}");
+    }
+
+    #[test]
+    fn hovering_a_bound_node_explains_the_node() {
+        let index = DocumentIndex::build(CLAIMING);
+        let markdown = hover(&index, None, &library(), Position::new(8, 14))
+            .expect("the bound node is under the cursor")
+            .markdown;
+
+        assert!(markdown.contains("**edge-gateway**"), "{markdown}");
+    }
+
+    #[test]
+    fn hovering_a_claim_key_explains_the_field() {
+        let index = DocumentIndex::build(CLAIMING);
+        let markdown = hover(&index, None, &library(), Position::new(7, 5))
+            .expect("the key is under the cursor")
+            .markdown;
+
+        assert!(markdown.contains("**bind**"), "{markdown}");
     }
 }

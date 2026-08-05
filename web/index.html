@@ -190,6 +190,7 @@
           <button type="button" data-example="broken">a syntax error</button>
           <button type="button" data-example="cycle">a dependency cycle</button>
           <button type="button" data-example="exposed">an exposed database</button>
+          <button type="button" data-example="pattern">a pattern claim</button>
         </div>
         <textarea id="source" spellcheck="false" aria-label="Architecture source"></textarea>
         <div class="summary">
@@ -294,7 +295,73 @@ relationships:
     target: orders-db
     type: sync
 `,
+
+        pattern: `name: checkout
+version: 1.0.0
+description: Claims conformance to the pattern in this page's library.
+
+nodes:
+  - name: edge-gateway
+    type: gateway
+    interfaces:
+      - name: public-api
+        protocol: http2
+        version: 2.1.0
+    controls:
+      - type: security
+        standard: OIDC-Core-1.0
+        description: Every request carries a validated OIDC token.
+      - type: security
+        standard: TLS1.3
+        description: TLS 1.3 terminated at the edge.
+
+  - name: orders
+    type: service
+
+relationships:
+  - source: edge-gateway
+    target: orders
+    type: sync
+
+# Change the version to 2.0.0 and the claim becomes *unchecked*: the library
+# holds no such pattern, and a claim nobody verified is never assumed met.
+patterns:
+  - pattern: secure-web-tier@1.0.0
+    bind:
+      edge: edge-gateway
+      application: orders
+`,
       };
+
+      // The pattern library this page validates against.
+      //
+      // A browser has no filesystem, so there is nowhere to discover a `patterns/`
+      // directory: the library crosses the ABI as text, exactly as an edge worker or a CI
+      // job would send it. This is the same pattern the repository dogfoods.
+      const PATTERNS = JSON.stringify([
+        `name: secure-web-tier
+version: 1.0.0
+description: >
+  Public traffic enters through one governed gateway, which calls an application
+  service synchronously.
+satisfies:
+  - SOC2-CC6.1
+  - SOC2-CC6.6
+requires:
+  - role: edge
+    type: gateway
+    description: The single public entry point.
+    min-security-controls: 2
+    requires-protocols: [http2]
+  - role: application
+    type: service
+    description: The service the gateway fronts.
+relationships:
+  - source: edge
+    target: application
+    type: sync
+`,
+      ]);
 
       const source = document.getElementById("source");
       const output = document.getElementById("output");
@@ -358,7 +425,7 @@ relationships:
       }
 
       function analyse() {
-        const raw = casm.validate(source.value);
+        const raw = casm.validate_with_patterns(source.value, PATTERNS);
         const result = JSON.parse(raw);
 
         const errors = result.diagnostics.filter((d) => d.severity === "error").length;

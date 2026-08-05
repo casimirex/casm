@@ -80,9 +80,33 @@ pub const ROOT_KEYS: &[Term] = &[
         documentation: "The directed edges between participants.",
     },
     Term {
+        label: "patterns",
+        detail: "sequence",
+        documentation: "The patterns this architecture claims conformance to. A claim is \
+                        checked, not stamped: see ADR-0012.",
+    },
+    Term {
         label: "metadata",
         detail: "mapping",
         documentation: "Arbitrary key/value annotations. Serialised in sorted key order.",
+    },
+];
+
+/// Keys valid on a conformance claim.
+pub const CLAIM_KEYS: &[Term] = &[
+    Term {
+        label: "pattern",
+        detail: "required, `name@version`",
+        documentation: "The pattern being claimed, at an exact version. A claim naming a \
+                        pattern the library does not hold is reported as unchecked, never \
+                        assumed satisfied.",
+    },
+    Term {
+        label: "bind",
+        detail: "mapping, role to node",
+        documentation: "Which node plays each role the pattern names. A role left unbound \
+                        is inferred when exactly one node has the required type, and \
+                        reported as ambiguous when several do.",
     },
 ];
 

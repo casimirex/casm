@@ -18,37 +18,57 @@
 //! for why release builds keep unwinding, and for why this is a last line of defence
 //! rather than a licence to panic.
 
+use casm_core::Pattern;
 use casm_renderer::{Mermaid, Renderer as _};
 use casm_validator::ValidatorConfig;
 use std::panic::AssertUnwindSafe;
+use std::path::PathBuf;
 use std::sync::Mutex;
 use tower_lsp_server::jsonrpc::{Error as RpcError, Result as RpcResult};
 use tower_lsp_server::ls_types::{
     CodeAction, CodeActionKind, CodeActionOrCommand, CodeActionParams,
     CodeActionProviderCapability, CodeActionResponse, Command, CompletionItem, CompletionItemKind,
     CompletionOptions, CompletionParams, CompletionResponse, Diagnostic, DiagnosticSeverity,
-    DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
-    DocumentSymbol, DocumentSymbolParams, DocumentSymbolResponse, Documentation,
-    ExecuteCommandOptions, ExecuteCommandParams, GotoDefinitionParams, GotoDefinitionResponse,
-    Hover, HoverContents, HoverParams, HoverProviderCapability, InitializeParams, InitializeResult,
-    InitializedParams, Location, MarkupContent, MarkupKind, MessageType, NumberOrString, OneOf,
-    Position, Range, ReferenceParams, ServerCapabilities, ServerInfo, SymbolKind,
-    TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit, Uri, WorkspaceEdit,
+    DidChangeTextDocumentParams, DidChangeWatchedFilesParams, DidCloseTextDocumentParams,
+    DidOpenTextDocumentParams, DocumentSymbol, DocumentSymbolParams, DocumentSymbolResponse,
+    Documentation, ExecuteCommandOptions, ExecuteCommandParams, GotoDefinitionParams,
+    GotoDefinitionResponse, Hover, HoverContents, HoverParams, HoverProviderCapability,
+    InitializeParams, InitializeResult, InitializedParams, Location, MarkupContent, MarkupKind,
+    MessageType, NumberOrString, OneOf, Position, Range, ReferenceParams, ServerCapabilities,
+    ServerInfo, SymbolKind, TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit, Uri,
+    WorkspaceEdit,
 };
 use tower_lsp_server::{Client, LanguageServer};
 
-use crate::actions::{self, ActionKind, GENERATE_DIAGRAM, VALIDATE_WORKSPACE};
+use crate::actions::{self, ActionKind, GENERATE_DIAGRAM, RELOAD_PATTERNS, VALIDATE_WORKSPACE};
 use crate::completion::{self, ItemKind};
 use crate::diagnostics::Severity;
-use crate::documents::{DocumentStore, Limits};
+use crate::documents::{DocumentStore, Limits, uri_to_path};
 use crate::hover;
+use crate::library;
 use crate::navigation;
 use crate::text::{Position as CasmPosition, Span};
+
+/// What the client told us about the workspace, and what we made of it.
+///
+/// Kept apart from the [`DocumentStore`] because it outlives any particular library: a
+/// reload has to know where to look again, and "the setting said `shapes/`" is still true
+/// after the load that used it failed.
+#[derive(Debug, Default)]
+struct Workspace {
+    /// The folders the client reported, most significant first.
+    roots: Vec<PathBuf>,
+    /// The `casm.patterns` initialization option, if the client sent one.
+    configured: Option<String>,
+    /// The directory the current library was loaded from, if any.
+    directory: Option<PathBuf>,
+}
 
 /// The language server.
 pub struct Backend {
     client: Client,
     store: Mutex<DocumentStore>,
+    workspace: Mutex<Workspace>,
 }
 
 impl Backend {
@@ -61,6 +81,7 @@ impl Backend {
                 Limits::default(),
                 ValidatorConfig::default(),
             )),
+            workspace: Mutex::new(Workspace::default()),
         }
     }
 
@@ -86,14 +107,18 @@ impl Backend {
     }
 
     /// Runs `operation` against the stored document for `uri`, if it is open.
+    ///
+    /// The pattern library is handed over alongside it: completion, hover, and quick-fixes
+    /// all answer differently depending on what the library holds, and it is the store —
+    /// not the document — that owns it.
     fn with_document<T>(
         &self,
         uri: &Uri,
-        operation: impl FnOnce(&crate::documents::Document) -> T,
+        operation: impl FnOnce(&crate::documents::Document, &[Pattern]) -> T,
     ) -> Option<T> {
         let mut store = self.store.lock().ok()?;
-        let document = store.get(uri.as_str())?;
-        Some(operation(document))
+        let (document, patterns) = store.get_with_patterns(uri.as_str())?;
+        Some(operation(document, patterns))
     }
 }
 
@@ -117,7 +142,20 @@ fn guarded<T>(operation_name: &'static str, operation: impl FnOnce() -> T) -> Rp
 // itself under `-D warnings`. `unknown_lints` makes the allow portable across both.
 #[allow(unknown_lints, clippy::unused_async_trait_impl)]
 impl LanguageServer for Backend {
-    async fn initialize(&self, _: InitializeParams) -> RpcResult<InitializeResult> {
+    async fn initialize(&self, params: InitializeParams) -> RpcResult<InitializeResult> {
+        // Recorded now, acted on in `initialized`: the client is not obliged to accept a
+        // log message until the handshake completes, and a library that failed to load is
+        // exactly the thing that must not be reported into a void.
+        if let Ok(mut workspace) = self.workspace.lock() {
+            workspace.roots = workspace_roots(&params);
+            workspace.configured = params
+                .initialization_options
+                .as_ref()
+                .and_then(|options| options.get("patterns"))
+                .and_then(serde_json::Value::as_str)
+                .map(ToOwned::to_owned);
+        }
+
         Ok(InitializeResult {
             server_info: Some(ServerInfo {
                 name: "casm-lsp".to_owned(),
@@ -145,7 +183,11 @@ impl LanguageServer for Backend {
                 document_symbol_provider: Some(OneOf::Left(true)),
                 code_action_provider: Some(CodeActionProviderCapability::Simple(true)),
                 execute_command_provider: Some(ExecuteCommandOptions {
-                    commands: vec![GENERATE_DIAGRAM.to_owned(), VALIDATE_WORKSPACE.to_owned()],
+                    commands: vec![
+                        GENERATE_DIAGRAM.to_owned(),
+                        VALIDATE_WORKSPACE.to_owned(),
+                        RELOAD_PATTERNS.to_owned(),
+                    ],
                     ..ExecuteCommandOptions::default()
                 }),
                 ..ServerCapabilities::default()
@@ -157,6 +199,9 @@ impl LanguageServer for Backend {
         self.client
             .log_message(MessageType::INFO, "casm-lsp ready — architecture as code")
             .await;
+
+        let note = self.reload_patterns().await;
+        self.client.log_message(MessageType::INFO, note).await;
     }
 
     async fn shutdown(&self) -> RpcResult<()> {
@@ -182,6 +227,24 @@ impl LanguageServer for Backend {
         .await;
     }
 
+    async fn did_change_watched_files(&self, params: DidChangeWatchedFilesParams) {
+        let directory = self
+            .workspace
+            .lock()
+            .ok()
+            .and_then(|workspace| workspace.directory.clone());
+
+        let touched = params.changes.iter().any(|change| {
+            library::is_pattern_file(&uri_to_path(change.uri.as_str()), directory.as_deref())
+        });
+        if !touched {
+            return;
+        }
+
+        let note = self.reload_patterns().await;
+        self.client.log_message(MessageType::INFO, note).await;
+    }
+
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
         if let Ok(mut store) = self.store.lock() {
             store.close(params.text_document.uri.as_str());
@@ -197,8 +260,8 @@ impl LanguageServer for Backend {
         let position = convert_position(location.position);
 
         guarded("completion", || {
-            self.with_document(&location.text_document.uri, |document| {
-                let result = completion::complete(&document.index, position);
+            self.with_document(&location.text_document.uri, |document, patterns| {
+                let result = completion::complete(&document.index, patterns, position);
                 CompletionResponse::Array(result.items.iter().map(convert_completion).collect())
             })
         })
@@ -209,10 +272,11 @@ impl LanguageServer for Backend {
         let position = convert_position(location.position);
 
         guarded("hover", || {
-            self.with_document(&location.text_document.uri, |document| {
+            self.with_document(&location.text_document.uri, |document, patterns| {
                 hover::hover(
                     &document.index,
                     document.analysis.architecture.as_ref(),
+                    patterns,
                     position,
                 )
                 .map(|found| Hover {
@@ -236,7 +300,7 @@ impl LanguageServer for Backend {
         let position = convert_position(location.position);
 
         guarded("goto_definition", || {
-            self.with_document(&uri, |document| {
+            self.with_document(&uri, |document, _| {
                 navigation::definition(&document.index, position).map(|span| {
                     GotoDefinitionResponse::Scalar(Location {
                         uri: uri.clone(),
@@ -255,7 +319,7 @@ impl LanguageServer for Backend {
         let include_declaration = params.context.include_declaration;
 
         guarded("references", || {
-            self.with_document(&uri, |document| {
+            self.with_document(&uri, |document, _| {
                 navigation::references(&document.index, position, include_declaration)
                     .into_iter()
                     .map(|span| Location {
@@ -274,7 +338,7 @@ impl LanguageServer for Backend {
         let uri = params.text_document.uri;
 
         guarded("document_symbol", || {
-            self.with_document(&uri, |document| {
+            self.with_document(&uri, |document, _| {
                 let symbols = navigation::outline(&document.index)
                     .into_iter()
                     .map(build_symbol)
@@ -289,7 +353,7 @@ impl LanguageServer for Backend {
         let requested = params.range;
 
         guarded("code_action", || {
-            self.with_document(&uri, |document| {
+            self.with_document(&uri, |document, _| {
                 // The server's own diagnostics are used rather than the client's copy, so
                 // a stale or lossy round-trip cannot suppress a fix.
                 let mut offered: Vec<CodeActionOrCommand> = document
@@ -348,6 +412,11 @@ impl LanguageServer for Backend {
                 Ok(Some(serde_json::Value::String(summary)))
             }
 
+            RELOAD_PATTERNS => {
+                let note = self.reload_patterns().await;
+                Ok(Some(serde_json::Value::String(note)))
+            }
+
             other => {
                 let mut error = RpcError::invalid_request();
                 error.message = format!("casm-lsp: unknown command '{other}'").into();
@@ -358,6 +427,63 @@ impl LanguageServer for Backend {
 }
 
 impl Backend {
+    /// Re-reads the pattern library and republishes every open document.
+    ///
+    /// Returns the note describing what happened, for the caller to log or hand back as a
+    /// command result.
+    ///
+    /// Republishing is the point. Reloading a library that no document is re-analysed
+    /// against would change what the *next* keystroke reports and leave every open file
+    /// showing findings computed against the previous one.
+    async fn reload_patterns(&self) -> String {
+        let (roots, configured) = {
+            let Ok(workspace) = self.workspace.lock() else {
+                return "casm-lsp: could not read the workspace configuration".to_owned();
+            };
+            (workspace.roots.clone(), workspace.configured.clone())
+        };
+
+        // Deliberately outside every lock: this reads the filesystem, and the store must
+        // stay available to requests arriving while it does.
+        let found = library::discover(&roots, configured.as_deref());
+
+        let refreshed = {
+            let Ok(mut store) = self.store.lock() else {
+                return "casm-lsp: could not reach the document store to reload patterns"
+                    .to_owned();
+            };
+            store.load_patterns(found.patterns.clone());
+            store
+                .uris()
+                .into_iter()
+                .filter_map(|uri| {
+                    let document = store.peek(&uri)?;
+                    let published: Vec<Diagnostic> = document
+                        .diagnostics()
+                        .iter()
+                        .map(convert_diagnostic)
+                        .collect();
+                    Some((uri, published, document.version))
+                })
+                .collect::<Vec<_>>()
+        };
+
+        if let Ok(mut workspace) = self.workspace.lock() {
+            workspace.directory = found.directory;
+        }
+
+        for (uri, diagnostics, version) in refreshed {
+            let Ok(parsed) = uri.parse::<Uri>() else {
+                continue;
+            };
+            self.client
+                .publish_diagnostics(parsed, diagnostics, Some(version))
+                .await;
+        }
+
+        format!("casm-lsp: {}", found.note)
+    }
+
     /// Summarises the findings across every open document.
     ///
     /// Deliberately synchronous: it holds the store's `Mutex`, and holding a blocking
@@ -387,6 +513,30 @@ impl Backend {
 
         format!("checked {documents} open document(s): {errors} error(s), {warnings} warning(s)")
     }
+}
+
+/// The workspace folders the client reported, most significant first.
+///
+/// `workspaceFolders` is the modern field and `rootUri` the deprecated one. Both are read:
+/// the fallback costs three lines and is the difference between working and not working in
+/// an older client.
+fn workspace_roots(params: &InitializeParams) -> Vec<PathBuf> {
+    if let Some(folders) = params.workspace_folders.as_ref()
+        && !folders.is_empty()
+    {
+        return folders
+            .iter()
+            .map(|folder| uri_to_path(folder.uri.as_str()))
+            .collect();
+    }
+
+    // Deprecated in the protocol, still the only thing some clients send.
+    #[allow(deprecated)]
+    params
+        .root_uri
+        .as_ref()
+        .map(|uri| vec![uri_to_path(uri.as_str())])
+        .unwrap_or_default()
 }
 
 /// Converts a protocol position into CASIMIR's.

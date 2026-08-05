@@ -29,13 +29,36 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
     what a tool could add from what only a human can decide, reuses the bindings written
     for an earlier version of the same pattern, and never rewrites the file.
 
+- **Patterns in the editor.** The language server finds its own library: the `casm.patterns`
+  setting if there is one, then `patterns/`, then `.casm/patterns/` at each workspace
+  folder. First hit wins, and every outcome — including a directory that failed to load —
+  is logged rather than left to look like an absent one.
+  - Editing a pattern republishes every open document. A finding that moved because the
+    library changed belongs on screen without the author touching the file.
+  - `patterns:` is a section the index understands, so a conformance finding underlines the
+    `pattern:` line rather than line 1, `bind:` values are go-to-definition targets, and
+    renaming a node finds the bindings that name it.
+  - Completion offers the references the library actually holds, and the roles the claimed
+    pattern names — the answer to the `bind:` verbosity ADR-0012 accepted as a cost. Hover
+    on a reference shows the shape it stands for.
+  - A `casm.reloadPatterns` command, for clients that do not watch files and for a library
+    that appears mid-session.
+
+- **Patterns in the browser and at the edge.** A browser has no filesystem, so the library
+  crosses the ABI as text: `validate_with_patterns`, `conformance`,
+  `complete_with_patterns`, and `hover_with_patterns` all take a JSON array of pattern
+  documents. `conformance` is `casm evolve` without a disk, and marks each unmet
+  requirement as mechanical or not.
+  - The existing exports are unchanged and delegate with an empty library, so a caller on
+    0.1.0 sees the same bytes.
+  - The edge worker gains `POST /conformance`, and `/validate` accepts an
+    `{architecture, patterns}` envelope. An unchecked claim is a 422 from `/conformance`:
+    a claim nobody verified is not a claim met.
+  - A malformed library is a value, never a trap — one bad pattern is reported and the
+    rest still load.
+
 ### Known limitations
 
-- The language server and the WebAssembly build cannot yet check conformance claims:
-  both construct their own validator and have nowhere to load a pattern library from.
-  They report every claim as unchecked, which is honest but less than useful. Giving the
-  LSP a workspace setting for the pattern directory, and the WASM ABI an argument for it,
-  is a design decision of its own rather than something to bolt on.
 - Signing, content addressing over the wire, and a federated hub remain unbuilt. Patterns
   already carry a fingerprint, which is what content addressing needs.
 

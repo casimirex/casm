@@ -11,16 +11,34 @@ work. Setup for each is in [`editors/`](https://github.com/casimirex/casimir/tre
 
 | Feature | Behaviour |
 |---|---|
-| Diagnostics | Parse errors and the rule library, on every keystroke |
-| Completion | Node types, relationship types, protocols, control types, field names, and the node names *this document* declares |
-| Hover | A node's interfaces, controls, and both directions of its edges |
-| Go to definition | From a `source:` or `target:` to the node's declaration |
-| Find references | Every mention of a node |
+| Diagnostics | Parse errors and the whole rule library, on every keystroke |
+| Completion | Node types, relationship types, protocols, control types, field names, the node names *this document* declares, and the patterns your library holds |
+| Hover | A node's interfaces, controls, and both directions of its edges; the shape a claimed pattern requires |
+| Go to definition | From a `source:`, `target:`, or `bind:` value to the node's declaration |
+| Find references | Every mention of a node, including the pattern roles it is bound to |
 | Quick fixes | Insert the controls a diagnostic asks for, matching your indentation |
 
-`patterns-are-satisfied` is the exception: the server has nowhere to load a pattern
-library from, so it reports conformance claims as unchecked. Run
-`casm validate --patterns <dir>` to check them.
+## Where the pattern library comes from
+
+There is no `--patterns` flag in an editor, so the server looks for one itself:
+
+1. the `casm.patterns` setting, absolute or relative to the first workspace folder;
+2. `patterns/` at each workspace folder;
+3. `.casm/patterns/` at each workspace folder.
+
+First hit wins — nothing is merged, because two directories holding different versions of
+one pattern would otherwise make the answer depend on scan order. A setting that points at
+nothing is reported rather than quietly falling back to a directory you did not name.
+
+Where it looked and what it found goes to the CASIMIR output channel, so an absent library
+and one that failed to load never look the same.
+
+Editing a pattern re-analyses every open document immediately. If your client does not
+watch files, run **CASIMIR: Reload the pattern library** (`casm.reloadPatterns`) — which is
+also what to use when a library appears mid-session, after a `git checkout`.
+
+A claim naming a pattern the library does not hold is reported as *unchecked*: a warning,
+never a silent pass.
 
 ## The part that matters
 

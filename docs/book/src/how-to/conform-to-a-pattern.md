@@ -120,6 +120,32 @@ silently discarded.
 `patterns-are-satisfied` is an error when a requirement is unmet, so a claim that has
 quietly stopped being true fails the build rather than sitting in the file as decoration.
 
+## In your editor, and in a browser
+
+The language server finds a library on its own — `casm.patterns`, then `patterns/`, then
+`.casm/patterns/` — and checks your claims as you type. Completion offers the references
+your library actually holds and the roles the claimed pattern names, so `bind:` is a list
+to pick from rather than something to remember. See
+[Set up your editor](set-up-your-editor.md).
+
+A browser and an edge worker have no filesystem, so they take the library as text:
+
+```javascript
+const library = JSON.stringify([patternSource]);
+
+const result = JSON.parse(casm.validate_with_patterns(source, library));
+const report = JSON.parse(casm.conformance(source, library));
+```
+
+`conformance` is `casm evolve` without a disk. Each unmet requirement is marked
+`mechanical: true` when a tool could satisfy it by adding to the architecture, and `false`
+when only a person can decide — the same distinction the CLI prints as `add:` and
+`decide:`.
+
+The edge worker exposes it as `POST /conformance`, taking
+`{"architecture": "...", "patterns": ["..."]}`. An unchecked claim answers 422: a claim
+nobody verified is not a claim met.
+
 ## What a pattern cannot do
 
 It cannot scaffold: you get a checklist, not generated YAML. And it can only require what
