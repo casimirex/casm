@@ -116,6 +116,12 @@ jobs:
 
   # A software bill of materials, in both formats the ecosystem asks for. An SBOM that
   # nobody can ingest is paperwork; SPDX and CycloneDX between them cover the tooling.
+  #
+  # v0.1.0 and v0.2.0 shipped without the CycloneDX half and nothing noticed. The step
+  # searched for `casm.cdx.json`, which `cargo cyclonedx` never writes — `--override-filename`
+  # sets the name exactly, dropping the `.cdx` infix used otherwise — and then hid the miss
+  # behind `2>/dev/null || true`. Every document is now taken by an explicit path and
+  # checked before upload.
   sbom:
     name: SBOM
     needs: verify
@@ -125,14 +131,39 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-cyclonedx cargo-sbom --locked
-      - run: |
+      - name: generate the bills of materials
+        run: |
+          set -euo pipefail
           mkdir -p dist
-          cargo cyclonedx --format json --all --override-filename casm
-          find . -name 'casm.cdx.json' -exec cp {} dist/casm-cyclonedx.json \; 2>/dev/null || true
+
+          # One BOM per workspace crate, each written into that crate's own directory.
+          # `--manifest-path` does not narrow this: it only locates the workspace.
+          cargo cyclonedx --format json --all --override-filename bom
+
+          # So the two that describe the shipped binaries are taken by path. A glob would
+          # collect twelve identically-named files and keep an arbitrary one.
+          cp crates/casm-cli/bom.json dist/casm-cli-cyclonedx.json
+          cp crates/casm-lsp/bom.json dist/casm-lsp-cyclonedx.json
+          find . -name 'bom.json' -not -path './target/*' -delete
+
+          # SPDX covers the whole workspace in one document, which is what `cargo sbom`
+          # produces and what an ingesting tool expects of it.
           cargo sbom --output-format spdx_json_2_3 > dist/casm-spdx.json
+      - name: every document must exist and parse
+        run: |
+          set -euo pipefail
+          for file in dist/casm-cli-cyclonedx.json \
+                      dist/casm-lsp-cyclonedx.json \
+                      dist/casm-spdx.json; do
+            test -s "$file" || { echo "error: $file is missing or empty" >&2; exit 1; }
+            python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$file"
+            echo "  ok   $file ($(wc -c <"$file") bytes)"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: sbom
+          # `if-no-files-found: error` only fires when the glob matches *nothing*, so it
+          # never noticed one document missing from three. The step above is the guard.
           path: dist/*.json
           if-no-files-found: error
 

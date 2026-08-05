@@ -266,7 +266,73 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: ./scripts/verify-otlp.sh
 
-  # Gate 16: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 16: the bills of materials must actually be produced.
+  #
+  # This exists because they were not. v0.1.0 and v0.2.0 shipped with no CycloneDX SBOM:
+  # the release step looked for a filename `cargo cyclonedx` does not write and hid the
+  # miss behind `|| true`. Nothing noticed, because the release workflow only runs on a
+  # tag — so the same generation runs here, on every push, where a regression is visible
+  # the day it lands rather than at the next release.
+  sbom:
+    name: bills of materials
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-cyclonedx cargo-sbom --locked
+      - name: generate
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cargo cyclonedx --format json --all --override-filename bom
+          cp crates/casm-cli/bom.json dist/casm-cli-cyclonedx.json
+          cp crates/casm-lsp/bom.json dist/casm-lsp-cyclonedx.json
+          find . -name 'bom.json' -not -path './target/*' -delete
+          cargo sbom --output-format spdx_json_2_3 > dist/casm-spdx.json
+      - name: every document must exist, parse, and describe what ships
+        run: |
+          set -euo pipefail
+          for file in dist/casm-cli-cyclonedx.json \
+                      dist/casm-lsp-cyclonedx.json \
+                      dist/casm-spdx.json; do
+            test -s "$file" || { echo "error: $file is missing or empty" >&2; exit 1; }
+            python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$file"
+            echo "  ok   $file ($(wc -c <"$file") bytes)"
+          done
+          # A document that parses but describes the wrong package would pass every check
+          # above. Every workspace crate the binary links must appear in its bill.
+          python3 - <<'PYTHON'
+          import json
+          import sys
+
+          expected = {
+              "dist/casm-cli-cyclonedx.json": ("casm-cli", ["casm-core", "casm-evidence", "casm-telemetry"]),
+              "dist/casm-lsp-cyclonedx.json": ("casm-lsp", ["casm-core", "casm-parser", "casm-validator"]),
+          }
+
+          failed = False
+          for path, (described, required) in expected.items():
+              document = json.load(open(path, encoding="utf-8"))
+              subject = document.get("metadata", {}).get("component", {}).get("name")
+              names = {component["name"] for component in document.get("components", [])}
+
+              problems = []
+              if subject != described:
+                  problems.append(f"describes {subject!r}, expected {described!r}")
+              problems.extend(f"does not list {crate}" for crate in required if crate not in names)
+
+              if problems:
+                  failed = True
+                  for problem in problems:
+                      print(f"  FAIL {path} {problem}")
+              else:
+                  print(f"  ok   {path} describes {subject} with {len(names)} components")
+
+          sys.exit(1 if failed else 0)
+          PYTHON
+
+  # Gate 17: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)

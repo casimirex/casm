@@ -53,6 +53,22 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   over `u64`, rendered to hexadecimal only when serialised. Removing four allocations per
   span cut its cost from about 230 ns to about 60 ns.
 
+### Fixed
+
+- **The CycloneDX SBOM is actually produced.** v0.1.0 and v0.2.0 shipped without one: the
+  release step searched for `casm.cdx.json`, which `cargo cyclonedx` never writes —
+  `--override-filename` sets the name exactly, dropping the `.cdx` infix used otherwise —
+  and hid the miss behind `2>/dev/null || true`. Nothing noticed because the release
+  workflow only runs on a tag.
+  - One CycloneDX document per shipped binary, taken by explicit path rather than by a
+    glob that would collect twelve identically-named files and keep an arbitrary one.
+  - CI now generates and checks them on every push, not only at a tag. The check verifies
+    each document parses, describes the crate it claims to, and lists the workspace crates
+    that binary links — a document that parses but describes the wrong package would
+    otherwise pass.
+  - The tagged releases were left alone; the missing artefact is paperwork rather than a
+    defect in the binaries. `RELEASING.md` says which releases are affected.
+
 ### Known limitations
 
 - There is no network exporter. An HTTP client, TLS, and a retry policy are three

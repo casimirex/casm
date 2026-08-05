@@ -21,7 +21,8 @@ Windows x86-64:
 - an archive containing `casm`, `casm-lsp`, the README, the licence, and the changelog
 - a SHA-256 checksum, and a combined `SHA256SUMS`
 - a build-provenance attestation signed by GitHub's OIDC identity
-- SPDX and CycloneDX SBOMs
+- an SPDX SBOM covering the whole workspace, and a CycloneDX SBOM for each shipped
+  binary (`casm-cli-cyclonedx.json`, `casm-lsp-cyclonedx.json`)
 - a multi-architecture container image on `ghcr.io`
 
 Consumers verify with:
@@ -30,6 +31,11 @@ Consumers verify with:
 $ sha256sum -c SHA256SUMS
 $ gh attestation verify casm-0.2.0-x86_64-unknown-linux-gnu.tar.gz --repo casimirex/casimir
 ```
+
+Releases before v0.3.0 carry only the SPDX document: the CycloneDX step searched for a
+filename `cargo cyclonedx` does not write and swallowed the failure, so v0.1.0 and v0.2.0
+shipped without it. Fixed on `main`; the tagged releases were left as they are, since the
+missing artefact is paperwork rather than a defect in the binaries.
 
 **Attestations need a public repository.** GitHub does not offer them for user-owned
 private repositories, so the step is guarded on visibility and skipped here — the first
