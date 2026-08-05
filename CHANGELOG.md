@@ -7,6 +7,17 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-08-05
+
+Observability and compliance evidence — roadmap Phase 11, which completes the twelve-phase
+roadmap. Three of its deliverables are deliberately absent rather than unfinished, and the
+notes below say which and why.
+
+Also three release-engineering fixes found by sweeping for one habit: a check that passes
+by not running. The CycloneDX SBOM had been missing from every release, `SHA256SUMS` could
+have shipped partial without a word, and the install instructions named a command that
+cannot work.
+
 ### Added
 
 - **Compliance evidence** (roadmap Phase 11). `casm evidence` assembles a register of the
@@ -241,6 +252,7 @@ First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
 - Phase 7 (distributed pattern registry) and Phase 11 (OpenTelemetry) are not implemented.
 - Edge cold-start latency is unmeasured; it can only be observed on the platform.
 
-[Unreleased]: https://github.com/casimirex/casimir/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/casimirex/casimir/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/casimirex/casimir/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/casimirex/casimir/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/casimirex/casimir/releases/tag/v0.1.0

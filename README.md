@@ -570,12 +570,12 @@ semantically.
 
 ## Status
 
-**v0.2.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
-Git-native history, WebAssembly runtime, patterns, and formal-methods bridge are
-implemented, tested, and usable, with a release pipeline and container image behind them.
-The API is pre-1.0 and will change — see [CHANGELOG.md](CHANGELOG.md) and
-[RELEASING.md](RELEASING.md). 0.2.0 changed the fingerprint scheme, so digests computed by
-0.1.0 no longer match.
+**v0.3.0 — the roadmap is complete.** The core, parser, validator, renderer, CLI, language
+server, Git-native history, WebAssembly runtime, patterns, evidence, telemetry, and
+formal-methods bridge are implemented, tested, and usable, with a release pipeline and
+container image behind them. The API is pre-1.0 and will change — see
+[CHANGELOG.md](CHANGELOG.md) and [RELEASING.md](RELEASING.md). 0.2.0 changed the
+fingerprint scheme, so digests computed by 0.1.0 no longer match.
 
 Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
 8, and 10 are complete, and Phase 9's formal verification bridge is what you see above.
