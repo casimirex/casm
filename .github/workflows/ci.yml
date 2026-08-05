@@ -15,8 +15,18 @@ env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: -D warnings
 
+# Push and pull-request runs supersede each other: only the newest commit is worth
+# testing. Scheduled and dispatched runs must not be superseded — the weekly jobs take
+# hours, and a push landing mid-campaign would cancel one, reporting "cancelled" rather
+# than a result. Giving each its own group by run id makes that impossible.
+#
+# Found by dispatching twice: the second run cancelled the first one's fuzz campaign.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: >-
+    ${{ github.workflow }}-${{ github.ref }}-${{
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+      && github.run_id || 'superseding'
+    }}
   cancel-in-progress: true
 
 jobs:
