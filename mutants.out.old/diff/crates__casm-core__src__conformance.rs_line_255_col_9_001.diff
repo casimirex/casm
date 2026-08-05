@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace ConformanceReport::conforms -> bool with false
+@@ -247,17 +247,17 @@
+     pub fn unmet(&self) -> &[Unmet] {
+         &self.unmet
+     }
+ 
+     /// Whether the architecture conforms.
+     #[inline]
+     #[must_use]
+     pub fn conforms(&self) -> bool {
+-        self.unmet.is_empty()
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The unmet requirements a tool could fix by adding to the architecture.
+     pub fn mechanical(&self) -> impl Iterator<Item = &Unmet> {
+         self.unmet.iter().filter(|unmet| unmet.is_mechanical())
+     }
+ }
+ 

@@ -1,0 +1,68 @@
+--- crates/casm-parser/src/document.rs
++++ replace Document::into_architecture -> Result<Architecture, ParseError> with Ok(Default::default())
+@@ -557,64 +557,17 @@
+     /// Nodes are resolved first so that relationships may reference them by name in any
+     /// order. `path` is used only to attribute errors to a file.
+     ///
+     /// # Errors
+     ///
+     /// - [`ParseError::Semantic`] if any value violates a domain rule.
+     /// - [`ParseError::UnresolvedReference`] if an endpoint names no declared node.
+     pub fn into_architecture(self, path: &Path) -> Result<Architecture, ParseError> {
+-        let resolved_nodes: Vec<(NodeDoc, Node)> = self
+-            .nodes
+-            .into_iter()
+-            .map(|doc| {
+-                let node = doc.resolve(path)?;
+-                Ok((doc, node))
+-            })
+-            .collect::<Result<_, ParseError>>()?;
+-
+-        let index = NodeIndex::new(&resolved_nodes);
+-
+-        let relationships: Vec<Relationship> = self
+-            .relationships
+-            .iter()
+-            .map(|doc| doc.resolve(path, &index))
+-            .collect::<Result<_, ParseError>>()?;
+-
+-        let conformance: Vec<Conformance> = self
+-            .patterns
+-            .iter()
+-            .map(|doc| doc.resolve(path, &index))
+-            .collect::<Result<_, ParseError>>()?;
+-
+-        let mut config = ArchitectureConfig::new()
+-            .name(self.name)
+-            .version(self.version);
+-
+-        if let Some(description) = self.description {
+-            config = config.description(description);
+-        }
+-        for (key, value) in self.metadata {
+-            config = config.metadata(key, value);
+-        }
+-        for (_, node) in resolved_nodes {
+-            config = config.node(node);
+-        }
+-        for relationship in relationships {
+-            config = config.relationship(relationship);
+-        }
+-        for claim in conformance {
+-            config = config.conformance(claim);
+-        }
+-
+-        config.build().map_err(|error| ParseError::Semantic {
+-            path: path.to_path_buf(),
+-            message: error.to_string(),
+-            suggestion: None,
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders a validated [`Architecture`] back into authoring form.
+     ///
+     /// Together with [`Document::into_architecture`] this gives the round-trip guarantee:
+     /// `parse → emit → parse` yields an equal architecture.
+     #[must_use]
+     pub fn from_architecture(architecture: &Architecture) -> Self {

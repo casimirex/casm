@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm (Section::Nodes, Block::None, "type") in Builder::record_symbol
+@@ -558,17 +558,17 @@
+         let (Some(key), Some(value), Some(span)) =
+             (info.key.as_deref(), info.value.clone(), info.value_span)
+         else {
+             return;
+         };
+ 
+         let kind = match (info.section, info.block, key) {
+             (Section::Nodes, Block::None, "name") => SymbolKind::NodeDefinition,
+-            (Section::Nodes, Block::None, "type") => SymbolKind::NodeTypeValue,
++             /* ~ changed by cargo-mutants ~ */
+             (Section::Relationships, Block::None, "type") => SymbolKind::RelationshipTypeValue,
+             (Section::Relationships, Block::None, "source") => {
+                 SymbolKind::NodeReference(Endpoint::Source)
+             }
+             (Section::Relationships, Block::None, "target") => {
+                 SymbolKind::NodeReference(Endpoint::Target)
+             }
+             (Section::Patterns, Block::None, "pattern") => SymbolKind::PatternReference,

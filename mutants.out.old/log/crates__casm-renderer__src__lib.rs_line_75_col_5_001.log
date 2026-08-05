@@ -1,0 +1,77 @@
+
+*** crates/casm-renderer/src/lib.rs:75:5: replace by_id -> Option<Box<dyn Renderer>> with Some(Box::new(Default::default()))
+
+*** mutation diff:
+--- crates/casm-renderer/src/lib.rs
++++ replace by_id -> Option<Box<dyn Renderer>> with Some(Box::new(Default::default()))
+@@ -67,17 +67,17 @@
+ #[must_use]
+ pub fn built_in() -> Vec<Box<dyn Renderer>> {
+     vec![Box::new(Mermaid), Box::new(Dot), Box::new(Ascii)]
+ }
+ 
+ /// Looks up a backend by its identifier.
+ #[must_use]
+ pub fn by_id(id: &str) -> Option<Box<dyn Renderer>> {
+-    built_in().into_iter().find(|backend| backend.id() == id)
++    Some(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Assigns each node a stable, positional diagram identifier.
+ ///
+ /// Positional rather than `UUID`-derived: a node's `NodeId` changes whenever the file is
+ /// regenerated without a pinned id, and a diagram whose every identifier churns is a
+ /// diagram nobody can review in a pull request.
+ fn diagram_ids(architecture: &Architecture) -> Vec<(NodeId, String)> {
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-renderer@0.3.0
+       Fresh version_check v0.9.5
+       Fresh unicode-ident v1.0.24
+       Fresh typenum v1.20.1
+       Fresh proc-macro2 v1.0.107
+       Fresh cfg-if v1.0.4
+       Fresh quote v1.0.47
+       Fresh generic-array v0.14.7
+       Fresh serde_core v1.0.229
+       Fresh libc v0.2.189
+       Fresh hashbrown v0.17.1
+       Fresh equivalent v1.0.2
+       Fresh keccak v0.1.6
+       Fresh syn v3.0.3
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh getrandom v0.4.3
+       Fresh semver v1.0.28
+       Fresh indexmap v2.14.0
+       Fresh thiserror-impl v2.0.19
+       Fresh serde_derive v1.0.229
+       Fresh digest v0.10.7
+   Compiling uuid v1.24.0
+       Fresh serde v1.0.229
+       Fresh thiserror v2.0.19
+       Fresh sha3 v0.10.9
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name uuid --edition=2021 /home/srinivasan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.24.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --allow=unexpected_cfgs --check-cfg 'cfg(uuid_unstable)' --cfg 'feature="default"' --cfg 'feature="rng"' --cfg 'feature="serde"' --cfg 'feature="std"' --cfg 'feature="v7"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("arbitrary", "atomic", "borsh", "bytemuck", "default", "fast-rng", "js", "macro-diagnostics", "md5", "rng", "rng-getrandom", "rng-rand", "serde", "sha1", "slog", "std", "uuid-rng-internal-lib", "v1", "v3", "v4", "v5", "v6", "v7", "v8", "zerocopy"))' -C metadata=818b6361d07ae039 -C extra-filename=-236853d6bc985c57 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern getrandom=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libgetrandom-6825cf178ac028d0.rmeta --extern serde_core=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde_core-acc55bf1e03f2e80.rmeta --cap-lints allow`
+   Compiling casm-core v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-core)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_core --edition=2024 crates/casm-core/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=bdb5617b4d83ac22 -C extra-filename=-e0f19a3016ddb7a5 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern indexmap=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libindexmap-386bfa02d45ab18e.rmeta --extern semver=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libsemver-14f981aa0b32f993.rmeta --extern serde=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern sha3=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libsha3-87752e9291d08871.rmeta --extern thiserror=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern uuid=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libuuid-236853d6bc985c57.rmeta --verbose`
+   Compiling casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-renderer)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_renderer --edition=2024 crates/casm-renderer/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9a17573fc0ebd8de -C extra-filename=-a274aae3a51b3045 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libcasm_core-e0f19a3016ddb7a5.rmeta --verbose`
+error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+  --> crates/casm-renderer/src/lib.rs:75:19
+   |
+75 |     Some(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+   |                   ^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+   |
+help: use a fully-qualified path to a specific available implementation
+   |
+75 |     Some(Box::new(</* self type */ as Default>::default())) /* ~ changed by cargo-mutants ~ */
+   |                   +++++++++++++++++++        +
+
+For more information about this error, try `rustc --explain E0790`.
+error: could not compile `casm-renderer` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_renderer --edition=2024 crates/casm-renderer/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9a17573fc0ebd8de -C extra-filename=-a274aae3a51b3045 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libcasm_core-e0f19a3016ddb7a5.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+
+*** result: Failure(101)

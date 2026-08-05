@@ -7,6 +7,32 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Tests that passed without testing.** A `cargo mutants` sweep changed the code 1,700
+  ways and reported which changes no test objected to: 177 survived. The behaviour-changing
+  ones are now covered.
+  - `Report::has_warnings` could have returned `false` unconditionally and every test still
+    passed — `--strict` consults nothing else, so a pipeline told to fail on warnings would
+    have stopped doing so in silence.
+  - `casm check` chooses the worst exit code across a directory with `>`. Replacing it with
+    `<` or `==` went unnoticed, because no test mixed a clean file with a failing one.
+  - The directory walk's depth bound, the architecture-file heuristic, `Relationship::connects`,
+    duplicate-relationship detection, `Outcome::label`, `Pack::has_unchecked_conformance`,
+    and the uncontrolled-nodes line of an evidence register were all likewise unasserted.
+  - `casm_git::DateTime` had no test for dates before its own epoch shift, so the branch
+    that handles them could be arbitrarily wrong — and it renders the dates in `casm log`,
+    `casm blame`, and an evidence register's provenance.
+  - `.cargo/mutants.toml` records what is deliberately not mutated and why. Prose-printing
+    functions are excluded: a survivor there means "no test asserts the exact wording",
+    which is intended, since the machine-readable output is what the tests pin.
+
+### Added
+
+- **Weekly scheduled CI.** A mutation sweep and an hour-per-target fuzz campaign, neither
+  of which is worth paying for on every push. The fuzz job's comment had described the
+  campaign as belonging "on a schedule" since it was written; no schedule existed.
+
 ## [0.3.0] — 2026-08-05
 
 Observability and compliance evidence — roadmap Phase 11, which completes the twelve-phase

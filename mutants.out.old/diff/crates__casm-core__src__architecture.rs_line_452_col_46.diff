@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace == with != in Architecture::check_conformance
+@@ -444,17 +444,17 @@
+                 });
+             }
+         }
+ 
+         let claimed_twice = self
+             .conformance
+             .iter()
+             .take(preceding)
+-            .any(|earlier| earlier.pattern() == claim.pattern());
++            .any(|earlier| earlier.pattern() != /* ~ changed by cargo-mutants ~ */ claim.pattern());
+         if claimed_twice {
+             return Err(ArchitectureError::DuplicateConformance {
+                 pattern: claim.pattern().to_string(),
+                 architecture: self.name.as_str().to_owned(),
+             });
+         }
+ 
+         Ok(())

@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for PatternsAreSatisfied>::id -> &'static str with "xyzzy"
+@@ -421,17 +421,17 @@
+ ///
+ /// A conformance claim is a statement the architecture makes about itself, and this rule
+ /// is what stops it from quietly becoming false. See ADR-0012 for why a pattern is a
+ /// shape to check rather than a template to re-stamp.
+ pub struct PatternsAreSatisfied;
+ 
+ impl Rule for PatternsAreSatisfied {
+     fn id(&self) -> &'static str {
+-        "patterns-are-satisfied"
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn description(&self) -> &'static str {
+         "every pattern the architecture claims conformance to must be satisfied"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for claim in context.architecture.conformance() {

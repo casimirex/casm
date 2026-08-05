@@ -1,0 +1,29 @@
+--- crates/casm-lsp/src/server.rs
++++ replace <impl LanguageServer for Backend>::completion -> RpcResult<Option<CompletionResponse>> with RpcResult::from_iter([None])
+@@ -251,25 +251,17 @@
+         }
+         // Clear the squiggles: a closed document has no findings to show.
+         self.client
+             .publish_diagnostics(params.text_document.uri, Vec::new(), None)
+             .await;
+     }
+ 
+     async fn completion(&self, params: CompletionParams) -> RpcResult<Option<CompletionResponse>> {
+-        let location = params.text_document_position;
+-        let position = convert_position(location.position);
+-
+-        guarded("completion", || {
+-            self.with_document(&location.text_document.uri, |document, patterns| {
+-                let result = completion::complete(&document.index, patterns, position);
+-                CompletionResponse::Array(result.items.iter().map(convert_completion).collect())
+-            })
+-        })
++        RpcResult::from_iter([None]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     async fn hover(&self, params: HoverParams) -> RpcResult<Option<Hover>> {
+         let location = params.text_document_position_params;
+         let position = convert_position(location.position);
+ 
+         guarded("hover", || {
+             self.with_document(&location.text_document.uri, |document, patterns| {

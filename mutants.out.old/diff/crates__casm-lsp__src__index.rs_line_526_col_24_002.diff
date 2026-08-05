@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace < with <= in Builder::update_scope
+@@ -518,17 +518,17 @@
+         // A sequence entry at the *same* indent as its key is valid YAML and common:
+         //
+         //     controls:
+         //     - type: security      <- still inside `controls:`
+         //
+         // so a list item at the opening indent stays in the block. Only a non-item at or
+         // below that indent leaves it.
+         if let Some(open_at) = self.block_indent
+-            && (indent < open_at || (indent == open_at && !is_list_item))
++            && (indent <= /* ~ changed by cargo-mutants ~ */ open_at || (indent == open_at && !is_list_item))
+         {
+             self.block = Block::None;
+             self.block_indent = None;
+         }
+ 
+         let block_of_this_line = self.block;
+ 
+         // Entering a block, effective from the following line.

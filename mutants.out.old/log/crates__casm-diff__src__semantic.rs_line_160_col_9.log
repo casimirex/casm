@@ -1,0 +1,121 @@
+
+*** crates/casm-diff/src/semantic.rs:160:9: replace Change::marker -> char with Default::default()
+
+*** mutation diff:
+--- crates/casm-diff/src/semantic.rs
++++ replace Change::marker -> char with Default::default()
+@@ -152,30 +152,17 @@
+             | Self::PatternBindingsChanged { .. }
+             | Self::LatencyBudgetChanged { .. } => false,
+         }
+     }
+ 
+     /// The diff marker for this change: `+`, `-`, or `~`.
+     #[must_use]
+     pub const fn marker(&self) -> char {
+-        match self {
+-            Self::NodeAdded { .. }
+-            | Self::RelationshipAdded { .. }
+-            | Self::PatternClaimed { .. } => '+',
+-            Self::NodeRemoved { .. }
+-            | Self::RelationshipRemoved { .. }
+-            | Self::PatternDropped { .. } => '-',
+-            Self::Version { .. }
+-            | Self::NodeTypeChanged { .. }
+-            | Self::NodeInterfacesChanged { .. }
+-            | Self::NodeControlsChanged { .. }
+-            | Self::PatternBindingsChanged { .. }
+-            | Self::LatencyBudgetChanged { .. } => '~',
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Change {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         match self {
+             Self::Version { from, to } => write!(f, "architecture version {from} -> {to}"),
+             Self::NodeAdded { name, node_type } => write!(f, "node '{name}' added ({node_type})"),
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-diff@0.3.0
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh equivalent v1.0.2
+       Fresh syn v3.0.3
+       Fresh generic-array v0.14.7
+       Fresh hashbrown v0.17.1
+       Fresh getrandom v0.4.3
+       Fresh keccak v0.1.6
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh indexmap v2.14.0
+       Fresh itoa v1.0.18
+       Fresh serde v1.0.229
+       Fresh digest v0.10.7
+       Fresh thiserror v2.0.19
+       Fresh zmij v1.0.23
+       Fresh uuid v1.24.0
+       Fresh semver v1.0.28
+       Fresh sha3 v0.10.9
+       Fresh winnow v1.0.4
+       Fresh memchr v2.8.3
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh winnow v0.7.15
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh serde_json v1.0.151
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh ryu v1.0.23
+       Fresh unsafe-libyaml v0.2.11
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh serde_yaml_ng v0.10.0
+       Dirty casm-diff v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-diff): the file `crates/casm-diff/src/semantic.rs` has changed (1785931647.730681078s, 1s after last build at 1785931646.279541908s)
+   Compiling casm-diff v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-diff)
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9565f1dc2285fbe6 -C extra-filename=-1f5d8f651604cc16 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rmeta --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9dda23a21ebb89cc -C extra-filename=-4e10ba2b0fd94d1b --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-46b061afdef23cde.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --verbose`
+error[E0658]: cannot call conditionally-const associated function `<char as Default>::default` in constant functions
+   --> crates/casm-diff/src/semantic.rs:160:9
+    |
+160 |         Default::default() /* ~ changed by cargo-mutants ~ */
+    |         ^^^^^^^^^^^^^^^^^^
+    |
+    = note: calls in constant functions are limited to constant functions, tuple structs and tuple variants
+    = note: see issue #143874 <https://github.com/rust-lang/rust/issues/143874> for more information
+    = help: add `#![feature(const_trait_impl)]` to the crate attributes to enable
+    = note: this compiler was built on 2026-06-26; consider upgrading it if it is out of date
+
+error: `Default` is not yet stable as a const trait
+   --> crates/casm-diff/src/semantic.rs:160:9
+    |
+160 |         Default::default() /* ~ changed by cargo-mutants ~ */
+    |         ^^^^^^^^^^^^^^^^^^
+    |
+help: add `#![feature(const_default)]` to the crate attributes to enable
+   --> crates/casm-diff/src/lib.rs:20:1
+    |
+ 20 + #![feature(const_default)]
+    |
+
+For more information about this error, try `rustc --explain E0658`.
+error: could not compile `casm-diff` (lib) due to 2 previous errors
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9565f1dc2285fbe6 -C extra-filename=-1f5d8f651604cc16 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rmeta --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `casm-diff` (lib test) due to 2 previous errors
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9dda23a21ebb89cc -C extra-filename=-4e10ba2b0fd94d1b --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-46b061afdef23cde.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --verbose` (exit status: 1)
+
+*** result: Failure(101)

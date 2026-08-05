@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace == with != in Diff::diff_conformance
+@@ -391,17 +391,17 @@
+     ///
+     /// Included because the fingerprint includes them: if `casm diff` stayed silent about
+     /// a claim `casm log` reports as a change, the two would contradict each other.
+     fn diff_conformance(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+         for claim in new.conformance() {
+             let reference = claim.pattern().to_string();
+             let Some(previous) = old
+                 .conformance()
+-                .find(|earlier| earlier.pattern() == claim.pattern())
++                .find(|earlier| earlier.pattern() != /* ~ changed by cargo-mutants ~ */ claim.pattern())
+             else {
+                 changes.push(Change::PatternClaimed { reference });
+                 continue;
+             };
+ 
+             let (added, removed) = difference(&bindings(old, previous), &bindings(new, claim));
+             if !added.is_empty() || !removed.is_empty() {
+                 changes.push(Change::PatternBindingsChanged {

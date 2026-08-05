@@ -1,0 +1,46 @@
+--- crates/casm-formal/src/tla.rs
++++ replace module_name -> String with "xyzzy".into()
+@@ -67,42 +67,17 @@
+ /// Converts an architecture name into a legal TLA+ module name.
+ ///
+ /// TLA+ requires the module name to match the filename and to be an identifier, so
+ /// `edge-storefront` becomes `EdgeStorefront`. A name that reduces to nothing — one made
+ /// entirely of punctuation — falls back to `Architecture` rather than producing a module
+ /// that cannot be parsed.
+ #[must_use]
+ pub fn module_name(architecture_name: &str) -> String {
+-    let mut out = String::new();
+-    let mut capitalise = true;
+-
+-    for character in architecture_name.chars() {
+-        if character.is_ascii_alphanumeric() {
+-            if capitalise {
+-                out.extend(character.to_uppercase());
+-                capitalise = false;
+-            } else {
+-                out.push(character);
+-            }
+-        } else {
+-            capitalise = true;
+-        }
+-    }
+-
+-    // A leading digit is not a legal identifier start.
+-    if out.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+-        out.insert(0, 'A');
+-    }
+-
+-    if out.is_empty() {
+-        "Architecture".to_owned()
+-    } else {
+-        out
+-    }
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders a set of strings as a TLA+ set literal.
+ fn string_set(values: &[&str]) -> String {
+     if values.is_empty() {
+         return "{}".to_owned();
+     }
+     let rendered: Vec<String> = values.iter().map(|value| format!("\"{value}\"")).collect();

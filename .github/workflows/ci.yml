@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  # Sunday, 03:00 UTC. Two jobs are too slow to run per push and too valuable to skip: a
+  # long fuzz campaign, and a mutation sweep. Both are guarded on the event so an ordinary
+  # push does not pay for them.
+  schedule:
+    - cron: "0 3 * * 0"
 
 env:
   CARGO_TERM_COLOR: always
@@ -177,9 +182,10 @@ jobs:
           CASM_ALLOY_JAR: ${{ runner.temp }}/tools/alloy.jar
         run: cargo test -p casm-formal --test checked -- --test-threads=2
 
-  # Gate 11: the fuzz targets must build and survive a short run. Not a substitute for a
-  # long campaign — that belongs on a schedule — but it catches a target that stopped
-  # compiling, and a regression shallow enough to find in a minute.
+  # Gate 11: the fuzz targets must build and survive a short run. It catches a target that
+  # stopped compiling, and a regression shallow enough to find in a minute. The long
+  # campaign it is not a substitute for runs weekly, below — for most of this project's
+  # life that sentence described a schedule that did not exist.
   fuzz:
     name: fuzz (smoke)
     runs-on: ubuntu-latest
@@ -331,6 +337,62 @@ jobs:
 
           sys.exit(1 if failed else 0)
           PYTHON
+
+  # The long fuzz campaign the smoke test is not a substitute for. Weekly, an hour per
+  # target, seeded from the corpus in `fuzz/seeds`.
+  fuzz-campaign:
+    name: fuzz (campaign, weekly)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-fuzz --locked
+      - run: cargo fuzz build
+      - name: run each target for an hour
+        run: |
+          set -euo pipefail
+          for target in parse validate analyse roundtrip; do
+            cargo fuzz run "$target" -- -max_total_time=3600 -rss_limit_mb=4096
+          done
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fuzz-artifacts
+          path: fuzz/artifacts/
+          if-no-files-found: ignore
+
+  # Gate 17: mutation testing, weekly.
+  #
+  # Four bugs in one day were checks that could not fail — a benchmark assertion in a
+  # target `cargo test` never runs, an OTLP check reading a meaningless 200, an SBOM step
+  # behind `|| true`, a checksum manifest that could ship partial. Each was found by hand.
+  # This finds that class mechanically, by changing the code and reporting which changes no
+  # test objects to.
+  #
+  # Weekly rather than per-push: a full sweep is 1,700 mutants and roughly forty minutes,
+  # which is not a price worth paying on every commit. It does not gate a merge — it opens
+  # a conversation about a test that is not testing.
+  mutants:
+    name: mutation testing (weekly)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-mutants --locked
+      - name: sweep
+        run: cargo mutants -j 4 --in-place --no-shuffle
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutants-report
+          path: mutants.out/
+          if-no-files-found: warn
 
   # Gate 17: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.

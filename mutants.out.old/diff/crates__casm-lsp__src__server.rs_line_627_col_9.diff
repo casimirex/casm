@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/server.rs
++++ delete field documentation from struct CompletionItem expression in convert_completion
+@@ -619,20 +619,17 @@
+     CompletionItem {
+         label: item.label.clone(),
+         kind: Some(match item.kind {
+             ItemKind::Field => CompletionItemKind::FIELD,
+             ItemKind::Value => CompletionItemKind::ENUM_MEMBER,
+             ItemKind::Reference => CompletionItemKind::REFERENCE,
+         }),
+         detail: Some(item.detail.clone()),
+-        documentation: Some(Documentation::MarkupContent(MarkupContent {
+-            kind: MarkupKind::Markdown,
+-            value: item.documentation.clone(),
+-        })),
++         /* ~ changed by cargo-mutants ~ */
+         insert_text: Some(item.insert_text.clone()),
+         ..CompletionItem::default()
+     }
+ }
+ 
+ /// Converts a CASIMIR code action into a protocol one.
+ fn convert_action(uri: &Uri, action: actions::CodeAction) -> CodeActionOrCommand {
+     let edit = (!action.edits.is_empty()).then(|| {

@@ -1,0 +1,74 @@
+--- crates/casm-formal/src/tla.rs
++++ replace write_topology with ()
+@@ -220,70 +220,17 @@
+ 
+ /// Writes the architecture's topology as constants.
+ fn write_topology(
+     out: &mut String,
+     model: &FormalModel,
+     blocking: &[(String, String)],
+     asynchronous: &[(String, String)],
+ ) {
+-    let _ = writeln!(out, "(* Every participant in the architecture. *)");
+-    let _ = writeln!(out, "Nodes == {}\n", string_set(&model.node_names()));
+-
+-    let _ = writeln!(
+-        out,
+-        "(* Nodes outside the control boundary. They may fail; they are"
+-    );
+-    let _ = writeln!(out, "   not ours to repair. *)");
+-    let _ = writeln!(out, "External == {}\n", string_set(&model.external_names()));
+-
+-    let _ = writeln!(
+-        out,
+-        "(* <<a, b>> means a cannot serve while b is unavailable. *)"
+-    );
+-    for edge in &model.blocking {
+-        let budget = edge
+-            .latency_budget_ms
+-            .map_or_else(String::new, |ms| format!(", {ms}ms"));
+-        let _ = writeln!(
+-            out,
+-            "(*   {} -> {} ({}{}) *)",
+-            edge.source, edge.target, edge.kind, budget
+-        );
+-    }
+-    let _ = writeln!(out, "BlockingDeps == {}\n", pair_set(blocking));
+-
+-    let _ = writeln!(
+-        out,
+-        "(* The transitive closure of BlockingDeps, computed by CASIMIR"
+-    );
+-    let _ = writeln!(out, "   so this module needs no recursive operator. *)");
+-    let _ = writeln!(out, "BlockingClosure == {}\n", pair_set(&model.closure));
+-
+-    let _ = writeln!(
+-        out,
+-        "(* Edges that carry no availability dependency. Recorded so a"
+-    );
+-    let _ = writeln!(
+-        out,
+-        "   reader can see them; absent from every property below. *)"
+-    );
+-    for edge in &model.asynchronous {
+-        let _ = writeln!(
+-            out,
+-            "(*   {} ~> {} ({}) *)",
+-            edge.source, edge.target, edge.kind
+-        );
+-    }
+-    let _ = writeln!(out, "AsyncEdges == {}\n", pair_set(asynchronous));
+-
+-    let _ = writeln!(
+-        out,
+-        "-------------------------------------------------------------\n"
+-    );
++    () /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Writes the state machine.
+ fn write_behaviour(out: &mut String) {
+     let _ = writeln!(out, "VARIABLE failed\n");
+     let _ = writeln!(out, "TypeOK == failed \\subseteq Nodes\n");
+     let _ = writeln!(out, "Init == failed = {{}}\n");
+     let _ = writeln!(out, "Fail(n) == /\\ n \\in Nodes");

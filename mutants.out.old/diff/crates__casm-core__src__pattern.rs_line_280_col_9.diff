@@ -1,0 +1,22 @@
+--- crates/casm-core/src/pattern.rs
++++ replace PatternConfig::name -> Self with Default::default()
+@@ -272,18 +272,17 @@
+     #[must_use]
+     pub fn new() -> Self {
+         Self::default()
+     }
+ 
+     /// Sets the pattern's name. Required.
+     #[must_use]
+     pub fn name(mut self, name: impl Into<String>) -> Self {
+-        self.name = Some(name.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Sets the pattern's semantic version. Defaults to `0.1.0`.
+     #[must_use]
+     pub fn version(mut self, version: impl Into<String>) -> Self {
+         self.version = Some(version.into());
+         self
+     }

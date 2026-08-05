@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/tla.rs
++++ replace TlaOutput::config_filename -> String with String::new()
+@@ -49,17 +49,17 @@
+     #[must_use]
+     pub fn specification_filename(&self) -> String {
+         format!("{}.tla", self.module)
+     }
+ 
+     /// The filename the safety configuration must be written to.
+     #[must_use]
+     pub fn config_filename(&self) -> String {
+-        format!("{}.cfg", self.module)
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The filename the liveness configuration must be written to.
+     #[must_use]
+     pub fn liveness_config_filename(&self) -> String {
+         format!("{}Liveness.cfg", self.module)
+     }
+ }

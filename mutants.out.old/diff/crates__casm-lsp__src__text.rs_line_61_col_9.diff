@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/text.rs
++++ replace Span::line_start -> Self with Default::default()
+@@ -53,21 +53,17 @@
+     #[must_use]
+     pub const fn new(line: u32, start: u32, end: u32) -> Self {
+         Self { line, start, end }
+     }
+ 
+     /// An empty span at the start of `line`.
+     #[must_use]
+     pub const fn line_start(line: u32) -> Self {
+-        Self {
+-            line,
+-            start: 0,
+-            end: 0,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if `position` falls within this span.
+     ///
+     /// The end is treated as inclusive. A cursor sitting immediately after a word is,
+     /// to a user, still "on" that word — and hover that dies at the last character feels
+     /// broken even though it is technically correct.
+     #[must_use]

@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace >= with < in controls_block
+@@ -235,17 +235,17 @@
+ /// Where an existing `controls:` block sits within a node.
+ struct ControlsBlock {
+     last_line: u32,
+     entry_indent: usize,
+ }
+ 
+ /// Locates a node's existing `controls:` block, if it has one.
+ fn controls_block(index: &DocumentIndex, node: &NodeEntry) -> Option<ControlsBlock> {
+-    let in_node = |line: &&LineInfo| line.number >= node.item_line && line.number <= node.last_line;
++    let in_node = |line: &&LineInfo| line.number < /* ~ changed by cargo-mutants ~ */ node.item_line && line.number <= node.last_line;
+ 
+     let header =
+         index.lines().iter().filter(in_node).find(|line| {
+             line.key.as_deref() == Some("controls") && line.indent == node.field_indent
+         })?;
+ 
+     // A sequence entry may sit at the same indent as its key, so a list item at the
+     // header's indent is part of the block, not a sibling field.

@@ -341,6 +341,51 @@ mod tests {
     }
 
     #[test]
+    fn has_warnings_distinguishes_a_warning_from_every_other_severity() {
+        // `--strict` turns warnings into a failing exit code and consults nothing else,
+        // so a `has_warnings` that always answered `false` would silently disarm it.
+        // Replacing the whole function with `false`, and its `==` with `!=`, both survived
+        // the mutation sweep.
+        let mut empty = Report::default();
+        assert!(!empty.has_warnings(), "nothing found");
+
+        empty.push(diagnostic(Severity::Info));
+        assert!(!empty.has_warnings(), "info is not a warning");
+
+        let mut errors = Report::default();
+        errors.push(diagnostic(Severity::Error));
+        assert!(!errors.has_warnings(), "an error is not a warning");
+
+        let mut warned = Report::default();
+        warned.push(diagnostic(Severity::Warning));
+        assert!(warned.has_warnings());
+
+        // And a warning among others is still found.
+        let mut mixed = Report::default();
+        mixed.push(diagnostic(Severity::Info));
+        mixed.push(diagnostic(Severity::Error));
+        mixed.push(diagnostic(Severity::Warning));
+        assert!(mixed.has_warnings());
+    }
+
+    #[test]
+    fn a_rendered_report_names_what_it_found() {
+        // `render` returning a constant survived: nothing asserted on its content.
+        let mut report = Report::default();
+        report.push(diagnostic(Severity::Warning));
+
+        let text = report.render();
+        assert!(text.contains("test-rule"), "the rule identifier: {text}");
+        assert!(text.contains("warning"), "the severity: {text}");
+        assert!(text.contains("something happened"), "the message: {text}");
+        assert_ne!(
+            text,
+            Report::default().render(),
+            "a clean report reads differently"
+        );
+    }
+
+    #[test]
     fn counts_and_filters_agree() {
         let mut report = Report::new();
         report.push(diagnostic(Severity::Error));

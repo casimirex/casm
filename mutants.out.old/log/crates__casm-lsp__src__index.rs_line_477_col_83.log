@@ -1,0 +1,1323 @@
+
+*** crates/casm-lsp/src/index.rs:477:83: replace + with - in Builder::push
+
+*** mutation diff:
+--- crates/casm-lsp/src/index.rs
++++ replace + with - in Builder::push
+@@ -469,17 +469,17 @@
+ 
+         let block = self.update_scope(indent, is_list_item, parsed.key);
+ 
+         let key_span = parsed
+             .key_range
+             .map(|(s, e)| span_of_bytes(number, raw, body_offset + s, body_offset + e));
+         let value_span = parsed
+             .value_range
+-            .map(|(s, e)| span_of_bytes(number, raw, body_offset + s, body_offset + e));
++            .map(|(s, e)| span_of_bytes(number, raw, body_offset + s, body_offset - /* ~ changed by cargo-mutants ~ */ e));
+ 
+         let info = LineInfo {
+             number,
+             indent,
+             section: self.section,
+             block,
+             is_list_item,
+             key: parsed.key.map(ToOwned::to_owned),
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-lsp@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh serde_core v1.0.229
+       Fresh version_check v0.9.5
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh typenum v1.20.1
+       Fresh serde_derive v1.0.229
+       Fresh memchr v2.8.3
+       Fresh syn v2.0.119
+       Fresh equivalent v1.0.2
+       Fresh hashbrown v0.17.1
+       Fresh pin-project-lite v0.2.17
+       Fresh generic-array v0.14.7
+       Fresh serde v1.0.229
+       Fresh indexmap v2.14.0
+       Fresh futures-core v0.3.33
+       Fresh itoa v1.0.18
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh futures-sink v0.3.33
+       Fresh zmij v1.0.23
+       Fresh getrandom v0.4.3
+       Fresh thiserror-impl v2.0.19
+       Fresh digest v0.10.7
+       Fresh keccak v0.1.6
+       Fresh serde_json v1.0.151
+       Fresh futures-channel v0.3.33
+       Fresh thiserror v2.0.19
+       Fresh uuid v1.24.0
+       Fresh futures-macro v0.3.33
+       Fresh sha3 v0.10.9
+       Fresh semver v1.0.28
+       Fresh ref-cast-impl v1.0.26
+       Fresh slab v0.4.12
+       Fresh futures-task v0.3.33
+       Fresh futures-io v0.3.33
+       Fresh once_cell v1.21.4
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh ref-cast v1.0.26
+       Fresh futures-util v0.3.33
+       Fresh tokio-macros v2.7.2
+       Fresh borrow-or-share v0.2.4
+       Fresh winnow v1.0.4
+       Fresh scopeguard v1.2.0
+       Fresh smallvec v1.15.2
+       Fresh foldhash v0.1.5
+       Fresh bytes v1.12.1
+       Fresh tokio v1.53.1
+       Fresh hashbrown v0.15.5
+       Fresh crossbeam-utils v0.8.22
+       Fresh lock_api v0.4.14
+       Fresh fluent-uri v0.4.1
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh parking_lot_core v0.9.12
+       Fresh tracing-core v0.1.36
+       Fresh tracing-attributes v0.1.31
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh serde_spanned v1.1.1
+       Fresh fixedbitset v0.5.7
+       Fresh tower-service v0.3.3
+       Fresh unsafe-libyaml v0.2.11
+       Fresh percent-encoding v2.3.2
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh hashbrown v0.14.5
+       Fresh winnow v0.7.15
+       Fresh bitflags v2.13.1
+       Fresh ryu v1.0.23
+       Fresh sync_wrapper v1.0.2
+       Fresh tower-layer v0.3.3
+       Fresh petgraph v0.8.3
+       Fresh tracing v0.1.44
+       Fresh tower v0.5.3
+       Fresh dashmap v6.2.1
+       Fresh ls-types v0.0.6
+       Fresh serde_yaml_ng v0.10.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh tokio-util v0.7.19
+       Fresh httparse v1.10.1
+       Fresh futures v0.3.33
+       Fresh tower-lsp-server v0.23.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-parser)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-validator)
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-renderer)
+       Dirty casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-lsp): the file `crates/casm-lsp/src/index.rs` has changed (1785932604.342767904s, 5s after last build at 1785932599.589615853s)
+   Compiling casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-lsp)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=47ec288518f74ead -C extra-filename=-6ce771c58ddaf742 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6a74160510f1ab21 -C extra-filename=-80fea0669f4842be --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rmeta --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rmeta --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rmeta --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rmeta --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name protocol --edition=2024 crates/casm-lsp/tests/protocol.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6702dd21f1281c0e -C extra-filename=-f7bd5060f831e6f5 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_lsp=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_lsp-80fea0669f4842be.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/main.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=96b6d3975acc9338 -C extra-filename=-ab7e64b657ebeb11 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_lsp=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_lsp-80fea0669f4842be.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/main.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=08aa6da8d523955d -C extra-filename=-f8b23709db8e618a --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_lsp=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_lsp-80fea0669f4842be.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.44s
+  Executable `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_lsp-6ce771c58ddaf742`
+  Executable `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_lsp-f8b23709db8e618a`
+  Executable `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/protocol-f7bd5060f831e6f5`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-lsp@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh serde_core v1.0.229
+       Fresh version_check v0.9.5
+       Fresh libc v0.2.189
+       Fresh typenum v1.20.1
+       Fresh cfg-if v1.0.4
+       Fresh generic-array v0.14.7
+       Fresh serde_derive v1.0.229
+       Fresh memchr v2.8.3
+       Fresh serde v1.0.229
+       Fresh syn v2.0.119
+       Fresh equivalent v1.0.2
+       Fresh pin-project-lite v0.2.17
+       Fresh hashbrown v0.17.1
+       Fresh indexmap v2.14.0
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh itoa v1.0.18
+       Fresh futures-sink v0.3.33
+       Fresh futures-core v0.3.33
+       Fresh digest v0.10.7
+       Fresh getrandom v0.4.3
+       Fresh zmij v1.0.23
+       Fresh thiserror-impl v2.0.19
+       Fresh keccak v0.1.6
+       Fresh thiserror v2.0.19
+       Fresh serde_json v1.0.151
+       Fresh sha3 v0.10.9
+       Fresh uuid v1.24.0
+       Fresh futures-channel v0.3.33
+       Fresh futures-macro v0.3.33
+       Fresh semver v1.0.28
+       Fresh ref-cast-impl v1.0.26
+       Fresh slab v0.4.12
+       Fresh once_cell v1.21.4
+       Fresh futures-io v0.3.33
+       Fresh futures-task v0.3.33
+       Fresh ref-cast v1.0.26
+       Fresh futures-util v0.3.33
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh tokio-macros v2.7.2
+       Fresh bytes v1.12.1
+       Fresh smallvec v1.15.2
+       Fresh scopeguard v1.2.0
+       Fresh foldhash v0.1.5
+       Fresh borrow-or-share v0.2.4
+       Fresh winnow v1.0.4
+       Fresh fluent-uri v0.4.1
+       Fresh hashbrown v0.15.5
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh parking_lot_core v0.9.12
+       Fresh lock_api v0.4.14
+       Fresh tokio v1.53.1
+       Fresh crossbeam-utils v0.8.22
+       Fresh tracing-core v0.1.36
+       Fresh tracing-attributes v0.1.31
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh serde_spanned v1.1.1
+       Fresh unsafe-libyaml v0.2.11
+       Fresh ryu v1.0.23
+       Fresh winnow v0.7.15
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh tower-layer v0.3.3
+       Fresh bitflags v2.13.1
+       Fresh hashbrown v0.14.5
+       Fresh fixedbitset v0.5.7
+       Fresh sync_wrapper v1.0.2
+       Fresh tower-service v0.3.3
+       Fresh percent-encoding v2.3.2
+       Fresh dashmap v6.2.1
+       Fresh tower v0.5.3
+       Fresh ls-types v0.0.6
+       Fresh petgraph v0.8.3
+       Fresh serde_yaml_ng v0.10.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh tracing v0.1.44
+       Fresh tokio-util v0.7.19
+       Fresh httparse v1.10.1
+       Fresh futures v0.3.33
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-parser)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-validator)
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-renderer)
+       Fresh tower-lsp-server v0.23.0
+       Fresh casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-lsp)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.29s
+     Running `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_lsp-6ce771c58ddaf742`
+
+running 215 tests
+test actions::tests::a_controls_header_is_added_when_the_node_has_none ... FAILED
+test actions::tests::a_fix_on_the_second_node_does_not_disturb_the_first ... FAILED
+test actions::tests::a_diagnostic_that_is_not_about_a_node_offers_no_fix ... FAILED
+test actions::tests::adding_datastore_controls_clears_its_diagnostic ... FAILED
+test actions::tests::a_diagnostic_with_no_fix_offers_none ... FAILED
+test actions::tests::applying_an_out_of_range_edit_is_a_no_op_rather_than_a_panic ... ok
+test actions::tests::an_existing_controls_block_is_appended_to_rather_than_duplicated ... FAILED
+test actions::tests::applying_no_edits_leaves_the_document_untouched ... ok
+test actions::tests::appended_controls_adopt_the_authors_indentation ... FAILED
+test actions::tests::inserted_controls_are_marked_todo_rather_than_invented ... FAILED
+test actions::tests::source_actions_offer_the_workspace_commands ... ok
+test actions::tests::quick_fixes_never_panic_on_arbitrary_diagnostics ... FAILED
+test actions::tests::several_edits_apply_without_disturbing_each_others_offsets ... ok
+test completion::tests::a_binding_key_offers_nothing_when_the_pattern_is_not_in_the_library ... FAILED
+test completion::tests::a_binding_key_offers_the_roles_the_claimed_pattern_names ... FAILED
+test completion::tests::a_binding_value_offers_the_nodes_this_document_declares ... FAILED
+test completion::tests::a_claim_offers_the_claim_keys ... FAILED
+test completion::tests::a_block_opening_key_line_still_offers_node_keys ... FAILED
+test actions::tests::applying_an_edit_preserves_the_trailing_newline ... FAILED
+test actions::tests::a_fix_on_a_node_followed_by_relationships_stays_inside_the_node ... FAILED
+test actions::tests::a_quick_fix_records_the_diagnostic_it_resolves ... FAILED
+test actions::tests::adding_security_controls_actually_clears_the_diagnostic ... FAILED
+test actions::tests::adding_security_controls_produces_a_document_that_still_parses ... FAILED
+test completion::tests::a_pattern_reference_is_completed_from_the_library ... FAILED
+test completion::tests::a_control_field_position_offers_control_keys ... FAILED
+test completion::tests::a_node_field_position_offers_node_keys ... FAILED
+test completion::tests::a_field_completion_inserts_the_colon_and_a_space ... FAILED
+test completion::tests::a_control_type_value_offers_control_types ... FAILED
+test completion::tests::a_value_completion_inserts_the_bare_label ... FAILED
+test completion::tests::a_position_past_the_end_of_the_document_is_handled ... FAILED
+test completion::tests::a_relationship_type_value_offers_relationship_types_not_node_types ... FAILED
+test completion::tests::an_endpoint_completion_annotates_each_node_with_its_type ... FAILED
+test completion::tests::an_endpoint_offers_the_nodes_this_document_declares ... FAILED
+test completion::tests::an_interface_field_position_offers_interface_keys_not_node_keys ... FAILED
+test completion::tests::an_unrecognised_value_position_offers_nothing ... FAILED
+test completion::tests::an_interface_name_is_not_offered_as_a_node_reference ... FAILED
+test completion::tests::a_top_level_position_offers_root_keys ... FAILED
+test completion::tests::completion_never_panics_on_malformed_input ... FAILED
+test completion::tests::an_empty_library_offers_no_references_rather_than_guessing ... FAILED
+test completion::tests::completion_never_panics_anywhere_in_a_document ... FAILED
+test completion::tests::a_protocol_value_offers_protocols_in_both_places_it_appears ... FAILED
+test completion::tests::a_node_type_value_offers_node_types ... FAILED
+test completion::tests::every_offered_item_carries_documentation ... FAILED
+test completion::tests::completion_works_immediately_after_a_colon_with_no_space_yet ... FAILED
+test completion::tests::metadata_offers_nothing_because_its_keys_are_free_form ... ok
+test completion::tests::patterns_is_offered_as_a_top_level_key ... FAILED
+test completion::tests::the_typed_prefix_is_reported_for_clients_that_want_it ... FAILED
+test diagnostics::tests::a_claim_with_no_library_is_a_warning_not_an_error ... FAILED
+test diagnostics::tests::a_node_finding_is_anchored_on_the_node_name ... FAILED
+test diagnostics::tests::a_syntax_error_is_reported_at_its_line ... FAILED
+test diagnostics::tests::a_syntax_error_carries_its_suggestion_into_the_message ... FAILED
+test diagnostics::tests::a_cycle_is_anchored_on_its_first_participant_with_the_rest_related ... FAILED
+test diagnostics::tests::a_relationship_finding_is_anchored_on_the_source_line ... FAILED
+test diagnostics::tests::a_claim_the_library_does_not_hold_still_anchors_on_the_claim ... FAILED
+test diagnostics::tests::a_clean_architecture_produces_no_diagnostics ... FAILED
+test diagnostics::tests::a_satisfied_claim_reports_nothing_once_the_library_is_loaded ... FAILED
+test diagnostics::tests::a_conformance_finding_is_anchored_on_the_claim_not_on_line_one ... FAILED
+test diagnostics::tests::an_unmet_requirement_is_an_error_in_the_editor ... FAILED
+test diagnostics::tests::an_unresolved_reference_is_anchored_on_the_offending_endpoint ... FAILED
+test diagnostics::tests::severities_are_carried_across_from_the_validator ... FAILED
+test diagnostics::tests::the_configured_thresholds_are_honoured ... FAILED
+test diagnostics::tests::validator_suggestions_are_folded_into_the_message ... FAILED
+test documents::tests::a_broken_document_is_stored_with_a_syntax_diagnostic_and_no_architecture ... FAILED
+test diagnostics::tests::analysis_never_panics_on_arbitrary_input ... ok
+test documents::tests::a_change_replaces_the_previous_analysis ... FAILED
+test documents::tests::a_document_is_stored_and_analysed_on_open ... FAILED
+test diagnostics::tests::every_diagnostic_lands_within_the_document ... FAILED
+test documents::tests::a_malformed_escape_is_left_alone_rather_than_refused ... ok
+test documents::tests::a_document_and_the_library_are_retrieved_together ... FAILED
+test diagnostics::tests::parser_positions_are_converted_from_one_indexed_to_zero_indexed ... FAILED
+test diagnostics::tests::has_errors_distinguishes_errors_from_warnings ... FAILED
+test documents::tests::a_leading_slash_survives_when_no_drive_letter_follows ... ok
+test documents::tests::a_posix_uri_becomes_its_path ... ok
+test documents::tests::a_missing_document_is_absent_rather_than_a_panic ... ok
+test diagnostics::tests::suppressed_rules_do_not_appear ... FAILED
+test documents::tests::a_store_starts_with_no_patterns ... ok
+test documents::tests::a_windows_uri_loses_the_slash_before_its_drive_letter ... ok
+test documents::tests::closing_a_document_forgets_it ... FAILED
+test documents::tests::diagnostics_are_available_immediately_after_a_change ... FAILED
+test documents::tests::decoding_is_total_on_arbitrary_input ... ok
+test documents::tests::peek_does_not_change_the_eviction_order ... FAILED
+test documents::tests::reconfiguring_re_analyses_every_open_document ... FAILED
+test documents::tests::percent_escapes_are_decoded ... ok
+test documents::tests::eviction_drops_the_least_recently_used_document ... FAILED
+test documents::tests::loading_patterns_re_analyses_every_open_document ... FAILED
+test documents::tests::eviction_is_deterministic_when_access_times_tie ... FAILED
+test documents::tests::uris_convert_to_paths_for_error_attribution ... ok
+test hover::tests::hovering_a_bound_node_explains_the_node ... FAILED
+test documents::tests::the_document_count_limit_is_enforced ... FAILED
+test documents::tests::the_document_just_written_is_never_the_eviction_victim ... FAILED
+test hover::tests::hovering_a_key_explains_the_field ... FAILED
+test hover::tests::hovering_a_claim_key_explains_the_field ... FAILED
+test documents::tests::the_byte_limit_is_enforced ... FAILED
+test hover::tests::hovering_a_key_uses_the_vocabulary_of_the_enclosing_block ... FAILED
+test documents::tests::the_store_never_panics_on_arbitrary_content ... ok
+test hover::tests::hovering_a_claimed_pattern_shows_what_it_requires ... FAILED
+test hover::tests::hovering_a_control_type_explains_it_without_confusing_it_for_a_node_type ... FAILED
+test hover::tests::hovering_a_node_name_lists_its_interfaces_and_controls ... FAILED
+test hover::tests::hovering_a_relationship_endpoint_describes_the_node_it_names ... FAILED
+test hover::tests::hovering_a_node_name_lists_what_it_calls_and_what_calls_it ... FAILED
+test hover::tests::hovering_a_node_name_shows_its_type_and_description ... FAILED
+test hover::tests::hovering_a_node_type_explains_the_type ... FAILED
+test hover::tests::hovering_a_relationship_type_explains_its_blocking_semantics ... FAILED
+test hover::tests::hovering_an_unresolvable_reference_says_so_and_suggests_a_fix ... FAILED
+test hover::tests::hovering_empty_space_produces_nothing ... FAILED
+test hover::tests::hovering_never_panics_anywhere_in_the_document ... FAILED
+test hover::tests::hovering_a_pattern_the_library_lacks_says_so ... FAILED
+test hover::tests::hovering_reports_the_span_so_the_editor_can_highlight_it ... FAILED
+test index::tests::a_blank_line_inherits_the_surrounding_context ... FAILED
+test index::tests::a_block_closes_when_a_sibling_key_appears_at_the_same_indent ... FAILED
+test hover::tests::hovering_a_protocol_explains_it ... FAILED
+test hover::tests::hovering_an_unmodelled_protocol_explains_the_custom_fallback ... FAILED
+test hover::tests::hovering_degrades_gracefully_when_the_document_does_not_parse ... FAILED
+test index::tests::a_block_closes_when_the_next_list_item_begins ... FAILED
+test index::tests::a_conformance_claim_is_indexed_with_its_reference ... FAILED
+test index::tests::a_block_opening_key_sits_outside_the_block_it_opens ... FAILED
+test index::tests::a_bound_node_is_a_reference_to_it ... FAILED
+test index::tests::a_claim_is_found_by_its_reference ... FAILED
+test index::tests::a_claim_that_is_still_being_typed_still_anchors ... FAILED
+test index::tests::a_control_type_is_not_mistaken_for_a_node_type ... FAILED
+test index::tests::a_hash_inside_a_value_is_not_a_comment ... ok
+test index::tests::a_position_on_a_blank_line_resolves_to_no_symbol ... FAILED
+test index::tests::a_position_over_a_key_resolves_to_no_symbol ... FAILED
+test index::tests::a_relationship_is_found_by_its_endpoints ... FAILED
+test index::tests::a_relationship_type_is_distinguished_from_a_node_type ... FAILED
+test index::tests::a_position_resolves_to_the_symbol_under_it ... FAILED
+test index::tests::a_sequence_indented_flush_with_its_key_stays_inside_the_block ... FAILED
+test index::tests::a_relationship_anchor_prefers_the_source_then_the_target ... FAILED
+test index::tests::a_syntactically_broken_document_still_indexes_what_it_can ... FAILED
+test index::tests::a_trailing_comment_does_not_corrupt_the_indexed_value ... FAILED
+test index::tests::a_relationships_controls_block_does_not_create_a_spurious_entry ... FAILED
+test index::tests::a_relationship_is_indexed_whatever_order_its_fields_are_written_in ... FAILED
+test index::tests::a_colon_inside_a_value_does_not_split_the_line ... FAILED
+test index::tests::building_never_fails_on_arbitrary_input ... ok
+test index::tests::an_interface_name_is_not_mistaken_for_a_node_declaration ... FAILED
+test index::tests::an_unknown_top_level_key_yields_the_unknown_section ... FAILED
+test index::tests::line_and_raw_line_accessors_agree_and_are_bounds_safe ... FAILED
+test index::tests::field_indent_accounts_for_the_sequence_dash ... ok
+test index::tests::bindings_are_indexed_by_role ... FAILED
+test index::tests::protocols_are_indexed_in_both_interfaces_and_relationships ... FAILED
+test index::tests::references_to_a_node_are_found ... FAILED
+test index::tests::relationship_declarations_are_collected_with_all_three_fields ... FAILED
+test index::tests::nested_blocks_are_tracked ... FAILED
+test index::tests::relationship_endpoints_are_indexed_as_references ... FAILED
+test index::tests::node_declarations_are_collected_with_their_types ... FAILED
+test index::tests::comments_are_stripped_only_at_a_word_boundary ... ok
+test index::tests::several_relationships_are_kept_separate ... FAILED
+test index::tests::spans_point_at_the_value_not_the_whole_line ... FAILED
+test index::tests::the_patterns_section_does_not_leak_into_the_next_one ... FAILED
+test library::tests::a_conventional_directory_is_found ... ok
+test index::tests::top_level_keys_set_the_section ... FAILED
+test library::tests::a_malformed_pattern_is_reported_not_swallowed ... ok
+test library::tests::a_workspace_with_no_library_says_where_it_looked ... ok
+test library::tests::a_setting_is_resolved_against_the_first_root ... ok
+test library::tests::a_setting_pointing_nowhere_does_not_fall_back ... ok
+test index::tests::spans_are_correct_on_lines_containing_multibyte_text ... FAILED
+test library::tests::only_files_in_the_loaded_directory_trigger_a_reload ... ok
+test navigation::tests::a_node_without_a_type_still_outlines ... FAILED
+test navigation::tests::an_empty_document_outlines_to_nothing ... ok
+test navigation::tests::an_endpoint_resolves_to_the_node_declaration ... FAILED
+test library::tests::the_dotted_directory_is_the_fallback ... ok
+test library::tests::an_absolute_setting_ignores_the_roots ... ok
+test library::tests::with_no_library_a_conventional_directory_still_triggers_one ... ok
+test navigation::tests::a_declaration_resolves_to_itself ... FAILED
+test navigation::tests::an_enum_value_has_no_declaration_to_jump_to ... FAILED
+test navigation::tests::an_outline_entry_spans_the_whole_node_item ... FAILED
+test navigation::tests::navigation_never_panics_anywhere_in_the_document ... FAILED
+test navigation::tests::navigation_works_on_a_document_that_does_not_parse ... FAILED
+test navigation::tests::references_can_exclude_the_declaration ... FAILED
+test navigation::tests::references_finds_every_mention ... FAILED
+test navigation::tests::references_on_empty_space_finds_nothing ... FAILED
+test navigation::tests::references_on_a_non_node_symbol_finds_nothing ... FAILED
+test navigation::tests::the_outline_lists_every_node_with_its_type ... FAILED
+test schema::tests::every_control_type_label_is_accepted_by_the_deserialiser ... ok
+test schema::tests::every_node_type_label_is_accepted_by_the_deserialiser ... ok
+test schema::tests::every_protocol_label_is_accepted_by_the_deserialiser ... ok
+test schema::tests::every_term_is_documented ... ok
+test navigation::tests::an_unresolvable_endpoint_resolves_to_nothing ... FAILED
+test navigation::tests::both_endpoints_resolve_independently ... FAILED
+test schema::tests::every_relationship_type_label_is_accepted_by_the_deserialiser ... ok
+test navigation::tests::references_works_from_a_use_site_not_only_the_declaration ... FAILED
+test schema::tests::labels_are_unique_within_each_table ... ok
+test schema::tests::lookup_finds_a_term_by_exact_label ... ok
+test schema::tests::markdown_rendering_includes_label_detail_and_documentation ... ok
+test schema::tests::interface_schema_hash_is_accepted_as_documented ... ok
+test schema::tests::the_relationship_type_table_is_complete ... ok
+test schema::tests::every_documented_key_is_accepted_by_the_real_parser ... ok
+test schema::tests::the_protocol_table_covers_every_non_custom_variant ... ok
+test schema::tests::the_control_type_table_is_complete ... ok
+test schema::tests::the_node_type_table_is_complete ... ok
+test server::tests::a_span_converts_to_a_single_line_range ... ok
+test server::tests::completion_kinds_map_onto_the_protocol ... ok
+test server::tests::guarded_contains_an_index_out_of_bounds_panic ... ok
+test server::tests::guarded_returns_a_value_when_nothing_goes_wrong ... ok
+test server::tests::a_completion_carries_markdown_documentation_and_its_insert_text ... ok
+test server::tests::overlap_is_tested_by_line ... ok
+test server::tests::positions_convert_in_both_directions_without_shifting ... ok
+test server::tests::a_diagnostic_carries_the_rule_id_as_its_code_and_casm_as_its_source ... ok
+test text::tests::an_empty_span_is_identified ... ok
+test text::tests::byte_offsets_convert_to_utf16_offsets ... ok
+test server::tests::guarded_converts_a_panic_into_an_error_response ... ok
+test server::tests::severities_map_onto_the_protocol ... ok
+test text::tests::conversion_is_total_for_out_of_range_and_split_offsets ... ok
+test text::tests::positions_order_by_line_then_character ... ok
+test text::tests::containment_covers_the_span_inclusively_at_both_ends ... ok
+test library::tests::the_first_hit_wins_rather_than_merging ... ok
+test text::tests::spans_are_built_from_byte_ranges ... ok
+test text::tests::utf16_length_matches_byte_length_for_ascii ... ok
+test text::tests::spans_over_multibyte_text_are_narrower_than_their_byte_range ... ok
+test text::tests::utf16_length_counts_code_units_not_characters ... ok
+test text::tests::containment_requires_the_same_line ... ok
+test text::tests::utf16_to_byte_round_trips_with_byte_to_utf16 ... ok
+test text::tests::utf16_offsets_convert_back_to_byte_offsets ... ok
+test text::tests::width_saturates_rather_than_underflowing ... ok
+test text::tests::utf16_to_byte_clamps_past_the_end_so_slicing_is_always_safe ... ok
+
+failures:
+
+---- actions::tests::a_controls_header_is_added_when_the_node_has_none stdout ----
+
+thread 'actions::tests::a_controls_header_is_added_when_the_node_has_none' (845005) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- actions::tests::a_fix_on_the_second_node_does_not_disturb_the_first stdout ----
+
+thread 'actions::tests::a_fix_on_the_second_node_does_not_disturb_the_first' (845012) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::a_diagnostic_that_is_not_about_a_node_offers_no_fix stdout ----
+
+thread 'actions::tests::a_diagnostic_that_is_not_about_a_node_offers_no_fix' (845007) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::adding_datastore_controls_clears_its_diagnostic stdout ----
+
+thread 'actions::tests::adding_datastore_controls_clears_its_diagnostic' (845014) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::a_diagnostic_with_no_fix_offers_none stdout ----
+
+thread 'actions::tests::a_diagnostic_with_no_fix_offers_none' (845010) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::an_existing_controls_block_is_appended_to_rather_than_duplicated stdout ----
+
+thread 'actions::tests::an_existing_controls_block_is_appended_to_rather_than_duplicated' (845023) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::appended_controls_adopt_the_authors_indentation stdout ----
+
+thread 'actions::tests::appended_controls_adopt_the_authors_indentation' (845025) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::inserted_controls_are_marked_todo_rather_than_invented stdout ----
+
+thread 'actions::tests::inserted_controls_are_marked_todo_rather_than_invented' (845033) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::quick_fixes_never_panic_on_arbitrary_diagnostics stdout ----
+
+thread 'actions::tests::quick_fixes_never_panic_on_arbitrary_diagnostics' (845034) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_binding_key_offers_nothing_when_the_pattern_is_not_in_the_library stdout ----
+
+thread 'completion::tests::a_binding_key_offers_nothing_when_the_pattern_is_not_in_the_library' (845037) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_binding_key_offers_the_roles_the_claimed_pattern_names stdout ----
+
+thread 'completion::tests::a_binding_key_offers_the_roles_the_claimed_pattern_names' (845038) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_binding_value_offers_the_nodes_this_document_declares stdout ----
+
+thread 'completion::tests::a_binding_value_offers_the_nodes_this_document_declares' (845040) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_claim_offers_the_claim_keys stdout ----
+
+thread 'completion::tests::a_claim_offers_the_claim_keys' (845043) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_block_opening_key_line_still_offers_node_keys stdout ----
+
+thread 'completion::tests::a_block_opening_key_line_still_offers_node_keys' (845042) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::applying_an_edit_preserves_the_trailing_newline stdout ----
+
+thread 'actions::tests::applying_an_edit_preserves_the_trailing_newline' (845026) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::a_fix_on_a_node_followed_by_relationships_stays_inside_the_node stdout ----
+
+thread 'actions::tests::a_fix_on_a_node_followed_by_relationships_stays_inside_the_node' (845011) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::a_quick_fix_records_the_diagnostic_it_resolves stdout ----
+
+thread 'actions::tests::a_quick_fix_records_the_diagnostic_it_resolves' (845013) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::adding_security_controls_actually_clears_the_diagnostic stdout ----
+
+thread 'actions::tests::adding_security_controls_actually_clears_the_diagnostic' (845015) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- actions::tests::adding_security_controls_produces_a_document_that_still_parses stdout ----
+
+thread 'actions::tests::adding_security_controls_produces_a_document_that_still_parses' (845017) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_pattern_reference_is_completed_from_the_library stdout ----
+
+thread 'completion::tests::a_pattern_reference_is_completed_from_the_library' (845077) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_control_field_position_offers_control_keys stdout ----
+
+thread 'completion::tests::a_control_field_position_offers_control_keys' (845055) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_node_field_position_offers_node_keys stdout ----
+
+thread 'completion::tests::a_node_field_position_offers_node_keys' (845060) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_field_completion_inserts_the_colon_and_a_space stdout ----
+
+thread 'completion::tests::a_field_completion_inserts_the_colon_and_a_space' (845058) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_control_type_value_offers_control_types stdout ----
+
+thread 'completion::tests::a_control_type_value_offers_control_types' (845057) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_value_completion_inserts_the_bare_label stdout ----
+
+thread 'completion::tests::a_value_completion_inserts_the_bare_label' (845087) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_position_past_the_end_of_the_document_is_handled stdout ----
+
+thread 'completion::tests::a_position_past_the_end_of_the_document_is_handled' (845081) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_relationship_type_value_offers_relationship_types_not_node_types stdout ----
+
+thread 'completion::tests::a_relationship_type_value_offers_relationship_types_not_node_types' (845083) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_endpoint_completion_annotates_each_node_with_its_type stdout ----
+
+thread 'completion::tests::an_endpoint_completion_annotates_each_node_with_its_type' (845100) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_endpoint_offers_the_nodes_this_document_declares stdout ----
+
+thread 'completion::tests::an_endpoint_offers_the_nodes_this_document_declares' (845102) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_interface_field_position_offers_interface_keys_not_node_keys stdout ----
+
+thread 'completion::tests::an_interface_field_position_offers_interface_keys_not_node_keys' (845103) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_unrecognised_value_position_offers_nothing stdout ----
+
+thread 'completion::tests::an_unrecognised_value_position_offers_nothing' (845109) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_interface_name_is_not_offered_as_a_node_reference stdout ----
+
+thread 'completion::tests::an_interface_name_is_not_offered_as_a_node_reference' (845108) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_top_level_position_offers_root_keys stdout ----
+
+thread 'completion::tests::a_top_level_position_offers_root_keys' (845086) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::completion_never_panics_on_malformed_input stdout ----
+
+thread 'completion::tests::completion_never_panics_on_malformed_input' (845111) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::an_empty_library_offers_no_references_rather_than_guessing stdout ----
+
+thread 'completion::tests::an_empty_library_offers_no_references_rather_than_guessing' (845099) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::completion_never_panics_anywhere_in_a_document stdout ----
+
+thread 'completion::tests::completion_never_panics_anywhere_in_a_document' (845110) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_protocol_value_offers_protocols_in_both_places_it_appears stdout ----
+
+thread 'completion::tests::a_protocol_value_offers_protocols_in_both_places_it_appears' (845082) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::a_node_type_value_offers_node_types stdout ----
+
+thread 'completion::tests::a_node_type_value_offers_node_types' (845076) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::every_offered_item_carries_documentation stdout ----
+
+thread 'completion::tests::every_offered_item_carries_documentation' (845127) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::completion_works_immediately_after_a_colon_with_no_space_yet stdout ----
+
+thread 'completion::tests::completion_works_immediately_after_a_colon_with_no_space_yet' (845120) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::patterns_is_offered_as_a_top_level_key stdout ----
+
+thread 'completion::tests::patterns_is_offered_as_a_top_level_key' (845134) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- completion::tests::the_typed_prefix_is_reported_for_clients_that_want_it stdout ----
+
+thread 'completion::tests::the_typed_prefix_is_reported_for_clients_that_want_it' (845135) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_claim_with_no_library_is_a_warning_not_an_error stdout ----
+
+thread 'diagnostics::tests::a_claim_with_no_library_is_a_warning_not_an_error' (845151) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_node_finding_is_anchored_on_the_node_name stdout ----
+
+thread 'diagnostics::tests::a_node_finding_is_anchored_on_the_node_name' (845155) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_syntax_error_is_reported_at_its_line stdout ----
+
+thread 'diagnostics::tests::a_syntax_error_is_reported_at_its_line' (845160) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_syntax_error_carries_its_suggestion_into_the_message stdout ----
+
+thread 'diagnostics::tests::a_syntax_error_carries_its_suggestion_into_the_message' (845159) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_cycle_is_anchored_on_its_first_participant_with_the_rest_related stdout ----
+
+thread 'diagnostics::tests::a_cycle_is_anchored_on_its_first_participant_with_the_rest_related' (845154) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_relationship_finding_is_anchored_on_the_source_line stdout ----
+
+thread 'diagnostics::tests::a_relationship_finding_is_anchored_on_the_source_line' (845157) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_claim_the_library_does_not_hold_still_anchors_on_the_claim stdout ----
+
+thread 'diagnostics::tests::a_claim_the_library_does_not_hold_still_anchors_on_the_claim' (845150) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_clean_architecture_produces_no_diagnostics stdout ----
+
+thread 'diagnostics::tests::a_clean_architecture_produces_no_diagnostics' (845152) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_satisfied_claim_reports_nothing_once_the_library_is_loaded stdout ----
+
+thread 'diagnostics::tests::a_satisfied_claim_reports_nothing_once_the_library_is_loaded' (845158) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::a_conformance_finding_is_anchored_on_the_claim_not_on_line_one stdout ----
+
+thread 'diagnostics::tests::a_conformance_finding_is_anchored_on_the_claim_not_on_line_one' (845153) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::an_unmet_requirement_is_an_error_in_the_editor stdout ----
+
+thread 'diagnostics::tests::an_unmet_requirement_is_an_error_in_the_editor' (845162) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::an_unresolved_reference_is_anchored_on_the_offending_endpoint stdout ----
+
+thread 'diagnostics::tests::an_unresolved_reference_is_anchored_on_the_offending_endpoint' (845163) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::severities_are_carried_across_from_the_validator stdout ----
+
+thread 'diagnostics::tests::severities_are_carried_across_from_the_validator' (845168) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::the_configured_thresholds_are_honoured stdout ----
+
+thread 'diagnostics::tests::the_configured_thresholds_are_honoured' (845170) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::validator_suggestions_are_folded_into_the_message stdout ----
+
+thread 'diagnostics::tests::validator_suggestions_are_folded_into_the_message' (845171) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::a_broken_document_is_stored_with_a_syntax_diagnostic_and_no_architecture stdout ----
+
+thread 'documents::tests::a_broken_document_is_stored_with_a_syntax_diagnostic_and_no_architecture' (845172) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::a_change_replaces_the_previous_analysis stdout ----
+
+thread 'documents::tests::a_change_replaces_the_previous_analysis' (845173) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::a_document_is_stored_and_analysed_on_open stdout ----
+
+thread 'documents::tests::a_document_is_stored_and_analysed_on_open' (845175) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::every_diagnostic_lands_within_the_document stdout ----
+
+thread 'diagnostics::tests::every_diagnostic_lands_within_the_document' (845165) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::a_document_and_the_library_are_retrieved_together stdout ----
+
+thread 'documents::tests::a_document_and_the_library_are_retrieved_together' (845174) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::parser_positions_are_converted_from_one_indexed_to_zero_indexed stdout ----
+
+thread 'diagnostics::tests::parser_positions_are_converted_from_one_indexed_to_zero_indexed' (845167) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::has_errors_distinguishes_errors_from_warnings stdout ----
+
+thread 'diagnostics::tests::has_errors_distinguishes_errors_from_warnings' (845166) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- diagnostics::tests::suppressed_rules_do_not_appear stdout ----
+
+thread 'diagnostics::tests::suppressed_rules_do_not_appear' (845169) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::closing_a_document_forgets_it stdout ----
+
+thread 'documents::tests::closing_a_document_forgets_it' (845182) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::diagnostics_are_available_immediately_after_a_change stdout ----
+
+thread 'documents::tests::diagnostics_are_available_immediately_after_a_change' (845184) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::peek_does_not_change_the_eviction_order stdout ----
+
+thread 'documents::tests::peek_does_not_change_the_eviction_order' (845189) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::reconfiguring_re_analyses_every_open_document stdout ----
+
+thread 'documents::tests::reconfiguring_re_analyses_every_open_document' (845191) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::eviction_drops_the_least_recently_used_document stdout ----
+
+thread 'documents::tests::eviction_drops_the_least_recently_used_document' (845185) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::loading_patterns_re_analyses_every_open_document stdout ----
+
+thread 'documents::tests::loading_patterns_re_analyses_every_open_document' (845188) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::eviction_is_deterministic_when_access_times_tie stdout ----
+
+thread 'documents::tests::eviction_is_deterministic_when_access_times_tie' (845187) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_bound_node_explains_the_node stdout ----
+
+thread 'hover::tests::hovering_a_bound_node_explains_the_node' (845203) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::the_document_count_limit_is_enforced stdout ----
+
+thread 'documents::tests::the_document_count_limit_is_enforced' (845195) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::the_document_just_written_is_never_the_eviction_victim stdout ----
+
+thread 'documents::tests::the_document_just_written_is_never_the_eviction_victim' (845196) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_key_explains_the_field stdout ----
+
+thread 'hover::tests::hovering_a_key_explains_the_field' (845209) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_claim_key_explains_the_field stdout ----
+
+thread 'hover::tests::hovering_a_claim_key_explains_the_field' (845206) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- documents::tests::the_byte_limit_is_enforced stdout ----
+
+thread 'documents::tests::the_byte_limit_is_enforced' (845194) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_key_uses_the_vocabulary_of_the_enclosing_block stdout ----
+
+thread 'hover::tests::hovering_a_key_uses_the_vocabulary_of_the_enclosing_block' (845210) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_claimed_pattern_shows_what_it_requires stdout ----
+
+thread 'hover::tests::hovering_a_claimed_pattern_shows_what_it_requires' (845207) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_control_type_explains_it_without_confusing_it_for_a_node_type stdout ----
+
+thread 'hover::tests::hovering_a_control_type_explains_it_without_confusing_it_for_a_node_type' (845208) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_node_name_lists_its_interfaces_and_controls stdout ----
+
+thread 'hover::tests::hovering_a_node_name_lists_its_interfaces_and_controls' (845213) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_relationship_endpoint_describes_the_node_it_names stdout ----
+
+thread 'hover::tests::hovering_a_relationship_endpoint_describes_the_node_it_names' (845220) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_node_name_lists_what_it_calls_and_what_calls_it stdout ----
+
+thread 'hover::tests::hovering_a_node_name_lists_what_it_calls_and_what_calls_it' (845214) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_node_name_shows_its_type_and_description stdout ----
+
+thread 'hover::tests::hovering_a_node_name_shows_its_type_and_description' (845215) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_node_type_explains_the_type stdout ----
+
+thread 'hover::tests::hovering_a_node_type_explains_the_type' (845216) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_relationship_type_explains_its_blocking_semantics stdout ----
+
+thread 'hover::tests::hovering_a_relationship_type_explains_its_blocking_semantics' (845221) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_an_unresolvable_reference_says_so_and_suggests_a_fix stdout ----
+
+thread 'hover::tests::hovering_an_unresolvable_reference_says_so_and_suggests_a_fix' (845223) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_empty_space_produces_nothing stdout ----
+
+thread 'hover::tests::hovering_empty_space_produces_nothing' (845225) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_never_panics_anywhere_in_the_document stdout ----
+
+thread 'hover::tests::hovering_never_panics_anywhere_in_the_document' (845226) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_pattern_the_library_lacks_says_so stdout ----
+
+thread 'hover::tests::hovering_a_pattern_the_library_lacks_says_so' (845218) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_reports_the_span_so_the_editor_can_highlight_it stdout ----
+
+thread 'hover::tests::hovering_reports_the_span_so_the_editor_can_highlight_it' (845228) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_blank_line_inherits_the_surrounding_context stdout ----
+
+thread 'index::tests::a_blank_line_inherits_the_surrounding_context' (845229) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_block_closes_when_a_sibling_key_appears_at_the_same_indent stdout ----
+
+thread 'index::tests::a_block_closes_when_a_sibling_key_appears_at_the_same_indent' (845231) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_a_protocol_explains_it stdout ----
+
+thread 'hover::tests::hovering_a_protocol_explains_it' (845219) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_an_unmodelled_protocol_explains_the_custom_fallback stdout ----
+
+thread 'hover::tests::hovering_an_unmodelled_protocol_explains_the_custom_fallback' (845222) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- hover::tests::hovering_degrades_gracefully_when_the_document_does_not_parse stdout ----
+
+thread 'hover::tests::hovering_degrades_gracefully_when_the_document_does_not_parse' (845224) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_block_closes_when_the_next_list_item_begins stdout ----
+
+thread 'index::tests::a_block_closes_when_the_next_list_item_begins' (845235) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_conformance_claim_is_indexed_with_its_reference stdout ----
+
+thread 'index::tests::a_conformance_claim_is_indexed_with_its_reference' (845242) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_block_opening_key_sits_outside_the_block_it_opens stdout ----
+
+thread 'index::tests::a_block_opening_key_sits_outside_the_block_it_opens' (845236) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_bound_node_is_a_reference_to_it stdout ----
+
+thread 'index::tests::a_bound_node_is_a_reference_to_it' (845238) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_claim_is_found_by_its_reference stdout ----
+
+thread 'index::tests::a_claim_is_found_by_its_reference' (845239) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_claim_that_is_still_being_typed_still_anchors stdout ----
+
+thread 'index::tests::a_claim_that_is_still_being_typed_still_anchors' (845240) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_control_type_is_not_mistaken_for_a_node_type stdout ----
+
+thread 'index::tests::a_control_type_is_not_mistaken_for_a_node_type' (845245) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_position_on_a_blank_line_resolves_to_no_symbol stdout ----
+
+thread 'index::tests::a_position_on_a_blank_line_resolves_to_no_symbol' (845247) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_position_over_a_key_resolves_to_no_symbol stdout ----
+
+thread 'index::tests::a_position_over_a_key_resolves_to_no_symbol' (845248) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_relationship_is_found_by_its_endpoints stdout ----
+
+thread 'index::tests::a_relationship_is_found_by_its_endpoints' (845251) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_relationship_type_is_distinguished_from_a_node_type stdout ----
+
+thread 'index::tests::a_relationship_type_is_distinguished_from_a_node_type' (845254) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_position_resolves_to_the_symbol_under_it stdout ----
+
+thread 'index::tests::a_position_resolves_to_the_symbol_under_it' (845249) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_sequence_indented_flush_with_its_key_stays_inside_the_block stdout ----
+
+thread 'index::tests::a_sequence_indented_flush_with_its_key_stays_inside_the_block' (845256) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_relationship_anchor_prefers_the_source_then_the_target stdout ----
+
+thread 'index::tests::a_relationship_anchor_prefers_the_source_then_the_target' (845250) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_syntactically_broken_document_still_indexes_what_it_can stdout ----
+
+thread 'index::tests::a_syntactically_broken_document_still_indexes_what_it_can' (845258) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_trailing_comment_does_not_corrupt_the_indexed_value stdout ----
+
+thread 'index::tests::a_trailing_comment_does_not_corrupt_the_indexed_value' (845259) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_relationships_controls_block_does_not_create_a_spurious_entry stdout ----
+
+thread 'index::tests::a_relationships_controls_block_does_not_create_a_spurious_entry' (845255) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_relationship_is_indexed_whatever_order_its_fields_are_written_in stdout ----
+
+thread 'index::tests::a_relationship_is_indexed_whatever_order_its_fields_are_written_in' (845252) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::a_colon_inside_a_value_does_not_split_the_line stdout ----
+
+thread 'index::tests::a_colon_inside_a_value_does_not_split_the_line' (845241) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::an_interface_name_is_not_mistaken_for_a_node_declaration stdout ----
+
+thread 'index::tests::an_interface_name_is_not_mistaken_for_a_node_declaration' (845262) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::an_unknown_top_level_key_yields_the_unknown_section stdout ----
+
+thread 'index::tests::an_unknown_top_level_key_yields_the_unknown_section' (845264) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::line_and_raw_line_accessors_agree_and_are_bounds_safe stdout ----
+
+thread 'index::tests::line_and_raw_line_accessors_agree_and_are_bounds_safe' (845273) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::bindings_are_indexed_by_role stdout ----
+
+thread 'index::tests::bindings_are_indexed_by_role' (845265) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::protocols_are_indexed_in_both_interfaces_and_relationships stdout ----
+
+thread 'index::tests::protocols_are_indexed_in_both_interfaces_and_relationships' (845286) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::references_to_a_node_are_found stdout ----
+
+thread 'index::tests::references_to_a_node_are_found' (845287) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::relationship_declarations_are_collected_with_all_three_fields stdout ----
+
+thread 'index::tests::relationship_declarations_are_collected_with_all_three_fields' (845288) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::nested_blocks_are_tracked stdout ----
+
+thread 'index::tests::nested_blocks_are_tracked' (845284) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::relationship_endpoints_are_indexed_as_references stdout ----
+
+thread 'index::tests::relationship_endpoints_are_indexed_as_references' (845289) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::node_declarations_are_collected_with_their_types stdout ----
+
+thread 'index::tests::node_declarations_are_collected_with_their_types' (845285) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::several_relationships_are_kept_separate stdout ----
+
+thread 'index::tests::several_relationships_are_kept_separate' (845290) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::spans_point_at_the_value_not_the_whole_line stdout ----
+
+thread 'index::tests::spans_point_at_the_value_not_the_whole_line' (845293) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::the_patterns_section_does_not_leak_into_the_next_one stdout ----
+
+thread 'index::tests::the_patterns_section_does_not_leak_into_the_next_one' (845294) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::top_level_keys_set_the_section stdout ----
+
+thread 'index::tests::top_level_keys_set_the_section' (845295) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- index::tests::spans_are_correct_on_lines_containing_multibyte_text stdout ----
+
+thread 'index::tests::spans_are_correct_on_lines_containing_multibyte_text' (845291) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::a_node_without_a_type_still_outlines stdout ----
+
+thread 'navigation::tests::a_node_without_a_type_still_outlines' (845316) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::an_endpoint_resolves_to_the_node_declaration stdout ----
+
+thread 'navigation::tests::an_endpoint_resolves_to_the_node_declaration' (845318) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::a_declaration_resolves_to_itself stdout ----
+
+thread 'navigation::tests::a_declaration_resolves_to_itself' (845315) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::an_enum_value_has_no_declaration_to_jump_to stdout ----
+
+thread 'navigation::tests::an_enum_value_has_no_declaration_to_jump_to' (845319) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::an_outline_entry_spans_the_whole_node_item stdout ----
+
+thread 'navigation::tests::an_outline_entry_spans_the_whole_node_item' (845320) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::navigation_never_panics_anywhere_in_the_document stdout ----
+
+thread 'navigation::tests::navigation_never_panics_anywhere_in_the_document' (845323) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::navigation_works_on_a_document_that_does_not_parse stdout ----
+
+thread 'navigation::tests::navigation_works_on_a_document_that_does_not_parse' (845324) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::references_can_exclude_the_declaration stdout ----
+
+thread 'navigation::tests::references_can_exclude_the_declaration' (845325) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::references_finds_every_mention stdout ----
+
+thread 'navigation::tests::references_finds_every_mention' (845326) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::references_on_empty_space_finds_nothing stdout ----
+
+thread 'navigation::tests::references_on_empty_space_finds_nothing' (845328) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::references_on_a_non_node_symbol_finds_nothing stdout ----
+
+thread 'navigation::tests::references_on_a_non_node_symbol_finds_nothing' (845327) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::the_outline_lists_every_node_with_its_type stdout ----
+
+thread 'navigation::tests::the_outline_lists_every_node_with_its_type' (845330) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::an_unresolvable_endpoint_resolves_to_nothing stdout ----
+
+thread 'navigation::tests::an_unresolvable_endpoint_resolves_to_nothing' (845321) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::both_endpoints_resolve_independently stdout ----
+
+thread 'navigation::tests::both_endpoints_resolve_independently' (845322) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+---- navigation::tests::references_works_from_a_use_site_not_only_the_declaration stdout ----
+
+thread 'navigation::tests::references_works_from_a_use_site_not_only_the_declaration' (845329) panicked at crates/casm-lsp/src/index.rs:477:71:
+attempt to subtract with overflow
+
+
+failures:
+    actions::tests::a_controls_header_is_added_when_the_node_has_none
+    actions::tests::a_diagnostic_that_is_not_about_a_node_offers_no_fix
+    actions::tests::a_diagnostic_with_no_fix_offers_none
+    actions::tests::a_fix_on_a_node_followed_by_relationships_stays_inside_the_node
+    actions::tests::a_fix_on_the_second_node_does_not_disturb_the_first
+    actions::tests::a_quick_fix_records_the_diagnostic_it_resolves
+    actions::tests::adding_datastore_controls_clears_its_diagnostic
+    actions::tests::adding_security_controls_actually_clears_the_diagnostic
+    actions::tests::adding_security_controls_produces_a_document_that_still_parses
+    actions::tests::an_existing_controls_block_is_appended_to_rather_than_duplicated
+    actions::tests::appended_controls_adopt_the_authors_indentation
+    actions::tests::applying_an_edit_preserves_the_trailing_newline
+    actions::tests::inserted_controls_are_marked_todo_rather_than_invented
+    actions::tests::quick_fixes_never_panic_on_arbitrary_diagnostics
+    completion::tests::a_binding_key_offers_nothing_when_the_pattern_is_not_in_the_library
+    completion::tests::a_binding_key_offers_the_roles_the_claimed_pattern_names
+    completion::tests::a_binding_value_offers_the_nodes_this_document_declares
+    completion::tests::a_block_opening_key_line_still_offers_node_keys
+    completion::tests::a_claim_offers_the_claim_keys
+    completion::tests::a_control_field_position_offers_control_keys
+    completion::tests::a_control_type_value_offers_control_types
+    completion::tests::a_field_completion_inserts_the_colon_and_a_space
+    completion::tests::a_node_field_position_offers_node_keys
+    completion::tests::a_node_type_value_offers_node_types
+    completion::tests::a_pattern_reference_is_completed_from_the_library
+    completion::tests::a_position_past_the_end_of_the_document_is_handled
+    completion::tests::a_protocol_value_offers_protocols_in_both_places_it_appears
+    completion::tests::a_relationship_type_value_offers_relationship_types_not_node_types
+    completion::tests::a_top_level_position_offers_root_keys
+    completion::tests::a_value_completion_inserts_the_bare_label
+    completion::tests::an_empty_library_offers_no_references_rather_than_guessing
+    completion::tests::an_endpoint_completion_annotates_each_node_with_its_type
+    completion::tests::an_endpoint_offers_the_nodes_this_document_declares
+    completion::tests::an_interface_field_position_offers_interface_keys_not_node_keys
+    completion::tests::an_interface_name_is_not_offered_as_a_node_reference
+    completion::tests::an_unrecognised_value_position_offers_nothing
+    completion::tests::completion_never_panics_anywhere_in_a_document
+    completion::tests::completion_never_panics_on_malformed_input
+    completion::tests::completion_works_immediately_after_a_colon_with_no_space_yet
+    completion::tests::every_offered_item_carries_documentation
+    completion::tests::patterns_is_offered_as_a_top_level_key
+    completion::tests::the_typed_prefix_is_reported_for_clients_that_want_it
+    diagnostics::tests::a_claim_the_library_does_not_hold_still_anchors_on_the_claim
+    diagnostics::tests::a_claim_with_no_library_is_a_warning_not_an_error
+    diagnostics::tests::a_clean_architecture_produces_no_diagnostics
+    diagnostics::tests::a_conformance_finding_is_anchored_on_the_claim_not_on_line_one
+    diagnostics::tests::a_cycle_is_anchored_on_its_first_participant_with_the_rest_related
+    diagnostics::tests::a_node_finding_is_anchored_on_the_node_name
+    diagnostics::tests::a_relationship_finding_is_anchored_on_the_source_line
+    diagnostics::tests::a_satisfied_claim_reports_nothing_once_the_library_is_loaded
+    diagnostics::tests::a_syntax_error_carries_its_suggestion_into_the_message
+    diagnostics::tests::a_syntax_error_is_reported_at_its_line
+    diagnostics::tests::an_unmet_requirement_is_an_error_in_the_editor
+    diagnostics::tests::an_unresolved_reference_is_anchored_on_the_offending_endpoint
+    diagnostics::tests::every_diagnostic_lands_within_the_document
+    diagnostics::tests::has_errors_distinguishes_errors_from_warnings
+    diagnostics::tests::parser_positions_are_converted_from_one_indexed_to_zero_indexed
+    diagnostics::tests::severities_are_carried_across_from_the_validator
+    diagnostics::tests::suppressed_rules_do_not_appear
+    diagnostics::tests::the_configured_thresholds_are_honoured
+    diagnostics::tests::validator_suggestions_are_folded_into_the_message
+    documents::tests::a_broken_document_is_stored_with_a_syntax_diagnostic_and_no_architecture
+    documents::tests::a_change_replaces_the_previous_analysis
+    documents::tests::a_document_and_the_library_are_retrieved_together
+    documents::tests::a_document_is_stored_and_analysed_on_open
+    documents::tests::closing_a_document_forgets_it
+    documents::tests::diagnostics_are_available_immediately_after_a_change
+    documents::tests::eviction_drops_the_least_recently_used_document
+    documents::tests::eviction_is_deterministic_when_access_times_tie
+    documents::tests::loading_patterns_re_analyses_every_open_document
+    documents::tests::peek_does_not_change_the_eviction_order
+    documents::tests::reconfiguring_re_analyses_every_open_document
+    documents::tests::the_byte_limit_is_enforced
+    documents::tests::the_document_count_limit_is_enforced
+    documents::tests::the_document_just_written_is_never_the_eviction_victim
+    hover::tests::hovering_a_bound_node_explains_the_node
+    hover::tests::hovering_a_claim_key_explains_the_field
+    hover::tests::hovering_a_claimed_pattern_shows_what_it_requires
+    hover::tests::hovering_a_control_type_explains_it_without_confusing_it_for_a_node_type
+    hover::tests::hovering_a_key_explains_the_field
+    hover::tests::hovering_a_key_uses_the_vocabulary_of_the_enclosing_block
+    hover::tests::hovering_a_node_name_lists_its_interfaces_and_controls
+    hover::tests::hovering_a_node_name_lists_what_it_calls_and_what_calls_it
+    hover::tests::hovering_a_node_name_shows_its_type_and_description
+    hover::tests::hovering_a_node_type_explains_the_type
+    hover::tests::hovering_a_pattern_the_library_lacks_says_so
+    hover::tests::hovering_a_protocol_explains_it
+    hover::tests::hovering_a_relationship_endpoint_describes_the_node_it_names
+    hover::tests::hovering_a_relationship_type_explains_its_blocking_semantics
+    hover::tests::hovering_an_unmodelled_protocol_explains_the_custom_fallback
+    hover::tests::hovering_an_unresolvable_reference_says_so_and_suggests_a_fix
+    hover::tests::hovering_degrades_gracefully_when_the_document_does_not_parse
+    hover::tests::hovering_empty_space_produces_nothing
+    hover::tests::hovering_never_panics_anywhere_in_the_document
+    hover::tests::hovering_reports_the_span_so_the_editor_can_highlight_it
+    index::tests::a_blank_line_inherits_the_surrounding_context
+    index::tests::a_block_closes_when_a_sibling_key_appears_at_the_same_indent
+    index::tests::a_block_closes_when_the_next_list_item_begins
+    index::tests::a_block_opening_key_sits_outside_the_block_it_opens
+    index::tests::a_bound_node_is_a_reference_to_it
+    index::tests::a_claim_is_found_by_its_reference
+    index::tests::a_claim_that_is_still_being_typed_still_anchors
+    index::tests::a_colon_inside_a_value_does_not_split_the_line
+    index::tests::a_conformance_claim_is_indexed_with_its_reference
+    index::tests::a_control_type_is_not_mistaken_for_a_node_type
+    index::tests::a_position_on_a_blank_line_resolves_to_no_symbol
+    index::tests::a_position_over_a_key_resolves_to_no_symbol
+    index::tests::a_position_resolves_to_the_symbol_under_it
+    index::tests::a_relationship_anchor_prefers_the_source_then_the_target
+    index::tests::a_relationship_is_found_by_its_endpoints
+    index::tests::a_relationship_is_indexed_whatever_order_its_fields_are_written_in
+    index::tests::a_relationship_type_is_distinguished_from_a_node_type
+    index::tests::a_relationships_controls_block_does_not_create_a_spurious_entry
+    index::tests::a_sequence_indented_flush_with_its_key_stays_inside_the_block
+    index::tests::a_syntactically_broken_document_still_indexes_what_it_can
+    index::tests::a_trailing_comment_does_not_corrupt_the_indexed_value
+    index::tests::an_interface_name_is_not_mistaken_for_a_node_declaration
+    index::tests::an_unknown_top_level_key_yields_the_unknown_section
+    index::tests::bindings_are_indexed_by_role
+    index::tests::line_and_raw_line_accessors_agree_and_are_bounds_safe
+    index::tests::nested_blocks_are_tracked
+    index::tests::node_declarations_are_collected_with_their_types
+    index::tests::protocols_are_indexed_in_both_interfaces_and_relationships
+    index::tests::references_to_a_node_are_found
+    index::tests::relationship_declarations_are_collected_with_all_three_fields
+    index::tests::relationship_endpoints_are_indexed_as_references
+    index::tests::several_relationships_are_kept_separate
+    index::tests::spans_are_correct_on_lines_containing_multibyte_text
+    index::tests::spans_point_at_the_value_not_the_whole_line
+    index::tests::the_patterns_section_does_not_leak_into_the_next_one
+    index::tests::top_level_keys_set_the_section
+    navigation::tests::a_declaration_resolves_to_itself
+    navigation::tests::a_node_without_a_type_still_outlines
+    navigation::tests::an_endpoint_resolves_to_the_node_declaration
+    navigation::tests::an_enum_value_has_no_declaration_to_jump_to
+    navigation::tests::an_outline_entry_spans_the_whole_node_item
+    navigation::tests::an_unresolvable_endpoint_resolves_to_nothing
+    navigation::tests::both_endpoints_resolve_independently
+    navigation::tests::navigation_never_panics_anywhere_in_the_document
+    navigation::tests::navigation_works_on_a_document_that_does_not_parse
+    navigation::tests::references_can_exclude_the_declaration
+    navigation::tests::references_finds_every_mention
+    navigation::tests::references_on_a_non_node_symbol_finds_nothing
+    navigation::tests::references_on_empty_space_finds_nothing
+    navigation::tests::references_works_from_a_use_site_not_only_the_declaration
+    navigation::tests::the_outline_lists_every_node_with_its_type
+
+test result: FAILED. 69 passed; 146 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `-p casm-lsp --lib`
+
+*** result: Failure(101)

@@ -1,0 +1,26 @@
+--- crates/casm-core/src/merkle.rs
++++ replace required_relationship_digest -> Fingerprint with Default::default()
+@@ -328,22 +328,17 @@
+         encoder.text(protocol);
+     }
+ 
+     encoder.finish("requirement")
+ }
+ 
+ /// The digest of a single required relationship.
+ fn required_relationship_digest(relationship: &RequiredRelationship) -> Fingerprint {
+-    Encoder::default()
+-        .text(relationship.source().as_str())
+-        .text(relationship.target().as_str())
+-        .text(relationship.relationship_type().label())
+-        .optional(relationship.description())
+-        .finish("required-relationship")
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The content address of a pattern.
+ ///
+ /// Order-independent in the same way and for the same reason as
+ /// [`fingerprint`]: two authors who wrote the same requirements in a different order
+ /// wrote the same shape, and a registry that treated them as distinct artefacts would be
+ /// distributing a distinction without a difference.

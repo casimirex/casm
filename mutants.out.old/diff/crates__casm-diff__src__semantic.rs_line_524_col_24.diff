@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ delete ! in difference
+@@ -516,17 +516,17 @@
+ fn difference(old: &[String], new: &[String]) -> (Vec<String>, Vec<String>) {
+     let added = new
+         .iter()
+         .filter(|item| !old.contains(item))
+         .cloned()
+         .collect();
+     let removed = old
+         .iter()
+-        .filter(|item| !new.contains(item))
++        .filter(|item|  /* ~ changed by cargo-mutants ~ */new.contains(item))
+         .cloned()
+         .collect();
+     (added, removed)
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,

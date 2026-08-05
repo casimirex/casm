@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace == with != in write_topology
+@@ -273,17 +273,17 @@
+             .blocking
+             .iter()
+             .filter(|edge| edge.source == node.name)
+             .map(|edge| identifier_of(identifiers, &edge.target))
+             .collect();
+         let notifies: Vec<String> = model
+             .asynchronous
+             .iter()
+-            .filter(|edge| edge.source == node.name)
++            .filter(|edge| edge.source != /* ~ changed by cargo-mutants ~ */ node.name)
+             .map(|edge| identifier_of(identifiers, &edge.target))
+             .collect();
+ 
+         let _ = writeln!(out, "    {identifier}.blocks = {}", union(&blocks));
+         let _ = writeln!(out, "    {identifier}.notifies = {}", union(&notifies));
+     }
+ 
+     let _ = writeln!(out, "}}\n");

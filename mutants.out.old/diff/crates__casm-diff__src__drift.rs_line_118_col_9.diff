@@ -1,0 +1,29 @@
+--- crates/casm-diff/src/drift.rs
++++ replace Inventory::bound_to -> Option<&Resource> with None
+@@ -110,25 +110,17 @@
+         })
+     }
+ 
+     /// Finds the resource bound to `node`, if any.
+     ///
+     /// Prefers an explicit `infrastructure-id`; falls back to name equality.
+     #[must_use]
+     pub fn bound_to(&self, node: &Node) -> Option<&Resource> {
+-        if let Some(declared) = node.metadata().get(BINDING_KEY) {
+-            return self
+-                .resources
+-                .iter()
+-                .find(|resource| &resource.id == declared);
+-        }
+-        self.resources
+-            .iter()
+-            .find(|resource| resource.name == node.name().as_str())
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Converts one Terraform state resource entry.
+ fn terraform_resource(entry: &serde_json::Value) -> Option<Resource> {
+     if entry.get("mode").and_then(serde_json::Value::as_str) != Some("managed") {
+         return None;
+     }

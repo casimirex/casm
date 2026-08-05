@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace Relationship::description -> Option<&str> with None
+@@ -292,17 +292,17 @@
+     pub const fn protocol(&self) -> Option<&Protocol> {
+         self.protocol.as_ref()
+     }
+ 
+     /// The human-readable description, if any.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+-        self.description.as_deref()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The controls governing this edge.
+     #[inline]
+     #[must_use]
+     pub fn controls(&self) -> &[Control] {
+         &self.controls
+     }

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/ids.rs
++++ replace NodeId::as_uuid -> &Uuid with Box::leak(Box::new(Default::default()))
+@@ -85,17 +85,17 @@
+ 
+         Ok(Self(uuid))
+     }
+ 
+     /// Borrows the underlying [`Uuid`].
+     #[inline]
+     #[must_use]
+     pub const fn as_uuid(&self) -> &Uuid {
+-        &self.0
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns the milliseconds-since-Unix-epoch timestamp embedded in this identifier.
+     ///
+     /// Because the type guarantees version 7, this is always available.
+     #[must_use]
+     pub fn timestamp_millis(&self) -> u64 {
+         self.0.get_timestamp().map_or(0, |ts| {

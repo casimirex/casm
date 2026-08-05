@@ -1,0 +1,26 @@
+--- crates/casm-validator/src/sarif.rs
++++ replace to_string -> Result<String, String> with Ok(String::new())
+@@ -43,22 +43,17 @@
+ 
+ /// Renders a report as pretty-printed SARIF JSON.
+ ///
+ /// # Errors
+ ///
+ /// Returns a message if serialisation fails, which for a `Value` built here means an
+ /// allocator failure rather than a data problem.
+ pub fn to_string(report: &Report, artifact: &str) -> Result<String, String> {
+-    serde_json::to_string_pretty(&to_value(report, artifact))
+-        .map(|mut json| {
+-            json.push('\n');
+-            json
+-        })
+-        .map_err(|error| error.to_string())
++    Ok(String::new()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds the SARIF tool driver, including the full catalogue of built-in rules.
+ ///
+ /// The catalogue is emitted whether or not a rule fired, so a dashboard can show
+ /// "0 findings for `no-dependency-cycles`" rather than staying silent about a rule it
+ /// has never seen.
+ fn driver() -> Value {

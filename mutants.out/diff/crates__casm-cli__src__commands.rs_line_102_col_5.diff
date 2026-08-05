@@ -1,0 +1,42 @@
+--- crates/casm-cli/src/commands.rs
++++ replace init -> CommandResult with Default::default()
+@@ -94,38 +94,17 @@
+     }
+ }
+ 
+ /// The result of running a subcommand.
+ pub(crate) type CommandResult = Result<ExitCode, CommandError>;
+ 
+ /// Scaffolds a new architecture file.
+ pub(crate) fn init(name: &str, output: &Path, force: bool) -> CommandResult {
+-    if output.exists() && !force {
+-        return Err(CommandError(format!(
+-            "'{}' already exists; pass --force to overwrite it",
+-            output.display()
+-        )));
+-    }
+-
+-    let contents = TEMPLATE.replace("{{NAME}}", name);
+-    std::fs::write(output, &contents)
+-        .map_err(|error| CommandError(format!("cannot write '{}': {error}", output.display())))?;
+-
+-    // Prove the template is valid rather than trusting it: a scaffold that fails its own
+-    // validator is the worst possible first impression.
+-    let architecture = parse_file(output)?;
+-
+-    println!(
+-        "created '{}' ({} nodes)",
+-        output.display(),
+-        architecture.node_count()
+-    );
+-    println!("  next: casm validate {}", output.display());
+-    Ok(ExitCode::Success)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds a validator configuration from command-line overrides.
+ fn validator_config(
+     allow: &[String],
+     max_critical_path_ms: Option<u64>,
+     min_security_controls: Option<usize>,
+ ) -> ValidatorConfig {

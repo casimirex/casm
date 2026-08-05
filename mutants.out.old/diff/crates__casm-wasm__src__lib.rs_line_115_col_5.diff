@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace render -> String with String::new()
+@@ -107,17 +107,17 @@
+ }
+ 
+ /// Renders an architecture as a diagram.
+ ///
+ /// `backend` is `mermaid`, `dot`, or `ascii`.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn render(source: &str, backend: &str) -> String {
+-    api::render(source, backend)
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Computes an architecture's semantic fingerprint and per-node digests.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn fingerprint(source: &str) -> String {
+     api::fingerprint(source)
+ }

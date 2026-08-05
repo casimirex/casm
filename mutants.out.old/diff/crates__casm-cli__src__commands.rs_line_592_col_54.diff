@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace == with != in evolve_targets
+@@ -584,17 +584,17 @@
+     // are reported rather than dropped, which is the honest outcome — a binding that no
+     // longer means anything is a thing the author should be told about.
+     let inherited = architecture
+         .conformance()
+         .find(|claim| claim.pattern() == &reference)
+         .or_else(|| {
+             architecture
+                 .conformance()
+-                .find(|claim| claim.pattern().name() == reference.name())
++                .find(|claim| claim.pattern().name() != /* ~ changed by cargo-mutants ~ */ reference.name())
+         });
+ 
+     let Some(existing) = inherited else {
+         return Ok(vec![casm_core::Conformance::new(reference)]);
+     };
+ 
+     let mut claim = casm_core::Conformance::new(reference);
+     for (role, node) in existing.bindings() {

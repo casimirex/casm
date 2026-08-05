@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/completion.rs
++++ delete match arm (_, Block::Controls, Some("type")) in value_completions
+@@ -344,17 +344,17 @@
+             };
+         }
+         (Section::Nodes, Block::None, Some("type")) => {
+             (CompletionContext::NodeTypeValue, NODE_TYPES)
+         }
+         (Section::Relationships, Block::None, Some("type")) => {
+             (CompletionContext::RelationshipTypeValue, RELATIONSHIP_TYPES)
+         }
+-        (_, Block::Controls, Some("type")) => (CompletionContext::ControlTypeValue, CONTROL_TYPES),
++         /* ~ changed by cargo-mutants ~ */
+         (_, _, Some("protocol")) => (CompletionContext::ProtocolValue, PROTOCOLS),
+         (Section::Relationships, Block::None, Some("source" | "target")) => {
+             return CompletionResult {
+                 context: CompletionContext::NodeNameValue,
+                 prefix,
+                 items: index
+                     .nodes()
+                     .iter()

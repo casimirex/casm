@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/drift.rs
++++ replace == with != in Inventory::bound_to
+@@ -114,17 +114,17 @@
+     ///
+     /// Prefers an explicit `infrastructure-id`; falls back to name equality.
+     #[must_use]
+     pub fn bound_to(&self, node: &Node) -> Option<&Resource> {
+         if let Some(declared) = node.metadata().get(BINDING_KEY) {
+             return self
+                 .resources
+                 .iter()
+-                .find(|resource| &resource.id == declared);
++                .find(|resource| &resource.id != /* ~ changed by cargo-mutants ~ */ declared);
+         }
+         self.resources
+             .iter()
+             .find(|resource| resource.name == node.name().as_str())
+     }
+ }
+ 
+ /// Converts one Terraform state resource entry.

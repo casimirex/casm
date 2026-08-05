@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace node_at -> Option<&NodeEntry> with None
+@@ -172,20 +172,17 @@
+         "operational",
+         "TODO-BACKUP",
+         "TODO describe the backup schedule, retention, and when a restore was last tested",
+     ),
+ ];
+ 
+ /// Finds the node whose declaration `span` sits on.
+ fn node_at(index: &DocumentIndex, span: Span) -> Option<&NodeEntry> {
+-    index
+-        .nodes()
+-        .iter()
+-        .find(|node| span.line >= node.item_line && span.line <= node.last_line)
++    None /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds an action that appends controls to a node.
+ fn add_controls(
+     index: &DocumentIndex,
+     node: &NodeEntry,
+     code: &str,
+     title: &str,

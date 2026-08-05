@@ -1,0 +1,55 @@
+--- crates/casm-formal/src/tla.rs
++++ replace emit -> TlaOutput with Default::default()
+@@ -122,51 +122,17 @@
+     }
+     out.push_str("    }");
+     out
+ }
+ 
+ /// Emits the TLA+ module and its TLC configuration.
+ #[must_use]
+ pub fn emit(model: &FormalModel) -> TlaOutput {
+-    let module = module_name(&model.name);
+-
+-    let blocking_pairs: Vec<(String, String)> = model
+-        .blocking
+-        .iter()
+-        .map(|edge| (edge.source.clone(), edge.target.clone()))
+-        .collect();
+-    let async_pairs: Vec<(String, String)> = model
+-        .asynchronous
+-        .iter()
+-        .map(|edge| (edge.source.clone(), edge.target.clone()))
+-        .collect();
+-
+-    // Seeded from the architecture so the assertion documents what is true today. Raising
+-    // it is a deliberate act; a bound that already fails teaches nothing.
+-    let blast_radius = model.blast_radius();
+-    let max_failures = 2.min(model.nodes.len().max(1));
+-
+-    let mut spec = String::new();
+-    write_header(&mut spec, &module, model);
+-    write_topology(&mut spec, model, &blocking_pairs, &async_pairs);
+-    write_behaviour(&mut spec);
+-    write_derived_operators(&mut spec);
+-    write_properties(&mut spec);
+-    let _ = writeln!(
+-        spec,
+-        "\n============================================================="
+-    );
+-
+-    TlaOutput {
+-        module,
+-        specification: spec,
+-        config: emit_config(blast_radius, max_failures),
+-        liveness_config: emit_liveness_config(blast_radius, max_failures),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Writes the module header and its explanatory comment.
+ fn write_header(out: &mut String, module: &str, model: &FormalModel) {
+     let _ = writeln!(out, "---- MODULE {module} ----");
+     let _ = writeln!(
+         out,
+         "(***************************************************************"

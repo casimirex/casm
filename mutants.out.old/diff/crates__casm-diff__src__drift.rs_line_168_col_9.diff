@@ -1,0 +1,26 @@
+--- crates/casm-diff/src/drift.rs
++++ delete match arm "aws_sqs_queue" | "aws_sns_topic" | "aws_msk_cluster" | "google_pubsub_topic" | "google_pubsub_subscription" | "azurerm_servicebus_queue" in terraform_type
+@@ -160,22 +160,17 @@
+         | "azurerm_postgresql_server"
+         | "azurerm_cosmosdb_account" => Some(NodeType::Database),
+ 
+         "aws_s3_bucket"
+         | "aws_efs_file_system"
+         | "google_storage_bucket"
+         | "azurerm_storage_account" => Some(NodeType::Storage),
+ 
+-        "aws_sqs_queue"
+-        | "aws_sns_topic"
+-        | "aws_msk_cluster"
+-        | "google_pubsub_topic"
+-        | "google_pubsub_subscription"
+-        | "azurerm_servicebus_queue" => Some(NodeType::Queue),
++         /* ~ changed by cargo-mutants ~ */
+ 
+         "aws_elasticache_cluster"
+         | "aws_elasticache_replication_group"
+         | "google_redis_instance"
+         | "azurerm_redis_cache" => Some(NodeType::Cache),
+ 
+         "aws_lb"
+         | "aws_alb"

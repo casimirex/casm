@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::relationship_count -> usize with 0
+@@ -246,17 +246,17 @@
+     pub fn node_count(&self) -> usize {
+         self.nodes.len()
+     }
+ 
+     /// How many relationships this architecture contains.
+     #[inline]
+     #[must_use]
+     pub fn relationship_count(&self) -> usize {
+-        self.relationships.len()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if the architecture contains no nodes.
+     #[inline]
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.nodes.is_empty()
+     }

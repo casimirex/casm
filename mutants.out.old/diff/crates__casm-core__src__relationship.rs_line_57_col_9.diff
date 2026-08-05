@@ -1,0 +1,29 @@
+--- crates/casm-core/src/relationship.rs
++++ replace RelationshipType::label -> &'static str with ""
+@@ -49,25 +49,17 @@
+     /// the validator treats a contract change at either end as breaking both.
+     QuantumEntangled,
+ }
+ 
+ impl RelationshipType {
+     /// Returns the canonical lowercase label.
+     #[must_use]
+     pub const fn label(self) -> &'static str {
+-        match self {
+-            Self::Sync => "sync",
+-            Self::Async => "async",
+-            Self::EventDriven => "event-driven",
+-            Self::DependsOn => "depends-on",
+-            Self::Composed => "composed",
+-            Self::DeployedOn => "deployed-on",
+-            Self::QuantumEntangled => "quantum-entangled",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if the source blocks on the target.
+     ///
+     /// Blocking edges are the ones that propagate failure and accumulate latency, so
+     /// this predicate drives both cascade analysis and budget summation.
+     #[must_use]
+     pub const fn is_blocking(self) -> bool {

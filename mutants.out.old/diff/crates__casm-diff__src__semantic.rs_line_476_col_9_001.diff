@@ -1,0 +1,32 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Diff::render -> String with "xyzzy".into()
+@@ -468,28 +468,17 @@
+     #[must_use]
+     pub fn has_breaking_changes(&self) -> bool {
+         self.changes.iter().any(Change::is_breaking)
+     }
+ 
+     /// Renders the diff as a marker-prefixed list.
+     #[must_use]
+     pub fn render(&self) -> String {
+-        if self.is_empty() {
+-            return "no semantic changes\n".to_owned();
+-        }
+-
+-        let mut out = String::new();
+-        for change in &self.changes {
+-            out.push(change.marker());
+-            out.push(' ');
+-            out.push_str(&change.to_string());
+-            out.push('\n');
+-        }
+-        out
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Builds a relationship's name-based identity key.
+ fn edge_key(architecture: &Architecture, edge: &Relationship) -> (String, String, String) {
+     let name_of = |id| {
+         architecture
+             .node(id)

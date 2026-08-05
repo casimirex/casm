@@ -1,0 +1,59 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace add_controls -> CodeAction with Default::default()
+@@ -186,55 +186,17 @@
+ /// Builds an action that appends controls to a node.
+ fn add_controls(
+     index: &DocumentIndex,
+     node: &NodeEntry,
+     code: &str,
+     title: &str,
+     controls: &[(&str, &str, &str)],
+ ) -> CodeAction {
+-    let existing = controls_block(index, node);
+-
+-    let (anchor_line, entry_indent, needs_header) = match existing {
+-        Some(block) => (block.last_line, block.entry_indent, false),
+-        None => (node.last_line, node.field_indent.saturating_add(2), true),
+-    };
+-
+-    let mut text = String::new();
+-    if needs_header {
+-        text.push('\n');
+-        text.push_str(&" ".repeat(node.field_indent));
+-        text.push_str("controls:");
+-    }
+-
+-    for (control_type, standard, description) in controls {
+-        let field_indent = " ".repeat(entry_indent.saturating_add(2));
+-        text.push('\n');
+-        text.push_str(&" ".repeat(entry_indent));
+-        // Writing to a `String` cannot fail; the `Result` is discarded deliberately
+-        // rather than unwrapped, per NASA Rule 3.
+-        let _ = writeln!(text, "- type: {control_type}");
+-        let _ = writeln!(text, "{field_indent}standard: {standard}");
+-        let _ = write!(text, "{field_indent}description: {description}");
+-    }
+-
+-    let column = index
+-        .raw_line(anchor_line)
+-        .map_or(0, crate::text::utf16_len);
+-
+-    CodeAction {
+-        title: title.to_owned(),
+-        kind: ActionKind::QuickFix,
+-        edits: vec![TextEdit {
+-            span: Span::new(anchor_line, column, column),
+-            new_text: text,
+-        }],
+-        command: None,
+-        resolves: Some(code.to_owned()),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Where an existing `controls:` block sits within a node.
+ struct ControlsBlock {
+     last_line: u32,
+     entry_indent: usize,
+ }
+ 

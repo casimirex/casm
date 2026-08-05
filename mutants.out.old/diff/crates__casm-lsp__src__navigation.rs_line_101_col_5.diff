@@ -1,0 +1,31 @@
+--- crates/casm-lsp/src/navigation.rs
++++ replace outline -> Vec<Outline> with vec![]
+@@ -93,27 +93,17 @@
+     );
+     spans.sort_unstable();
+     spans
+ }
+ 
+ /// Builds the document outline: one entry per declared node.
+ #[must_use]
+ pub fn outline(index: &DocumentIndex) -> Vec<Outline> {
+-    index
+-        .nodes()
+-        .iter()
+-        .map(|node| Outline {
+-            name: node.name.clone(),
+-            detail: node.node_type.clone().unwrap_or_else(|| "node".to_owned()),
+-            selection_span: node.name_span,
+-            start_line: node.item_line,
+-            end_line: node.last_line,
+-        })
+-        .collect()
++    vec![] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

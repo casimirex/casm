@@ -1,0 +1,42 @@
+--- crates/casm-wasm/src/api.rs
++++ replace complete_with_patterns -> String with "xyzzy".into()
+@@ -451,38 +451,17 @@
+     complete_with_patterns(source, "", line, character)
+ }
+ 
+ /// Returns completions for a cursor position, drawing pattern references from `patterns`.
+ ///
+ /// `patterns` is a JSON array of pattern documents, as [`validate_with_patterns`] takes.
+ #[must_use]
+ pub fn complete_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+-    let library = Library::read(patterns);
+-    let index = DocumentIndex::build(source);
+-    let result = casm_lsp::completion::complete(
+-        &index,
+-        &library.patterns,
+-        casm_lsp::Position::new(line, character),
+-    );
+-
+-    to_json(&CompletionResult {
+-        context: format!("{:?}", result.context),
+-        prefix: result.prefix,
+-        items: result
+-            .items
+-            .iter()
+-            .map(|item| WasmCompletion {
+-                label: item.label.clone(),
+-                insert_text: item.insert_text.clone(),
+-                detail: item.detail.clone(),
+-                documentation: item.documentation.clone(),
+-            })
+-            .collect(),
+-    })
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// A hover tooltip.
+ #[derive(Debug, Serialize)]
+ #[serde(rename_all = "camelCase")]
+ pub struct HoverResult {
+     /// `true` if there is something to show.
+     pub ok: bool,

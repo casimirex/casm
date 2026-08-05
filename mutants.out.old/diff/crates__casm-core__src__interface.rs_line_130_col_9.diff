@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace <impl fmt::Display for Protocol>::fmt -> fmt::Result with Ok(Default::default())
+@@ -122,17 +122,17 @@
+             }
+             _ => Ok(()),
+         }
+     }
+ }
+ 
+ impl fmt::Display for Protocol {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-        f.write_str(self.label())
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A SHA3-256 digest identifying the exact bytes of an interface contract.
+ ///
+ /// Content addressing means an interface's identity is its content: if the schema
+ /// changes by one byte, the hash changes, and every architecture pinning the old hash
+ /// fails validation loudly instead of drifting silently.

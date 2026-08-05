@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Report::is_clean -> bool with true
+@@ -207,17 +207,17 @@
+         self.diagnostics
+             .iter()
+             .any(|d| d.severity == Severity::Warning)
+     }
+ 
+     /// Returns `true` if nothing at all was found.
+     #[must_use]
+     pub fn is_clean(&self) -> bool {
+-        self.diagnostics.is_empty()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns only the findings at a given severity.
+     #[must_use]
+     pub fn at(&self, severity: Severity) -> Vec<&Diagnostic> {
+         self.diagnostics
+             .iter()
+             .filter(|d| d.severity == severity)

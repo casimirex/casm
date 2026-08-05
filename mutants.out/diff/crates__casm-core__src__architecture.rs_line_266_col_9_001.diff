@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::nodes -> impl Iterator<Item =&Node> with ::std::iter::once(Box::leak(Box::new(Default::default())))
+@@ -258,17 +258,17 @@
+     #[inline]
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.nodes.is_empty()
+     }
+ 
+     /// Iterates the nodes in insertion order.
+     pub fn nodes(&self) -> impl Iterator<Item = &Node> {
+-        self.nodes.values()
++        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Iterates the relationships in insertion order.
+     pub fn relationships(&self) -> impl Iterator<Item = &Relationship> {
+         self.relationships.iter()
+     }
+ 
+     /// Iterates the pattern-conformance claims, in declaration order.

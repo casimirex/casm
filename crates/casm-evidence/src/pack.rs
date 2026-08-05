@@ -486,6 +486,23 @@ mod tests {
     }
 
     #[test]
+    fn a_checked_pattern_leaves_nothing_unchecked() {
+        // The other half of `an_unchecked_pattern_corroborates_nothing`. Asserting only
+        // the true case let `has_unchecked_conformance` be replaced by `true` and no test
+        // noticed — found by `cargo mutants`.
+        let pack = Pack::assemble(&claiming(), &[pattern()], Provenance::unknown());
+
+        assert!(!pack.has_unchecked_conformance());
+        assert!(pack.conformance[0].checked);
+    }
+
+    #[test]
+    fn an_architecture_claiming_nothing_has_nothing_unchecked() {
+        let pack = Pack::assemble(&architecture(), &[], Provenance::unknown());
+        assert!(!pack.has_unchecked_conformance());
+    }
+
+    #[test]
     fn nodes_declaring_no_control_are_listed() {
         let pack = Pack::assemble(&architecture(), &[], Provenance::unknown());
         assert_eq!(pack.uncontrolled_nodes, ["worker"]);

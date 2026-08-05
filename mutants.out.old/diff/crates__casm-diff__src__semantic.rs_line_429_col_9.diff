@@ -1,0 +1,50 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Diff::diff_relationships with ()
+@@ -421,46 +421,17 @@
+                     reference: claim.pattern().to_string(),
+                 });
+             }
+         }
+     }
+ 
+     /// Appends relationship-level changes.
+     fn diff_relationships(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+-        for edge in new.relationships() {
+-            let key = edge_key(new, edge);
+-            match find_edge(old, &key) {
+-                None => changes.push(Change::RelationshipAdded {
+-                    source: key.0,
+-                    target: key.1,
+-                    kind: key.2,
+-                }),
+-                Some(previous) if previous.latency_budget_ms() != edge.latency_budget_ms() => {
+-                    changes.push(Change::LatencyBudgetChanged {
+-                        source: key.0,
+-                        target: key.1,
+-                        from: previous.latency_budget_ms(),
+-                        to: edge.latency_budget_ms(),
+-                    });
+-                }
+-                Some(_) => {}
+-            }
+-        }
+-
+-        for edge in old.relationships() {
+-            let key = edge_key(old, edge);
+-            if find_edge(new, &key).is_none() {
+-                changes.push(Change::RelationshipRemoved {
+-                    source: key.0,
+-                    target: key.1,
+-                    kind: key.2,
+-                });
+-            }
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if the two architectures are semantically identical.
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.changes.is_empty()
+     }
+ 

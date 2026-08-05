@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace == with != in check_node
+@@ -364,17 +364,17 @@
+             role: role.clone(),
+             node: name.clone(),
+             required: requirement.min_security_controls(),
+             declared,
+         });
+     }
+ 
+     for control_type in requirement.required_control_types() {
+-        if node.controls_of_type(*control_type) == 0 {
++        if node.controls_of_type(*control_type) != /* ~ changed by cargo-mutants ~ */ 0 {
+             unmet.push(Unmet::MissingControlType {
+                 role: role.clone(),
+                 node: name.clone(),
+                 control_type: control_type.label().to_owned(),
+             });
+         }
+     }
+ 

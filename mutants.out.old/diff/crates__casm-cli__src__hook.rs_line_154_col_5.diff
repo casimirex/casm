@@ -1,0 +1,35 @@
+--- crates/casm-cli/src/hook.rs
++++ replace uninstall -> Result<Status, String> with Ok(Default::default())
+@@ -146,31 +146,17 @@
+ }
+ 
+ /// Removes CASIMIR's hook, leaving a foreign one alone.
+ ///
+ /// # Errors
+ ///
+ /// Returns a human-readable message if a foreign hook is present, or if removal fails.
+ pub(crate) fn uninstall(git_dir: &Path) -> Result<Status, String> {
+-    let existing = status(git_dir);
+-
+-    match existing {
+-        Status::Absent => Ok(existing),
+-        Status::Foreign => Err(format!(
+-            "'{}' was not written by CASIMIR; leaving it alone.",
+-            hook_path(git_dir).display()
+-        )),
+-        Status::Installed => {
+-            let path = hook_path(git_dir);
+-            std::fs::remove_file(&path)
+-                .map_err(|error| format!("cannot remove '{}': {error}", path.display()))?;
+-            Ok(existing)
+-        }
+-    }
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

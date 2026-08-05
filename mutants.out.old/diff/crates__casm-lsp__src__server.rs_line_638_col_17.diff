@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/server.rs
++++ delete ! in convert_action
+@@ -630,17 +630,17 @@
+         })),
+         insert_text: Some(item.insert_text.clone()),
+         ..CompletionItem::default()
+     }
+ }
+ 
+ /// Converts a CASIMIR code action into a protocol one.
+ fn convert_action(uri: &Uri, action: actions::CodeAction) -> CodeActionOrCommand {
+-    let edit = (!action.edits.is_empty()).then(|| {
++    let edit = ( /* ~ changed by cargo-mutants ~ */action.edits.is_empty()).then(|| {
+         let edits: Vec<TextEdit> = action
+             .edits
+             .iter()
+             .map(|edit| TextEdit {
+                 range: convert_span(edit.span),
+                 new_text: edit.new_text.clone(),
+             })
+             .collect();

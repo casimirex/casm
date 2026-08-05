@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/hook.rs
++++ replace make_executable -> std::io::Result<()> with Ok(())
+@@ -98,20 +98,17 @@
+ }
+ 
+ /// Makes a file executable on Unix.
+ ///
+ /// Git ignores a hook that is not executable, silently — so an install that skipped this
+ /// would appear to succeed and do nothing.
+ #[cfg(unix)]
+ fn make_executable(path: &Path) -> std::io::Result<()> {
+-    use std::os::unix::fs::PermissionsExt as _;
+-    let mut permissions = std::fs::metadata(path)?.permissions();
+-    permissions.set_mode(0o755);
+-    std::fs::set_permissions(path, permissions)
++    Ok(()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Windows has no executable bit; Git runs hooks through its bundled shell regardless.
+ #[cfg(not(unix))]
+ fn make_executable(_path: &Path) -> std::io::Result<()> {
+     Ok(())
+ }
+ 

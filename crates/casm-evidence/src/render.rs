@@ -395,6 +395,49 @@ mod tests {
     }
 
     #[test]
+    fn uncontrolled_nodes_are_named_and_only_when_there_are_some() {
+        // Deleting the `!` from this branch's condition survived the mutation sweep:
+        // nothing asserted the line appears, so nothing noticed it appearing backwards.
+        let bare = Architecture::builder()
+            .name("mixed")
+            .node(
+                Node::builder()
+                    .name("orders-db")
+                    .node_type(NodeType::Database)
+                    .control(
+                        Control::new(ControlType::Compliance, "ISO27001-A.10.1", "Encrypted")
+                            .unwrap(),
+                    )
+                    .build()
+                    .unwrap(),
+            )
+            .node(
+                Node::builder()
+                    .name("worker")
+                    .node_type(NodeType::Service)
+                    .build()
+                    .unwrap(),
+            )
+            .build()
+            .unwrap();
+
+        let with_gap = Pack::assemble(&bare, &[], Provenance::unknown());
+        for format in [Format::Human, Format::Markdown] {
+            let text = render(&with_gap, format);
+            assert!(
+                text.contains("1 node(s) declare no control at all: worker."),
+                "{format:?}:\n{text}"
+            );
+        }
+
+        // And every node controlled means the line must be absent, not empty.
+        for format in [Format::Human, Format::Markdown] {
+            let text = render(&pack(), format);
+            assert!(!text.contains("declare no control"), "{format:?}:\n{text}");
+        }
+    }
+
+    #[test]
     fn rendering_is_deterministic() {
         for format in [Format::Human, Format::Markdown] {
             assert_eq!(

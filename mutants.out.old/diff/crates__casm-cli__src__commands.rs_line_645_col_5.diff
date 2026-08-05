@@ -1,0 +1,25 @@
+--- crates/casm-cli/src/commands.rs
++++ replace repository_for -> Result<casm_git::Repository, CommandError> with Ok(Default::default())
+@@ -637,21 +637,17 @@
+     for unmet in decisions {
+         println!("  decide: {}", unmet.message());
+     }
+     println!();
+ }
+ 
+ /// Opens the repository containing `file`, reporting failures in the user's terms.
+ fn repository_for(file: &Path) -> Result<casm_git::Repository, CommandError> {
+-    let search_from = file
+-        .parent()
+-        .filter(|parent| !parent.as_os_str().is_empty());
+-    casm_git::Repository::discover(search_from.unwrap_or(Path::new(".")))
+-        .map_err(|error| CommandError(error.to_string()))
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Assembles a register of the control claims an architecture makes.
+ ///
+ /// Reports claims, never satisfaction. A control flagged `evidence-required` is listed as
+ /// outstanding, because CASIMIR does not hold the artefact behind it and saying otherwise
+ /// would launder an assertion into evidence — see ADR-0013.
+ pub(crate) fn evidence(

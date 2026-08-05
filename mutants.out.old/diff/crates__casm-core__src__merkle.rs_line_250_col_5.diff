@@ -1,0 +1,38 @@
+--- crates/casm-core/src/merkle.rs
++++ replace node_digest -> Fingerprint with Default::default()
+@@ -242,34 +242,17 @@
+         .optional(interface.schema_hash().map(SchemaHash::to_hex).as_deref())
+         .optional(interface.description())
+         .finish("interface")
+ }
+ 
+ /// The digest of a node, excluding its identifier.
+ #[must_use]
+ pub fn node_digest(node: &Node) -> Fingerprint {
+-    let mut encoder = Encoder::default();
+-    encoder
+-        .text(node.name().as_str())
+-        .text(node.node_type().label())
+-        .optional(node.description())
+-        .map(node.metadata());
+-
+-    encoder.text(&node.interfaces().len().to_string());
+-    for digest in sorted_digests(node.interfaces().iter().map(interface_digest)) {
+-        encoder.text(&digest);
+-    }
+-
+-    encoder.text(&node.controls().len().to_string());
+-    for digest in sorted_digests(node.controls().iter().map(control_digest)) {
+-        encoder.text(&digest);
+-    }
+-
+-    encoder.finish("node")
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The digest of a relationship, with endpoints named rather than identified.
+ #[must_use]
+ pub fn relationship_digest(architecture: &Architecture, edge: &Relationship) -> Fingerprint {
+     let name_of = |id| {
+         architecture
+             .node(id)

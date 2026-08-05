@@ -1,0 +1,54 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoPubliclyExposedDatastores>::check with ()
+@@ -124,50 +124,17 @@
+         "no-publicly-exposed-datastores"
+     }
+ 
+     fn description(&self) -> &'static str {
+         "external systems and humans must not connect directly to a database, queue, or store"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+-        for edge in context.architecture.relationships() {
+-            let (Some(source), Some(target)) = (
+-                context.architecture.node(edge.source()),
+-                context.architecture.node(edge.target()),
+-            ) else {
+-                continue;
+-            };
+-
+-            if !source.node_type().is_external() || !target.node_type().is_stateful() {
+-                continue;
+-            }
+-
+-            report.push(
+-                Diagnostic::new(
+-                    self.id(),
+-                    Severity::Error,
+-                    Subject::Relationship {
+-                        source: source.name().as_str().to_owned(),
+-                        target: target.name().as_str().to_owned(),
+-                    },
+-                    format!(
+-                        "'{}' is outside the control boundary and connects directly to the \
+-                         {} '{}'",
+-                        source.name(),
+-                        target.node_type(),
+-                        target.name()
+-                    ),
+-                )
+-                .with_suggestion(
+-                    "route the access through a service or gateway that can enforce \
+-                     authentication, authorisation, and rate limiting",
+-                ),
+-            );
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Every service must declare a minimum number of security controls.
+ pub struct ServicesRequireSecurityControls;
+ 
+ impl Rule for ServicesRequireSecurityControls {
+     fn id(&self) -> &'static str {

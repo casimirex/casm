@@ -1,0 +1,22 @@
+--- crates/casm-lsp/src/index.rs
++++ replace DocumentIndex::line -> Option<&LineInfo> with Some(Box::leak(Box::new(Default::default())))
+@@ -309,18 +309,17 @@
+     #[must_use]
+     pub fn lines(&self) -> &[LineInfo] {
+         &self.lines
+     }
+ 
+     /// The parsed information for one line.
+     #[must_use]
+     pub fn line(&self, number: u32) -> Option<&LineInfo> {
+-        self.lines
+-            .get(usize::try_from(number).unwrap_or(usize::MAX))
++        Some(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The raw text of one line, without its terminator.
+     #[must_use]
+     pub fn raw_line(&self, number: u32) -> Option<&str> {
+         self.raw_lines
+             .get(usize::try_from(number).unwrap_or(usize::MAX))
+             .map(String::as_str)

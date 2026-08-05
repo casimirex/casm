@@ -1,0 +1,28 @@
+--- crates/casm-lsp/src/library.rs
++++ replace is_pattern_file -> bool with true
+@@ -138,24 +138,17 @@
+ /// Returns `true` if `path` is a file that could change what the library holds.
+ ///
+ /// Used to decide whether a `workspace/didChangeWatchedFiles` notification is worth a
+ /// reload. A client may watch more than the server cares about, and re-reading the library
+ /// on every YAML file in the repository would make every keystroke in an architecture file
+ /// pay for it.
+ #[must_use]
+ pub fn is_pattern_file(path: &Path, directory: Option<&Path>) -> bool {
+-    let Some(directory) = directory else {
+-        // With no library loaded, any file under a conventionally named directory could be
+-        // the one that creates it.
+-        return path
+-            .parent()
+-            .is_some_and(|parent| CONVENTIONAL.iter().any(|name| parent.ends_with(name)));
+-    };
+-    path.starts_with(directory)
++    true /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

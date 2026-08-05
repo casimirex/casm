@@ -1,0 +1,60 @@
+--- crates/casm-lsp/src/hover.rs
++++ replace describe_pattern -> String with "xyzzy".into()
+@@ -113,56 +113,17 @@
+ }
+ 
+ /// Renders a claimed pattern, from the library if it holds one.
+ ///
+ /// Says plainly when the library does not, rather than showing an empty tooltip: "the
+ /// library has no such pattern" is the answer the author needs, and it is the same thing
+ /// `patterns-are-satisfied` reports as a warning.
+ fn describe_pattern(patterns: &[Pattern], reference: &str) -> String {
+-    let Some(pattern) = patterns
+-        .iter()
+-        .find(|pattern| pattern.reference() == reference)
+-    else {
+-        return format!(
+-            "`{reference}` is not in the loaded pattern library, so this claim is \
+-             **unchecked**.\n\nPoint the server at a library with the `casm.patterns` \
+-             setting, or check the reference for a typo."
+-        );
+-    };
+-
+-    let mut out = format!("**{}** — _v{}_", pattern.name(), pattern.version());
+-    if let Some(description) = pattern.description() {
+-        let _ = write!(out, "\n\n{description}");
+-    }
+-
+-    out.push_str("\n\n**Roles**");
+-    for requirement in pattern.requirements() {
+-        let _ = write!(
+-            out,
+-            "\n- `{}` — a {}",
+-            requirement.role(),
+-            requirement.node_type()
+-        );
+-    }
+-
+-    if !pattern.relationships().is_empty() {
+-        out.push_str("\n\n**Required relationships**");
+-        for required in pattern.relationships() {
+-            let _ = write!(
+-                out,
+-                "\n- `{}` → `{}` ({})",
+-                required.source(),
+-                required.target(),
+-                required.relationship_type()
+-            );
+-        }
+-    }
+-
+-    out
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders a vocabulary term, or says plainly that it is not one.
+ fn describe_term(terms: &[Term], label: &str, what: &str) -> String {
+     find(terms, label).map_or_else(
+         || format!("`{label}` is not a recognised {what}."),
+         Term::to_markdown,
+     )

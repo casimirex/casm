@@ -1,0 +1,272 @@
+
+*** crates/casm-diff/src/semantic.rs:343:28: replace != with == in Diff::diff_node_pair
+
+*** mutation diff:
+--- crates/casm-diff/src/semantic.rs
++++ replace != with == in Diff::diff_node_pair
+@@ -335,17 +335,17 @@
+             }
+         }
+     }
+ 
+     /// Appends changes between two versions of the same named node.
+     fn diff_node_pair(old: &Node, new: &Node, changes: &mut Vec<Change>) {
+         let name = new.name().as_str().to_owned();
+ 
+-        if old.node_type() != new.node_type() {
++        if old.node_type() == /* ~ changed by cargo-mutants ~ */ new.node_type() {
+             changes.push(Change::NodeTypeChanged {
+                 name: name.clone(),
+                 from: old.node_type().to_string(),
+                 to: new.node_type().to_string(),
+             });
+         }
+ 
+         let old_interfaces: Vec<String> = old
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-diff@0.3.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh serde_core v1.0.229
+       Fresh proc-macro2 v1.0.107
+       Fresh libc v0.2.189
+       Fresh hashbrown v0.17.1
+       Fresh quote v1.0.47
+       Fresh generic-array v0.14.7
+       Fresh equivalent v1.0.2
+       Fresh cfg-if v1.0.4
+       Fresh syn v3.0.3
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh getrandom v0.4.3
+       Fresh indexmap v2.14.0
+       Fresh keccak v0.1.6
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh digest v0.10.7
+       Fresh itoa v1.0.18
+       Fresh uuid v1.24.0
+       Fresh zmij v1.0.23
+       Fresh serde v1.0.229
+       Fresh thiserror v2.0.19
+       Fresh sha3 v0.10.9
+       Fresh semver v1.0.28
+       Fresh winnow v1.0.4
+       Fresh memchr v2.8.3
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh serde_json v1.0.151
+       Fresh serde_spanned v1.1.1
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh winnow v0.7.15
+       Fresh unsafe-libyaml v0.2.11
+       Fresh ryu v1.0.23
+       Fresh toml v0.9.12+spec-1.1.0
+       Dirty casm-diff v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-diff): the file `crates/casm-diff/src/semantic.rs` has changed (1785931653.174671985s, 2s after last build at 1785931651.725062549s)
+   Compiling casm-diff v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-diff)
+       Fresh serde_yaml_ng v0.10.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-parser)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9dda23a21ebb89cc -C extra-filename=-4e10ba2b0fd94d1b --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-46b061afdef23cde.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9565f1dc2285fbe6 -C extra-filename=-1f5d8f651604cc16 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rmeta --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.71s
+  Executable `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_diff-4e10ba2b0fd94d1b`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-diff@0.3.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh version_check v0.9.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh typenum v1.20.1
+       Fresh generic-array v0.14.7
+       Fresh libc v0.2.189
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh serde_derive v1.0.229
+       Fresh equivalent v1.0.2
+       Fresh cfg-if v1.0.4
+       Fresh hashbrown v0.17.1
+       Fresh indexmap v2.14.0
+       Fresh getrandom v0.4.3
+       Fresh serde v1.0.229
+       Fresh digest v0.10.7
+       Fresh thiserror-impl v2.0.19
+       Fresh keccak v0.1.6
+       Fresh itoa v1.0.18
+       Fresh sha3 v0.10.9
+       Fresh thiserror v2.0.19
+       Fresh uuid v1.24.0
+       Fresh zmij v1.0.23
+       Fresh semver v1.0.28
+       Fresh memchr v2.8.3
+       Fresh winnow v1.0.4
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh serde_json v1.0.151
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh winnow v0.7.15
+       Fresh ryu v1.0.23
+       Fresh unsafe-libyaml v0.2.11
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh serde_yaml_ng v0.10.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-parser)
+       Fresh casm-diff v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-diff)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running `/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/casm_diff-4e10ba2b0fd94d1b`
+
+running 41 tests
+test drift::tests::a_malformed_inventory_is_rejected_with_a_message ... ok
+test drift::tests::a_declared_node_with_no_resource_is_missing ... ok
+test drift::tests::a_report_summarises_itself_in_both_states ... ok
+test drift::tests::a_matching_inventory_reports_no_drift ... ok
+test drift::tests::a_bound_resource_of_the_wrong_type_is_a_mismatch ... ok
+test drift::tests::a_report_round_trips_through_json ... ok
+test drift::tests::an_undeclared_resource_is_unexpected ... ok
+test drift::tests::an_explicit_binding_that_matches_nothing_is_missing_despite_a_name_collision ... ok
+test drift::tests::an_unrecognised_resource_type_asserts_nothing_about_the_node ... ok
+test drift::tests::external_nodes_are_exempt ... ok
+test drift::tests::malformed_terraform_state_is_rejected ... ok
+test drift::tests::a_native_inventory_parses_from_json ... ok
+test drift::tests::an_empty_architecture_reports_every_resource_as_unexpected ... ok
+test drift::tests::detection_is_deterministic ... ok
+test drift::tests::terraform_state_projects_into_an_inventory ... ok
+test drift::tests::terraform_state_with_no_resources_is_an_empty_inventory ... ok
+test drift::tests::an_empty_inventory_reports_every_node_as_missing ... ok
+test drift::tests::an_explicit_binding_overrides_name_matching ... ok
+test drift::tests::the_terraform_type_map_covers_each_node_type_it_claims_to ... ok
+test semantic::tests::a_renamed_node_shows_as_a_removal_and_an_addition ... ok
+test semantic::tests::a_removed_relationship_is_breaking ... ok
+test semantic::tests::a_version_bump_is_reported ... ok
+test semantic::tests::a_rendered_diff_is_marker_prefixed_and_newline_terminated ... ok
+test semantic::tests::a_version_bump_of_a_pattern_is_a_drop_and_a_claim ... FAILED
+test semantic::tests::a_changed_node_type_is_breaking ... FAILED
+test semantic::tests::a_latency_budget_change_is_reported_but_not_breaking ... FAILED
+test semantic::tests::a_removed_node_is_breaking ... ok
+test semantic::tests::an_added_node_is_reported_and_is_not_breaking ... FAILED
+test semantic::tests::an_added_relationship_is_reported ... ok
+test semantic::tests::an_architecture_does_not_differ_from_itself ... FAILED
+test semantic::tests::interface_and_control_changes_are_reported ... ok
+test semantic::tests::markers_distinguish_additions_removals_and_modifications ... ok
+test semantic::tests::an_empty_diff_renders_a_plain_statement ... FAILED
+test semantic::tests::an_unchanged_claim_produces_nothing ... FAILED
+test semantic::tests::claiming_a_pattern_is_a_change ... FAILED
+test semantic::tests::reparsing_a_file_does_not_look_like_a_rebinding ... FAILED
+test semantic::tests::dropping_a_claim_is_breaking ... FAILED
+test semantic::tests::the_difference_helper_partitions_correctly ... ok
+test semantic::tests::rebinding_a_role_is_reported_without_being_breaking ... FAILED
+test semantic::tests::regenerated_identifiers_produce_no_diff ... FAILED
+test semantic::tests::reordering_nodes_produces_no_diff ... FAILED
+
+failures:
+
+---- semantic::tests::a_version_bump_of_a_pattern_is_a_drop_and_a_claim stdout ----
+
+thread 'semantic::tests::a_version_bump_of_a_pattern_is_a_drop_and_a_claim' (549304) panicked at crates/casm-diff/src/semantic.rs:915:9:
+assertion `left == right` failed: [NodeTypeChanged { name: "api", from: "service", to: "service" }, NodeTypeChanged { name: "orders-db", from: "database", to: "database" }, PatternClaimed { reference: "p@2.0.0" }, PatternDropped { reference: "p@1.0.0" }]
+  left: 4
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- semantic::tests::a_changed_node_type_is_breaking stdout ----
+
+thread 'semantic::tests::a_changed_node_type_is_breaking' (549297) panicked at crates/casm-diff/src/semantic.rs:650:9:
+[NodeTypeChanged { name: "api", from: "service", to: "service" }]
+
+---- semantic::tests::a_latency_budget_change_is_reported_but_not_breaking stdout ----
+
+thread 'semantic::tests::a_latency_budget_change_is_reported_but_not_breaking' (549298) panicked at crates/casm-diff/src/semantic.rs:730:9:
+assertion failed: !diff.has_breaking_changes()
+
+---- semantic::tests::an_added_node_is_reported_and_is_not_breaking stdout ----
+
+thread 'semantic::tests::an_added_node_is_reported_and_is_not_breaking' (549305) panicked at crates/casm-diff/src/semantic.rs:627:9:
+assertion failed: !diff.has_breaking_changes()
+
+---- semantic::tests::an_architecture_does_not_differ_from_itself stdout ----
+
+thread 'semantic::tests::an_architecture_does_not_differ_from_itself' (549307) panicked at crates/casm-diff/src/semantic.rs:565:9:
+assertion failed: Diff::compute(&architecture, &architecture).is_empty()
+
+---- semantic::tests::an_empty_diff_renders_a_plain_statement stdout ----
+
+thread 'semantic::tests::an_empty_diff_renders_a_plain_statement' (549308) panicked at crates/casm-diff/src/semantic.rs:808:9:
+assertion `left == right` failed
+  left: "~ node 'api' changed type from service to service\n~ node 'orders-db' changed type from database to database\n"
+ right: "no semantic changes\n"
+
+---- semantic::tests::an_unchanged_claim_produces_nothing stdout ----
+
+thread 'semantic::tests::an_unchanged_claim_produces_nothing' (549309) panicked at crates/casm-diff/src/semantic.rs:897:9:
+assertion failed: Diff::compute(&architecture, &architecture).is_empty()
+
+---- semantic::tests::claiming_a_pattern_is_a_change stdout ----
+
+thread 'semantic::tests::claiming_a_pattern_is_a_change' (549310) panicked at crates/casm-diff/src/semantic.rs:850:9:
+assertion `left == right` failed
+  left: 3
+ right: 1
+
+---- semantic::tests::reparsing_a_file_does_not_look_like_a_rebinding stdout ----
+
+thread 'semantic::tests::reparsing_a_file_does_not_look_like_a_rebinding' (549317) panicked at crates/casm-diff/src/semantic.rs:906:9:
+assertion failed: Diff::compute(&first, &second).is_empty()
+
+---- semantic::tests::dropping_a_claim_is_breaking stdout ----
+
+thread 'semantic::tests::dropping_a_claim_is_breaking' (549311) panicked at crates/casm-diff/src/semantic.rs:866:9:
+assertion `left == right` failed
+  left: 3
+ right: 1
+
+---- semantic::tests::rebinding_a_role_is_reported_without_being_breaking stdout ----
+
+thread 'semantic::tests::rebinding_a_role_is_reported_without_being_breaking' (549314) panicked at crates/casm-diff/src/semantic.rs:883:9:
+assertion `left == right` failed
+  left: 3
+ right: 1
+
+---- semantic::tests::regenerated_identifiers_produce_no_diff stdout ----
+
+thread 'semantic::tests::regenerated_identifiers_produce_no_diff' (549315) panicked at crates/casm-diff/src/semantic.rs:579:9:
+assertion failed: Diff::compute(&old, &new).is_empty()
+
+---- semantic::tests::reordering_nodes_produces_no_diff stdout ----
+
+thread 'semantic::tests::reordering_nodes_produces_no_diff' (549316) panicked at crates/casm-diff/src/semantic.rs:598:9:
+assertion failed: Diff::compute(&parse(BASE), &parse(reordered)).is_empty()
+
+
+failures:
+    semantic::tests::a_changed_node_type_is_breaking
+    semantic::tests::a_latency_budget_change_is_reported_but_not_breaking
+    semantic::tests::a_version_bump_of_a_pattern_is_a_drop_and_a_claim
+    semantic::tests::an_added_node_is_reported_and_is_not_breaking
+    semantic::tests::an_architecture_does_not_differ_from_itself
+    semantic::tests::an_empty_diff_renders_a_plain_statement
+    semantic::tests::an_unchanged_claim_produces_nothing
+    semantic::tests::claiming_a_pattern_is_a_change
+    semantic::tests::dropping_a_claim_is_breaking
+    semantic::tests::rebinding_a_role_is_reported_without_being_breaking
+    semantic::tests::regenerated_identifiers_produce_no_diff
+    semantic::tests::reordering_nodes_produces_no_diff
+    semantic::tests::reparsing_a_file_does_not_look_like_a_rebinding
+
+test result: FAILED. 28 passed; 13 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p casm-diff --lib`
+
+*** result: Failure(101)

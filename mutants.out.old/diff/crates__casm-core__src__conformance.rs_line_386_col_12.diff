@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ delete ! in check_node
+@@ -378,17 +378,17 @@
+         }
+     }
+ 
+     for protocol in requirement.required_protocols() {
+         let speaks = node
+             .interfaces()
+             .iter()
+             .any(|interface| interface.protocol() == protocol);
+-        if !speaks {
++        if  /* ~ changed by cargo-mutants ~ */speaks {
+             unmet.push(Unmet::MissingProtocol {
+                 role: role.clone(),
+                 node: name.clone(),
+                 protocol: protocol.label().to_owned(),
+             });
+         }
+     }
+ }

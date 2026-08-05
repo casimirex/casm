@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm (Section::Patterns, Some("bind")) in Builder::update_scope
+@@ -537,20 +537,17 @@
+                 (Section::Nodes | Section::Relationships, Some("interfaces")) => {
+                     self.block = Block::Interfaces;
+                     self.block_indent = Some(indent);
+                 }
+                 (Section::Nodes | Section::Relationships, Some("controls")) => {
+                     self.block = Block::Controls;
+                     self.block_indent = Some(indent);
+                 }
+-                (Section::Patterns, Some("bind")) => {
+-                    self.block = Block::Bindings;
+-                    self.block_indent = Some(indent);
+-                }
++                 /* ~ changed by cargo-mutants ~ */
+                 _ => {}
+             }
+         }
+ 
+         block_of_this_line
+     }
+ 
+     /// Records a symbol for the line, if it carries one.

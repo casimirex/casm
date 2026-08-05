@@ -1,0 +1,36 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Change::is_breaking -> bool with false
+@@ -131,32 +131,17 @@
+ 
+ impl Change {
+     /// Returns `true` if this change could break an existing consumer.
+     ///
+     /// Used to decide whether a diff warrants a major version bump. Removals and type
+     /// changes are breaking; additions generally are not.
+     #[must_use]
+     pub const fn is_breaking(&self) -> bool {
+-        match self {
+-            Self::NodeRemoved { .. }
+-            | Self::NodeTypeChanged { .. }
+-            | Self::RelationshipRemoved { .. }
+-            // Dropping a claim withdraws a compliance guarantee somebody may be relying
+-            // on. Making a new claim takes nothing away, so it is not breaking.
+-            | Self::PatternDropped { .. } => true,
+-            Self::Version { .. }
+-            | Self::NodeAdded { .. }
+-            | Self::NodeInterfacesChanged { .. }
+-            | Self::NodeControlsChanged { .. }
+-            | Self::RelationshipAdded { .. }
+-            | Self::PatternClaimed { .. }
+-            | Self::PatternBindingsChanged { .. }
+-            | Self::LatencyBudgetChanged { .. } => false,
+-        }
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The diff marker for this change: `+`, `-`, or `~`.
+     #[must_use]
+     pub const fn marker(&self) -> char {
+         match self {
+             Self::NodeAdded { .. }
+             | Self::RelationshipAdded { .. }

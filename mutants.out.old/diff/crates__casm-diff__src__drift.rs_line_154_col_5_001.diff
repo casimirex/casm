@@ -1,0 +1,64 @@
+--- crates/casm-diff/src/drift.rs
++++ replace terraform_type -> Option<NodeType> with Some(Default::default())
+@@ -146,60 +146,17 @@
+ 
+ /// Maps a Terraform resource type onto a CASIMIR node type.
+ ///
+ /// Deliberately incomplete. An unmapped type yields `None`, which suppresses type-mismatch
+ /// reporting for that resource — CASIMIR would rather say nothing than invent a
+ /// disagreement from a type it does not understand.
+ #[must_use]
+ pub fn terraform_type(provider_type: &str) -> Option<NodeType> {
+-    match provider_type {
+-        "aws_db_instance"
+-        | "aws_rds_cluster"
+-        | "aws_dynamodb_table"
+-        | "google_sql_database_instance"
+-        | "google_spanner_database"
+-        | "azurerm_postgresql_server"
+-        | "azurerm_cosmosdb_account" => Some(NodeType::Database),
+-
+-        "aws_s3_bucket"
+-        | "aws_efs_file_system"
+-        | "google_storage_bucket"
+-        | "azurerm_storage_account" => Some(NodeType::Storage),
+-
+-        "aws_sqs_queue"
+-        | "aws_sns_topic"
+-        | "aws_msk_cluster"
+-        | "google_pubsub_topic"
+-        | "google_pubsub_subscription"
+-        | "azurerm_servicebus_queue" => Some(NodeType::Queue),
+-
+-        "aws_elasticache_cluster"
+-        | "aws_elasticache_replication_group"
+-        | "google_redis_instance"
+-        | "azurerm_redis_cache" => Some(NodeType::Cache),
+-
+-        "aws_lb"
+-        | "aws_alb"
+-        | "aws_api_gateway_rest_api"
+-        | "aws_apigatewayv2_api"
+-        | "aws_cloudfront_distribution"
+-        | "google_compute_global_forwarding_rule"
+-        | "azurerm_application_gateway" => Some(NodeType::Gateway),
+-
+-        "aws_ecs_service"
+-        | "aws_lambda_function"
+-        | "aws_instance"
+-        | "google_cloud_run_service"
+-        | "google_cloudfunctions_function"
+-        | "kubernetes_deployment"
+-        | "azurerm_linux_web_app" => Some(NodeType::Service),
+-
+-        _ => None,
+-    }
++    Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// One way the declared architecture and reality disagree.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(rename_all = "kebab-case", tag = "drift")]
+ // Not `#[non_exhaustive]`, per ADR-0005.
+ pub enum Drift {
+     /// The architecture declares a node that the inventory does not contain.

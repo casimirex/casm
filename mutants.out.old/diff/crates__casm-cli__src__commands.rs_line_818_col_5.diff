@@ -1,0 +1,34 @@
+--- crates/casm-cli/src/commands.rs
++++ replace checkout -> CommandResult with Default::default()
+@@ -810,30 +810,17 @@
+         println!();
+     }
+ 
+     println!("{} semantic change(s)", revisions.len());
+ }
+ 
+ /// Prints an architecture as it was at a past revision.
+ pub(crate) fn checkout(revision: &str, file: &Path, validate_it: bool) -> CommandResult {
+-    let repository = repository_for(file)?;
+-    let source = repository
+-        .read_at(revision, file)
+-        .map_err(|error| CommandError(error.to_string()))?;
+-
+-    if !validate_it {
+-        print!("{source}");
+-        return Ok(ExitCode::Success);
+-    }
+-
+-    let architecture = casm_parser::parse_str(&source, file)?;
+-    let report = Validator::new().validate(&architecture);
+-    print_human(file, &architecture, &report);
+-    Ok(exit_code_for(&report, false))
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Lists the built-in validation rules.
+ pub(crate) fn rules(json: bool) -> CommandResult {
+     let catalogue = casm_validator::rules::built_in();
+ 
+     if json {
+         let entries: Vec<serde_json::Value> = catalogue

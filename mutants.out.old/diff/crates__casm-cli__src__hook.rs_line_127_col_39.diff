@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/hook.rs
++++ delete ! in install
+@@ -119,17 +119,17 @@
+ ///
+ /// # Errors
+ ///
+ /// Returns a human-readable message if a foreign hook is present without `force`, or if
+ /// the file cannot be written.
+ pub(crate) fn install(git_dir: &Path, force: bool) -> Result<Status, String> {
+     let existing = status(git_dir);
+ 
+-    if existing == Status::Foreign && !force {
++    if existing == Status::Foreign &&  /* ~ changed by cargo-mutants ~ */force {
+         return Err(format!(
+             "'{}' already exists and was not written by CASIMIR.\n\
+              Inspect it first, then pass --force to replace it.",
+             hook_path(git_dir).display()
+         ));
+     }
+ 
+     let directory = hooks_directory(git_dir);

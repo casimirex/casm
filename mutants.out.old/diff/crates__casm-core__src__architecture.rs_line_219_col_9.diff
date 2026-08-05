@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::name -> &Name with Box::leak(Box::new(Default::default()))
+@@ -211,17 +211,17 @@
+     pub fn builder() -> ArchitectureConfig {
+         ArchitectureConfig::new()
+     }
+ 
+     /// The architecture's name.
+     #[inline]
+     #[must_use]
+     pub const fn name(&self) -> &Name {
+-        &self.name
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The architecture's semantic version.
+     #[inline]
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+         &self.version
+     }

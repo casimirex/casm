@@ -1,0 +1,49 @@
+--- crates/casm-formal/src/tla.rs
++++ replace write_derived_operators with ()
+@@ -312,45 +312,17 @@
+     let _ = writeln!(
+         out,
+         "-------------------------------------------------------------\n"
+     );
+ }
+ 
+ /// Writes the operators the properties are stated in terms of.
+ fn write_derived_operators(out: &mut String) {
+-    let _ = writeln!(
+-        out,
+-        "(* A node is unavailable if it has failed, or if anything it"
+-    );
+-    let _ = writeln!(out, "   blocks on has -- transitively. *)");
+-    let _ = writeln!(out, "Unavailable ==");
+-    let _ = writeln!(out, "    failed \\cup");
+-    let _ = writeln!(
+-        out,
+-        "    {{ n \\in Nodes : \\E f \\in failed : <<n, f>> \\in BlockingClosure }}\n"
+-    );
+-
+-    let _ = writeln!(
+-        out,
+-        "(* Everything that would be taken down by n failing. *)"
+-    );
+-    let _ = writeln!(
+-        out,
+-        "Dependents(n) == {{ m \\in Nodes : <<m, n>> \\in BlockingClosure }}\n"
+-    );
+-
+-    let _ = writeln!(
+-        out,
+-        "(* Nodes nothing blocks on. Failing one cannot affect anything else. *)"
+-    );
+-    let _ = writeln!(
+-        out,
+-        "Independent == {{ n \\in Nodes : Dependents(n) = {{}} }}\n"
+-    );
++    () /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Writes the properties to check, and the bound on the state space.
+ fn write_properties(out: &mut String) {
+     let _ = writeln!(
+         out,
+         "(* --- Invariants ------------------------------------------- *)\n"
+     );

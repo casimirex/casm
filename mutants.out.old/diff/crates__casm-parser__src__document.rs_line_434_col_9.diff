@@ -1,0 +1,33 @@
+--- crates/casm-parser/src/document.rs
++++ replace ConformanceDoc::from_conformance -> Self with Default::default()
+@@ -426,29 +426,17 @@
+                 })?;
+         }
+ 
+         Ok(claim)
+     }
+ 
+     /// Renders a validated claim back into authoring form, naming bound nodes.
+     fn from_conformance(claim: &Conformance, architecture: &Architecture) -> Self {
+-        Self {
+-            pattern: claim.pattern().to_string(),
+-            bind: claim
+-                .bindings()
+-                .iter()
+-                .map(|(role, id)| {
+-                    let node = architecture
+-                        .node(*id)
+-                        .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+-                    (role.as_str().to_owned(), node)
+-                })
+-                .collect(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Maps the names and ids declared in a document to their resolved [`NodeId`]s.
+ struct NodeIndex<'a> {
+     by_name: Vec<(&'a str, NodeId)>,
+ }
+ 

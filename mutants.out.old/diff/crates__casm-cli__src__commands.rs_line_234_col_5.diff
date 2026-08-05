@@ -1,0 +1,34 @@
+--- crates/casm-cli/src/commands.rs
++++ replace diff -> CommandResult with Default::default()
+@@ -226,30 +226,17 @@
+         None => print!("{diagram}"),
+     }
+ 
+     Ok(ExitCode::Success)
+ }
+ 
+ /// Shows the semantic difference between two architectures.
+ pub(crate) fn diff(old: &Path, new: &Path, fail_on_breaking: bool) -> CommandResult {
+-    let old_architecture = parse_file(old)?;
+-    let new_architecture = parse_file(new)?;
+-
+-    let difference = Diff::compute(&old_architecture, &new_architecture);
+-    print!("{}", difference.render());
+-
+-    if difference.has_breaking_changes() {
+-        println!("\nthis diff contains breaking changes");
+-        if fail_on_breaking {
+-            return Ok(ExitCode::ValidationErrors);
+-        }
+-    }
+-
+-    Ok(ExitCode::Success)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Validates every architecture file found under a directory.
+ pub(crate) fn check(
+     directory: &Path,
+     strict: bool,
+     patterns: Option<&Path>,
+     recorder: &mut Recorder,

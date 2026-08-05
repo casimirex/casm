@@ -1,0 +1,59 @@
+--- crates/casm-wasm/src/api.rs
++++ replace check_claim -> ClaimReport with Default::default()
+@@ -676,55 +676,17 @@
+ }
+ 
+ /// Checks one claim against the library, reporting an unheld pattern as unchecked.
+ fn check_claim(
+     architecture: &casm_core::Architecture,
+     patterns: &[casm_core::Pattern],
+     claim: &casm_core::Conformance,
+ ) -> ClaimReport {
+-    let reference = claim.pattern().to_string();
+-
+-    let Some(pattern) = patterns
+-        .iter()
+-        .find(|pattern| claim.pattern().matches(pattern))
+-    else {
+-        return ClaimReport {
+-            pattern: reference,
+-            checked: false,
+-            conforms: false,
+-            bindings: std::collections::BTreeMap::new(),
+-            unmet: Vec::new(),
+-        };
+-    };
+-
+-    let report = casm_core::conformance::check(architecture, pattern, claim);
+-    ClaimReport {
+-        pattern: reference,
+-        checked: true,
+-        conforms: report.conforms(),
+-        bindings: report
+-            .bindings()
+-            .iter()
+-            .map(|(role, id)| {
+-                let name = architecture
+-                    .node(*id)
+-                    .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned());
+-                (role.clone(), name)
+-            })
+-            .collect(),
+-        unmet: report
+-            .unmet()
+-            .iter()
+-            .map(|unmet| UnmetReport {
+-                message: unmet.message(),
+-                mechanical: unmet.is_mechanical(),
+-            })
+-            .collect(),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The rule catalogue, so a playground can explain itself.
+ #[must_use]
+ pub fn rules() -> String {
+     #[derive(Serialize)]
+     #[serde(rename_all = "camelCase")]
+     struct Rule {

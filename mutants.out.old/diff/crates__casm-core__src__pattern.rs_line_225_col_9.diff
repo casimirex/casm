@@ -1,0 +1,22 @@
+--- crates/casm-core/src/pattern.rs
++++ replace RequiredRelationship::with_description -> Self with Default::default()
+@@ -217,18 +217,17 @@
+             relationship_type,
+             description: None,
+         })
+     }
+ 
+     /// Sets the description.
+     #[must_use]
+     pub fn with_description(mut self, description: impl Into<String>) -> Self {
+-        self.description = Some(description.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The originating role.
+     #[inline]
+     #[must_use]
+     pub const fn source(&self) -> &Name {
+         &self.source
+     }

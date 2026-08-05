@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace DocumentIndex::line_count -> u32 with 1
+@@ -324,17 +324,17 @@
+         self.raw_lines
+             .get(usize::try_from(number).unwrap_or(usize::MAX))
+             .map(String::as_str)
+     }
+ 
+     /// How many lines the document has.
+     #[must_use]
+     pub fn line_count(&self) -> u32 {
+-        u32::try_from(self.lines.len()).unwrap_or(u32::MAX)
++        1 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Every resolved symbol, in document order.
+     #[must_use]
+     pub fn symbols(&self) -> &[Symbol] {
+         &self.symbols
+     }
+ 

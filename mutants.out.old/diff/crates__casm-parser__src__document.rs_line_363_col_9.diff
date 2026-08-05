@@ -1,0 +1,39 @@
+--- crates/casm-parser/src/document.rs
++++ replace RelationshipDoc::from_relationship -> Self with Default::default()
+@@ -355,35 +355,17 @@
+         })
+     }
+ 
+     /// Renders a validated [`Relationship`] back into authoring form.
+     ///
+     /// Endpoints are emitted as **names** rather than ids, because that is what a human
+     /// would have written and what keeps a round-tripped file reviewable in a diff.
+     fn from_relationship(relationship: &Relationship, architecture: &Architecture) -> Self {
+-        let name_of = |id: NodeId| {
+-            architecture
+-                .node(id)
+-                .map_or_else(|| id.to_string(), |node| node.name().as_str().to_owned())
+-        };
+-
+-        Self {
+-            source: name_of(relationship.source()),
+-            target: name_of(relationship.target()),
+-            relationship_type: relationship.relationship_type(),
+-            protocol: relationship.protocol().cloned(),
+-            description: relationship.description().map(ToOwned::to_owned),
+-            latency_budget_ms: relationship.latency_budget_ms(),
+-            controls: relationship
+-                .controls()
+-                .iter()
+-                .map(ControlDoc::from_control)
+-                .collect(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A claim, as written by a human, that this architecture conforms to a pattern.
+ ///
+ /// ```yaml
+ /// patterns:
+ ///   - pattern: secure-web-tier@1.0.0

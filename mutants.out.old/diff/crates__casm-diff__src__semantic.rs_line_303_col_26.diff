@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace != with == in Diff::compute
+@@ -295,17 +295,17 @@
+ }
+ 
+ impl Diff {
+     /// Computes the semantic difference from `old` to `new`.
+     #[must_use]
+     pub fn compute(old: &Architecture, new: &Architecture) -> Self {
+         let mut changes = Vec::new();
+ 
+-        if old.version() != new.version() {
++        if old.version() == /* ~ changed by cargo-mutants ~ */ new.version() {
+             changes.push(Change::Version {
+                 from: old.version().to_string(),
+                 to: new.version().to_string(),
+             });
+         }
+ 
+         Self::diff_nodes(old, new, &mut changes);
+         Self::diff_relationships(old, new, &mut changes);

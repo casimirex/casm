@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace conformance -> String with String::new()
+@@ -98,17 +98,17 @@
+ 
+ /// Reports what an architecture must change to satisfy the patterns it claims.
+ ///
+ /// `casm evolve` without a filesystem: it reports rather than rewrites, because a pattern
+ /// is a shape to conform to and not a template to stamp (ADR-0012).
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn conformance(source: &str, patterns: &str) -> String {
+-    api::conformance(source, patterns)
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders an architecture as a diagram.
+ ///
+ /// `backend` is `mermaid`, `dot`, or `ascii`.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn render(source: &str, backend: &str) -> String {

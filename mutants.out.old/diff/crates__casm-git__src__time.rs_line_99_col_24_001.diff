@@ -1,0 +1,21 @@
+--- crates/casm-git/src/time.rs
++++ replace + with * in civil_from_days
+@@ -91,17 +91,17 @@
+ /// Converts days since the Unix epoch into a proleptic Gregorian date.
+ ///
+ /// Howard Hinnant's `civil_from_days`. The era trick shifts the calendar so that March is
+ /// the first month, which makes the leap day fall at the end of a year and removes every
+ /// special case for February.
+ #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+ const fn civil_from_days(days: i64) -> (i64, u32, u32) {
+     // Shift the epoch from 1970-01-01 to 0000-03-01.
+-    let shifted = days + 719_468;
++    let shifted = days * /* ~ changed by cargo-mutants ~ */ 719_468;
+ 
+     let era = if shifted >= 0 {
+         shifted
+     } else {
+         shifted - 146_096
+     } / 146_097;
+     let day_of_era = shifted - era * 146_097; // 0..=146_096
+     let year_of_era =

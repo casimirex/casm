@@ -1,0 +1,24 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::isolated_nodes -> Vec<&Node> with vec![Box::leak(Box::new(Default::default()))]
+@@ -330,20 +330,17 @@
+     }
+ 
+     /// Returns the nodes with no relationships at all.
+     ///
+     /// An isolated node is usually either a modelling mistake or a component nobody
+     /// remembers owning — both worth surfacing.
+     #[must_use]
+     pub fn isolated_nodes(&self) -> Vec<&Node> {
+-        self.nodes
+-            .values()
+-            .filter(|node| self.degree(node.id()) == 0)
+-            .collect()
++        vec![Box::leak(Box::new(Default::default()))] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Inserts a node, enforcing name and identifier uniqueness.
+     ///
+     /// # Errors
+     ///
+     /// - [`ArchitectureError::DuplicateId`] if the identifier is already present.
+     /// - [`ArchitectureError::DuplicateName`] if the name is already taken.

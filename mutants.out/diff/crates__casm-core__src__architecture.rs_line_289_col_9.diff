@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::node -> Option<&Node> with None
+@@ -281,17 +281,17 @@
+     #[must_use]
+     pub fn conformance_count(&self) -> usize {
+         self.conformance.len()
+     }
+ 
+     /// Looks up a node by identifier.
+     #[must_use]
+     pub fn node(&self, id: NodeId) -> Option<&Node> {
+-        self.nodes.get(&id)
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Looks up a node by its unique name.
+     ///
+     /// Unique-name enforcement is what makes this lookup unambiguous, which in turn is
+     /// what lets authors write `source: payment-service` instead of a raw UUID.
+     #[must_use]
+     pub fn node_by_name(&self, name: &str) -> Option<&Node> {

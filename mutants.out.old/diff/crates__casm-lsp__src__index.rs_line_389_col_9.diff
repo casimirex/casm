@@ -1,0 +1,23 @@
+--- crates/casm-lsp/src/index.rs
++++ replace DocumentIndex::symbol_at -> Option<&Symbol> with None
+@@ -381,19 +381,17 @@
+     #[must_use]
+     pub fn node_names(&self) -> Vec<&str> {
+         self.nodes.iter().map(|node| node.name.as_str()).collect()
+     }
+ 
+     /// Finds the symbol under `position`, if there is one.
+     #[must_use]
+     pub fn symbol_at(&self, position: Position) -> Option<&Symbol> {
+-        self.symbols
+-            .iter()
+-            .find(|symbol| symbol.span.contains(position))
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Finds the declaration of the node called `name`.
+     #[must_use]
+     pub fn node_named(&self, name: &str) -> Option<&NodeEntry> {
+         self.nodes.iter().find(|node| node.name == name)
+     }
+ 

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::fingerprint -> crate::merkle::Fingerprint with Default::default()
+@@ -510,17 +510,17 @@
+ 
+     /// The pattern's content address.
+     ///
+     /// Independent of declaration order, so the same shape written in a different order
+     /// has the same address. This is what a registry would key on; see ADR-0012 on why
+     /// the registry is not a prerequisite for any of this.
+     #[must_use]
+     pub fn fingerprint(&self) -> crate::merkle::Fingerprint {
+-        crate::merkle::pattern_digest(self)
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Re-checks every invariant.
+     ///
+     /// The constructors already guarantee these, so this is a defence-in-depth check for
+     /// patterns that arrived through `serde`, which populates fields directly. The same
+     /// reasoning as [`crate::Architecture::verify_invariants`].
+     ///

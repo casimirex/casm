@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace + with - in Architecture::remove_node
+@@ -473,17 +473,17 @@
+     pub fn remove_node(&mut self, id: NodeId) -> Result<Option<Node>, ArchitectureError> {
+         let bound = self
+             .conformance
+             .iter()
+             .flat_map(|claim| claim.bindings().values())
+             .filter(|bound| **bound == id)
+             .count();
+ 
+-        let references = self.degree(id) + bound;
++        let references = self.degree(id) - /* ~ changed by cargo-mutants ~ */ bound;
+         if references > 0 {
+             return Err(ArchitectureError::NodeStillReferenced {
+                 id: id.to_string(),
+                 count: references,
+             });
+         }
+ 
+         Ok(self.nodes.shift_remove(&id))

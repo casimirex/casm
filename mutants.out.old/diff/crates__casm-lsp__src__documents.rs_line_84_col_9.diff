@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace Document::size -> usize with 0
+@@ -76,17 +76,17 @@
+     #[must_use]
+     pub fn diagnostics(&self) -> &[Diagnostic] {
+         &self.analysis.diagnostics
+     }
+ 
+     /// How many source bytes this document occupies.
+     #[must_use]
+     pub fn size(&self) -> usize {
+-        self.text.len()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The set of documents the server currently has analysed.
+ #[derive(Debug)]
+ pub struct DocumentStore {
+     documents: HashMap<String, Document>,
+     limits: Limits,

@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/server.rs
++++ delete field commands from struct ExecuteCommandOptions expression in <impl LanguageServer for Backend>::initialize
+@@ -178,21 +178,17 @@
+                     ..CompletionOptions::default()
+                 }),
+                 hover_provider: Some(HoverProviderCapability::Simple(true)),
+                 definition_provider: Some(OneOf::Left(true)),
+                 references_provider: Some(OneOf::Left(true)),
+                 document_symbol_provider: Some(OneOf::Left(true)),
+                 code_action_provider: Some(CodeActionProviderCapability::Simple(true)),
+                 execute_command_provider: Some(ExecuteCommandOptions {
+-                    commands: vec![
+-                        GENERATE_DIAGRAM.to_owned(),
+-                        VALIDATE_WORKSPACE.to_owned(),
+-                        RELOAD_PATTERNS.to_owned(),
+-                    ],
++                     /* ~ changed by cargo-mutants ~ */
+                     ..ExecuteCommandOptions::default()
+                 }),
+                 ..ServerCapabilities::default()
+             },
+         })
+     }
+ 
+     async fn initialized(&self, _: InitializedParams) {

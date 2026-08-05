@@ -1,0 +1,27 @@
+--- crates/casm-diff/src/drift.rs
++++ delete match arm "aws_lb" | "aws_alb" | "aws_api_gateway_rest_api" | "aws_apigatewayv2_api" | "aws_cloudfront_distribution" | "google_compute_global_forwarding_rule" | "azurerm_application_gateway" in terraform_type
+@@ -172,23 +172,17 @@
+         | "google_pubsub_subscription"
+         | "azurerm_servicebus_queue" => Some(NodeType::Queue),
+ 
+         "aws_elasticache_cluster"
+         | "aws_elasticache_replication_group"
+         | "google_redis_instance"
+         | "azurerm_redis_cache" => Some(NodeType::Cache),
+ 
+-        "aws_lb"
+-        | "aws_alb"
+-        | "aws_api_gateway_rest_api"
+-        | "aws_apigatewayv2_api"
+-        | "aws_cloudfront_distribution"
+-        | "google_compute_global_forwarding_rule"
+-        | "azurerm_application_gateway" => Some(NodeType::Gateway),
++         /* ~ changed by cargo-mutants ~ */
+ 
+         "aws_ecs_service"
+         | "aws_lambda_function"
+         | "aws_instance"
+         | "google_cloud_run_service"
+         | "google_cloudfunctions_function"
+         | "kubernetes_deployment"
+         | "azurerm_linux_web_app" => Some(NodeType::Service),

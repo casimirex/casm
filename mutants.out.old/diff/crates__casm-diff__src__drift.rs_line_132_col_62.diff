@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/drift.rs
++++ replace != with == in terraform_resource
+@@ -124,17 +124,17 @@
+         self.resources
+             .iter()
+             .find(|resource| resource.name == node.name().as_str())
+     }
+ }
+ 
+ /// Converts one Terraform state resource entry.
+ fn terraform_resource(entry: &serde_json::Value) -> Option<Resource> {
+-    if entry.get("mode").and_then(serde_json::Value::as_str) != Some("managed") {
++    if entry.get("mode").and_then(serde_json::Value::as_str) == /* ~ changed by cargo-mutants ~ */ Some("managed") {
+         return None;
+     }
+ 
+     let provider_type = entry.get("type").and_then(serde_json::Value::as_str)?;
+     let name = entry.get("name").and_then(serde_json::Value::as_str)?;
+ 
+     Some(Resource {
+         id: format!("{provider_type}.{name}"),

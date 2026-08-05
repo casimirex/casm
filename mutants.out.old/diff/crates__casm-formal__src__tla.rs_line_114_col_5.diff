@@ -1,0 +1,31 @@
+--- crates/casm-formal/src/tla.rs
++++ replace pair_set -> String with String::new()
+@@ -106,27 +106,17 @@
+         return "{}".to_owned();
+     }
+     let rendered: Vec<String> = values.iter().map(|value| format!("\"{value}\"")).collect();
+     format!("{{ {} }}", rendered.join(", "))
+ }
+ 
+ /// Renders a set of pairs as a TLA+ set of tuples.
+ fn pair_set(pairs: &[(String, String)]) -> String {
+-    if pairs.is_empty() {
+-        return "{}".to_owned();
+-    }
+-
+-    let mut out = String::from("{\n");
+-    for (index, (source, target)) in pairs.iter().enumerate() {
+-        let separator = if index + 1 == pairs.len() { "" } else { "," };
+-        let _ = writeln!(out, "        <<\"{source}\", \"{target}\">>{separator}");
+-    }
+-    out.push_str("    }");
+-    out
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Emits the TLA+ module and its TLC configuration.
+ #[must_use]
+ pub fn emit(model: &FormalModel) -> TlaOutput {
+     let module = module_name(&model.name);
+ 
+     let blocking_pairs: Vec<(String, String)> = model

@@ -1,0 +1,37 @@
+--- crates/casm-lsp/src/diagnostics.rs
++++ replace related_locations -> Vec<(String, Span)> with vec![("xyzzy".into(), Default::default())]
+@@ -215,33 +215,17 @@
+             .map(|node| node.name_span)
+             .min()
+             .unwrap_or_else(|| first_line_span(index)),
+     }
+ }
+ 
+ /// Additional locations implicated in a finding.
+ fn related_locations(index: &DocumentIndex, subject: &Subject) -> Vec<(String, Span)> {
+-    let Subject::NodeSet { names } = subject else {
+-        return Vec::new();
+-    };
+-
+-    // Every member of a cycle is part of the problem, and the author needs to see all of
+-    // them to choose which edge to break.
+-    names
+-        .iter()
+-        .filter_map(|name| {
+-            index.node_named(name).map(|node| {
+-                (
+-                    format!("`{name}` participates in this cycle"),
+-                    node.name_span,
+-                )
+-            })
+-        })
+-        .collect()
++    vec![("xyzzy".into(), Default::default())] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The span covering the document's first line.
+ fn first_line_span(index: &DocumentIndex) -> Span {
+     let width = index.raw_line(0).map_or(0, crate::text::utf16_len);
+     Span::new(0, 0, width)
+ }
+ 

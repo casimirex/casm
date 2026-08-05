@@ -1436,6 +1436,144 @@ nodes:
         std::fs::remove_dir_all(dir).ok();
     }
 
+    /// A document with nothing to report.
+    const CLEAN: &str = "\
+name: clean
+nodes:
+  - name: db
+    type: database
+    controls:
+      - type: security
+        standard: ENC
+        description: encrypted at rest
+";
+
+    /// A datastore reachable from outside the boundary: an error, not a warning.
+    const EXPOSED: &str = "\
+name: exposed
+nodes:
+  - name: partner
+    type: external-system
+  - name: db
+    type: database
+relationships:
+  - source: partner
+    target: db
+    type: sync
+";
+
+    #[test]
+    fn a_sweep_reports_the_worst_exit_code_it_found() {
+        // `if code.code() > worst.code()` — replacing `>` with `<`, `==`, or `>=` all
+        // survived the mutation sweep, because no test mixed a clean file with a failing
+        // one. This is the number CI branches on.
+        let dir = temp_dir("check-worst");
+        std::fs::write(dir.join("clean.yaml"), CLEAN).expect("write the fixture");
+        // A datastore reachable from an external system: an error, not a warning.
+        std::fs::write(dir.join("broken.yaml"), EXPOSED).expect("write the fixture");
+
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        let code = check(&dir, false, None, &mut recorder).expect("the sweep runs");
+
+        assert_eq!(
+            code,
+            ExitCode::ValidationErrors,
+            "the worst finding across the directory decides the exit code"
+        );
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn a_sweep_of_only_clean_files_succeeds() {
+        // The other side of the comparison: without this, `>` could become `<` and the
+        // worst code would never be adopted at all.
+        let dir = temp_dir("check-clean");
+        for name in ["a.yaml", "b.yaml"] {
+            std::fs::write(dir.join(name), CLEAN).expect("write the fixture");
+        }
+
+        let mut recorder = Recorder::new(casm_telemetry::Resource::new("casm", "test"));
+        assert_eq!(
+            check(&dir, false, None, &mut recorder).expect("the sweep runs"),
+            ExitCode::Success
+        );
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn the_walk_stops_at_its_depth_bound() {
+        // NASA Rule 4 in practice. `if depth > MAX_WALK_DEPTH` — replacing `>` with `==`
+        // or `>=` survived, because nothing nested deeper than one directory.
+        let dir = temp_dir("walk-depth");
+        let mut deep = dir.clone();
+        for level in 0..=(MAX_WALK_DEPTH + 2) {
+            deep = deep.join(format!("level{level}"));
+            std::fs::create_dir_all(&deep).expect("create the nesting");
+            std::fs::write(deep.join("architecture.yaml"), CLEAN).expect("write the fixture");
+        }
+
+        let found = discover(&dir).expect("the walk runs");
+
+        // One file per level that is within the bound, and none beyond it.
+        assert_eq!(
+            found.len(),
+            MAX_WALK_DEPTH,
+            "expected one file per level inside the bound, found {found:?}"
+        );
+        std::fs::remove_dir_all(dir).ok();
+    }
+
+    #[test]
+    fn a_file_needs_nodes_and_something_else_to_look_like_an_architecture() {
+        // `source.contains("nodes") && (...)` — replacing the outer `&&` with `||`
+        // survived, because no fixture had one half without the other.
+        let dir = temp_dir("detect");
+        let cases = [
+            (
+                "architecture.yaml",
+                "name: a
+nodes:
+  - name: x
+    type: service
+",
+                true,
+            ),
+            (
+                "no-nodes.yaml",
+                "name: a
+relationships: []
+",
+                false,
+            ),
+            (
+                "nodes-only.yaml",
+                "nodes:
+  - x
+",
+                false,
+            ),
+            (
+                "unrelated.yaml",
+                "kind: Deployment
+spec: {}
+",
+                false,
+            ),
+        ];
+
+        for (name, body, expected) in cases {
+            let path = dir.join(name);
+            std::fs::write(&path, body).expect("write the fixture");
+            assert_eq!(
+                is_architecture_file(&path),
+                expected,
+                "{name} should{} be treated as an architecture",
+                if expected { "" } else { " not" }
+            );
+        }
+        std::fs::remove_dir_all(dir).ok();
+    }
+
     #[test]
     fn the_check_sweep_records_a_span_for_every_file() {
         let dir = temp_dir("check-telemetry");

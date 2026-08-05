@@ -1,0 +1,22 @@
+--- crates/casm-parser/src/library.rs
++++ replace parse_pattern_str -> Result<Pattern, ParseError> with Ok(Default::default())
+@@ -270,18 +270,17 @@
+ 
+ /// Parses a pattern from an in-memory document.
+ ///
+ /// # Errors
+ ///
+ /// - [`ParseError::Syntax`] if the document is malformed, with line and column.
+ /// - [`ParseError::Semantic`] if a value violates a pattern invariant.
+ pub fn parse_pattern_str(source: &str, path: &Path) -> Result<Pattern, ParseError> {
+-    let format = Format::resolve(path, source);
+-    crate::deserialize_as::<PatternDoc>(source, path, format)?.into_pattern(path)
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reads and parses a pattern from a file.
+ ///
+ /// # Errors
+ ///
+ /// - [`ParseError::Io`] if the file cannot be read.
+ /// - [`ParseError::TooLarge`] if it exceeds [`MAX_DOCUMENT_BYTES`].

@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/api.rs
++++ replace hover -> String with String::new()
+@@ -488,17 +488,17 @@
+     pub ok: bool,
+     /// The tooltip, as Markdown.
+     pub markdown: String,
+ }
+ 
+ /// Returns a hover tooltip for a zero-based cursor position.
+ #[must_use]
+ pub fn hover(source: &str, line: u32, character: u32) -> String {
+-    hover_with_patterns(source, "", line, character)
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns a hover tooltip, explaining a claimed pattern from `patterns`.
+ ///
+ /// `patterns` is a JSON array of pattern documents, as [`validate_with_patterns`] takes.
+ #[must_use]
+ pub fn hover_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+     let library = Library::read(patterns);

@@ -1007,6 +1007,63 @@ mod tests {
     }
 
     #[test]
+    fn verifying_invariants_tells_a_duplicate_edge_from_a_distinct_one() {
+        // Replacing `==` with `!=` in the duplicate check survived the mutation sweep:
+        // every architecture verified in a test had too few relationships to tell the two
+        // apart, so an inverted comparison produced the same answer.
+        let (a, b, c) = (NodeId::new(), NodeId::new(), NodeId::new());
+        let node = |id: NodeId, name: &str| {
+            Node::builder()
+                .id(id)
+                .name(name)
+                .node_type(NodeType::Service)
+                .build()
+                .expect("the fixture node is valid")
+        };
+        let edge = |from: NodeId, to: NodeId| {
+            Relationship::builder()
+                .source(from)
+                .target(to)
+                .relationship_type(RelationshipType::Sync)
+                .build()
+                .expect("the fixture edge is valid")
+        };
+
+        // Three distinct edges must verify cleanly. With the comparison inverted, the
+        // second edge is reported as a duplicate of the first.
+        let distinct = Architecture::builder()
+            .name("distinct")
+            .node(node(a, "a"))
+            .node(node(b, "b"))
+            .node(node(c, "c"))
+            .relationship(edge(a, b))
+            .relationship(edge(b, c))
+            .relationship(edge(a, c))
+            .build()
+            .expect("distinct edges are valid");
+
+        assert!(distinct.verify_invariants().is_ok());
+        assert_eq!(distinct.relationship_count(), 3);
+
+        // And a genuine duplicate must still be caught.
+        let duplicated = Architecture::builder()
+            .name("duplicated")
+            .node(node(a, "a"))
+            .node(node(b, "b"))
+            .relationship(edge(a, b))
+            .relationship(edge(a, b))
+            .build();
+
+        assert!(
+            matches!(
+                duplicated,
+                Err(ArchitectureError::DuplicateRelationship { .. })
+            ),
+            "{duplicated:?}"
+        );
+    }
+
+    #[test]
     fn verify_invariants_catches_a_binding_smuggled_in_via_serde() {
         let (architecture, api_id, _) = sample();
         let architecture = architecture

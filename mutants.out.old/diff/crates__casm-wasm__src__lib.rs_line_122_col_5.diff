@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace fingerprint -> String with String::new()
+@@ -114,17 +114,17 @@
+ pub fn render(source: &str, backend: &str) -> String {
+     api::render(source, backend)
+ }
+ 
+ /// Computes an architecture's semantic fingerprint and per-node digests.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn fingerprint(source: &str) -> String {
+-    api::fingerprint(source)
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Compares two architectures semantically.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn diff(before: &str, after: &str) -> String {
+     api::diff(before, after)
+ }

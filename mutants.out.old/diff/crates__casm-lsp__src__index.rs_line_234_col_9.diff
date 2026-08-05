@@ -1,0 +1,23 @@
+--- crates/casm-lsp/src/index.rs
++++ replace RelationshipEntry::anchor_span -> Span with Default::default()
+@@ -226,19 +226,17 @@
+ 
+ impl RelationshipEntry {
+     /// The best span to anchor a diagnostic about this relationship on.
+     ///
+     /// Prefers the source, then the target, then the opening line — whichever the author
+     /// has actually written.
+     #[must_use]
+     pub fn anchor_span(&self) -> Span {
+-        self.source_span
+-            .or(self.target_span)
+-            .unwrap_or_else(|| Span::line_start(self.item_line))
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A conformance claim found in the document.
+ ///
+ /// Like [`RelationshipEntry`], an entry begins at the `- ` of the sequence item rather
+ /// than at the field that identifies it: a claim being typed has an opening dash before it
+ /// has a `pattern:`, and a diagnostic still has to land somewhere.

@@ -1,0 +1,23 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::add_conformance -> Result<(), ArchitectureError> with Ok(())
+@@ -404,19 +404,17 @@
+     /// edge, and is refused for the same reason: every consumer downstream would
+     /// otherwise have to handle a case that should never have been representable.
+     ///
+     /// # Errors
+     ///
+     /// - [`ArchitectureError::DanglingBinding`] if a bound node is absent.
+     /// - [`ArchitectureError::DuplicateConformance`] if the same pattern is claimed twice.
+     pub fn add_conformance(&mut self, claim: Conformance) -> Result<(), ArchitectureError> {
+-        self.check_conformance(&claim, self.conformance.len())?;
+-        self.conformance.push(claim);
+-        Ok(())
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Consuming variant of [`Architecture::add_conformance`].
+     ///
+     /// # Errors
+     ///
+     /// As [`Architecture::add_conformance`].
+     pub fn with_conformance(mut self, claim: Conformance) -> Result<Self, ArchitectureError> {

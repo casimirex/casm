@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/main.rs
++++ replace outcome_of -> Outcome with Default::default()
+@@ -80,20 +80,17 @@
+ }
+ 
+ /// How a command's result reads as a span outcome.
+ ///
+ /// Validation findings are *not* an error: the command did its job and reported what it
+ /// found. Only a command that could not run is an error, which keeps a trace searchable
+ /// for real failures rather than for architectures that need work.
+ fn outcome_of(result: &CommandResult) -> Outcome {
+-    match result {
+-        Ok(_) => Outcome::Ok,
+-        Err(_) => Outcome::Error,
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// How a command's result reads as an event severity.
+ ///
+ /// Deliberately different from [`outcome_of`]. The span outcome answers "did the tool
+ /// work"; the event severity answers "what did it find", which is what somebody filtering
+ /// a log stream is asking. An architecture with errors is a healthy run of `casm` and an
+ /// `ERROR` line in the log, and both readings are correct.

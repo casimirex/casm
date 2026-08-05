@@ -1,0 +1,68 @@
+--- crates/casm-lsp/src/index.rs
++++ replace Builder::update_scope -> Block with Default::default()
+@@ -498,64 +498,17 @@
+     /// Updates section and block state, returning the block the current line sits in.
+     ///
+     /// A block's opening key line is deliberately **outside** the block it opens: on
+     /// `    controls:` the author is still writing a field of the node, so completion
+     /// there must offer node fields, not control fields. The block begins on the next
+     /// line.
+     fn update_scope(&mut self, indent: usize, is_list_item: bool, key: Option<&str>) -> Block {
+         // A top-level key starts a new section and closes any open block.
+-        if indent == 0 && !is_list_item {
+-            if let Some(key) = key {
+-                self.section = Section::from_key(key);
+-                self.block = Block::None;
+-                self.block_indent = None;
+-            }
+-            return self.block;
+-        }
+-
+-        // Leaving a block. Checked before opening a new one, so `interfaces:` followed by
+-        // `controls:` at the same indent transitions correctly.
+-        //
+-        // A sequence entry at the *same* indent as its key is valid YAML and common:
+-        //
+-        //     controls:
+-        //     - type: security      <- still inside `controls:`
+-        //
+-        // so a list item at the opening indent stays in the block. Only a non-item at or
+-        // below that indent leaves it.
+-        if let Some(open_at) = self.block_indent
+-            && (indent < open_at || (indent == open_at && !is_list_item))
+-        {
+-            self.block = Block::None;
+-            self.block_indent = None;
+-        }
+-
+-        let block_of_this_line = self.block;
+-
+-        // Entering a block, effective from the following line.
+-        if self.block == Block::None {
+-            match (self.section, key) {
+-                (Section::Nodes | Section::Relationships, Some("interfaces")) => {
+-                    self.block = Block::Interfaces;
+-                    self.block_indent = Some(indent);
+-                }
+-                (Section::Nodes | Section::Relationships, Some("controls")) => {
+-                    self.block = Block::Controls;
+-                    self.block_indent = Some(indent);
+-                }
+-                (Section::Patterns, Some("bind")) => {
+-                    self.block = Block::Bindings;
+-                    self.block_indent = Some(indent);
+-                }
+-                _ => {}
+-            }
+-        }
+-
+-        block_of_this_line
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Records a symbol for the line, if it carries one.
+     fn record_symbol(&mut self, info: &LineInfo) {
+         let (Some(key), Some(value), Some(span)) =
+             (info.key.as_deref(), info.value.clone(), info.value_span)
+         else {
+             return;

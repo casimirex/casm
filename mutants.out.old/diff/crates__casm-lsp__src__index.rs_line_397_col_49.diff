@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace == with != in DocumentIndex::node_named
+@@ -389,17 +389,17 @@
+         self.symbols
+             .iter()
+             .find(|symbol| symbol.span.contains(position))
+     }
+ 
+     /// Finds the declaration of the node called `name`.
+     #[must_use]
+     pub fn node_named(&self, name: &str) -> Option<&NodeEntry> {
+-        self.nodes.iter().find(|node| node.name == name)
++        self.nodes.iter().find(|node| node.name != /* ~ changed by cargo-mutants ~ */ name)
+     }
+ 
+     /// Finds every reference to the node called `name`.
+     ///
+     /// A `bind:` entry counts: binding a node to a pattern role is a use of that node, and
+     /// renaming it without following the binding leaves a claim pointing at nothing.
+     #[must_use]
+     pub fn references_to(&self, name: &str) -> Vec<&Symbol> {

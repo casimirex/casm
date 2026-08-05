@@ -1,0 +1,43 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace apply -> String with String::new()
+@@ -272,39 +272,17 @@
+     })
+ }
+ 
+ /// Applies `edits` to `source`, for tests and for clients without an edit engine.
+ ///
+ /// Edits are applied last-first so that earlier spans keep their offsets.
+ #[must_use]
+ pub fn apply(source: &str, edits: &[TextEdit]) -> String {
+-    let mut lines: Vec<String> = source.lines().map(ToOwned::to_owned).collect();
+-
+-    let mut ordered: Vec<&TextEdit> = edits.iter().collect();
+-    ordered.sort_by_key(|edit| core::cmp::Reverse(edit.span));
+-
+-    for edit in ordered {
+-        let Some(line) = lines.get_mut(usize::try_from(edit.span.line).unwrap_or(usize::MAX))
+-        else {
+-            continue;
+-        };
+-        let start = crate::text::utf16_to_byte(line, edit.span.start);
+-        let end = crate::text::utf16_to_byte(line, edit.span.end);
+-        let (Some(head), Some(tail)) = (line.get(..start), line.get(end..)) else {
+-            continue;
+-        };
+-        *line = format!("{head}{}{tail}", edit.new_text);
+-    }
+-
+-    let mut out = lines.join("\n");
+-    if source.ends_with('\n') {
+-        out.push('\n');
+-    }
+-    out
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

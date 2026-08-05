@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/api.rs
++++ replace == with != in validate_with_patterns
+@@ -151,17 +151,17 @@
+             start: diagnostic.span.start,
+             end: diagnostic.span.end,
+         })
+         .collect();
+ 
+     let errors = diagnostics.iter().filter(|d| d.severity == "error").count();
+     let warnings = diagnostics
+         .iter()
+-        .filter(|d| d.severity == "warning")
++        .filter(|d| d.severity != /* ~ changed by cargo-mutants ~ */ "warning")
+         .count();
+ 
+     // The same mapping `Report::exit_code` makes, so a page and a pipeline never
+     // disagree about whether a document passed.
+     let exit_code = match (errors, warnings) {
+         (0, 0) => 0,
+         (0, _) => 1,
+         _ => 2,

@@ -1,0 +1,34 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Diff::compute -> Self with Default::default()
+@@ -293,30 +293,17 @@
+     /// Every change, grouped by kind and deterministically ordered.
+     pub changes: Vec<Change>,
+ }
+ 
+ impl Diff {
+     /// Computes the semantic difference from `old` to `new`.
+     #[must_use]
+     pub fn compute(old: &Architecture, new: &Architecture) -> Self {
+-        let mut changes = Vec::new();
+-
+-        if old.version() != new.version() {
+-            changes.push(Change::Version {
+-                from: old.version().to_string(),
+-                to: new.version().to_string(),
+-            });
+-        }
+-
+-        Self::diff_nodes(old, new, &mut changes);
+-        Self::diff_relationships(old, new, &mut changes);
+-        Self::diff_conformance(old, new, &mut changes);
+-
+-        Self { changes }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Appends node-level changes.
+     fn diff_nodes(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+         for node in new.nodes() {
+             match old.node_by_name(node.name().as_str()) {
+                 None => changes.push(Change::NodeAdded {
+                     name: node.name().as_str().to_owned(),

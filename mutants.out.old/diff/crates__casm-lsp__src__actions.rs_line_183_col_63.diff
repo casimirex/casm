@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace <= with > in node_at
+@@ -175,17 +175,17 @@
+     ),
+ ];
+ 
+ /// Finds the node whose declaration `span` sits on.
+ fn node_at(index: &DocumentIndex, span: Span) -> Option<&NodeEntry> {
+     index
+         .nodes()
+         .iter()
+-        .find(|node| span.line >= node.item_line && span.line <= node.last_line)
++        .find(|node| span.line >= node.item_line && span.line > /* ~ changed by cargo-mutants ~ */ node.last_line)
+ }
+ 
+ /// Builds an action that appends controls to a node.
+ fn add_controls(
+     index: &DocumentIndex,
+     node: &NodeEntry,
+     code: &str,
+     title: &str,

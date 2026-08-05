@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/error.rs
++++ replace Location::start -> Self with Default::default()
+@@ -32,17 +32,17 @@
+             line: if line == 0 { 1 } else { line },
+             column: if column == 0 { 1 } else { column },
+         }
+     }
+ 
+     /// The location of the very start of a file.
+     #[must_use]
+     pub const fn start() -> Self {
+-        Self { line: 1, column: 1 }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Location {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         write!(f, "{}:{}", self.line, self.column)
+     }
+ }

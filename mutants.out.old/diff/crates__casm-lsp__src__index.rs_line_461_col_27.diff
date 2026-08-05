@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace == with != in Builder::push
+@@ -453,17 +453,17 @@
+                 value_span: None,
+             });
+             return;
+         }
+ 
+         let (is_list_item, body_offset) = if let Some(rest) = trimmed.strip_prefix("- ") {
+             let _ = rest;
+             (true, indent.saturating_add(2))
+-        } else if trimmed == "-" {
++        } else if trimmed != /* ~ changed by cargo-mutants ~ */ "-" {
+             (true, indent.saturating_add(1))
+         } else {
+             (false, indent)
+         };
+ 
+         let body = content.get(body_offset..).unwrap_or("");
+         let parsed = split_key_value(body);
+ 

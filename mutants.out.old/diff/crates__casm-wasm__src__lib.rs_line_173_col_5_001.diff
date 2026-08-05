@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace drift -> String with "xyzzy".into()
+@@ -165,17 +165,17 @@
+ }
+ 
+ /// Compares an architecture against an inventory of real infrastructure.
+ ///
+ /// `inventory_kind` is `native` or `terraform`.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn drift(source: &str, inventory: &str, inventory_kind: &str) -> String {
+-    api::drift(source, inventory, inventory_kind)
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns the built-in validation rules and their descriptions.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn rules() -> String {
+     api::rules()
+ }

@@ -1,0 +1,22 @@
+--- crates/casm-parser/src/document.rs
++++ replace NodeIndex<'a>::hint -> Option<String> with Some(String::new())
+@@ -474,18 +474,17 @@
+ 
+         NodeId::parse(reference)
+             .ok()
+             .filter(|id| self.by_name.iter().any(|(_, known)| known == id))
+     }
+ 
+     /// The "did you mean" hint for an unresolvable reference, if one is close enough.
+     fn hint(&self, reference: &str) -> Option<String> {
+-        let names = self.by_name.iter().map(|(name, _)| *name);
+-        suggest::closest(reference, names).map(suggest::did_you_mean)
++        Some(String::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Resolves a relationship endpoint.
+     fn resolve(
+         &self,
+         reference: &str,
+         endpoint: &'static str,
+         path: &Path,

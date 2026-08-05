@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace == with != in PatternConfig::reject_unknown_roles
+@@ -379,17 +379,17 @@
+     /// Enforces that every relationship references a declared role.
+     fn reject_unknown_roles(
+         requirements: &[Requirement],
+         relationships: &[RequiredRelationship],
+     ) -> Result<(), PatternError> {
+         let declares = |role: &Name| {
+             requirements
+                 .iter()
+-                .any(|requirement| requirement.role() == role)
++                .any(|requirement| requirement.role() != /* ~ changed by cargo-mutants ~ */ role)
+         };
+ 
+         for relationship in relationships {
+             for (endpoint, role) in [
+                 ("source", relationship.source()),
+                 ("target", relationship.target()),
+             ] {
+                 if !declares(role) {

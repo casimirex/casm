@@ -1,0 +1,36 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::add_node -> Result<(), ArchitectureError> with Ok(())
+@@ -343,32 +343,17 @@
+ 
+     /// Inserts a node, enforcing name and identifier uniqueness.
+     ///
+     /// # Errors
+     ///
+     /// - [`ArchitectureError::DuplicateId`] if the identifier is already present.
+     /// - [`ArchitectureError::DuplicateName`] if the name is already taken.
+     pub fn add_node(&mut self, node: Node) -> Result<(), ArchitectureError> {
+-        if self.nodes.contains_key(&node.id()) {
+-            return Err(ArchitectureError::DuplicateId {
+-                id: node.id().to_string(),
+-                architecture: self.name.as_str().to_owned(),
+-            });
+-        }
+-
+-        if self.node_by_name(node.name().as_str()).is_some() {
+-            return Err(ArchitectureError::DuplicateName {
+-                name: node.name().as_str().to_owned(),
+-                architecture: self.name.as_str().to_owned(),
+-            });
+-        }
+-
+-        self.nodes.insert(node.id(), node);
+-        Ok(())
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Inserts a relationship, enforcing referential integrity and uniqueness.
+     ///
+     /// # Errors
+     ///
+     /// - [`ArchitectureError::DanglingReference`] if either endpoint is absent. The
+     ///   `endpoint` field names which end failed, so the caller can point at it.

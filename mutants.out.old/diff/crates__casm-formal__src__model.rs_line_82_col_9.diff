@@ -1,0 +1,57 @@
+--- crates/casm-formal/src/model.rs
++++ replace FormalModel::of -> Self with Default::default()
+@@ -74,53 +74,17 @@
+     /// hand-rolled fixed point in TLA+ would be far harder to read and to trust.
+     pub closure: Vec<(String, String)>,
+ }
+ 
+ impl FormalModel {
+     /// Reduces an architecture to its failure-propagation model.
+     #[must_use]
+     pub fn of(architecture: &Architecture) -> Self {
+-        let name_of = |id| {
+-            architecture
+-                .node(id)
+-                .map_or_else(|| "?".to_owned(), |node| node.name().as_str().to_owned())
+-        };
+-
+-        let mut nodes: Vec<ModelNode> = architecture.nodes().map(ModelNode::from_node).collect();
+-        nodes.sort();
+-
+-        let (mut blocking, mut asynchronous) = (Vec::new(), Vec::new());
+-        for edge in architecture.relationships() {
+-            let entry = ModelEdge {
+-                source: name_of(edge.source()),
+-                target: name_of(edge.target()),
+-                kind: edge.relationship_type().to_string(),
+-                latency_budget_ms: edge.latency_budget_ms(),
+-            };
+-            if edge.relationship_type().is_blocking() {
+-                blocking.push(entry);
+-            } else {
+-                asynchronous.push(entry);
+-            }
+-        }
+-        blocking.sort();
+-        asynchronous.sort();
+-
+-        let closure = transitive_closure(&blocking);
+-
+-        Self {
+-            name: architecture.name().as_str().to_owned(),
+-            version: architecture.version().to_string(),
+-            fingerprint: merkle::fingerprint(architecture).abbreviated(16),
+-            nodes,
+-            blocking,
+-            asynchronous,
+-            closure,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The names of every node, sorted.
+     #[must_use]
+     pub fn node_names(&self) -> Vec<&str> {
+         self.nodes.iter().map(|node| node.name.as_str()).collect()
+     }
+ 

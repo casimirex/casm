@@ -1,0 +1,66 @@
+--- crates/casm-parser/src/suggest.rs
++++ replace edit_distance -> usize with 0
+@@ -22,62 +22,17 @@
+ pub const MAX_PLAUSIBLE_DISTANCE: usize = 3;
+ 
+ /// Computes the Levenshtein edit distance between two strings.
+ ///
+ /// Comparison is case-insensitive on ASCII, because `Service` versus `service` is a
+ /// capitalisation slip rather than a different word.
+ #[must_use]
+ pub fn edit_distance(left: &str, right: &str) -> usize {
+-    let left: Vec<char> = left.chars().flat_map(char::to_lowercase).collect();
+-    let right: Vec<char> = right.chars().flat_map(char::to_lowercase).collect();
+-
+-    if left.is_empty() {
+-        return right.len();
+-    }
+-    if right.is_empty() {
+-        return left.len();
+-    }
+-
+-    // Two rolling rows rather than a full (n+1)×(m+1) matrix.
+-    let mut previous: Vec<usize> = (0..=right.len()).collect();
+-    let mut current: Vec<usize> = vec![0; right.len() + 1];
+-
+-    for (i, left_char) in left.iter().enumerate() {
+-        if let Some(slot) = current.first_mut() {
+-            *slot = i + 1;
+-        }
+-
+-        for (j, right_char) in right.iter().enumerate() {
+-            let substitution_cost = usize::from(left_char != right_char);
+-            let deletion = previous
+-                .get(j + 1)
+-                .copied()
+-                .unwrap_or(usize::MAX)
+-                .saturating_add(1);
+-            let insertion = current
+-                .get(j)
+-                .copied()
+-                .unwrap_or(usize::MAX)
+-                .saturating_add(1);
+-            let substitution = previous
+-                .get(j)
+-                .copied()
+-                .unwrap_or(usize::MAX)
+-                .saturating_add(substitution_cost);
+-
+-            if let Some(slot) = current.get_mut(j + 1) {
+-                *slot = deletion.min(insertion).min(substitution);
+-            }
+-        }
+-
+-        core::mem::swap(&mut previous, &mut current);
+-    }
+-
+-    previous.last().copied().unwrap_or(0)
++    0 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns the candidate closest to `input`, if any is close enough to be worth saying.
+ ///
+ /// Returns `None` when the nearest candidate is further than
+ /// [`MAX_PLAUSIBLE_DISTANCE`], or when two candidates tie — an ambiguous suggestion
+ /// misleads more than it helps.
+ #[must_use]

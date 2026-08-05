@@ -1,0 +1,464 @@
+
+*** crates/casm-git/src/time.rs:111:69: replace / with % in civil_from_days
+
+*** mutation diff:
+--- crates/casm-git/src/time.rs
++++ replace / with % in civil_from_days
+@@ -103,17 +103,17 @@
+     } else {
+         shifted - 146_096
+     } / 146_097;
+     let day_of_era = shifted - era * 146_097; // 0..=146_096
+     let year_of_era =
+         (day_of_era - day_of_era / 1_460 + day_of_era / 36_524 - day_of_era / 146_096) / 365;
+ 
+     let year = year_of_era + era * 400;
+-    let day_of_year = day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100);
++    let day_of_year = day_of_era - (365 * year_of_era + year_of_era % /* ~ changed by cargo-mutants ~ */ 4 - year_of_era / 100);
+     let month_prime = (5 * day_of_year + 2) / 153; // 0..=11, March-based
+ 
+     let day = (day_of_year - (153 * month_prime + 2) / 5 + 1) as u32;
+     let month = if month_prime < 10 {
+         month_prime + 3
+     } else {
+         month_prime - 9
+     } as u32;
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-git@0.3.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh cfg-if v1.0.4
+       Fresh unicode-ident v1.0.24
+       Fresh memchr v2.8.3
+       Fresh regex-automata v0.4.16
+       Fresh libc v0.2.189
+       Fresh bstr v1.13.0
+       Fresh tinyvec_macros v0.1.1
+       Fresh proc-macro2 v1.0.107
+       Fresh tinyvec v1.12.0
+       Fresh fastrand v2.5.0
+       Fresh gix-trace v0.1.21
+       Fresh quote v1.0.47
+       Fresh getrandom v0.4.3
+       Fresh unicode-normalization v0.1.25
+       Fresh gix-validate v0.11.3
+       Fresh scopeguard v1.2.0
+       Fresh smallvec v1.15.2
+       Fresh syn v3.0.3
+       Fresh gix-utils v0.3.5
+       Fresh parking_lot_core v0.9.12
+       Fresh lock_api v0.4.14
+       Fresh version_check v0.9.5
+       Fresh once_cell v1.21.4
+       Fresh thiserror-impl v2.0.19
+       Fresh parking_lot v0.12.5
+       Fresh typenum v1.20.1
+       Fresh same-file v1.0.6
+       Fresh thiserror v2.0.19
+       Fresh crossbeam-utils v0.8.22
+       Fresh prodash v31.0.0
+       Fresh walkdir v2.5.0
+       Fresh gix-error v0.2.5
+       Fresh gix-path v0.12.3
+       Fresh crc32fast v1.5.0
+       Fresh crossbeam-channel v0.5.16
+       Fresh generic-array v0.14.7
+       Fresh foldhash v0.2.0
+       Fresh equivalent v1.0.2
+       Fresh allocator-api2 v0.2.21
+       Fresh byteorder v1.5.0
+       Fresh gix-features v0.49.0
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh bitflags v2.13.1
+       Fresh hash32 v0.3.1
+       Fresh stable_deref_trait v1.2.1
+       Fresh hashbrown v0.17.1
+       Fresh digest v0.10.7
+       Fresh cpufeatures v0.2.17
+       Fresh itoa v1.0.18
+       Fresh jiff-core v0.1.0
+       Fresh memmap2 v0.9.11
+       Fresh linux-raw-sys v0.12.1
+       Fresh heapless v0.8.0
+       Fresh sha1 v0.10.7
+       Fresh jiff v0.2.35
+       Fresh gix-fs v0.22.0
+       Fresh hashbrown v0.14.5
+       Fresh gix-chunk v0.7.3
+       Fresh faster-hex v0.10.0
+       Fresh sha1-checked v0.10.0
+       Fresh gix-date v0.15.6
+       Fresh rustix v1.1.4
+       Fresh dashmap v6.2.1
+       Fresh nonempty v0.12.0
+       Fresh gix-quote v0.7.2
+       Fresh gix-hash v0.26.0
+       Fresh gix-actor v0.41.2
+       Fresh tempfile v3.27.0
+       Fresh serde_core v1.0.229
+       Fresh gix-glob v0.27.0
+       Fresh unicode-bom v2.0.3
+       Fresh gix-sec v0.14.2
+       Fresh gix-hashtable v0.16.0
+       Fresh gix-tempfile v24.0.0
+       Fresh gix-commitgraph v0.38.0
+       Fresh gix-attributes v0.34.0
+       Fresh shell-words v1.1.1
+       Fresh gix-packetline v0.22.0
+       Fresh serde_derive v1.0.229
+       Fresh gix-object v0.63.0
+       Fresh gix-lock v24.0.0
+       Fresh gix-command v0.9.1
+       Fresh percent-encoding v2.3.2
+       Fresh serde v1.0.229
+       Fresh indexmap v2.14.0
+       Fresh gix-config-value v0.19.0
+       Fresh gix-revwalk v0.34.0
+       Fresh gix-ref v0.66.0
+       Fresh gix-url v0.37.0
+       Fresh hashbrown v0.16.1
+       Fresh gix-bitmap v0.3.3
+       Fresh filetime v0.2.29
+       Fresh keccak v0.1.6
+       Fresh gix-traverse v0.60.0
+       Fresh fnv v1.0.7
+       Fresh zlib-rs v0.6.6
+       Fresh arrayvec v0.7.8
+       Fresh rustversion v1.0.23
+       Fresh sha3 v0.10.9
+       Fresh gix-revision v0.48.0
+       Fresh gix-zlib v0.1.0
+       Fresh gix-index v0.54.0
+       Fresh uluru v3.1.0
+       Fresh clru v0.6.3
+       Fresh uuid v1.24.0
+       Fresh gix-ignore v0.22.0
+       Fresh semver v1.0.28
+       Fresh encoding_rs v0.8.35
+       Fresh winnow v1.0.4
+       Fresh bisync_macros v0.2.3
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-core)
+       Fresh gix-pack v0.73.0
+       Fresh gix-worktree v0.55.0
+       Fresh zmij v1.0.23
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh bisync v0.3.0
+       Fresh gix-filter v0.33.0
+       Fresh gix-refspec v0.44.0
+       Fresh arc-swap v1.9.2
+       Fresh gix-transport v0.58.0
+       Fresh gix-config v0.59.0
+       Fresh gix-pathspec v0.19.0
+       Fresh gix-shallow v0.13.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh gix-imara-diff v0.2.4
+       Fresh unsafe-libyaml v0.2.11
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh winnow v0.7.15
+       Fresh ryu v1.0.23
+       Fresh gix-submodule v0.33.0
+       Fresh gix-diff v0.66.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh gix-protocol v0.64.0
+       Fresh serde_json v1.0.151
+       Fresh gix-odb v0.83.0
+       Fresh gix-discover v0.54.0
+       Fresh serde_yaml_ng v0.10.0
+       Fresh gix v0.86.0
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-renderer)
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-parser)
+       Dirty casm-git v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-git): the file `crates/casm-git/src/time.rs` has changed (1785934182.002553143s, 7s after last build at 1785934175.768800862s)
+   Compiling casm-git v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-git)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_git --edition=2024 crates/casm-git/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=ce79a48482f49ebe -C extra-filename=-625b383ef6b94488 --out-dir /tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_core-e0b2d07509e0486a.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_parser-eea18f9648d94226.rmeta --extern gix=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libgix-a35a39ae47e53fc2.rmeta --extern serde=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern thiserror=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_git --edition=2024 crates/casm-git/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=45b60c19f2d046c1 -C extra-filename=-05b7a69092996fff --out-dir /tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_core-e0b2d07509e0486a.rlib --extern casm_parser=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_parser-eea18f9648d94226.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_renderer-2dde920b49b30771.rlib --extern gix=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libgix-a35a39ae47e53fc2.rlib --extern serde=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern thiserror=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name history --edition=2024 crates/casm-git/tests/history.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=12340d40753d09ab -C extra-filename=-91e356cc7194429d --out-dir /tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_core-e0b2d07509e0486a.rlib --extern casm_git=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_git-625b383ef6b94488.rlib --extern casm_parser=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_parser-eea18f9648d94226.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libcasm_renderer-2dde920b49b30771.rlib --extern gix=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libgix-a35a39ae47e53fc2.rlib --extern serde=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern thiserror=/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.48s
+  Executable `/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/casm_git-05b7a69092996fff`
+  Executable `/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/history-91e356cc7194429d`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-git@0.3.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh cfg-if v1.0.4
+       Fresh memchr v2.8.3
+       Fresh unicode-ident v1.0.24
+       Fresh regex-automata v0.4.16
+       Fresh libc v0.2.189
+       Fresh bstr v1.13.0
+       Fresh tinyvec_macros v0.1.1
+       Fresh proc-macro2 v1.0.107
+       Fresh tinyvec v1.12.0
+       Fresh gix-trace v0.1.21
+       Fresh fastrand v2.5.0
+       Fresh quote v1.0.47
+       Fresh getrandom v0.4.3
+       Fresh unicode-normalization v0.1.25
+       Fresh gix-validate v0.11.3
+       Fresh smallvec v1.15.2
+       Fresh syn v3.0.3
+       Fresh scopeguard v1.2.0
+       Fresh parking_lot_core v0.9.12
+       Fresh gix-utils v0.3.5
+       Fresh version_check v0.9.5
+       Fresh thiserror-impl v2.0.19
+       Fresh lock_api v0.4.14
+       Fresh crossbeam-utils v0.8.22
+       Fresh once_cell v1.21.4
+       Fresh same-file v1.0.6
+       Fresh thiserror v2.0.19
+       Fresh parking_lot v0.12.5
+       Fresh typenum v1.20.1
+       Fresh walkdir v2.5.0
+       Fresh crc32fast v1.5.0
+       Fresh crossbeam-channel v0.5.16
+       Fresh gix-path v0.12.3
+       Fresh prodash v31.0.0
+       Fresh generic-array v0.14.7
+       Fresh gix-error v0.2.5
+       Fresh equivalent v1.0.2
+       Fresh foldhash v0.2.0
+       Fresh allocator-api2 v0.2.21
+       Fresh gix-features v0.49.0
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh byteorder v1.5.0
+       Fresh bitflags v2.13.1
+       Fresh stable_deref_trait v1.2.1
+       Fresh digest v0.10.7
+       Fresh hash32 v0.3.1
+       Fresh hashbrown v0.17.1
+       Fresh cpufeatures v0.2.17
+       Fresh itoa v1.0.18
+       Fresh jiff-core v0.1.0
+       Fresh heapless v0.8.0
+       Fresh sha1 v0.10.7
+       Fresh jiff v0.2.35
+       Fresh memmap2 v0.9.11
+       Fresh linux-raw-sys v0.12.1
+       Fresh faster-hex v0.10.0
+       Fresh sha1-checked v0.10.0
+       Fresh gix-date v0.15.6
+       Fresh gix-fs v0.22.0
+       Fresh hashbrown v0.14.5
+       Fresh gix-hash v0.26.0
+       Fresh gix-actor v0.41.2
+       Fresh rustix v1.1.4
+       Fresh serde_core v1.0.229
+       Fresh dashmap v6.2.1
+       Fresh gix-chunk v0.7.3
+       Fresh nonempty v0.12.0
+       Fresh gix-hashtable v0.16.0
+       Fresh tempfile v3.27.0
+       Fresh gix-quote v0.7.2
+       Fresh gix-glob v0.27.0
+       Fresh gix-commitgraph v0.38.0
+       Fresh unicode-bom v2.0.3
+       Fresh gix-sec v0.14.2
+       Fresh gix-object v0.63.0
+       Fresh gix-tempfile v24.0.0
+       Fresh gix-attributes v0.34.0
+       Fresh shell-words v1.1.1
+       Fresh gix-packetline v0.22.0
+       Fresh serde_derive v1.0.229
+       Fresh gix-lock v24.0.0
+       Fresh gix-revwalk v0.34.0
+       Fresh gix-command v0.9.1
+       Fresh percent-encoding v2.3.2
+       Fresh indexmap v2.14.0
+       Fresh gix-ref v0.66.0
+       Fresh gix-traverse v0.60.0
+       Fresh serde v1.0.229
+       Fresh gix-url v0.37.0
+       Fresh gix-config-value v0.19.0
+       Fresh hashbrown v0.16.1
+       Fresh gix-bitmap v0.3.3
+       Fresh filetime v0.2.29
+       Fresh fnv v1.0.7
+       Fresh keccak v0.1.6
+       Fresh arrayvec v0.7.8
+       Fresh zlib-rs v0.6.6
+       Fresh gix-zlib v0.1.0
+       Fresh sha3 v0.10.9
+       Fresh uluru v3.1.0
+       Fresh gix-index v0.54.0
+       Fresh rustversion v1.0.23
+       Fresh clru v0.6.3
+       Fresh gix-revision v0.48.0
+       Fresh gix-ignore v0.22.0
+       Fresh uuid v1.24.0
+       Fresh semver v1.0.28
+       Fresh encoding_rs v0.8.35
+       Fresh winnow v1.0.4
+       Fresh bisync_macros v0.2.3
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-core)
+       Fresh gix-refspec v0.44.0
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh gix-filter v0.33.0
+       Fresh gix-worktree v0.55.0
+       Fresh bisync v0.3.0
+       Fresh gix-pack v0.73.0
+       Fresh arc-swap v1.9.2
+       Fresh zmij v1.0.23
+       Fresh gix-config v0.59.0
+       Fresh gix-transport v0.58.0
+       Fresh gix-pathspec v0.19.0
+       Fresh gix-shallow v0.13.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh gix-imara-diff v0.2.4
+       Fresh ryu v1.0.23
+       Fresh unsafe-libyaml v0.2.11
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh winnow v0.7.15
+       Fresh gix-protocol v0.64.0
+       Fresh gix-diff v0.66.0
+       Fresh serde_yaml_ng v0.10.0
+       Fresh gix-submodule v0.33.0
+       Fresh gix-odb v0.83.0
+       Fresh serde_json v1.0.151
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh gix-discover v0.54.0
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-renderer)
+       Fresh gix v0.86.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-parser)
+       Fresh casm-git v0.3.0 (/tmp/cargo-mutants-casm-TRDkvl.tmp/crates/casm-git)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.85s
+     Running `/tmp/cargo-mutants-casm-TRDkvl.tmp/target/debug/deps/casm_git-05b7a69092996fff`
+
+running 24 tests
+test tests::a_short_commit_does_not_panic_on_an_unexpectedly_short_hash ... ok
+test tests::a_revision_renders_its_author_time_as_utc ... FAILED
+test tests::default_options_are_bounded ... ok
+test error::tests::a_missing_path_names_both_the_file_and_the_revision ... ok
+test error::tests::a_missing_repository_says_what_was_needed_and_why ... ok
+test error::tests::an_empty_repository_is_distinguished_from_a_missing_one ... ok
+test error::tests::errors_are_comparable_for_exact_assertions ... ok
+test time::tests::dates_before_1970_convert_correctly ... FAILED
+test tests::option_builders_override_the_limits ... ok
+test time::tests::a_full_day_before_the_epoch_converts_correctly ... FAILED
+test time::tests::dates_before_the_algorithms_own_epoch_still_convert ... FAILED
+test time::tests::extreme_values_do_not_panic ... ok
+test time::tests::consecutive_days_are_consecutive_across_the_era_boundary ... ok
+test time::tests::known_timestamps_convert_correctly ... FAILED
+test time::tests::leap_days_are_handled ... FAILED
+test time::tests::nineteen_hundred_was_not_a_leap_year ... FAILED
+test tests::a_short_commit_is_seven_characters ... ok
+test time::tests::conversion_is_monotonic ... FAILED
+test time::tests::the_date_form_is_a_prefix_of_the_datetime_form ... ok
+test time::tests::timestamps_before_the_epoch_do_not_produce_negative_times ... FAILED
+test time::tests::the_day_before_and_after_a_leap_day_are_correct ... FAILED
+test time::tests::the_epoch_itself_converts_correctly ... FAILED
+test tests::discovering_outside_a_repository_says_so ... ok
+test time::tests::every_component_stays_in_range_across_a_wide_span ... FAILED
+
+failures:
+
+---- tests::a_revision_renders_its_author_time_as_utc stdout ----
+
+thread 'tests::a_revision_renders_its_author_time_as_utc' (1293306) panicked at crates/casm-git/src/lib.rs:436:9:
+assertion `left == right` failed
+  left: "2023-11-16"
+ right: "2023-11-14"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- time::tests::dates_before_1970_convert_correctly stdout ----
+
+thread 'time::tests::dates_before_1970_convert_correctly' (1293319) panicked at crates/casm-git/src/time.rs:168:9:
+assertion `left == right` failed
+  left: "1969-03-30"
+ right: "1969-12-31"
+
+---- time::tests::a_full_day_before_the_epoch_converts_correctly stdout ----
+
+thread 'time::tests::a_full_day_before_the_epoch_converts_correctly' (1293316) panicked at crates/casm-git/src/time.rs:245:9:
+assertion `left == right` failed
+  left: "1969-03-30 00:00:00"
+ right: "1969-12-31 00:00:00"
+
+---- time::tests::dates_before_the_algorithms_own_epoch_still_convert stdout ----
+
+thread 'time::tests::dates_before_the_algorithms_own_epoch_still_convert' (1293321) panicked at crates/casm-git/src/time.rs:151:9:
+assertion `left == right` failed
+  left: "-001-06-03"
+ right: "0000-02-29"
+
+---- time::tests::known_timestamps_convert_correctly stdout ----
+
+thread 'time::tests::known_timestamps_convert_correctly' (1293325) panicked at crates/casm-git/src/time.rs:205:13:
+assertion `left == right` failed: at 1000000000
+  left: "2001-09-08 01:46:40"
+ right: "2001-09-09 01:46:40"
+
+---- time::tests::leap_days_are_handled stdout ----
+
+thread 'time::tests::leap_days_are_handled' (1293326) panicked at crates/casm-git/src/time.rs:217:9:
+assertion `left == right` failed
+  left: "1999-06-03"
+ right: "2000-02-29"
+
+---- time::tests::nineteen_hundred_was_not_a_leap_year stdout ----
+
+thread 'time::tests::nineteen_hundred_was_not_a_leap_year' (1293327) panicked at crates/casm-git/src/time.rs:231:9:
+assertion `left == right` failed
+  left: "1900-05-15"
+ right: "1900-03-01"
+
+---- time::tests::conversion_is_monotonic stdout ----
+
+thread 'time::tests::conversion_is_monotonic' (1293318) panicked at crates/casm-git/src/time.rs:274:13:
+went backwards at 29999973
+
+---- time::tests::timestamps_before_the_epoch_do_not_produce_negative_times stdout ----
+
+thread 'time::tests::timestamps_before_the_epoch_do_not_produce_negative_times' (1293332) panicked at crates/casm-git/src/time.rs:239:9:
+assertion `left == right` failed
+  left: "1969-03-30 23:59:59"
+ right: "1969-12-31 23:59:59"
+
+---- time::tests::the_day_before_and_after_a_leap_day_are_correct stdout ----
+
+thread 'time::tests::the_day_before_and_after_a_leap_day_are_correct' (1293329) panicked at crates/casm-git/src/time.rs:224:9:
+assertion `left == right` failed
+  left: "2024-02-30"
+ right: "2024-02-28"
+
+---- time::tests::the_epoch_itself_converts_correctly stdout ----
+
+thread 'time::tests::the_epoch_itself_converts_correctly' (1293330) panicked at crates/casm-git/src/time.rs:137:9:
+assertion `left == right` failed
+  left: "1969-03-31 00:00:00"
+ right: "1970-01-01 00:00:00"
+
+---- time::tests::every_component_stays_in_range_across_a_wide_span stdout ----
+
+thread 'time::tests::every_component_stays_in_range_across_a_wide_span' (1293323) panicked at crates/casm-git/src/time.rs:258:13:
+day at 1015006045
+
+
+failures:
+    tests::a_revision_renders_its_author_time_as_utc
+    time::tests::a_full_day_before_the_epoch_converts_correctly
+    time::tests::conversion_is_monotonic
+    time::tests::dates_before_1970_convert_correctly
+    time::tests::dates_before_the_algorithms_own_epoch_still_convert
+    time::tests::every_component_stays_in_range_across_a_wide_span
+    time::tests::known_timestamps_convert_correctly
+    time::tests::leap_days_are_handled
+    time::tests::nineteen_hundred_was_not_a_leap_year
+    time::tests::the_day_before_and_after_a_leap_day_are_correct
+    time::tests::the_epoch_itself_converts_correctly
+    time::tests::timestamps_before_the_epoch_do_not_produce_negative_times
+
+test result: FAILED. 12 passed; 12 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p casm-git --lib`
+
+*** result: Failure(101)

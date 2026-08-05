@@ -1,0 +1,23 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace diagram_id -> &str with ""
+@@ -85,19 +85,17 @@
+         .nodes()
+         .enumerate()
+         .map(|(index, node)| (node.id(), format!("n{index}")))
+         .collect()
+ }
+ 
+ /// Resolves a node's diagram identifier.
+ fn diagram_id(ids: &[(NodeId, String)], node: NodeId) -> &str {
+-    ids.iter()
+-        .find(|(id, _)| *id == node)
+-        .map_or("unknown", |(_, diagram_id)| diagram_id.as_str())
++    "" /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Escapes a free-form label for embedding in a quoted diagram string.
+ ///
+ /// Node *names* never need this — the CASIMIR name alphabet has no metacharacters — but
+ /// descriptions are arbitrary text supplied by the author.
+ #[must_use]
+ pub fn escape_label(raw: &str) -> String {

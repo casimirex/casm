@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for PatternsAreSatisfied>::description -> &'static str with ""
+@@ -425,17 +425,17 @@
+ pub struct PatternsAreSatisfied;
+ 
+ impl Rule for PatternsAreSatisfied {
+     fn id(&self) -> &'static str {
+         "patterns-are-satisfied"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "every pattern the architecture claims conformance to must be satisfied"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for claim in context.architecture.conformance() {
+             let reference = claim.pattern().to_string();
+             let subject = Subject::Pattern {
+                 reference: reference.clone(),
+             };

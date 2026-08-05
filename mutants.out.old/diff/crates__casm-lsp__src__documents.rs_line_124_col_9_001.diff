@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::patterns -> &[Pattern] with Vec::leak(vec![Default::default()])
+@@ -116,17 +116,17 @@
+     #[must_use]
+     pub const fn config(&self) -> &ValidatorConfig {
+         &self.config
+     }
+ 
+     /// The pattern library in force.
+     #[must_use]
+     pub fn patterns(&self) -> &[Pattern] {
+-        &self.patterns
++        Vec::leak(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Replaces the validator configuration and re-analyses every open document.
+     ///
+     /// Called when the client changes settings. Re-analysing eagerly means the next
+     /// keystroke shows diagnostics consistent with the new thresholds rather than stale
+     /// ones.
+     pub fn reconfigure(&mut self, config: ValidatorConfig) {

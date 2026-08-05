@@ -1,0 +1,28 @@
+--- crates/casm-lsp/src/index.rs
++++ replace Section::from_key -> Self with Default::default()
+@@ -57,24 +57,17 @@
+     Metadata,
+     /// Inside a top-level key CASIMIR does not recognise.
+     Unknown,
+ }
+ 
+ impl Section {
+     /// Classifies a top-level key.
+     fn from_key(key: &str) -> Self {
+-        match key {
+-            "nodes" => Self::Nodes,
+-            "relationships" => Self::Relationships,
+-            "patterns" => Self::Patterns,
+-            "metadata" => Self::Metadata,
+-            "name" | "version" | "description" => Self::Root,
+-            _ => Self::Unknown,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A nested block within a node or relationship item.
+ #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+ pub enum Block {
+     /// Directly on the item, not inside a nested sequence.
+     #[default]

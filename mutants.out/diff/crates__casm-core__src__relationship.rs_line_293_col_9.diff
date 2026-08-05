@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace Relationship::protocol -> Option<&Protocol> with None
+@@ -285,17 +285,17 @@
+     pub const fn relationship_type(&self) -> RelationshipType {
+         self.relationship_type
+     }
+ 
+     /// The wire protocol, if declared.
+     #[inline]
+     #[must_use]
+     pub const fn protocol(&self) -> Option<&Protocol> {
+-        self.protocol.as_ref()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The human-readable description, if any.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }

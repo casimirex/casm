@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/model.rs
++++ replace FormalModel::has_cycle -> bool with false
+@@ -163,17 +163,17 @@
+     }
+ 
+     /// Returns `true` if any node blocks on itself, however indirectly.
+     ///
+     /// Always `false` for an architecture that passed `casm validate`; the generated
+     /// assertions restate it so a checker confirms it independently.
+     #[must_use]
+     pub fn has_cycle(&self) -> bool {
+-        self.closure.iter().any(|(source, target)| source == target)
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if the model has nothing to check.
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.nodes.is_empty()
+     }
+ }

@@ -1,0 +1,161 @@
+
+*** crates/casm-lsp/src/hover.rs:49:5: replace hover -> Option<Hover> with Some(Default::default())
+
+*** mutation diff:
+--- crates/casm-lsp/src/hover.rs
++++ replace hover -> Option<Hover> with Some(Default::default())
+@@ -41,36 +41,17 @@
+ /// requirements it stands for rather than only its own text.
+ #[must_use]
+ pub fn hover(
+     index: &DocumentIndex,
+     architecture: Option<&Architecture>,
+     patterns: &[Pattern],
+     position: Position,
+ ) -> Option<Hover> {
+-    if let Some(symbol) = index.symbol_at(position) {
+-        return Some(Hover {
+-            markdown: describe_symbol(index, architecture, patterns, symbol),
+-            span: symbol.span,
+-        });
+-    }
+-
+-    // Not on a value — perhaps on the key that introduces it.
+-    let line = index.line(position.line)?;
+-    let span = line.key_span?;
+-    if !span.contains(position) {
+-        return None;
+-    }
+-
+-    let key = line.key.as_deref()?;
+-    let term = find(key_table(line.section, line.block), key)?;
+-    Some(Hover {
+-        markdown: term.to_markdown(),
+-        span,
+-    })
++    Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The key vocabulary in force at a given section and block.
+ fn key_table(section: Section, block: Block) -> &'static [Term] {
+     match (section, block) {
+         (Section::Root, _) => ROOT_KEYS,
+         (Section::Nodes, Block::None) => NODE_KEYS,
+         (Section::Nodes, Block::Interfaces) => INTERFACE_KEYS,
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-lsp@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh serde_core v1.0.229
+       Fresh version_check v0.9.5
+       Fresh libc v0.2.189
+       Fresh typenum v1.20.1
+       Fresh cfg-if v1.0.4
+       Fresh serde_derive v1.0.229
+       Fresh memchr v2.8.3
+       Fresh syn v2.0.119
+       Fresh equivalent v1.0.2
+       Fresh pin-project-lite v0.2.17
+       Fresh hashbrown v0.17.1
+       Fresh generic-array v0.14.7
+       Fresh serde v1.0.229
+       Fresh indexmap v2.14.0
+       Fresh futures-core v0.3.33
+       Fresh futures-sink v0.3.33
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh itoa v1.0.18
+       Fresh zmij v1.0.23
+       Fresh getrandom v0.4.3
+       Fresh digest v0.10.7
+       Fresh thiserror-impl v2.0.19
+       Fresh keccak v0.1.6
+       Fresh serde_json v1.0.151
+       Fresh thiserror v2.0.19
+       Fresh sha3 v0.10.9
+       Fresh uuid v1.24.0
+       Fresh futures-channel v0.3.33
+       Fresh futures-macro v0.3.33
+       Fresh semver v1.0.28
+       Fresh ref-cast-impl v1.0.26
+       Fresh once_cell v1.21.4
+       Fresh futures-task v0.3.33
+       Fresh slab v0.4.12
+       Fresh futures-io v0.3.33
+       Fresh ref-cast v1.0.26
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-core)
+       Fresh tokio-macros v2.7.2
+       Fresh futures-util v0.3.33
+       Fresh bytes v1.12.1
+       Fresh borrow-or-share v0.2.4
+       Fresh smallvec v1.15.2
+       Fresh scopeguard v1.2.0
+       Fresh foldhash v0.1.5
+       Fresh winnow v1.0.4
+       Fresh tokio v1.53.1
+       Fresh hashbrown v0.15.5
+       Fresh lock_api v0.4.14
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh fluent-uri v0.4.1
+       Fresh parking_lot_core v0.9.12
+       Fresh crossbeam-utils v0.8.22
+       Fresh tracing-core v0.1.36
+       Fresh tracing-attributes v0.1.31
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh sync_wrapper v1.0.2
+       Fresh winnow v0.7.15
+       Fresh tower-layer v0.3.3
+       Fresh fixedbitset v0.5.7
+       Fresh bitflags v2.13.1
+       Fresh ryu v1.0.23
+       Fresh hashbrown v0.14.5
+       Fresh unsafe-libyaml v0.2.11
+       Fresh percent-encoding v2.3.2
+       Fresh tower-service v0.3.3
+       Fresh serde_yaml_ng v0.10.0
+       Fresh petgraph v0.8.3
+       Fresh dashmap v6.2.1
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh tracing v0.1.44
+       Fresh tower v0.5.3
+       Fresh ls-types v0.0.6
+       Fresh tokio-util v0.7.19
+       Fresh httparse v1.10.1
+       Fresh futures v0.3.33
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-parser)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-validator)
+       Fresh tower-lsp-server v0.23.0
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-renderer)
+       Dirty casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-lsp): the file `crates/casm-lsp/src/hover.rs` has changed (1785932279.440891389s, 13s after last build at 1785932266.276331321s)
+   Compiling casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-ougte5.tmp/crates/casm-lsp)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=47ec288518f74ead -C extra-filename=-6ce771c58ddaf742 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6a74160510f1ab21 -C extra-filename=-80fea0669f4842be --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rmeta --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rmeta --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rmeta --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rmeta --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rmeta --verbose`
+error[E0277]: the trait bound `hover::Hover: Default` is not satisfied
+  --> crates/casm-lsp/src/hover.rs:49:10
+   |
+49 |     Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |          ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `hover::Hover`
+   |
+help: consider annotating `hover::Hover` with `#[derive(Default)]`
+   |
+30 + #[derive(Default)]
+31 | pub struct Hover {
+   |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `casm-lsp` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6a74160510f1ab21 -C extra-filename=-80fea0669f4842be --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rmeta --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rmeta --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rmeta --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rmeta --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `casm-lsp` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=47ec288518f74ead -C extra-filename=-6ce771c58ddaf742 --out-dir /tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-ougte5.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose` (exit status: 1)
+
+*** result: Failure(101)

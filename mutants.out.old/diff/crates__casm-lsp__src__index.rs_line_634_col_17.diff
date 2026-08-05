@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete field last_line from struct RelationshipEntry expression in Builder::record_relationship
+@@ -626,17 +626,17 @@
+     fn record_relationship(&mut self, info: &LineInfo) {
+         if info.section != Section::Relationships || info.block != Block::None {
+             return;
+         }
+ 
+         if info.is_list_item {
+             self.relationships.push(RelationshipEntry {
+                 item_line: info.number,
+-                last_line: info.number,
++                 /* ~ changed by cargo-mutants ~ */
+                 field_indent: info.field_indent(),
+                 ..RelationshipEntry::default()
+             });
+         }
+ 
+         let Some(current) = self.relationships.last_mut() else {
+             return;
+         };

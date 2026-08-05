@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete field item_line from struct ClaimEntry expression in Builder::record_claim
+@@ -665,17 +665,17 @@
+     /// Records or extends a conformance claim.
+     fn record_claim(&mut self, info: &LineInfo) {
+         if info.section != Section::Patterns {
+             return;
+         }
+ 
+         if info.is_list_item && info.block == Block::None {
+             self.claims.push(ClaimEntry {
+-                item_line: info.number,
++                 /* ~ changed by cargo-mutants ~ */
+                 last_line: info.number,
+                 field_indent: info.field_indent(),
+                 ..ClaimEntry::default()
+             });
+         }
+ 
+         let Some(current) = self.claims.last_mut() else {
+             return;

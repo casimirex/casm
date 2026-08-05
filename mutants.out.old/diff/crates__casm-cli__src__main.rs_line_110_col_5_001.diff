@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/main.rs
++++ replace summarise -> String with "xyzzy".into()
+@@ -102,20 +102,17 @@
+         Ok(ExitCode::Success) => Severity::Info,
+         Ok(ExitCode::Warnings) => Severity::Warn,
+         Ok(ExitCode::ValidationErrors | ExitCode::Failure) | Err(_) => Severity::Error,
+     }
+ }
+ 
+ /// One line describing how the command ended, for a log stream.
+ fn summarise(name: &'static str, result: &CommandResult) -> String {
+-    match result {
+-        Ok(code) => format!("{name} finished with exit code {}", code.code()),
+-        Err(error) => format!("{name} failed: {}", error.0),
+-    }
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Narrows an exit code into the byte the operating system accepts.
+ ///
+ /// Every code CASIMIR produces is already in `0..=3`; the clamp exists so the conversion
+ /// is total and cannot panic (NASA Rule 3).
+ fn clamp(code: i32) -> u8 {
+     u8::try_from(code).unwrap_or(u8::MAX)

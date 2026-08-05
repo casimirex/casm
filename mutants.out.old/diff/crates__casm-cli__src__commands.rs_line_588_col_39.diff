@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace == with != in evolve_targets
+@@ -580,17 +580,17 @@
+     // An existing claim carries the author's bindings, and discarding them would report
+     // back an ambiguity they have already resolved. Any version of the same pattern will
+     // do: migrating from 1.0.0 to 2.0.0 is precisely the case where the bindings written
+     // for the old version are the ones worth reusing. Roles the new version does not have
+     // are reported rather than dropped, which is the honest outcome — a binding that no
+     // longer means anything is a thing the author should be told about.
+     let inherited = architecture
+         .conformance()
+-        .find(|claim| claim.pattern() == &reference)
++        .find(|claim| claim.pattern() != /* ~ changed by cargo-mutants ~ */ &reference)
+         .or_else(|| {
+             architecture
+                 .conformance()
+                 .find(|claim| claim.pattern().name() == reference.name())
+         });
+ 
+     let Some(existing) = inherited else {
+         return Ok(vec![casm_core::Conformance::new(reference)]);

@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/text.rs
++++ replace <= with > in Span::contains
+@@ -69,17 +69,17 @@
+     ///
+     /// The end is treated as inclusive. A cursor sitting immediately after a word is,
+     /// to a user, still "on" that word — and hover that dies at the last character feels
+     /// broken even though it is technically correct.
+     #[must_use]
+     pub const fn contains(&self, position: Position) -> bool {
+         position.line == self.line
+             && position.character >= self.start
+-            && position.character <= self.end
++            && position.character > /* ~ changed by cargo-mutants ~ */ self.end
+     }
+ 
+     /// The span's width in UTF-16 code units.
+     #[must_use]
+     pub const fn width(&self) -> u32 {
+         self.end.saturating_sub(self.start)
+     }
+ 

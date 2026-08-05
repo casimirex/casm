@@ -1,0 +1,29 @@
+--- crates/casm-lsp/src/server.rs
++++ replace guarded -> RpcResult<T> with RpcResult::new()
+@@ -119,25 +119,17 @@
+         let mut store = self.store.lock().ok()?;
+         let (document, patterns) = store.get_with_patterns(uri.as_str())?;
+         Some(operation(document, patterns))
+     }
+ }
+ 
+ /// Runs `operation`, converting a panic into an error response instead of a dead session.
+ fn guarded<T>(operation_name: &'static str, operation: impl FnOnce() -> T) -> RpcResult<T> {
+-    std::panic::catch_unwind(AssertUnwindSafe(operation)).map_err(|_| {
+-        let mut error = RpcError::internal_error();
+-        error.message = format!(
+-            "casm-lsp: the '{operation_name}' handler panicked. The request failed; the \
+-             server is still running. Please report this with the document that triggered it."
+-        )
+-        .into();
+-        error
+-    })
++    RpcResult::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ // Every handler below is `async` because the `LanguageServer` trait declares it so; the
+ // signatures are not ours to choose. Clippy's suggestion — return `std::future::ready`
+ // instead — cannot be taken for a trait method, so the lint is a false positive here.
+ // `unused_async_trait_impl` is nightly-only, so stable clippy would reject the attribute
+ // itself under `-D warnings`. `unknown_lints` makes the allow portable across both.
+ #[allow(unknown_lints, clippy::unused_async_trait_impl)]

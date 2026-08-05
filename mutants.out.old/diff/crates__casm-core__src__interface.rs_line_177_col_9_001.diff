@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace SchemaHash::to_hex -> String with "xyzzy".into()
+@@ -169,17 +169,17 @@
+     #[must_use]
+     pub const fn as_bytes(&self) -> &[u8; HASH_LEN] {
+         &self.0
+     }
+ 
+     /// Renders the digest as 64 lowercase hexadecimal characters.
+     #[must_use]
+     pub fn to_hex(&self) -> String {
+-        crate::hex::encode(&self.0)
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for SchemaHash {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(&self.to_hex())
+     }
+ }

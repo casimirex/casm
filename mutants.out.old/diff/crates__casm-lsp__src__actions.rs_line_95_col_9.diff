@@ -1,0 +1,27 @@
+--- crates/casm-lsp/src/actions.rs
++++ delete match arm "services-require-security-controls" in quick_fixes
+@@ -87,23 +87,17 @@
+ /// Builds the quick-fixes available for `diagnostic`.
+ #[must_use]
+ pub fn quick_fixes(index: &DocumentIndex, diagnostic: &Diagnostic) -> Vec<CodeAction> {
+     let Some(node) = node_at(index, diagnostic.span) else {
+         return Vec::new();
+     };
+ 
+     match diagnostic.code.as_str() {
+-        "services-require-security-controls" => vec![add_controls(
+-            index,
+-            node,
+-            &diagnostic.code,
+-            "Add the missing security controls",
+-            SECURITY_CONTROLS,
+-        )],
++         /* ~ changed by cargo-mutants ~ */
+         "stateful-nodes-require-controls" => vec![add_controls(
+             index,
+             node,
+             &diagnostic.code,
+             "Add controls for this datastore",
+             DATASTORE_CONTROLS,
+         )],
+         _ => Vec::new(),

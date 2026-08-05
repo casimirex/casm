@@ -1,0 +1,43 @@
+--- crates/casm-lsp/src/server.rs
++++ replace Backend::validate_workspace -> String with "xyzzy".into()
+@@ -484,39 +484,17 @@
+         format!("casm-lsp: {}", found.note)
+     }
+ 
+     /// Summarises the findings across every open document.
+     ///
+     /// Deliberately synchronous: it holds the store's `Mutex`, and holding a blocking
+     /// lock across an `.await` is how an async runtime deadlocks itself.
+     fn validate_workspace(&self) -> String {
+-        let Ok(store) = self.store.lock() else {
+-            return "casm-lsp: could not read the document store".to_owned();
+-        };
+-
+-        let mut documents = 0_usize;
+-        let mut errors = 0_usize;
+-        let mut warnings = 0_usize;
+-
+-        for uri in store.uris() {
+-            let Some(document) = store.peek(&uri) else {
+-                continue;
+-            };
+-            documents = documents.saturating_add(1);
+-            for diagnostic in document.diagnostics() {
+-                match diagnostic.severity {
+-                    Severity::Error => errors = errors.saturating_add(1),
+-                    Severity::Warning => warnings = warnings.saturating_add(1),
+-                    Severity::Info => {}
+-                }
+-            }
+-        }
+-
+-        format!("checked {documents} open document(s): {errors} error(s), {warnings} warning(s)")
++        "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The workspace folders the client reported, most significant first.
+ ///
+ /// `workspaceFolders` is the modern field and `rootUri` the deprecated one. Both are read:
+ /// the fallback costs three lines and is the difference between working and not working in
+ /// an older client.

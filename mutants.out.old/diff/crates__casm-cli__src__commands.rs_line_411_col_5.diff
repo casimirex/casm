@@ -1,0 +1,53 @@
+--- crates/casm-cli/src/commands.rs
++++ replace manage_hook -> CommandResult with Default::default()
+@@ -403,49 +403,17 @@
+         );
+     }
+ 
+     Ok(ExitCode::Success)
+ }
+ 
+ /// Manages the Git pre-commit hook.
+ pub(crate) fn manage_hook(action: &HookAction) -> CommandResult {
+-    let repository = casm_git::Repository::discover(Path::new("."))
+-        .map_err(|error| CommandError(error.to_string()))?;
+-    let git_dir = repository.root().join(".git");
+-
+-    match action {
+-        HookAction::Install { force } => {
+-            let previous = hook::install(&git_dir, *force).map_err(CommandError)?;
+-            match previous {
+-                hook::Status::Installed => println!("hook already installed; refreshed it"),
+-                hook::Status::Foreign => println!("replaced an existing hook (--force)"),
+-                hook::Status::Absent => {
+-                    println!("installed {}", hook::hook_path(&git_dir).display());
+-                }
+-            }
+-            println!("  architectures are now validated before each commit");
+-        }
+-        HookAction::Uninstall => match hook::uninstall(&git_dir).map_err(CommandError)? {
+-            hook::Status::Installed => println!("removed {}", hook::hook_path(&git_dir).display()),
+-            hook::Status::Absent | hook::Status::Foreign => println!("nothing to remove"),
+-        },
+-        HookAction::Status => match hook::status(&git_dir) {
+-            hook::Status::Installed => {
+-                println!("installed at {}", hook::hook_path(&git_dir).display());
+-            }
+-            hook::Status::Absent => println!("not installed; run `casm hook install`"),
+-            hook::Status::Foreign => println!(
+-                "a pre-commit hook exists at {}, but CASIMIR did not write it",
+-                hook::hook_path(&git_dir).display()
+-            ),
+-        },
+-    }
+-
+-    Ok(ExitCode::Success)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Compares a declared architecture against an observed inventory.
+ pub(crate) fn drift(
+     file: &Path,
+     inventory_path: &Path,
+     from: InventorySource,
+     format: OutputFormat,

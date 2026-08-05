@@ -1,0 +1,45 @@
+--- crates/casm-lsp/src/navigation.rs
++++ replace references -> Vec<Span> with vec![Default::default()]
+@@ -63,41 +63,17 @@
+ /// Includes the declaration when `include_declaration` is set, matching the protocol's
+ /// `ReferenceParams.context.includeDeclaration`. Results are in document order.
+ #[must_use]
+ pub fn references(
+     index: &DocumentIndex,
+     position: Position,
+     include_declaration: bool,
+ ) -> Vec<Span> {
+-    let Some(symbol) = index.symbol_at(position) else {
+-        return Vec::new();
+-    };
+-
+-    if !matches!(
+-        symbol.kind,
+-        SymbolKind::NodeDefinition | SymbolKind::NodeReference(_)
+-    ) {
+-        return Vec::new();
+-    }
+-
+-    let mut spans: Vec<Span> = Vec::new();
+-
+-    if include_declaration && let Some(declaration) = index.node_named(&symbol.text) {
+-        spans.push(declaration.name_span);
+-    }
+-
+-    spans.extend(
+-        index
+-            .references_to(&symbol.text)
+-            .into_iter()
+-            .map(|found| found.span),
+-    );
+-    spans.sort_unstable();
+-    spans
++    vec![Default::default()] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds the document outline: one entry per declared node.
+ #[must_use]
+ pub fn outline(index: &DocumentIndex) -> Vec<Outline> {
+     index
+         .nodes()
+         .iter()

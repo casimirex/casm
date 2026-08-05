@@ -1,0 +1,30 @@
+--- crates/casm-lsp/src/index.rs
++++ replace strip_comment -> &str with ""
+@@ -768,26 +768,17 @@
+ }
+ 
+ /// Removes a trailing `#` comment from a line.
+ ///
+ /// A `#` only begins a comment at the start of the line or after whitespace, so a value
+ /// such as `standard: ISO27001#A.12` keeps its hash.
+ #[must_use]
+ pub fn strip_comment(line: &str) -> &str {
+-    let mut previous_was_space = true;
+-
+-    for (offset, character) in line.char_indices() {
+-        if character == '#' && previous_was_space {
+-            return line.get(..offset).unwrap_or(line);
+-        }
+-        previous_was_space = character.is_whitespace();
+-    }
+-
+-    line
++    "" /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

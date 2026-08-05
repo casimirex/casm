@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::config -> &ValidatorConfig with Box::leak(Box::new(Default::default()))
+@@ -110,17 +110,17 @@
+             patterns: Vec::new(),
+             clock: 0,
+         }
+     }
+ 
+     /// The validator configuration in force.
+     #[must_use]
+     pub const fn config(&self) -> &ValidatorConfig {
+-        &self.config
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The pattern library in force.
+     #[must_use]
+     pub fn patterns(&self) -> &[Pattern] {
+         &self.patterns
+     }
+ 

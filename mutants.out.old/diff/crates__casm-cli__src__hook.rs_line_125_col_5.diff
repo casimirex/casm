@@ -1,0 +1,41 @@
+--- crates/casm-cli/src/hook.rs
++++ replace install -> Result<Status, String> with Ok(Default::default())
+@@ -117,37 +117,17 @@
+ 
+ /// Writes the hook, refusing to clobber a foreign one unless `force` is set.
+ ///
+ /// # Errors
+ ///
+ /// Returns a human-readable message if a foreign hook is present without `force`, or if
+ /// the file cannot be written.
+ pub(crate) fn install(git_dir: &Path, force: bool) -> Result<Status, String> {
+-    let existing = status(git_dir);
+-
+-    if existing == Status::Foreign && !force {
+-        return Err(format!(
+-            "'{}' already exists and was not written by CASIMIR.\n\
+-             Inspect it first, then pass --force to replace it.",
+-            hook_path(git_dir).display()
+-        ));
+-    }
+-
+-    let directory = hooks_directory(git_dir);
+-    std::fs::create_dir_all(&directory)
+-        .map_err(|error| format!("cannot create '{}': {error}", directory.display()))?;
+-
+-    let path = hook_path(git_dir);
+-    std::fs::write(&path, SCRIPT)
+-        .map_err(|error| format!("cannot write '{}': {error}", path.display()))?;
+-    make_executable(&path)
+-        .map_err(|error| format!("cannot make '{}' executable: {error}", path.display()))?;
+-
+-    Ok(existing)
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Removes CASIMIR's hook, leaving a foreign one alone.
+ ///
+ /// # Errors
+ ///
+ /// Returns a human-readable message if a foreign hook is present, or if removal fails.
+ pub(crate) fn uninstall(git_dir: &Path) -> Result<Status, String> {

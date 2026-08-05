@@ -1,0 +1,33 @@
+--- crates/casm-git/src/time.rs
++++ replace DateTime::from_unix -> Self with Default::default()
+@@ -46,29 +46,17 @@
+     /// `rem_euclid` guarantees `remainder` is in `0..86_400`, so every cast below is
+     /// exact — the lint cannot see the range invariant, but the tests pin it across the
+     /// whole `i64` span.
+     #[must_use]
+     #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+     pub const fn from_unix(seconds: i64) -> Self {
+         // `rem_euclid` keeps the time-of-day positive for timestamps before 1970, where a
+         // plain remainder would go negative and produce an hour of -1.
+-        let days = seconds.div_euclid(SECONDS_PER_DAY);
+-        let remainder = seconds.rem_euclid(SECONDS_PER_DAY);
+-
+-        let (year, month, day) = civil_from_days(days);
+-
+-        Self {
+-            year,
+-            month,
+-            day,
+-            hour: (remainder / 3_600) as u32,
+-            minute: ((remainder % 3_600) / 60) as u32,
+-            second: (remainder % 60) as u32,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders as `YYYY-MM-DD`.
+     #[must_use]
+     pub fn to_date(&self) -> String {
+         format!("{:04}-{:02}-{:02}", self.year, self.month, self.day)
+     }
+ 

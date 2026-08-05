@@ -1,0 +1,31 @@
+--- crates/casm-lsp/src/completion.rs
++++ delete match arm (Section::Patterns, Block::Bindings, _) in value_completions
+@@ -327,27 +327,17 @@
+         (Section::Patterns, Block::None, Some("pattern")) => {
+             return CompletionResult {
+                 context: CompletionContext::PatternReferenceValue,
+                 prefix,
+                 items: patterns.iter().map(Completion::pattern).collect(),
+             };
+         }
+         // Every key inside `bind:` takes a node name, whatever the role is called.
+-        (Section::Patterns, Block::Bindings, _) => {
+-            return CompletionResult {
+-                context: CompletionContext::NodeNameValue,
+-                prefix,
+-                items: index
+-                    .nodes()
+-                    .iter()
+-                    .map(|node| Completion::reference(&node.name, node.node_type.as_deref()))
+-                    .collect(),
+-            };
+-        }
++         /* ~ changed by cargo-mutants ~ */
+         (Section::Nodes, Block::None, Some("type")) => {
+             (CompletionContext::NodeTypeValue, NODE_TYPES)
+         }
+         (Section::Relationships, Block::None, Some("type")) => {
+             (CompletionContext::RelationshipTypeValue, RELATIONSHIP_TYPES)
+         }
+         (_, Block::Controls, Some("type")) => (CompletionContext::ControlTypeValue, CONTROL_TYPES),
+         (_, _, Some("protocol")) => (CompletionContext::ProtocolValue, PROTOCOLS),

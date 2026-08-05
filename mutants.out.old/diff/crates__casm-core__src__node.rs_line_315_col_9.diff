@@ -1,0 +1,21 @@
+--- crates/casm-core/src/node.rs
++++ replace Node::controls -> &[Control] with Vec::leak(Vec::new())
+@@ -307,17 +307,17 @@
+     pub fn interfaces(&self) -> &[Interface] {
+         &self.interfaces
+     }
+ 
+     /// The controls this node is asserted to satisfy.
+     #[inline]
+     #[must_use]
+     pub fn controls(&self) -> &[Control] {
+-        &self.controls
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The node's annotations, in deterministic key order.
+     #[inline]
+     #[must_use]
+     pub const fn metadata(&self) -> &BTreeMap<String, String> {
+         &self.metadata
+     }

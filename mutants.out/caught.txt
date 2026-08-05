@@ -1,0 +1,199 @@
+crates/casm-cli/src/commands.rs:102:24: replace && with || in init
+crates/casm-cli/src/commands.rs:132:5: replace validator_config -> ValidatorConfig with Default::default()
+crates/casm-cli/src/commands.rs:182:15: replace && with || in exit_code_for
+crates/casm-cli/src/commands.rs:299:32: replace > with == in check
+crates/casm-cli/src/commands.rs:299:32: replace > with < in check
+crates/casm-cli/src/commands.rs:321:8: delete ! in fmt
+crates/casm-cli/src/commands.rs:336:5: replace target_path -> PathBuf with Default::default()
+crates/casm-cli/src/commands.rs:102:27: delete ! in init
+crates/casm-cli/src/commands.rs:502:5: replace load_patterns -> Result<Vec<Pattern>, CommandError> with Ok(vec![])
+crates/casm-cli/src/commands.rs:573:5: replace evolve_targets -> Result<Vec<casm_core::Conformance>, CommandError> with Ok(vec![])
+crates/casm-cli/src/commands.rs:592:54: replace == with != in evolve_targets
+crates/casm-cli/src/commands.rs:553:20: replace == with != in evolve
+crates/casm-cli/src/commands.rs:693:15: replace && with || in evidence
+crates/casm-cli/src/commands.rs:693:37: replace > with < in evidence
+crates/casm-cli/src/commands.rs:693:37: replace > with == in evidence
+crates/casm-cli/src/commands.rs:693:37: replace > with >= in evidence
+crates/casm-cli/src/commands.rs:705:5: replace provenance_of -> Provenance with Default::default()
+crates/casm-cli/src/commands.rs:876:14: replace > with == in walk
+crates/casm-cli/src/commands.rs:862:5: replace discover -> Result<Vec<PathBuf>, CommandError> with Ok(vec![])
+crates/casm-cli/src/commands.rs:862:5: replace discover -> Result<Vec<PathBuf>, CommandError> with Ok(vec![Default::default()])
+crates/casm-cli/src/commands.rs:876:5: replace walk -> Result<(), CommandError> with Ok(())
+crates/casm-cli/src/commands.rs:876:14: replace > with < in walk
+crates/casm-cli/src/commands.rs:876:14: replace > with >= in walk
+crates/casm-cli/src/commands.rs:887:54: replace || with && in walk
+crates/casm-cli/src/commands.rs:887:34: replace || with && in walk
+crates/casm-cli/src/commands.rs:887:42: replace == with != in walk
+crates/casm-cli/src/commands.rs:887:62: replace == with != in walk
+crates/casm-cli/src/commands.rs:893:54: replace && with || in walk
+crates/casm-cli/src/commands.rs:907:5: replace is_architecture_file -> bool with true
+crates/casm-cli/src/commands.rs:907:5: replace is_architecture_file -> bool with false
+crates/casm-cli/src/commands.rs:910:30: replace && with || in is_architecture_file
+crates/casm-cli/src/commands.rs:910:67: replace || with && in is_architecture_file
+crates/casm-core/src/architecture.rs:68:9: replace ArchitectureConfig::name -> Self with Default::default()
+crates/casm-core/src/architecture.rs:75:9: replace ArchitectureConfig::version -> Self with Default::default()
+crates/casm-core/src/architecture.rs:96:9: replace ArchitectureConfig::relationship -> Self with Default::default()
+crates/casm-core/src/architecture.rs:103:9: replace ArchitectureConfig::conformance -> Self with Default::default()
+crates/casm-core/src/architecture.rs:89:9: replace ArchitectureConfig::node -> Self with Default::default()
+crates/casm-core/src/architecture.rs:247:9: replace Architecture::node_count -> usize with 0
+crates/casm-core/src/architecture.rs:247:9: replace Architecture::node_count -> usize with 1
+crates/casm-core/src/architecture.rs:254:9: replace Architecture::relationship_count -> usize with 0
+crates/casm-core/src/architecture.rs:254:9: replace Architecture::relationship_count -> usize with 1
+crates/casm-core/src/architecture.rs:261:9: replace Architecture::is_empty -> bool with false
+crates/casm-core/src/architecture.rs:266:9: replace Architecture::nodes -> impl Iterator<Item =&Node> with ::std::iter::empty()
+crates/casm-core/src/architecture.rs:271:9: replace Architecture::relationships -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
+crates/casm-core/src/architecture.rs:276:9: replace Architecture::conformance -> impl Iterator<Item =&Conformance> with ::std::iter::empty()
+crates/casm-core/src/architecture.rs:283:9: replace Architecture::conformance_count -> usize with 1
+crates/casm-core/src/architecture.rs:283:9: replace Architecture::conformance_count -> usize with 0
+crates/casm-core/src/architecture.rs:289:9: replace Architecture::node -> Option<&Node> with None
+crates/casm-core/src/architecture.rs:298:9: replace Architecture::node_by_name -> Option<&Node> with None
+crates/casm-core/src/architecture.rs:300:47: replace == with != in Architecture::node_by_name
+crates/casm-core/src/architecture.rs:311:9: replace Architecture::outgoing -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
+crates/casm-core/src/architecture.rs:313:47: replace == with != in Architecture::outgoing
+crates/casm-core/src/architecture.rs:318:9: replace Architecture::incoming -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
+crates/casm-core/src/architecture.rs:320:47: replace == with != in Architecture::incoming
+crates/casm-core/src/architecture.rs:326:9: replace Architecture::degree -> usize with 0
+crates/casm-core/src/architecture.rs:326:9: replace Architecture::degree -> usize with 1
+crates/casm-core/src/architecture.rs:328:48: replace || with && in Architecture::degree
+crates/casm-core/src/architecture.rs:328:42: replace == with != in Architecture::degree
+crates/casm-core/src/architecture.rs:328:65: replace == with != in Architecture::degree
+crates/casm-core/src/architecture.rs:338:9: replace Architecture::isolated_nodes -> Vec<&Node> with vec![]
+crates/casm-core/src/architecture.rs:340:51: replace == with != in Architecture::isolated_nodes
+crates/casm-core/src/architecture.rs:351:9: replace Architecture::add_node -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/architecture.rs:380:9: replace Architecture::add_relationship -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/architecture.rs:387:49: replace == with != in Architecture::add_relationship
+crates/casm-core/src/architecture.rs:412:9: replace Architecture::add_conformance -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/architecture.rs:437:9: replace Architecture::check_conformance -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/architecture.rs:438:16: delete ! in Architecture::check_conformance
+crates/casm-core/src/architecture.rs:452:46: replace == with != in Architecture::check_conformance
+crates/casm-core/src/architecture.rs:474:9: replace Architecture::remove_node -> Result<Option<Node>, ArchitectureError> with Ok(None)
+crates/casm-core/src/architecture.rs:478:37: replace == with != in Architecture::remove_node
+crates/casm-core/src/architecture.rs:481:42: replace + with - in Architecture::remove_node
+crates/casm-core/src/architecture.rs:481:42: replace + with * in Architecture::remove_node
+crates/casm-core/src/architecture.rs:482:23: replace > with < in Architecture::remove_node
+crates/casm-core/src/architecture.rs:482:23: replace > with >= in Architecture::remove_node
+crates/casm-core/src/architecture.rs:482:23: replace > with == in Architecture::remove_node
+crates/casm-core/src/architecture.rs:531:47: replace == with != in Architecture::verify_invariants
+crates/casm-core/src/architecture.rs:526:9: replace Architecture::verify_invariants -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/architecture.rs:569:9: replace Architecture::require_node -> Result<(), ArchitectureError> with Ok(())
+crates/casm-core/src/relationship.rs:57:9: replace RelationshipType::label -> &'static str with ""
+crates/casm-core/src/relationship.rs:57:9: replace RelationshipType::label -> &'static str with "xyzzy"
+crates/casm-core/src/relationship.rs:74:9: replace RelationshipType::is_blocking -> bool with true
+crates/casm-core/src/relationship.rs:74:9: replace RelationshipType::is_blocking -> bool with false
+crates/casm-core/src/relationship.rs:83:9: replace RelationshipType::is_entangled -> bool with true
+crates/casm-core/src/relationship.rs:83:9: replace RelationshipType::is_entangled -> bool with false
+crates/casm-core/src/relationship.rs:92:9: replace RelationshipType::forms_dependency_cycle -> bool with true
+crates/casm-core/src/relationship.rs:92:9: replace RelationshipType::forms_dependency_cycle -> bool with false
+crates/casm-core/src/relationship.rs:98:9: replace <impl fmt::Display for RelationshipType>::fmt -> fmt::Result with Ok(Default::default())
+crates/casm-core/src/relationship.rs:145:9: replace RelationshipConfig::protocol -> Self with Default::default()
+crates/casm-core/src/relationship.rs:152:9: replace RelationshipConfig::description -> Self with Default::default()
+crates/casm-core/src/relationship.rs:191:19: replace == with != in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:198:29: replace || with && in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:198:24: replace == with != in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:198:39: replace > with == in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:198:39: replace > with < in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:198:39: replace > with >= in RelationshipConfig::build
+crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with None
+crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with Some(0)
+crates/casm-core/src/relationship.rs:314:9: replace Relationship::latency_budget_ms -> Option<u64> with Some(1)
+crates/casm-core/src/relationship.rs:320:9: replace Relationship::connects -> bool with true
+crates/casm-core/src/relationship.rs:320:9: replace Relationship::connects -> bool with false
+crates/casm-core/src/relationship.rs:320:48: replace || with && in Relationship::connects
+crates/casm-core/src/relationship.rs:320:27: replace && with || in Relationship::connects
+crates/casm-core/src/relationship.rs:320:22: replace == with != in Relationship::connects
+crates/casm-core/src/relationship.rs:320:42: replace == with != in Relationship::connects
+crates/casm-core/src/relationship.rs:320:69: replace && with || in Relationship::connects
+crates/casm-core/src/relationship.rs:320:64: replace == with != in Relationship::connects
+crates/casm-core/src/relationship.rs:320:84: replace == with != in Relationship::connects
+crates/casm-git/src/time.rs:64:42: replace / with * in DateTime::from_unix
+crates/casm-git/src/time.rs:63:30: replace / with * in DateTime::from_unix
+crates/casm-git/src/time.rs:63:30: replace / with % in DateTime::from_unix
+crates/casm-git/src/time.rs:64:33: replace % with / in DateTime::from_unix
+crates/casm-git/src/time.rs:64:33: replace % with + in DateTime::from_unix
+crates/casm-git/src/time.rs:65:32: replace % with + in DateTime::from_unix
+crates/casm-git/src/time.rs:65:32: replace % with / in DateTime::from_unix
+crates/casm-git/src/time.rs:64:42: replace / with % in DateTime::from_unix
+crates/casm-git/src/time.rs:72:9: replace DateTime::to_date -> String with String::new()
+crates/casm-git/src/time.rs:78:9: replace DateTime::to_datetime -> String with "xyzzy".into()
+crates/casm-git/src/time.rs:78:9: replace DateTime::to_datetime -> String with String::new()
+crates/casm-git/src/time.rs:72:9: replace DateTime::to_date -> String with "xyzzy".into()
+crates/casm-git/src/time.rs:87:9: replace <impl core::fmt::Display for DateTime>::fmt -> core::fmt::Result with Ok(Default::default())
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (0, 1, 0)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (0, 0, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (0, 1, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (0, 0, 0)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (1, 1, 0)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (1, 1, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (1, 0, 0)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (1, 0, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (-1, 0, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (-1, 1, 1)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (-1, 0, 0)
+crates/casm-git/src/time.rs:99:5: replace civil_from_days -> (i64, u32, u32) with (-1, 1, 0)
+crates/casm-git/src/time.rs:99:24: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:99:24: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:105:7: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:105:7: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:101:26: replace >= with < in civil_from_days
+crates/casm-git/src/time.rs:104:17: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:104:17: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:106:30: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:106:30: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:106:36: replace * with + in civil_from_days
+crates/casm-git/src/time.rs:106:36: replace * with / in civil_from_days
+crates/casm-git/src/time.rs:108:88: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:108:88: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:108:64: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:108:64: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:108:42: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:108:42: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:108:21: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:108:21: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:108:34: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:108:55: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:108:34: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:108:77: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:108:55: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:110:28: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:108:77: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:110:28: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:110:34: replace * with + in civil_from_days
+crates/casm-git/src/time.rs:111:34: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:110:34: replace * with / in civil_from_days
+crates/casm-git/src/time.rs:111:34: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:111:73: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:111:73: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:111:55: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:111:55: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:111:41: replace * with + in civil_from_days
+crates/casm-git/src/time.rs:111:69: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:111:41: replace * with / in civil_from_days
+crates/casm-git/src/time.rs:111:87: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:111:69: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:112:45: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:111:87: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:112:45: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:112:40: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:112:40: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:112:26: replace * with + in civil_from_days
+crates/casm-git/src/time.rs:112:26: replace * with / in civil_from_days
+crates/casm-git/src/time.rs:114:58: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:114:28: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:114:58: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:114:28: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:114:54: replace / with % in civil_from_days
+crates/casm-git/src/time.rs:114:49: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:114:54: replace / with * in civil_from_days
+crates/casm-git/src/time.rs:114:35: replace * with + in civil_from_days
+crates/casm-git/src/time.rs:114:49: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:115:32: replace < with == in civil_from_days
+crates/casm-git/src/time.rs:114:35: replace * with / in civil_from_days
+crates/casm-git/src/time.rs:115:32: replace < with <= in civil_from_days
+crates/casm-git/src/time.rs:115:32: replace < with > in civil_from_days
+crates/casm-git/src/time.rs:116:21: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:116:21: replace + with - in civil_from_days
+crates/casm-git/src/time.rs:118:21: replace - with / in civil_from_days
+crates/casm-git/src/time.rs:118:21: replace - with + in civil_from_days
+crates/casm-git/src/time.rs:121:15: replace <= with > in civil_from_days
+crates/casm-git/src/time.rs:121:27: replace + with * in civil_from_days
+crates/casm-git/src/time.rs:121:27: replace + with - in civil_from_days

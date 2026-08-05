@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::peek -> Option<&Document> with None
+@@ -218,17 +218,17 @@
+         let document = self.documents.get_mut(uri)?;
+         document.accessed = accessed;
+         Some((document, &self.patterns))
+     }
+ 
+     /// Retrieves a document without affecting eviction order.
+     #[must_use]
+     pub fn peek(&self, uri: &str) -> Option<&Document> {
+-        self.documents.get(uri)
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Forgets a document the client has closed.
+     pub fn close(&mut self, uri: &str) -> Option<Document> {
+         self.documents.remove(uri)
+     }
+ 
+     /// How many documents are held.

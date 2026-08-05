@@ -1,0 +1,24 @@
+--- crates/casm-parser/src/format.rs
++++ replace Format::from_path -> Option<Self> with Some(Default::default())
+@@ -49,20 +49,17 @@
+     }
+ 
+     /// Classifies a path by its extension, case-insensitively.
+     ///
+     /// Returns `None` for an unrecognised or absent extension; callers fall back to
+     /// [`Format::sniff`].
+     #[must_use]
+     pub fn from_path(path: &Path) -> Option<Self> {
+-        let extension = path.extension()?.to_str()?.to_ascii_lowercase();
+-        Self::ALL
+-            .into_iter()
+-            .find(|format| format.extensions().contains(&extension.as_str()))
++        Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Guesses a format from the document's first meaningful character.
+     ///
+     /// This is a heuristic of last resort, used only when the path carries no usable
+     /// extension (a stdin pipe, for instance). It is deliberately conservative: a
+     /// document whose shape is ambiguous between YAML and TOML is called YAML, because
+     /// YAML is the authoring default and produces the more familiar error messages.

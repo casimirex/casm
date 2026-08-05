@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace || with && in walk
+@@ -879,17 +879,17 @@
+ 
+     let entries = std::fs::read_dir(directory)
+         .map_err(|error| CommandError(format!("cannot read '{}': {error}", directory.display())))?;
+ 
+     for entry in entries.flatten() {
+         let path = entry.path();
+         let name = entry.file_name().to_string_lossy().to_string();
+ 
+-        if name.starts_with('.') || name == "target" || name == "node_modules" {
++        if name.starts_with('.') && /* ~ changed by cargo-mutants ~ */ name == "target" || name == "node_modules" {
+             continue;
+         }
+ 
+         if path.is_dir() {
+             walk(&path, depth.saturating_add(1), found)?;
+         } else if Format::from_path(&path).is_some() && is_architecture_file(&path) {
+             found.push(path);
+         }

@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/text.rs
++++ replace span_of_bytes -> Span with Default::default()
+@@ -130,21 +130,17 @@
+     }
+ 
+     line.len()
+ }
+ 
+ /// Builds a span covering `[start_byte, end_byte)` of `line`.
+ #[must_use]
+ pub fn span_of_bytes(line_number: u32, line: &str, start_byte: usize, end_byte: usize) -> Span {
+-    Span::new(
+-        line_number,
+-        byte_to_utf16(line, start_byte),
+-        byte_to_utf16(line, end_byte),
+-    )
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,23 @@
+--- crates/casm-core/src/merkle.rs
++++ replace Fingerprint::parse_hex -> Result<Self, String> with Ok(Default::default())
+@@ -96,19 +96,17 @@
+     }
+ 
+     /// Parses a digest from its 64-character hexadecimal form.
+     ///
+     /// # Errors
+     ///
+     /// Returns a human-readable message if `raw` is not 64 hexadecimal digits.
+     pub fn parse_hex(raw: &str) -> Result<Self, String> {
+-        crate::hex::decode(raw)
+-            .map(Self)
+-            .map_err(|reason| format!("fingerprint: {reason}"))
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders the digest as 64 lowercase hexadecimal characters.
+     #[must_use]
+     pub fn to_hex(&self) -> String {
+         crate::hex::encode(&self.0)
+     }
+ 

@@ -1,0 +1,28 @@
+--- crates/casm-lsp/src/hover.rs
++++ replace edge_summary -> String with "xyzzy".into()
+@@ -264,24 +264,17 @@
+                 edge_summary(edge)
+             );
+         }
+     }
+ }
+ 
+ /// Summarises a relationship's type, protocol, and budget.
+ fn edge_summary(edge: &Relationship) -> String {
+-    let mut parts = vec![edge.relationship_type().to_string()];
+-    if let Some(protocol) = edge.protocol() {
+-        parts.push(protocol.to_string());
+-    }
+-    if let Some(budget) = edge.latency_budget_ms() {
+-        parts.push(format!("{budget}ms"));
+-    }
+-    parts.join(", ")
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The degraded picture, from a document that does not currently parse.
+ fn describe_indexed_node(index: &DocumentIndex, name: &str) -> String {
+     let Some(entry) = index.node_named(name) else {
+         return format!(
+             "`{name}` does not match any node declared in this document.\n\n\
+              Check the spelling, or add a node with this name under `nodes:`."

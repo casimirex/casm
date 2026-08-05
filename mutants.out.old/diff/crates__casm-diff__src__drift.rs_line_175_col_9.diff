@@ -1,0 +1,24 @@
+--- crates/casm-diff/src/drift.rs
++++ delete match arm "aws_elasticache_cluster" | "aws_elasticache_replication_group" | "google_redis_instance" | "azurerm_redis_cache" in terraform_type
+@@ -167,20 +167,17 @@
+ 
+         "aws_sqs_queue"
+         | "aws_sns_topic"
+         | "aws_msk_cluster"
+         | "google_pubsub_topic"
+         | "google_pubsub_subscription"
+         | "azurerm_servicebus_queue" => Some(NodeType::Queue),
+ 
+-        "aws_elasticache_cluster"
+-        | "aws_elasticache_replication_group"
+-        | "google_redis_instance"
+-        | "azurerm_redis_cache" => Some(NodeType::Cache),
++         /* ~ changed by cargo-mutants ~ */
+ 
+         "aws_lb"
+         | "aws_alb"
+         | "aws_api_gateway_rest_api"
+         | "aws_apigatewayv2_api"
+         | "aws_cloudfront_distribution"
+         | "google_compute_global_forwarding_rule"
+         | "azurerm_application_gateway" => Some(NodeType::Gateway),

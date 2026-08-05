@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ delete ! in <impl Rule for SyncTargetsShouldDeclareInterfaces>::check
+@@ -391,17 +391,17 @@
+                 continue;
+             }
+ 
+             let called_synchronously = context
+                 .architecture
+                 .incoming(node.id())
+                 .any(|edge| edge.relationship_type() == RelationshipType::Sync);
+ 
+-            if !called_synchronously {
++            if  /* ~ changed by cargo-mutants ~ */called_synchronously {
+                 continue;
+             }
+ 
+             report.push(
+                 Diagnostic::new(
+                     self.id(),
+                     Severity::Info,
+                     RuleContext::subject(node),

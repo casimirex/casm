@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/completion.rs
++++ replace == with != in key_completions
+@@ -232,17 +232,17 @@
+     let prefix = before_cursor
+         .trim_start()
+         .trim_start_matches("- ")
+         .trim_start()
+         .to_owned();
+ 
+     // Inside `bind:` the keys are roles the claimed pattern defines, not a fixed
+     // vocabulary, so they come from the library rather than from `schema`.
+-    if line.section == Section::Patterns && line.block == Block::Bindings {
++    if line.section == Section::Patterns && line.block != /* ~ changed by cargo-mutants ~ */ Block::Bindings {
+         let roles = enclosing_pattern(index, patterns, line.number)
+             .map(|pattern| {
+                 pattern
+                     .requirements()
+                     .iter()
+                     .map(Completion::role)
+                     .collect()
+             })

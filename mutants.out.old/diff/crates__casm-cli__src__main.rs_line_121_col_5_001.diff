@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/main.rs
++++ replace clamp -> u8 with 1
+@@ -113,17 +113,17 @@
+     }
+ }
+ 
+ /// Narrows an exit code into the byte the operating system accepts.
+ ///
+ /// Every code CASIMIR produces is already in `0..=3`; the clamp exists so the conversion
+ /// is total and cannot panic (NASA Rule 3).
+ fn clamp(code: i32) -> u8 {
+-    u8::try_from(code).unwrap_or(u8::MAX)
++    1 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Routes a parsed command line to its implementation.
+ fn dispatch(cli: Cli, recorder: &mut Recorder) -> CommandResult {
+     match cli.command {
+         Command::Init {
+             name,
+             output,

@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/hover.rs
++++ delete ! in describe_resolved_node
+@@ -205,17 +205,17 @@
+                 "\n- `{}` — {} v{}",
+                 interface.name(),
+                 interface.protocol(),
+                 interface.version()
+             );
+         }
+     }
+ 
+-    if !node.controls().is_empty() {
++    if  /* ~ changed by cargo-mutants ~ */node.controls().is_empty() {
+         out.push_str("\n\n**Controls**");
+         for control in node.controls() {
+             let evidence = if control.evidence_required() {
+                 " *(evidence required)*"
+             } else {
+                 ""
+             };
+             let _ = write!(

@@ -1,0 +1,37 @@
+--- crates/casm-parser/src/library.rs
++++ replace read_bounded -> Result<String, ParseError> with Ok(String::new())
+@@ -297,33 +297,17 @@
+ ///
+ /// Returns [`ParseError::Emit`] if the underlying serialiser fails.
+ pub fn emit_pattern_str(pattern: &Pattern, format: Format) -> Result<String, ParseError> {
+     crate::serialize(&PatternDoc::from_pattern(pattern), format)
+ }
+ 
+ /// Reads a file, refusing one larger than [`MAX_DOCUMENT_BYTES`].
+ fn read_bounded(path: &Path) -> Result<String, ParseError> {
+-    let metadata = std::fs::metadata(path).map_err(|error| ParseError::Io {
+-        path: path.to_path_buf(),
+-        message: error.to_string(),
+-    })?;
+-
+-    if metadata.len() > MAX_DOCUMENT_BYTES {
+-        return Err(ParseError::TooLarge {
+-            path: path.to_path_buf(),
+-            size: metadata.len(),
+-            limit: MAX_DOCUMENT_BYTES,
+-        });
+-    }
+-
+-    std::fs::read_to_string(path).map_err(|error| ParseError::Io {
+-        path: path.to_path_buf(),
+-        message: error.to_string(),
+-    })
++    Ok(String::new()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// A collection of patterns, loaded from a directory or assembled in memory.
+ ///
+ /// Lookup is by `name@version`. Two versions of one pattern coexist happily — that is
+ /// what makes a migration expressible as a period during which an architecture claims
+ /// both.
+ #[derive(Clone, Debug, Default)]

@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace && with || in exit_code_for
+@@ -174,17 +174,17 @@
+         }
+     }
+ 
+     Ok(exit_code_for(&report, strict))
+ }
+ 
+ /// Maps a report onto an exit code, honouring `--strict`.
+ fn exit_code_for(report: &Report, strict: bool) -> ExitCode {
+-    if strict && report.has_warnings() {
++    if strict || /* ~ changed by cargo-mutants ~ */ report.has_warnings() {
+         return ExitCode::ValidationErrors;
+     }
+     ExitCode::from_report_code(report.exit_code())
+ }
+ 
+ /// Prints a validation report as prose.
+ fn print_human(file: &Path, architecture: &Architecture, report: &Report) {
+     println!(

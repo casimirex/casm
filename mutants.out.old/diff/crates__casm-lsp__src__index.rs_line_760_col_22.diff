@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace != with == in find_separator
+@@ -752,17 +752,17 @@
+         value,
+         value_range,
+     }
+ }
+ 
+ /// Finds the byte offset of the `key: value` separator, if the line has one.
+ fn find_separator(body: &str) -> Option<usize> {
+     body.char_indices().find_map(|(offset, character)| {
+-        if character != ':' {
++        if character == /* ~ changed by cargo-mutants ~ */ ':' {
+             return None;
+         }
+         let next = body
+             .get(offset.saturating_add(1)..)
+             .and_then(|rest| rest.chars().next());
+         matches!(next, None | Some(' ' | '\t')).then_some(offset)
+     })
+ }

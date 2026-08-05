@@ -1,0 +1,22 @@
+--- crates/casm-core/src/relationship.rs
++++ replace RelationshipConfig::latency_budget_ms -> Self with Default::default()
+@@ -158,18 +158,17 @@
+     pub fn control(mut self, control: Control) -> Self {
+         self.controls.push(control);
+         self
+     }
+ 
+     /// Sets the single-hop latency budget in milliseconds.
+     #[must_use]
+     pub const fn latency_budget_ms(mut self, budget: u64) -> Self {
+-        self.latency_budget_ms = Some(budget);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Phase 2: validates the configuration and produces an immutable [`Relationship`].
+     ///
+     /// # Errors
+     ///
+     /// - [`RelationshipError::MissingField`] if a required field was never set.
+     /// - [`RelationshipError::SelfEdge`] if source and target are the same node.

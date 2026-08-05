@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace || with && in <impl Rule for StatefulNodesRequireControls>::check
+@@ -223,17 +223,17 @@
+     }
+ 
+     fn description(&self) -> &'static str {
+         "nodes that hold state must declare at least one control"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for node in context.architecture.nodes() {
+-            if !node.node_type().is_stateful() || !node.controls().is_empty() {
++            if !node.node_type().is_stateful() && /* ~ changed by cargo-mutants ~ */ !node.controls().is_empty() {
+                 continue;
+             }
+ 
+             report.push(
+                 Diagnostic::new(
+                     self.id(),
+                     Severity::Warning,
+                     RuleContext::subject(node),

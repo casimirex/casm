@@ -1,0 +1,25 @@
+--- crates/casm-parser/src/format.rs
++++ replace Format::extensions -> &'static[&'static str] with Vec::leak(Vec::new())
+@@ -36,21 +36,17 @@
+             Self::Json => "json",
+             Self::Toml => "toml",
+         }
+     }
+ 
+     /// The file extensions conventionally associated with this format.
+     #[must_use]
+     pub const fn extensions(self) -> &'static [&'static str] {
+-        match self {
+-            Self::Yaml => &["yaml", "yml"],
+-            Self::Json => &["json"],
+-            Self::Toml => &["toml"],
+-        }
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Classifies a path by its extension, case-insensitively.
+     ///
+     /// Returns `None` for an unrecognised or absent extension; callers fall back to
+     /// [`Format::sniff`].
+     #[must_use]
+     pub fn from_path(path: &Path) -> Option<Self> {

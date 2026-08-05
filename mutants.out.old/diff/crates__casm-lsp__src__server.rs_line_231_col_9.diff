@@ -1,0 +1,35 @@
+--- crates/casm-lsp/src/server.rs
++++ replace <impl LanguageServer for Backend>::did_change_watched_files with ()
+@@ -223,31 +223,17 @@
+             &params.text_document.uri,
+             change.text,
+             params.text_document.version,
+         )
+         .await;
+     }
+ 
+     async fn did_change_watched_files(&self, params: DidChangeWatchedFilesParams) {
+-        let directory = self
+-            .workspace
+-            .lock()
+-            .ok()
+-            .and_then(|workspace| workspace.directory.clone());
+-
+-        let touched = params.changes.iter().any(|change| {
+-            library::is_pattern_file(&uri_to_path(change.uri.as_str()), directory.as_deref())
+-        });
+-        if !touched {
+-            return;
+-        }
+-
+-        let note = self.reload_patterns().await;
+-        self.client.log_message(MessageType::INFO, note).await;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     async fn did_close(&self, params: DidCloseTextDocumentParams) {
+         if let Ok(mut store) = self.store.lock() {
+             store.close(params.text_document.uri.as_str());
+         }
+         // Clear the squiggles: a closed document has no findings to show.
+         self.client

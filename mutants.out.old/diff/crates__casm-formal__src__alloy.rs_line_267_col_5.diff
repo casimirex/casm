@@ -1,0 +1,43 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace write_topology with ()
+@@ -259,39 +259,17 @@
+             signature_of(node.node_type)
+         );
+     }
+     let _ = writeln!(out);
+ }
+ 
+ /// Writes the topology as a fact.
+ fn write_topology(out: &mut String, model: &FormalModel, identifiers: &BTreeMap<String, String>) {
+-    let _ = writeln!(out, "fact Topology {{");
+-
+-    for node in &model.nodes {
+-        let identifier = identifier_of(identifiers, &node.name);
+-
+-        let blocks: Vec<String> = model
+-            .blocking
+-            .iter()
+-            .filter(|edge| edge.source == node.name)
+-            .map(|edge| identifier_of(identifiers, &edge.target))
+-            .collect();
+-        let notifies: Vec<String> = model
+-            .asynchronous
+-            .iter()
+-            .filter(|edge| edge.source == node.name)
+-            .map(|edge| identifier_of(identifiers, &edge.target))
+-            .collect();
+-
+-        let _ = writeln!(out, "    {identifier}.blocks = {}", union(&blocks));
+-        let _ = writeln!(out, "    {identifier}.notifies = {}", union(&notifies));
+-    }
+-
+-    let _ = writeln!(out, "}}\n");
++    () /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Writes the named groups the assertions quantify over.
+ fn write_groups(out: &mut String, model: &FormalModel, identifiers: &BTreeMap<String, String>) {
+     let external: Vec<String> = model
+         .external_names()
+         .iter()
+         .map(|name| identifier_of(identifiers, name))

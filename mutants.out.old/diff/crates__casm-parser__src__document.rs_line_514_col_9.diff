@@ -1,0 +1,28 @@
+--- crates/casm-parser/src/document.rs
++++ replace NodeIndex<'a>::resolve_binding -> Result<NodeId, ParseError> with Ok(Default::default())
+@@ -506,24 +506,17 @@
+     /// claim points at a node that is not there.
+     fn resolve_binding(
+         &self,
+         reference: &str,
+         pattern: &str,
+         role: &str,
+         path: &Path,
+     ) -> Result<NodeId, ParseError> {
+-        self.lookup(reference)
+-            .ok_or_else(|| ParseError::UnresolvedBinding {
+-                path: path.to_path_buf(),
+-                pattern: pattern.to_owned(),
+-                role: role.to_owned(),
+-                reference: reference.to_owned(),
+-                suggestion: self.hint(reference),
+-            })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A CASIMIR architecture in authoring form: permissive, unvalidated, human-shaped.
+ ///
+ /// See the module documentation for the grammar and for why this type is separate from
+ /// [`Architecture`].
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

@@ -1,0 +1,53 @@
+--- crates/casm-cli/src/commands.rs
++++ replace evidence -> CommandResult with Default::default()
+@@ -656,49 +656,17 @@
+ /// would launder an assertion into evidence — see ADR-0013.
+ pub(crate) fn evidence(
+     file: &Path,
+     format: EvidenceFormat,
+     patterns: Option<&Path>,
+     no_history: bool,
+     strict: bool,
+ ) -> CommandResult {
+-    let architecture = parse_file(file)?;
+-    let patterns = load_patterns(patterns)?;
+-
+-    let provenance = if no_history {
+-        Provenance::unknown().from_source(file.display().to_string())
+-    } else {
+-        provenance_of(file)
+-    };
+-
+-    let pack = Pack::assemble(&architecture, &patterns, provenance);
+-
+-    match format {
+-        EvidenceFormat::Human => print!(
+-            "{}",
+-            casm_evidence::render::render(&pack, RenderFormat::Human)
+-        ),
+-        EvidenceFormat::Markdown => {
+-            print!(
+-                "{}",
+-                casm_evidence::render::render(&pack, RenderFormat::Markdown)
+-            );
+-        }
+-        EvidenceFormat::Json => {
+-            let json = serde_json::to_string_pretty(&pack)
+-                .map_err(|error| CommandError(format!("cannot serialise the register: {error}")))?;
+-            println!("{json}");
+-        }
+-    }
+-
+-    if strict && pack.outstanding() > 0 {
+-        return Ok(ExitCode::ValidationErrors);
+-    }
+-    Ok(ExitCode::Success)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reads whatever Git can tell us about where an architecture came from.
+ ///
+ /// A file outside a repository, or one Git cannot read, yields
+ /// [`Provenance::unknown`] rather than an error: a register without attribution is still
+ /// worth having, and refusing to produce one would be the wrong trade.
+ fn provenance_of(file: &Path) -> Provenance {

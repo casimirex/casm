@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace > with == in controls_block
+@@ -250,17 +250,17 @@
+     // A sequence entry may sit at the same indent as its key, so a list item at the
+     // header's indent is part of the block, not a sibling field.
+     let body: Vec<&LineInfo> = index
+         .lines()
+         .iter()
+         .filter(in_node)
+         .filter(|line| {
+             line.number > header.number
+-                && (line.indent > header.indent
++                && (line.indent == /* ~ changed by cargo-mutants ~ */ header.indent
+                     || (line.indent == header.indent && line.is_list_item))
+         })
+         .collect();
+ 
+     // The author's own indentation wins over anything this module would pick.
+     let entry_indent = body
+         .iter()
+         .find(|line| line.is_list_item)

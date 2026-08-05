@@ -1,0 +1,26 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace Dot::style -> &'static str with ""
+@@ -213,22 +213,17 @@
+     }
+ 
+     /// Maps a relationship type onto a Graphviz edge style.
+     ///
+     /// Graphviz offers fewer distinct line styles than CASIMIR has relationship types,
+     /// so `composed` and `quantum-entangled` share `bold`. They remain distinguishable
+     /// by the edge label, which always carries the exact type.
+     fn style(relationship_type: RelationshipType) -> &'static str {
+-        match relationship_type {
+-            RelationshipType::Sync | RelationshipType::DependsOn => "solid",
+-            RelationshipType::Async | RelationshipType::EventDriven => "dashed",
+-            RelationshipType::Composed | RelationshipType::QuantumEntangled => "bold",
+-            RelationshipType::DeployedOn => "dotted",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Renderer for Dot {
+     fn id(&self) -> &'static str {
+         "dot"
+     }
+ 

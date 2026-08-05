@@ -1,0 +1,27 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace identifier_of -> String with String::new()
+@@ -87,23 +87,17 @@
+         assigned.insert(candidate, (*name).to_owned());
+     }
+ 
+     assigned
+ }
+ 
+ /// Looks up the identifier assigned to `name`.
+ fn identifier_of(identifiers: &BTreeMap<String, String>, name: &str) -> String {
+-    identifiers
+-        .iter()
+-        .find(|(_, original)| original.as_str() == name)
+-        .map_or_else(
+-            || "N_unknown".to_owned(),
+-            |(identifier, _)| identifier.clone(),
+-        )
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The Alloy signature name for a node type.
+ const fn signature_of(node_type: NodeType) -> &'static str {
+     match node_type {
+         NodeType::Service => "Service",
+         NodeType::Database => "Database",
+         NodeType::Queue => "Queue",

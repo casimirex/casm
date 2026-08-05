@@ -1,0 +1,22 @@
+--- crates/casm-git/src/lib.rs
++++ replace HistoryOptions::with_max_revisions -> Self with Default::default()
+@@ -66,18 +66,17 @@
+         }
+     }
+ }
+ 
+ impl HistoryOptions {
+     /// Options with the given revision limit.
+     #[must_use]
+     pub const fn with_max_revisions(mut self, limit: usize) -> Self {
+-        self.max_revisions = limit;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Options with the given commit-walk ceiling.
+     #[must_use]
+     pub const fn with_max_commits(mut self, limit: usize) -> Self {
+         self.max_commits = limit;
+         self
+     }

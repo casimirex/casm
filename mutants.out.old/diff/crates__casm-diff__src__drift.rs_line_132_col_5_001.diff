@@ -1,0 +1,33 @@
+--- crates/casm-diff/src/drift.rs
++++ replace terraform_resource -> Option<Resource> with Some(Default::default())
+@@ -124,29 +124,17 @@
+         self.resources
+             .iter()
+             .find(|resource| resource.name == node.name().as_str())
+     }
+ }
+ 
+ /// Converts one Terraform state resource entry.
+ fn terraform_resource(entry: &serde_json::Value) -> Option<Resource> {
+-    if entry.get("mode").and_then(serde_json::Value::as_str) != Some("managed") {
+-        return None;
+-    }
+-
+-    let provider_type = entry.get("type").and_then(serde_json::Value::as_str)?;
+-    let name = entry.get("name").and_then(serde_json::Value::as_str)?;
+-
+-    Some(Resource {
+-        id: format!("{provider_type}.{name}"),
+-        name: name.to_owned(),
+-        node_type: terraform_type(provider_type),
+-        provider_type: Some(provider_type.to_owned()),
+-    })
++    Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Maps a Terraform resource type onto a CASIMIR node type.
+ ///
+ /// Deliberately incomplete. An unmapped type yields `None`, which suppresses type-mismatch
+ /// reporting for that resource — CASIMIR would rather say nothing than invent a
+ /// disagreement from a type it does not understand.
+ #[must_use]

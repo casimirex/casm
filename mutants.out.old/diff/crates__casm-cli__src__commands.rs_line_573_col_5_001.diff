@@ -1,0 +1,53 @@
+--- crates/casm-cli/src/commands.rs
++++ replace evolve_targets -> Result<Vec<casm_core::Conformance>, CommandError> with Ok(vec![Default::default()])
+@@ -565,49 +565,17 @@
+ /// Decides which claims `casm evolve` should report on.
+ ///
+ /// With `--to`, exactly that pattern, whether or not the architecture already claims it —
+ /// that is the migration case. Without it, everything already claimed.
+ fn evolve_targets(
+     architecture: &Architecture,
+     to: Option<&str>,
+ ) -> Result<Vec<casm_core::Conformance>, CommandError> {
+-    let Some(wanted) = to else {
+-        return Ok(architecture.conformance().cloned().collect());
+-    };
+-
+-    let reference = casm_core::PatternRef::parse(wanted)
+-        .map_err(|error| CommandError(format!("--to: {error}")))?;
+-
+-    // An existing claim carries the author's bindings, and discarding them would report
+-    // back an ambiguity they have already resolved. Any version of the same pattern will
+-    // do: migrating from 1.0.0 to 2.0.0 is precisely the case where the bindings written
+-    // for the old version are the ones worth reusing. Roles the new version does not have
+-    // are reported rather than dropped, which is the honest outcome — a binding that no
+-    // longer means anything is a thing the author should be told about.
+-    let inherited = architecture
+-        .conformance()
+-        .find(|claim| claim.pattern() == &reference)
+-        .or_else(|| {
+-            architecture
+-                .conformance()
+-                .find(|claim| claim.pattern().name() == reference.name())
+-        });
+-
+-    let Some(existing) = inherited else {
+-        return Ok(vec![casm_core::Conformance::new(reference)]);
+-    };
+-
+-    let mut claim = casm_core::Conformance::new(reference);
+-    for (role, node) in existing.bindings() {
+-        claim = claim
+-            .binding(role.as_str(), *node)
+-            .map_err(|error| CommandError(format!("--to: {error}")))?;
+-    }
+-    Ok(vec![claim])
++    Ok(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Prints one conformance report.
+ fn print_conformance(
+     reference: &str,
+     report: &casm_core::ConformanceReport,
+     architecture: &Architecture,
+ ) {

@@ -1,0 +1,25 @@
+--- crates/casm-validator/src/lib.rs
++++ replace Validator::empty -> Self with Default::default()
+@@ -94,21 +94,17 @@
+             rules: rules::built_in(),
+             patterns: Vec::new(),
+         }
+     }
+ 
+     /// A validator with no rules at all, for building a custom set.
+     #[must_use]
+     pub fn empty(config: ValidatorConfig) -> Self {
+-        Self {
+-            config,
+-            rules: Vec::new(),
+-            patterns: Vec::new(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Adds a rule to this validator.
+     #[must_use]
+     pub fn with_rule(mut self, rule: Box<dyn Rule>) -> Self {
+         self.rules.push(rule);
+         self
+     }

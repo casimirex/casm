@@ -1,0 +1,25 @@
+--- crates/casm-cli/src/cli.rs
++++ replace DiagramFormat::renderer_id -> &'static str with ""
+@@ -95,21 +95,17 @@
+     /// Plain text, readable in a CI log.
+     Ascii,
+ }
+ 
+ impl DiagramFormat {
+     /// The renderer identifier this format selects.
+     #[must_use]
+     pub(crate) const fn renderer_id(self) -> &'static str {
+-        match self {
+-            Self::Mermaid => "mermaid",
+-            Self::Dot => "dot",
+-            Self::Ascii => "ascii",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Where an inventory of real infrastructure comes from.
+ #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+ pub(crate) enum InventorySource {
+     /// CASIMIR's own inventory schema.
+     Native,

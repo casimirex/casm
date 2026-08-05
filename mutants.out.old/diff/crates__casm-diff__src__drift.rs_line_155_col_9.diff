@@ -1,0 +1,27 @@
+--- crates/casm-diff/src/drift.rs
++++ delete match arm "aws_db_instance" | "aws_rds_cluster" | "aws_dynamodb_table" | "google_sql_database_instance" | "google_spanner_database" | "azurerm_postgresql_server" | "azurerm_cosmosdb_account" in terraform_type
+@@ -147,23 +147,17 @@
+ /// Maps a Terraform resource type onto a CASIMIR node type.
+ ///
+ /// Deliberately incomplete. An unmapped type yields `None`, which suppresses type-mismatch
+ /// reporting for that resource — CASIMIR would rather say nothing than invent a
+ /// disagreement from a type it does not understand.
+ #[must_use]
+ pub fn terraform_type(provider_type: &str) -> Option<NodeType> {
+     match provider_type {
+-        "aws_db_instance"
+-        | "aws_rds_cluster"
+-        | "aws_dynamodb_table"
+-        | "google_sql_database_instance"
+-        | "google_spanner_database"
+-        | "azurerm_postgresql_server"
+-        | "azurerm_cosmosdb_account" => Some(NodeType::Database),
++         /* ~ changed by cargo-mutants ~ */
+ 
+         "aws_s3_bucket"
+         | "aws_efs_file_system"
+         | "google_storage_bucket"
+         | "azurerm_storage_account" => Some(NodeType::Storage),
+ 
+         "aws_sqs_queue"
+         | "aws_sns_topic"

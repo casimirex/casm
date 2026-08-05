@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace != with == in resolve_role
+@@ -315,17 +315,17 @@
+         // The architecture's own invariant guarantees a bound id resolves.
+         let Some(node) = architecture.node(id) else {
+             return Err(Unmet::NoCandidate {
+                 role: role.as_str().to_owned(),
+                 node_type: requirement.node_type().to_string(),
+             });
+         };
+ 
+-        if node.node_type() != requirement.node_type() {
++        if node.node_type() == /* ~ changed by cargo-mutants ~ */ requirement.node_type() {
+             return Err(Unmet::WrongType {
+                 role: role.as_str().to_owned(),
+                 node: node.name().as_str().to_owned(),
+                 expected: requirement.node_type().to_string(),
+                 found: node.node_type().to_string(),
+             });
+         }
+         return Ok(node);

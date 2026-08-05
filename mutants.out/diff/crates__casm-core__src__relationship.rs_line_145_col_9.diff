@@ -1,0 +1,22 @@
+--- crates/casm-core/src/relationship.rs
++++ replace RelationshipConfig::protocol -> Self with Default::default()
+@@ -137,18 +137,17 @@
+     pub const fn relationship_type(mut self, relationship_type: RelationshipType) -> Self {
+         self.relationship_type = Some(relationship_type);
+         self
+     }
+ 
+     /// Sets the wire protocol carrying this relationship.
+     #[must_use]
+     pub fn protocol(mut self, protocol: Protocol) -> Self {
+-        self.protocol = Some(protocol);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Sets a human-readable description.
+     #[must_use]
+     pub fn description(mut self, description: impl Into<String>) -> Self {
+         self.description = Some(description.into());
+         self
+     }

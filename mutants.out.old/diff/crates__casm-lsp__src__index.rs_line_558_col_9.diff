@@ -1,0 +1,50 @@
+--- crates/casm-lsp/src/index.rs
++++ replace Builder::record_symbol with ()
+@@ -550,46 +550,17 @@
+             }
+         }
+ 
+         block_of_this_line
+     }
+ 
+     /// Records a symbol for the line, if it carries one.
+     fn record_symbol(&mut self, info: &LineInfo) {
+-        let (Some(key), Some(value), Some(span)) =
+-            (info.key.as_deref(), info.value.clone(), info.value_span)
+-        else {
+-            return;
+-        };
+-
+-        let kind = match (info.section, info.block, key) {
+-            (Section::Nodes, Block::None, "name") => SymbolKind::NodeDefinition,
+-            (Section::Nodes, Block::None, "type") => SymbolKind::NodeTypeValue,
+-            (Section::Relationships, Block::None, "type") => SymbolKind::RelationshipTypeValue,
+-            (Section::Relationships, Block::None, "source") => {
+-                SymbolKind::NodeReference(Endpoint::Source)
+-            }
+-            (Section::Relationships, Block::None, "target") => {
+-                SymbolKind::NodeReference(Endpoint::Target)
+-            }
+-            (Section::Patterns, Block::None, "pattern") => SymbolKind::PatternReference,
+-            // Every key inside `bind:` is a role name, so the *value* is the node
+-            // reference regardless of what the key is called.
+-            (Section::Patterns, Block::Bindings, _) => SymbolKind::BindingTarget,
+-            (_, Block::Controls, "type") => SymbolKind::ControlTypeValue,
+-            (_, _, "protocol") => SymbolKind::ProtocolValue,
+-            _ => return,
+-        };
+-
+-        self.symbols.push(Symbol {
+-            kind,
+-            text: value,
+-            span,
+-        });
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Records or extends a node declaration.
+     fn record_node(&mut self, info: &LineInfo) {
+         if info.section != Section::Nodes {
+             return;
+         }
+ 

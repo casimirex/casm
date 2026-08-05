@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/hover.rs
++++ delete ! in hover
+@@ -51,17 +51,17 @@
+             markdown: describe_symbol(index, architecture, patterns, symbol),
+             span: symbol.span,
+         });
+     }
+ 
+     // Not on a value — perhaps on the key that introduces it.
+     let line = index.line(position.line)?;
+     let span = line.key_span?;
+-    if !span.contains(position) {
++    if  /* ~ changed by cargo-mutants ~ */span.contains(position) {
+         return None;
+     }
+ 
+     let key = line.key.as_deref()?;
+     let term = find(key_table(line.section, line.block), key)?;
+     Some(Hover {
+         markdown: term.to_markdown(),
+         span,

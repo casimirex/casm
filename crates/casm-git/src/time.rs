@@ -138,6 +138,61 @@ mod tests {
     }
 
     #[test]
+    fn dates_before_the_algorithms_own_epoch_still_convert() {
+        // `civil_from_days` shifts the epoch to 0000-03-01 and takes a different branch
+        // when the shifted count goes negative. Nothing exercised it, so replacing that
+        // branch's `-` with `+` or `/` survived the mutation sweep.
+        //
+        // Not circular: 0000-03-01 is where the shift puts zero by construction, and days
+        // either side of it must be consecutive whatever the arithmetic does.
+        let boundary = -719_468_i64 * 86_400;
+
+        assert_eq!(DateTime::from_unix(boundary).to_date(), "0000-03-01");
+        assert_eq!(
+            DateTime::from_unix(boundary - 86_400).to_date(),
+            "0000-02-29"
+        );
+        assert_eq!(
+            DateTime::from_unix(boundary - 2 * 86_400).to_date(),
+            "0000-02-28"
+        );
+        assert_eq!(
+            DateTime::from_unix(boundary + 86_400).to_date(),
+            "0000-03-02"
+        );
+    }
+
+    #[test]
+    fn dates_before_1970_convert_correctly() {
+        // Verified against `date -u -d @<seconds>`.
+        assert_eq!(DateTime::from_unix(-1).to_date(), "1969-12-31");
+        assert_eq!(DateTime::from_unix(-2_208_988_800).to_date(), "1900-01-01");
+        assert_eq!(DateTime::from_unix(-1).to_datetime(), "1969-12-31 23:59:59");
+    }
+
+    #[test]
+    fn consecutive_days_are_consecutive_across_the_era_boundary() {
+        // A discontinuity here is exactly what a wrong era calculation produces, and it
+        // would be invisible in any single-value assertion.
+        let boundary = -719_468_i64 * 86_400;
+        let dates: Vec<String> = (-3..=3)
+            .map(|offset| DateTime::from_unix(boundary + offset * 86_400).to_date())
+            .collect();
+
+        let mut sorted = dates.clone();
+        sorted.sort();
+        assert_eq!(dates, sorted, "dates must increase with time: {dates:?}");
+        assert_eq!(
+            dates
+                .iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .len(),
+            dates.len(),
+            "each day must be distinct: {dates:?}"
+        );
+    }
+
+    #[test]
     fn known_timestamps_convert_correctly() {
         // Verified against `date -u -d @<seconds>`.
         let cases = [

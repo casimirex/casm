@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/graph.rs
++++ replace DependencyGraph::is_acyclic -> bool with true
+@@ -86,17 +86,17 @@
+ 
+         cycles.sort();
+         cycles
+     }
+ 
+     /// Returns `true` if the blocking dependency structure is acyclic.
+     #[must_use]
+     pub fn is_acyclic(&self) -> bool {
+-        self.cycles().is_empty()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Computes the highest total latency budget along any blocking path.
+     ///
+     /// This is the architecture's *critical path*: the arithmetic floor on end-to-end
+     /// latency, assuming every hop consumes its whole budget. Comparing it against a
+     /// target SLO answers "is this SLO achievable at all?" before anything is built.
+     ///

@@ -1,0 +1,47 @@
+--- crates/casm-lsp/src/diagnostics.rs
++++ replace from_parse_error -> Diagnostic with Default::default()
+@@ -135,43 +135,17 @@
+     Analysis {
+         architecture: Some(architecture),
+         diagnostics,
+     }
+ }
+ 
+ /// Converts a parse failure into a located diagnostic.
+ fn from_parse_error(error: &casm_parser::ParseError, index: &DocumentIndex) -> Diagnostic {
+-    let span = match error.location() {
+-        // The parser reports 1-indexed positions; LSP is 0-indexed.
+-        Some(location) => {
+-            let line = u32::try_from(location.line).unwrap_or(1).saturating_sub(1);
+-            let column = u32::try_from(location.column)
+-                .unwrap_or(1)
+-                .saturating_sub(1);
+-            let width = index
+-                .raw_line(line)
+-                .map_or(column.saturating_add(1), crate::text::utf16_len);
+-            Span::new(line, column, width.max(column.saturating_add(1)))
+-        }
+-        None => unresolved_reference_span(error, index),
+-    };
+-
+-    let message = match error.suggestion() {
+-        Some(hint) => format!("{error}\n\n{hint}"),
+-        None => error.to_string(),
+-    };
+-
+-    Diagnostic {
+-        span,
+-        severity: Severity::Error,
+-        code: "syntax".to_owned(),
+-        message,
+-        related: Vec::new(),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Locates an unresolved-reference error on the endpoint that failed.
+ ///
+ /// These carry no line or column — the parser resolves references after positions are
+ /// gone — but the offending text is known, so the index can find it.
+ fn unresolved_reference_span(error: &casm_parser::ParseError, index: &DocumentIndex) -> Span {
+     if let casm_parser::ParseError::UnresolvedReference { reference, .. } = error {

@@ -1,0 +1,31 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace Dot::shape -> &'static str with "xyzzy"
+@@ -194,27 +194,17 @@
+ }
+ 
+ /// The Graphviz DOT backend: for complex layouts and downstream tooling.
+ pub struct Dot;
+ 
+ impl Dot {
+     /// Maps a node type onto a Graphviz shape.
+     fn shape(node_type: NodeType) -> &'static str {
+-        match node_type {
+-            NodeType::Database | NodeType::Storage => "cylinder",
+-            NodeType::Queue => "box3d",
+-            NodeType::Cache => "parallelogram",
+-            NodeType::Gateway => "hexagon",
+-            NodeType::ExternalSystem => "ellipse",
+-            NodeType::Human => "circle",
+-            NodeType::Boundary => "diamond",
+-            NodeType::Legacy => "note",
+-            NodeType::Service => "box",
+-        }
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Maps a relationship type onto a Graphviz edge style.
+     ///
+     /// Graphviz offers fewer distinct line styles than CASIMIR has relationship types,
+     /// so `composed` and `quantum-entangled` share `bold`. They remain distinguishable
+     /// by the edge label, which always carries the exact type.
+     fn style(relationship_type: RelationshipType) -> &'static str {

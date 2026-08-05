@@ -1,0 +1,56 @@
+--- crates/casm-core/src/conformance.rs
++++ replace check_node with ()
+@@ -350,52 +350,17 @@
+                 .map(|node| node.name().as_str().to_owned())
+                 .collect(),
+         }),
+     }
+ }
+ 
+ /// Checks one node against the requirement it fills.
+ fn check_node(requirement: &Requirement, node: &Node, unmet: &mut Vec<Unmet>) {
+-    let role = requirement.role().as_str().to_owned();
+-    let name = node.name().as_str().to_owned();
+-
+-    let declared = node.controls_of_type(ControlType::Security);
+-    if declared < requirement.min_security_controls() {
+-        unmet.push(Unmet::TooFewControls {
+-            role: role.clone(),
+-            node: name.clone(),
+-            required: requirement.min_security_controls(),
+-            declared,
+-        });
+-    }
+-
+-    for control_type in requirement.required_control_types() {
+-        if node.controls_of_type(*control_type) == 0 {
+-            unmet.push(Unmet::MissingControlType {
+-                role: role.clone(),
+-                node: name.clone(),
+-                control_type: control_type.label().to_owned(),
+-            });
+-        }
+-    }
+-
+-    for protocol in requirement.required_protocols() {
+-        let speaks = node
+-            .interfaces()
+-            .iter()
+-            .any(|interface| interface.protocol() == protocol);
+-        if !speaks {
+-            unmet.push(Unmet::MissingProtocol {
+-                role: role.clone(),
+-                node: name.clone(),
+-                protocol: protocol.label().to_owned(),
+-            });
+-        }
+-    }
++    () /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Checks the relationships the pattern requires between filled roles.
+ ///
+ /// Roles that could not be filled are skipped: reporting "no relationship from an
+ /// unfilled role" would be a consequence of a failure already reported, and the second
+ /// message tells the author nothing the first did not.
+ fn check_relationships(

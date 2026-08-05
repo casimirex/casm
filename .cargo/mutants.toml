@@ -1,0 +1,40 @@
+# Configuration for `cargo mutants`, which finds tests that pass without testing.
+#
+# Run with:  cargo mutants -j 4
+#
+# # Why this exists
+#
+# Four bugs in one day were checks that could not fail: a benchmark assertion inside a
+# `harness = false` target that `cargo test` never ran; an OTLP check reading an HTTP 200
+# that an ignoring receiver returns for any payload; an SBOM step searching for a filename
+# that is never written, behind `|| true`; and a checksum manifest that could ship partial
+# in silence. Each was found by hand, and only because somebody looked.
+#
+# Mutation testing finds that class mechanically: it changes the code and reports which
+# changes no test objects to. The first sweep over this workspace tested 1,700 mutants and
+# 177 survived.
+#
+# # What is deliberately not mutated
+#
+# Nothing here is excluded to flatter the number. Each exclusion is a place where a
+# surviving mutant would *not* indicate a missing test.
+
+exclude_re = [
+    # Functions whose entire job is to print prose. A surviving mutant here means "no test
+    # asserts on the exact wording", which is true and intended: `cli.rs` states that a
+    # pipeline scraping human prose breaks the first time a message is reworded, so the
+    # machine-readable output is what the tests pin. Asserting on the prose would make
+    # every reword a test failure and buy nothing.
+    "replace print_[a-z_]+ with \\(\\)",
+    "replace render_[a-z_]+ with \\(\\)",
+
+    # `>` and `>=` are interchangeable when folding a maximum — the mutant produces a
+    # redundant assignment, never a different answer. Unkillable by construction, and
+    # chasing it would mean contorting a test around a distinction that does not exist.
+    "replace > with >= in check",
+]
+
+# A generous ceiling. The suite runs in seconds; anything approaching this is a mutant that
+# introduced a hang, which is itself worth knowing about.
+timeout_multiplier = 5.0
+minimum_test_timeout = 60

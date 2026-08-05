@@ -1,0 +1,27 @@
+--- crates/casm-lsp/src/completion.rs
++++ replace Completion::value -> Self with Default::default()
+@@ -98,23 +98,17 @@
+             detail: term.detail.to_owned(),
+             documentation: term.documentation.to_owned(),
+             kind: ItemKind::Field,
+         }
+     }
+ 
+     /// Builds an enum value suggestion.
+     fn value(term: &Term) -> Self {
+-        Self {
+-            label: term.label.to_owned(),
+-            insert_text: term.label.to_owned(),
+-            detail: term.detail.to_owned(),
+-            documentation: term.documentation.to_owned(),
+-            kind: ItemKind::Value,
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Builds a suggestion referencing a node the document declares.
+     fn reference(name: &str, node_type: Option<&str>) -> Self {
+         let detail = node_type.unwrap_or("node").to_owned();
+         Self {
+             label: name.to_owned(),
+             insert_text: name.to_owned(),

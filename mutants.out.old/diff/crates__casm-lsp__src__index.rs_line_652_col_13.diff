@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm Some("source") in Builder::record_relationship
+@@ -644,20 +644,17 @@
+         // Compared on *field* indent, not raw indent: `  - source: api` sits at indent 2
+         // but its key is a field at indent 4, exactly like the `    target: db` below it.
+         if info.field_indent() < current.field_indent {
+             return;
+         }
+ 
+         current.last_line = info.number;
+         match info.key.as_deref() {
+-            Some("source") => {
+-                current.source.clone_from(&info.value);
+-                current.source_span = info.value_span;
+-            }
++             /* ~ changed by cargo-mutants ~ */
+             Some("target") => {
+                 current.target.clone_from(&info.value);
+                 current.target_span = info.value_span;
+             }
+             Some("type") => current.kind.clone_from(&info.value),
+             _ => {}
+         }
+     }

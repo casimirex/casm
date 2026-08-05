@@ -1,0 +1,21 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace <impl Renderer for Dot>::id -> &'static str with "xyzzy"
+@@ -224,17 +224,17 @@
+             RelationshipType::Composed | RelationshipType::QuantumEntangled => "bold",
+             RelationshipType::DeployedOn => "dotted",
+         }
+     }
+ }
+ 
+ impl Renderer for Dot {
+     fn id(&self) -> &'static str {
+-        "dot"
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn extension(&self) -> &'static str {
+         "dot"
+     }
+ 
+     fn render(&self, architecture: &Architecture) -> String {
+         let ids = diagram_ids(architecture);

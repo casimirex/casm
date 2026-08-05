@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::name -> &Name with Box::leak(Box::new(Default::default()))
+@@ -284,17 +284,17 @@
+         self.description = Some(description.into());
+         self
+     }
+ 
+     /// The interface's validated name.
+     #[inline]
+     #[must_use]
+     pub const fn name(&self) -> &Name {
+-        &self.name
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The wire protocol.
+     #[inline]
+     #[must_use]
+     pub const fn protocol(&self) -> &Protocol {
+         &self.protocol
+     }

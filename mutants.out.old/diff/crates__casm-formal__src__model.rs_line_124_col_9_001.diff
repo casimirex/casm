@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/model.rs
++++ replace FormalModel::node_names -> Vec<&str> with vec![""]
+@@ -116,17 +116,17 @@
+             asynchronous,
+             closure,
+         }
+     }
+ 
+     /// The names of every node, sorted.
+     #[must_use]
+     pub fn node_names(&self) -> Vec<&str> {
+-        self.nodes.iter().map(|node| node.name.as_str()).collect()
++        vec![""] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The names of nodes outside the control boundary, sorted.
+     #[must_use]
+     pub fn external_names(&self) -> Vec<&str> {
+         self.nodes
+             .iter()
+             .filter(|node| node.external)

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace <impl From<SchemaHash> for String>::from -> Self with Default::default()
+@@ -198,17 +198,17 @@
+ 
+     fn try_from(value: String) -> Result<Self, Self::Error> {
+         Self::parse_hex(&value)
+     }
+ }
+ 
+ impl From<SchemaHash> for String {
+     fn from(value: SchemaHash) -> Self {
+-        value.to_hex()
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A named, versioned protocol contract exposed by a [`crate::Node`].
+ ///
+ /// # Examples
+ ///
+ /// ```

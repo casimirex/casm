@@ -1,0 +1,50 @@
+--- crates/casm-wasm/src/api.rs
++++ replace Library::read -> Self with Default::default()
+@@ -194,46 +194,17 @@
+ }
+ 
+ impl Library {
+     /// Reads a JSON array of pattern documents.
+     ///
+     /// An empty or blank string is an empty library, not an error: it is what a caller
+     /// with no patterns passes, and what [`validate`] passes on their behalf.
+     fn read(supplied: &str) -> Self {
+-        if supplied.trim().is_empty() {
+-            return Self {
+-                patterns: Vec::new(),
+-                errors: Vec::new(),
+-            };
+-        }
+-
+-        let sources: Vec<String> = match serde_json::from_str(supplied) {
+-            Ok(sources) => sources,
+-            Err(error) => {
+-                return Self {
+-                    patterns: Vec::new(),
+-                    errors: vec![format!(
+-                        "the pattern library must be a JSON array of pattern documents: {error}"
+-                    )],
+-                };
+-            }
+-        };
+-
+-        let mut patterns = Vec::new();
+-        let mut errors = Vec::new();
+-        for (position, source) in sources.iter().enumerate() {
+-            let path = format!("<pattern {position}>");
+-            match casm_parser::library::parse_pattern_str(source, Path::new(&path)) {
+-                Ok(pattern) => patterns.push(pattern),
+-                Err(error) => errors.push(format!("pattern {position}: {}", error.render())),
+-            }
+-        }
+-
+-        Self { patterns, errors }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A rendered diagram, or the reason there is none.
+ #[derive(Debug, Serialize)]
+ #[serde(rename_all = "camelCase")]
+ pub struct RenderResult {
+     /// `true` if a diagram was produced.

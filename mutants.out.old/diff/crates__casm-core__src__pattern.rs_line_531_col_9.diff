@@ -1,0 +1,22 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::verify_invariants -> Result<(), PatternError> with Ok(())
+@@ -523,18 +523,17 @@
+     /// The constructors already guarantee these, so this is a defence-in-depth check for
+     /// patterns that arrived through `serde`, which populates fields directly. The same
+     /// reasoning as [`crate::Architecture::verify_invariants`].
+     ///
+     /// # Errors
+     ///
+     /// Returns the first violated invariant.
+     pub fn verify_invariants(&self) -> Result<(), PatternError> {
+-        PatternConfig::reject_duplicate_roles(&self.requirements)?;
+-        PatternConfig::reject_unknown_roles(&self.requirements, &self.relationships)
++        Ok(()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Pattern {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(&self.reference())
+     }
+ }

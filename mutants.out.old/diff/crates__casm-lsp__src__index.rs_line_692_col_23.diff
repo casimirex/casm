@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace == with != in Builder::record_claim
+@@ -684,17 +684,17 @@
+             return;
+         }
+ 
+         current.last_line = info.number;
+         if info.block == Block::None && info.key.as_deref() == Some("pattern") {
+             current.reference.clone_from(&info.value);
+             current.reference_span = info.value_span;
+         }
+-        if info.block == Block::Bindings
++        if info.block != /* ~ changed by cargo-mutants ~ */ Block::Bindings
+             && let (Some(role), Some(span)) = (info.key.clone(), info.value_span)
+         {
+             current.bindings.push((role, span));
+         }
+     }
+ 
+     /// Produces the finished index.
+     fn finish(self) -> DocumentIndex {

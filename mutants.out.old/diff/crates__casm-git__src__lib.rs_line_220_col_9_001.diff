@@ -1,0 +1,63 @@
+--- crates/casm-git/src/lib.rs
++++ replace Repository::semantic_history -> Result<Vec<Revision>> with Ok(vec![Default::default()])
+@@ -212,59 +212,17 @@
+     /// Commits that touched the file without changing its meaning are omitted, as are
+     /// commits where the file did not exist or did not parse.
+     ///
+     /// # Errors
+     ///
+     /// - [`GitError::NoCommits`] if the repository has no history.
+     /// - [`GitError::ObjectDatabase`] if the object database cannot be read.
+     pub fn semantic_history(&self, path: &Path, options: HistoryOptions) -> Result<Vec<Revision>> {
+-        let relative = self.relative_path(path);
+-        let head = self.inner.head_commit().map_err(|_| GitError::NoCommits)?;
+-
+-        let walk = head
+-            .ancestors()
+-            .all()
+-            .map_err(|error| GitError::ObjectDatabase {
+-                message: error.to_string(),
+-            })?;
+-
+-        let mut revisions = Vec::new();
+-        // The sliding window is what bounds memory: two snapshots, never the whole history.
+-        let mut newer: Option<Snapshot> = None;
+-        let mut examined = 0_usize;
+-
+-        for step in walk {
+-            if examined >= options.max_commits || revisions.len() >= options.max_revisions {
+-                break;
+-            }
+-            examined = examined.saturating_add(1);
+-
+-            let Ok(info) = step else { continue };
+-            let Some(current) = self.snapshot(info.id, &relative) else {
+-                continue;
+-            };
+-
+-            if let Some(previous) = newer.take()
+-                && let Some(revision) = previous.into_revision(Some(&current))
+-            {
+-                revisions.push(revision);
+-            }
+-            newer = Some(current);
+-        }
+-
+-        // The oldest snapshot we hold has no parent in view, so it introduced the file.
+-        if revisions.len() < options.max_revisions
+-            && let Some(oldest) = newer
+-            && let Some(revision) = oldest.into_revision(None)
+-        {
+-            revisions.push(revision);
+-        }
+-
+-        Ok(revisions)
++        Ok(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns the commits at which a single node's meaning changed, newest first.
+     ///
+     /// # Errors
+     ///
+     /// As [`Repository::semantic_history`].
+     pub fn blame_node(

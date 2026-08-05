@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace ConformanceReport::mechanical -> impl Iterator<Item =&Unmet> with ::std::iter::once(Box::leak(Box::new(Default::default())))
+@@ -252,17 +252,17 @@
+     #[inline]
+     #[must_use]
+     pub fn conforms(&self) -> bool {
+         self.unmet.is_empty()
+     }
+ 
+     /// The unmet requirements a tool could fix by adding to the architecture.
+     pub fn mechanical(&self) -> impl Iterator<Item = &Unmet> {
+-        self.unmet.iter().filter(|unmet| unmet.is_mechanical())
++        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Checks `architecture` against `pattern`, honouring the bindings in `claim`.
+ ///
+ /// Always succeeds: the result describes the architecture, and an architecture that
+ /// matches nothing at all produces a report full of [`Unmet`] rather than an error.
+ #[must_use]

@@ -1,0 +1,77 @@
+--- crates/casm-core/src/conformance.rs
++++ replace Unmet::message -> String with String::new()
+@@ -130,73 +130,17 @@
+         relationship_type: String,
+     },
+ }
+ 
+ impl Unmet {
+     /// A one-line statement of what is wrong.
+     #[must_use]
+     pub fn message(&self) -> String {
+-        match self {
+-            Self::UnknownRole { role } => {
+-                format!("binds role '{role}', which the pattern does not require")
+-            }
+-            Self::NoCandidate { role, node_type } => {
+-                format!("no node of type '{node_type}' can fill role '{role}'")
+-            }
+-            Self::Ambiguous {
+-                role,
+-                node_type,
+-                candidates,
+-            } => format!(
+-                "role '{role}' requires a '{node_type}' and {} could fill it: {}",
+-                candidates.len(),
+-                candidates.join(", ")
+-            ),
+-            Self::WrongType {
+-                role,
+-                node,
+-                expected,
+-                found,
+-            } => format!("role '{role}' requires a '{expected}' but '{node}' is a '{found}'"),
+-            Self::TooFewControls {
+-                role,
+-                node,
+-                required,
+-                declared,
+-            } => format!(
+-                "role '{role}' requires {required} security control(s) but '{node}' \
+-                 declares {declared}"
+-            ),
+-            Self::MissingControlType {
+-                role,
+-                node,
+-                control_type,
+-            } => format!(
+-                "role '{role}' requires a '{control_type}' control but '{node}' declares none"
+-            ),
+-            Self::MissingProtocol {
+-                role,
+-                node,
+-                protocol,
+-            } => format!(
+-                "role '{role}' requires an interface speaking '{protocol}' but '{node}' \
+-                 exposes none"
+-            ),
+-            Self::MissingRelationship {
+-                source_role,
+-                source,
+-                target_role,
+-                target,
+-                relationship_type,
+-            } => format!(
+-                "the pattern requires a '{relationship_type}' relationship from \
+-                 '{source}' ({source_role}) to '{target}' ({target_role}), and there is none"
+-            ),
+-        }
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Whether this failure can be fixed by adding to the architecture, rather than by
+     /// a human deciding something.
+     ///
+     /// `casm evolve` uses this to separate "here is what to add" from "here is what only
+     /// you can answer". A missing control is the first kind; an ambiguous role is the
+     /// second, and no tool should resolve it by picking.

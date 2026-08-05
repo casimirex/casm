@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace <impl AsRef<str> for Name>::as_ref -> &str with ""
+@@ -108,17 +108,17 @@
+ impl fmt::Display for Name {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(&self.0)
+     }
+ }
+ 
+ impl AsRef<str> for Name {
+     fn as_ref(&self) -> &str {
+-        &self.0
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl TryFrom<String> for Name {
+     type Error = NameError;
+ 
+     fn try_from(value: String) -> Result<Self, Self::Error> {
+         Self::new(value)

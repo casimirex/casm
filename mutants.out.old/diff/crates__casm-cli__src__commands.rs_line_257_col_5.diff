@@ -1,0 +1,77 @@
+--- crates/casm-cli/src/commands.rs
++++ replace check -> CommandResult with Default::default()
+@@ -249,73 +249,17 @@
+ 
+ /// Validates every architecture file found under a directory.
+ pub(crate) fn check(
+     directory: &Path,
+     strict: bool,
+     patterns: Option<&Path>,
+     recorder: &mut Recorder,
+ ) -> CommandResult {
+-    let files = discover(directory)?;
+-
+-    if files.is_empty() {
+-        println!(
+-            "no architecture files found under '{}'",
+-            directory.display()
+-        );
+-        return Ok(ExitCode::Success);
+-    }
+-
+-    let validator = Validator::new().with_patterns(load_patterns(patterns)?);
+-    let mut worst = ExitCode::Success;
+-    let mut checked = 0_usize;
+-
+-    for file in &files {
+-        // A span per file: this is the sweep where a slow document is worth finding, and
+-        // an aggregate over the whole directory would hide it.
+-        let span = recorder
+-            .start("check-file")
+-            .with_attribute("casm.file", file.display().to_string());
+-        let parsed = parse_file(file);
+-        recorder.finish(
+-            span,
+-            if parsed.is_ok() {
+-                Outcome::Ok
+-            } else {
+-                Outcome::Error
+-            },
+-        );
+-
+-        match parsed {
+-            Ok(architecture) => {
+-                let report = validator.validate(&architecture);
+-                checked = checked.saturating_add(1);
+-                recorder.count("casm.documents.checked", 1);
+-                println!("{}: {}", file.display(), report.summary());
+-
+-                for diagnostic in &report.diagnostics {
+-                    println!("  {}", diagnostic.render().replace('\n', "\n  "));
+-                }
+-
+-                let code = exit_code_for(&report, strict);
+-                if code.code() > worst.code() {
+-                    worst = code;
+-                }
+-            }
+-            Err(error) => {
+-                // A file that fails to parse is reported and the sweep continues: a
+-                // single broken file must not hide findings in every other one.
+-                println!("{}: FAILED TO PARSE\n  {}", file.display(), error.render());
+-                worst = ExitCode::Failure;
+-            }
+-        }
+-    }
+-
+-    println!("\nchecked {checked} of {} file(s)", files.len());
+-    Ok(worst)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reformats or converts an architecture file.
+ pub(crate) fn fmt(file: &Path, format: DocumentFormat, write: bool) -> CommandResult {
+     let architecture = parse_file(file)?;
+     let rendered = emit_str(&architecture, format.as_parser_format())?;
+ 
+     if !write {

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace < with <= in check_node
+@@ -354,17 +354,17 @@
+ }
+ 
+ /// Checks one node against the requirement it fills.
+ fn check_node(requirement: &Requirement, node: &Node, unmet: &mut Vec<Unmet>) {
+     let role = requirement.role().as_str().to_owned();
+     let name = node.name().as_str().to_owned();
+ 
+     let declared = node.controls_of_type(ControlType::Security);
+-    if declared < requirement.min_security_controls() {
++    if declared <= /* ~ changed by cargo-mutants ~ */ requirement.min_security_controls() {
+         unmet.push(Unmet::TooFewControls {
+             role: role.clone(),
+             node: name.clone(),
+             required: requirement.min_security_controls(),
+             declared,
+         });
+     }
+ 

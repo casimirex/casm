@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::relationships -> impl Iterator<Item =&Relationship> with ::std::iter::empty()
+@@ -263,17 +263,17 @@
+ 
+     /// Iterates the nodes in insertion order.
+     pub fn nodes(&self) -> impl Iterator<Item = &Node> {
+         self.nodes.values()
+     }
+ 
+     /// Iterates the relationships in insertion order.
+     pub fn relationships(&self) -> impl Iterator<Item = &Relationship> {
+-        self.relationships.iter()
++        ::std::iter::empty() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Iterates the pattern-conformance claims, in declaration order.
+     pub fn conformance(&self) -> impl Iterator<Item = &Conformance> {
+         self.conformance.iter()
+     }
+ 
+     /// How many patterns this architecture claims to conform to.

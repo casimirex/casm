@@ -1,0 +1,22 @@
+--- crates/casm-git/src/lib.rs
++++ replace HistoryOptions::with_max_commits -> Self with Default::default()
+@@ -73,18 +73,17 @@
+     pub const fn with_max_revisions(mut self, limit: usize) -> Self {
+         self.max_revisions = limit;
+         self
+     }
+ 
+     /// Options with the given commit-walk ceiling.
+     #[must_use]
+     pub const fn with_max_commits(mut self, limit: usize) -> Self {
+-        self.max_commits = limit;
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A commit at which the architecture's meaning changed.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+ #[serde(rename_all = "kebab-case")]
+ pub struct Revision {
+     /// The full commit hash.

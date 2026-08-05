@@ -1,0 +1,26 @@
+--- crates/casm-cli/src/commands.rs
++++ replace load_patterns -> Result<Vec<Pattern>, CommandError> with Ok(vec![Default::default()])
+@@ -494,22 +494,17 @@
+     Ok(ExitCode::Success)
+ }
+ 
+ /// Loads a pattern library, or none if the caller supplied no directory.
+ ///
+ /// A missing directory is an error rather than an empty library: an author who typed
+ /// `--patterns ptterns` should be told, not handed a silent all-clear.
+ fn load_patterns(directory: Option<&Path>) -> Result<Vec<Pattern>, CommandError> {
+-    let Some(directory) = directory else {
+-        return Ok(Vec::new());
+-    };
+-
+-    let library = Library::load(directory).map_err(|error| CommandError(error.render()))?;
+-    Ok(library.patterns().cloned().collect())
++    Ok(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reports what an architecture must change to conform to a pattern.
+ ///
+ /// Reports rather than rewrites. ADR-0012: a pattern is a shape, so migrating to a new
+ /// version is "here is what you do not yet satisfy" — a computation over two sets — and
+ /// not a three-way merge that could silently corrupt the file.
+ pub(crate) fn evolve(

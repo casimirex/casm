@@ -1,0 +1,56 @@
+--- crates/casm-wasm/src/api.rs
++++ replace drift -> String with String::new()
+@@ -540,52 +540,17 @@
+     pub error: Option<String>,
+ }
+ 
+ /// Compares a document against an inventory of real infrastructure.
+ ///
+ /// `inventory_kind` is `native` or `terraform`.
+ #[must_use]
+ pub fn drift(source: &str, inventory_json: &str, inventory_kind: &str) -> String {
+-    let failure = |error: String| {
+-        to_json(&DriftResult {
+-            ok: false,
+-            clean: false,
+-            summary: String::new(),
+-            drifts: Vec::new(),
+-            error: Some(error),
+-        })
+-    };
+-
+-    let architecture = match casm_parser::parse_str(source, Path::new(VIRTUAL_PATH)) {
+-        Ok(architecture) => architecture,
+-        Err(error) => return failure(error.render()),
+-    };
+-
+-    let inventory = match inventory_kind {
+-        "native" => Inventory::from_json(inventory_json),
+-        "terraform" => Inventory::from_terraform_state(inventory_json),
+-        other => Err(format!(
+-            "unknown inventory kind '{other}'; expected native or terraform"
+-        )),
+-    };
+-
+-    let inventory = match inventory {
+-        Ok(inventory) => inventory,
+-        Err(error) => return failure(error),
+-    };
+-
+-    let report = casm_diff::drift::detect(&architecture, &inventory);
+-    to_json(&DriftResult {
+-        ok: true,
+-        clean: report.is_clean(),
+-        summary: report.summary(),
+-        drifts: report.drifts.iter().map(ToString::to_string).collect(),
+-        error: None,
+-    })
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// What one conformance claim came to.
+ #[derive(Debug, Serialize)]
+ #[serde(rename_all = "camelCase")]
+ pub struct ClaimReport {
+     /// The `name@version` the document claims.
+     pub pattern: String,

@@ -1,0 +1,49 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace percent_decode -> String with "xyzzy".into()
+@@ -318,45 +318,17 @@
+ }
+ 
+ /// Decodes `%XX` escapes, leaving anything malformed exactly as it was found.
+ ///
+ /// Deliberately not a general URI decoder: `+` is not a space in a path, and a truncated
+ /// or non-hexadecimal escape is likelier to be a literal `%` in a filename than an error
+ /// worth refusing the workspace over.
+ fn percent_decode(text: &str) -> String {
+-    if !text.contains('%') {
+-        return text.to_owned();
+-    }
+-
+-    let bytes = text.as_bytes();
+-    let mut out: Vec<u8> = Vec::with_capacity(bytes.len());
+-    let mut index = 0_usize;
+-
+-    // Bounded by the input length: every arm advances `index`.
+-    while let Some(&byte) = bytes.get(index) {
+-        let decoded = if byte == b'%' {
+-            bytes
+-                .get(index.saturating_add(1)..index.saturating_add(3))
+-                .and_then(|pair| std::str::from_utf8(pair).ok())
+-                .and_then(|pair| u8::from_str_radix(pair, 16).ok())
+-        } else {
+-            None
+-        };
+-
+-        if let Some(value) = decoded {
+-            out.push(value);
+-            index = index.saturating_add(3);
+-        } else {
+-            out.push(byte);
+-            index = index.saturating_add(1);
+-        }
+-    }
+-
+-    String::from_utf8(out).unwrap_or_else(|_| text.to_owned())
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

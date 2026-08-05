@@ -1,0 +1,21 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace built_in -> Vec<Box<dyn Renderer>> with vec![]
+@@ -61,17 +61,17 @@
+     ///
+     /// Must be a pure function: the same architecture always yields the same bytes.
+     fn render(&self, architecture: &Architecture) -> String;
+ }
+ 
+ /// Returns every built-in backend.
+ #[must_use]
+ pub fn built_in() -> Vec<Box<dyn Renderer>> {
+-    vec![Box::new(Mermaid), Box::new(Dot), Box::new(Ascii)]
++    vec![] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Looks up a backend by its identifier.
+ #[must_use]
+ pub fn by_id(id: &str) -> Option<Box<dyn Renderer>> {
+     built_in().into_iter().find(|backend| backend.id() == id)
+ }
+ 

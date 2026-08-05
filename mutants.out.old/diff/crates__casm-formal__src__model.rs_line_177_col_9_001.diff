@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/model.rs
++++ replace FormalModel::is_empty -> bool with false
+@@ -169,17 +169,17 @@
+     #[must_use]
+     pub fn has_cycle(&self) -> bool {
+         self.closure.iter().any(|(source, target)| source == target)
+     }
+ 
+     /// Returns `true` if the model has nothing to check.
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+-        self.nodes.is_empty()
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl ModelNode {
+     /// Reduces one node.
+     fn from_node(node: &Node) -> Self {
+         Self {
+             name: node.name().as_str().to_owned(),

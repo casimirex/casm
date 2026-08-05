@@ -1,0 +1,49 @@
+--- crates/casm-lsp/src/index.rs
++++ replace split_key_value -> KeyValue<'_> with Default::default()
+@@ -718,45 +718,17 @@
+     value_range: Option<(usize, usize)>,
+ }
+ 
+ /// Splits `body` at its first `key:` separator.
+ ///
+ /// A colon only separates when followed by whitespace or end of line, which is YAML's own
+ /// rule. Without it, `description: see http://example.com` would split at the wrong colon.
+ fn split_key_value(body: &str) -> KeyValue<'_> {
+-    let Some(colon) = find_separator(body) else {
+-        return KeyValue::default();
+-    };
+-
+-    let key_raw = body.get(..colon).unwrap_or("");
+-    let key = key_raw.trim_end();
+-    let key_start = key_raw.len().saturating_sub(key_raw.trim_start().len());
+-
+-    let after = body.get(colon.saturating_add(1)..).unwrap_or("");
+-    let value_trimmed = after.trim();
+-
+-    let (value, value_range) = if value_trimmed.is_empty() {
+-        (None, None)
+-    } else {
+-        let offset = colon
+-            .saturating_add(1)
+-            .saturating_add(after.len().saturating_sub(after.trim_start().len()));
+-        (
+-            Some(value_trimmed),
+-            Some((offset, offset.saturating_add(value_trimmed.len()))),
+-        )
+-    };
+-
+-    KeyValue {
+-        key: (!key.is_empty()).then_some(key),
+-        key_range: (!key.is_empty()).then_some((key_start, key_start.saturating_add(key.len()))),
+-        value,
+-        value_range,
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Finds the byte offset of the `key: value` separator, if the line has one.
+ fn find_separator(body: &str) -> Option<usize> {
+     body.char_indices().find_map(|(offset, character)| {
+         if character != ':' {
+             return None;
+         }

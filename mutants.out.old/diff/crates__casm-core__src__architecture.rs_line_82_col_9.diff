@@ -1,0 +1,22 @@
+--- crates/casm-core/src/architecture.rs
++++ replace ArchitectureConfig::description -> Self with Default::default()
+@@ -74,18 +74,17 @@
+     pub fn version(mut self, version: impl Into<String>) -> Self {
+         self.version = Some(version.into());
+         self
+     }
+ 
+     /// Sets a human-readable description.
+     #[must_use]
+     pub fn description(mut self, description: impl Into<String>) -> Self {
+-        self.description = Some(description.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Stages a node for inclusion.
+     #[must_use]
+     pub fn node(mut self, node: Node) -> Self {
+         self.nodes.push(node);
+         self
+     }

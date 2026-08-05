@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::requirements -> &[Requirement] with Vec::leak(vec![Default::default()])
+@@ -467,17 +467,17 @@
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }
+ 
+     /// Every requirement, in declaration order.
+     #[inline]
+     #[must_use]
+     pub fn requirements(&self) -> &[Requirement] {
+-        &self.requirements
++        Vec::leak(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Every required relationship.
+     #[inline]
+     #[must_use]
+     pub fn relationships(&self) -> &[RequiredRelationship] {
+         &self.relationships
+     }

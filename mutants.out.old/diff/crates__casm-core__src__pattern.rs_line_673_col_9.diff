@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Conformance::bindings -> &BTreeMap<Name, NodeId> with Box::leak(Box::new(BTreeMap::new()))
+@@ -665,17 +665,17 @@
+     pub const fn pattern(&self) -> &PatternRef {
+         &self.pattern
+     }
+ 
+     /// Every explicit binding, in role order.
+     #[inline]
+     #[must_use]
+     pub const fn bindings(&self) -> &BTreeMap<Name, NodeId> {
+-        &self.bindings
++        Box::leak(Box::new(BTreeMap::new())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The node explicitly bound to `role`, if any.
+     #[must_use]
+     pub fn bound(&self, role: &Name) -> Option<NodeId> {
+         self.bindings.get(role).copied()
+     }
+ }

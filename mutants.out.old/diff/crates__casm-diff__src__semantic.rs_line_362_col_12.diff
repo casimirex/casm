@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ delete ! in Diff::diff_node_pair
+@@ -354,17 +354,17 @@
+             .map(|i| i.name().as_str().to_owned())
+             .collect();
+         let new_interfaces: Vec<String> = new
+             .interfaces()
+             .iter()
+             .map(|i| i.name().as_str().to_owned())
+             .collect();
+         let (added, removed) = difference(&old_interfaces, &new_interfaces);
+-        if !added.is_empty() || !removed.is_empty() {
++        if  /* ~ changed by cargo-mutants ~ */added.is_empty() || !removed.is_empty() {
+             changes.push(Change::NodeInterfacesChanged {
+                 name: name.clone(),
+                 added,
+                 removed,
+             });
+         }
+ 
+         let old_controls: Vec<String> = old

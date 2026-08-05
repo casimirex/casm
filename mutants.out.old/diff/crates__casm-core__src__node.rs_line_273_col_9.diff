@@ -1,0 +1,21 @@
+--- crates/casm-core/src/node.rs
++++ replace Node::builder -> NodeConfig with Default::default()
+@@ -265,17 +265,17 @@
+     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+     metadata: BTreeMap<String, String>,
+ }
+ 
+ impl Node {
+     /// Begins two-phase construction. Equivalent to [`NodeConfig::new`].
+     #[must_use]
+     pub fn builder() -> NodeConfig {
+-        NodeConfig::new()
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The node's time-ordered identifier.
+     #[inline]
+     #[must_use]
+     pub const fn id(&self) -> NodeId {
+         self.id
+     }

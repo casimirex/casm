@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace == with != in Relationship::connects
+@@ -312,17 +312,17 @@
+     #[must_use]
+     pub const fn latency_budget_ms(&self) -> Option<u64> {
+         self.latency_budget_ms
+     }
+ 
+     /// Returns `true` if this edge connects `a` and `b` in either direction.
+     #[must_use]
+     pub fn connects(&self, a: NodeId, b: NodeId) -> bool {
+-        (self.source == a && self.target == b) || (self.source == b && self.target == a)
++        (self.source != /* ~ changed by cargo-mutants ~ */ a && self.target == b) || (self.source == b && self.target == a)
+     }
+ 
+     /// The identity used for duplicate detection: source, target, and type.
+     ///
+     /// Two edges may legitimately connect the same pair of nodes with *different*
+     /// semantics (a sync call and an async event), so type is part of the key.
+     #[must_use]
+     pub fn identity(&self) -> (NodeId, NodeId, RelationshipType) {

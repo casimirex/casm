@@ -1,0 +1,21 @@
+--- crates/casm-git/src/lib.rs
++++ replace < with > in Repository::semantic_history
+@@ -247,17 +247,17 @@
+                 && let Some(revision) = previous.into_revision(Some(&current))
+             {
+                 revisions.push(revision);
+             }
+             newer = Some(current);
+         }
+ 
+         // The oldest snapshot we hold has no parent in view, so it introduced the file.
+-        if revisions.len() < options.max_revisions
++        if revisions.len() > /* ~ changed by cargo-mutants ~ */ options.max_revisions
+             && let Some(oldest) = newer
+             && let Some(revision) = oldest.into_revision(None)
+         {
+             revisions.push(revision);
+         }
+ 
+         Ok(revisions)
+     }

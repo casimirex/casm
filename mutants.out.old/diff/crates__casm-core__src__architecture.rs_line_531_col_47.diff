@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace == with != in Architecture::verify_invariants
+@@ -523,17 +523,17 @@
+     ///
+     /// Returns the first violated invariant.
+     pub fn verify_invariants(&self) -> Result<(), ArchitectureError> {
+         for (index, node) in self.nodes.values().enumerate() {
+             let name_taken = self
+                 .nodes
+                 .values()
+                 .take(index)
+-                .any(|earlier| earlier.name() == node.name());
++                .any(|earlier| earlier.name() != /* ~ changed by cargo-mutants ~ */ node.name());
+             if name_taken {
+                 return Err(ArchitectureError::DuplicateName {
+                     name: node.name().as_str().to_owned(),
+                     architecture: self.name.as_str().to_owned(),
+                 });
+             }
+         }
+ 

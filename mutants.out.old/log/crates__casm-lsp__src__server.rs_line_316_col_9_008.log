@@ -1,0 +1,157 @@
+
+*** crates/casm-lsp/src/server.rs:316:9: replace <impl LanguageServer for Backend>::references -> RpcResult<Option<Vec<Location>>> with RpcResult::new(Some(vec![Default::default()]))
+
+*** mutation diff:
+--- crates/casm-lsp/src/server.rs
++++ replace <impl LanguageServer for Backend>::references -> RpcResult<Option<Vec<Location>>> with RpcResult::new(Some(vec![Default::default()]))
+@@ -308,32 +308,17 @@
+                     })
+                 })
+             })
+             .flatten()
+         })
+     }
+ 
+     async fn references(&self, params: ReferenceParams) -> RpcResult<Option<Vec<Location>>> {
+-        let location = params.text_document_position;
+-        let uri = location.text_document.uri.clone();
+-        let position = convert_position(location.position);
+-        let include_declaration = params.context.include_declaration;
+-
+-        guarded("references", || {
+-            self.with_document(&uri, |document, _| {
+-                navigation::references(&document.index, position, include_declaration)
+-                    .into_iter()
+-                    .map(|span| Location {
+-                        uri: uri.clone(),
+-                        range: convert_span(span),
+-                    })
+-                    .collect::<Vec<_>>()
+-            })
+-        })
++        RpcResult::new(Some(vec![Default::default()])) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     async fn document_symbol(
+         &self,
+         params: DocumentSymbolParams,
+     ) -> RpcResult<Option<DocumentSymbolResponse>> {
+         let uri = params.text_document.uri;
+ 
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-lsp@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh proc-macro2 v1.0.107
+       Fresh cfg-if v1.0.4
+       Fresh quote v1.0.47
+       Fresh serde_core v1.0.229
+       Fresh libc v0.2.189
+       Fresh memchr v2.8.3
+       Fresh syn v3.0.3
+       Fresh generic-array v0.14.7
+       Fresh syn v2.0.119
+       Fresh equivalent v1.0.2
+       Fresh hashbrown v0.17.1
+       Fresh pin-project-lite v0.2.17
+       Fresh serde_derive v1.0.229
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh indexmap v2.14.0
+       Fresh futures-sink v0.3.33
+       Fresh serde v1.0.229
+       Fresh futures-core v0.3.33
+       Fresh itoa v1.0.18
+       Fresh getrandom v0.4.3
+       Fresh zmij v1.0.23
+       Fresh digest v0.10.7
+       Fresh thiserror-impl v2.0.19
+       Fresh keccak v0.1.6
+       Fresh futures-channel v0.3.33
+       Fresh sha3 v0.10.9
+       Fresh serde_json v1.0.151
+       Fresh thiserror v2.0.19
+       Fresh uuid v1.24.0
+       Fresh futures-macro v0.3.33
+       Fresh ref-cast-impl v1.0.26
+       Fresh semver v1.0.28
+       Fresh once_cell v1.21.4
+       Fresh slab v0.4.12
+       Fresh futures-io v0.3.33
+       Fresh futures-task v0.3.33
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh futures-util v0.3.33
+       Fresh ref-cast v1.0.26
+       Fresh tokio-macros v2.7.2
+       Fresh bytes v1.12.1
+       Fresh scopeguard v1.2.0
+       Fresh winnow v1.0.4
+       Fresh smallvec v1.15.2
+       Fresh foldhash v0.1.5
+       Fresh borrow-or-share v0.2.4
+       Fresh crossbeam-utils v0.8.22
+       Fresh hashbrown v0.15.5
+       Fresh lock_api v0.4.14
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh parking_lot_core v0.9.12
+       Fresh fluent-uri v0.4.1
+       Fresh tokio v1.53.1
+       Fresh tracing-core v0.1.36
+       Fresh tracing-attributes v0.1.31
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh percent-encoding v2.3.2
+       Fresh bitflags v2.13.1
+       Fresh ryu v1.0.23
+       Fresh hashbrown v0.14.5
+       Fresh unsafe-libyaml v0.2.11
+       Fresh winnow v0.7.15
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh sync_wrapper v1.0.2
+       Fresh tower-service v0.3.3
+       Fresh fixedbitset v0.5.7
+       Fresh tower-layer v0.3.3
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh dashmap v6.2.1
+       Fresh petgraph v0.8.3
+       Fresh serde_yaml_ng v0.10.0
+       Fresh ls-types v0.0.6
+       Fresh tracing v0.1.44
+       Fresh tower v0.5.3
+       Fresh httparse v1.10.1
+       Fresh tokio-util v0.7.19
+       Fresh futures v0.3.33
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-validator)
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-renderer)
+       Fresh tower-lsp-server v0.23.0
+       Dirty casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-lsp): couldn't read metadata for file `target/debug/deps/libcasm_lsp-80fea0669f4842be.rlib`
+   Compiling casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-lsp)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=47ec288518f74ead -C extra-filename=-6ce771c58ddaf742 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6a74160510f1ab21 -C extra-filename=-80fea0669f4842be --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rmeta --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rmeta --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rmeta --extern tokio=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rmeta --extern tower_lsp_server=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rmeta --verbose`
+error[E0599]: no variant, associated function, or constant named `new` found for enum `Result<T, E>` in the current scope
+   --> crates/casm-lsp/src/server.rs:316:20
+    |
+316 |         RpcResult::new(Some(vec![Default::default()])) /* ~ changed by cargo-mutants ~ */
+    |                    ^^^ variant, associated function, or constant not found in `Result<_, tower_lsp_server::jsonrpc::Error>`
+    |
+help: there is a method `ne` with a similar name
+    |
+316 -         RpcResult::new(Some(vec![Default::default()])) /* ~ changed by cargo-mutants ~ */
+316 +         RpcResult::ne(Some(vec![Default::default()])) /* ~ changed by cargo-mutants ~ */
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `casm-lsp` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=6a74160510f1ab21 -C extra-filename=-80fea0669f4842be --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rmeta --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rmeta --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rmeta --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rmeta --extern tokio=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rmeta --extern tower_lsp_server=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `casm-lsp` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_lsp --edition=2024 crates/casm-lsp/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --cfg 'feature="default"' --cfg 'feature="server"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "server"))' -C metadata=47ec288518f74ead -C extra-filename=-6ce771c58ddaf742 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-436faef67019be0b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-73e0cf500af32db2.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-ac502ef6e0f80926.rlib --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-c290c5037270b99c.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-87d69d13b54ddd78.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-c5598d48721c9847.rlib --extern tokio=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtokio-28c68a70018de8ed.rlib --extern tower_lsp_server=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtower_lsp_server-2fdfa097d8152abe.rlib --verbose` (exit status: 1)
+
+*** result: Failure(101)

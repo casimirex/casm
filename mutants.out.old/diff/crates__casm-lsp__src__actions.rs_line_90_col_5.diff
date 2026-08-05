@@ -1,0 +1,41 @@
+--- crates/casm-lsp/src/actions.rs
++++ replace quick_fixes -> Vec<CodeAction> with vec![]
+@@ -82,37 +82,17 @@
+ /// A client that watches files gets reloads for free. This exists for the ones that do
+ /// not, and for the case a watcher cannot see: a library created, moved, or checked out
+ /// after the session began.
+ pub const RELOAD_PATTERNS: &str = "casm.reloadPatterns";
+ 
+ /// Builds the quick-fixes available for `diagnostic`.
+ #[must_use]
+ pub fn quick_fixes(index: &DocumentIndex, diagnostic: &Diagnostic) -> Vec<CodeAction> {
+-    let Some(node) = node_at(index, diagnostic.span) else {
+-        return Vec::new();
+-    };
+-
+-    match diagnostic.code.as_str() {
+-        "services-require-security-controls" => vec![add_controls(
+-            index,
+-            node,
+-            &diagnostic.code,
+-            "Add the missing security controls",
+-            SECURITY_CONTROLS,
+-        )],
+-        "stateful-nodes-require-controls" => vec![add_controls(
+-            index,
+-            node,
+-            &diagnostic.code,
+-            "Add controls for this datastore",
+-            DATASTORE_CONTROLS,
+-        )],
+-        _ => Vec::new(),
+-    }
++    vec![] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Builds the actions that apply to the document as a whole.
+ #[must_use]
+ pub fn source_actions() -> Vec<CodeAction> {
+     vec![
+         CodeAction {
+             title: "CASIMIR: generate Mermaid diagram".to_owned(),

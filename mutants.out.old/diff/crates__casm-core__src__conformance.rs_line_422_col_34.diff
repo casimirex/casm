@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace == with != in check_relationships
+@@ -414,17 +414,17 @@
+     for required in pattern.relationships() {
+         let (Some(source), Some(target)) = (filled(required.source()), filled(required.target()))
+         else {
+             continue;
+         };
+ 
+         let exists = architecture.relationships().any(|edge| {
+             edge.source() == source
+-                && edge.target() == target
++                && edge.target() != /* ~ changed by cargo-mutants ~ */ target
+                 && edge.relationship_type() == required.relationship_type()
+         });
+ 
+         if !exists {
+             unmet.push(Unmet::MissingRelationship {
+                 source_role: required.source().as_str().to_owned(),
+                 source: name_of(architecture, source),
+                 target_role: required.target().as_str().to_owned(),

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace fingerprint -> Fingerprint with Default::default()
+@@ -593,17 +593,17 @@
+ /// };
+ ///
+ /// // Built twice: different `NodeId`s, identical meaning, identical fingerprint.
+ /// assert_eq!(merkle::fingerprint(&build()?), merkle::fingerprint(&build()?));
+ /// # Ok::<(), Box<dyn std::error::Error>>(())
+ /// ```
+ #[must_use]
+ pub fn fingerprint(architecture: &Architecture) -> Fingerprint {
+-    MerkleTree::of(architecture).root()
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/diagnostic.rs
++++ replace == with != in Report::at
+@@ -215,17 +215,17 @@
+         self.diagnostics.is_empty()
+     }
+ 
+     /// Returns only the findings at a given severity.
+     #[must_use]
+     pub fn at(&self, severity: Severity) -> Vec<&Diagnostic> {
+         self.diagnostics
+             .iter()
+-            .filter(|d| d.severity == severity)
++            .filter(|d| d.severity != /* ~ changed by cargo-mutants ~ */ severity)
+             .collect()
+     }
+ 
+     /// The process exit code this report implies.
+     ///
+     /// `0` clean or informational, `1` warnings, `2` errors. Every CASIMIR surface —
+     /// CLI, CI, pre-commit hook — derives its exit status from here, so they cannot
+     /// drift apart.

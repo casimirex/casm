@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/server.rs
++++ delete field label from struct CompletionItem expression in convert_completion
+@@ -612,17 +612,17 @@
+         selection_range: convert_span(entry.selection_span),
+         children: None,
+     }
+ }
+ 
+ /// Converts a CASIMIR completion into a protocol item.
+ fn convert_completion(item: &completion::Completion) -> CompletionItem {
+     CompletionItem {
+-        label: item.label.clone(),
++         /* ~ changed by cargo-mutants ~ */
+         kind: Some(match item.kind {
+             ItemKind::Field => CompletionItemKind::FIELD,
+             ItemKind::Value => CompletionItemKind::ENUM_MEMBER,
+             ItemKind::Reference => CompletionItemKind::REFERENCE,
+         }),
+         detail: Some(item.detail.clone()),
+         documentation: Some(Documentation::MarkupContent(MarkupContent {
+             kind: MarkupKind::Markdown,

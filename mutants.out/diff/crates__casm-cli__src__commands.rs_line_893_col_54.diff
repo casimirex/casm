@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace && with || in walk
+@@ -885,17 +885,17 @@
+         let name = entry.file_name().to_string_lossy().to_string();
+ 
+         if name.starts_with('.') || name == "target" || name == "node_modules" {
+             continue;
+         }
+ 
+         if path.is_dir() {
+             walk(&path, depth.saturating_add(1), found)?;
+-        } else if Format::from_path(&path).is_some() && is_architecture_file(&path) {
++        } else if Format::from_path(&path).is_some() || /* ~ changed by cargo-mutants ~ */ is_architecture_file(&path) {
+             found.push(path);
+         }
+     }
+ 
+     Ok(())
+ }
+ 
+ /// Returns `true` if `path` looks like a CASIMIR architecture rather than any old YAML.

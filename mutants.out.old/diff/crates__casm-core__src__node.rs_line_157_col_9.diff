@@ -1,0 +1,22 @@
+--- crates/casm-core/src/node.rs
++++ replace NodeConfig::description -> Self with Default::default()
+@@ -149,18 +149,17 @@
+     pub const fn node_type(mut self, node_type: NodeType) -> Self {
+         self.node_type = Some(node_type);
+         self
+     }
+ 
+     /// Sets a human-readable description.
+     #[must_use]
+     pub fn description(mut self, description: impl Into<String>) -> Self {
+-        self.description = Some(description.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Adds an interface this node exposes.
+     #[must_use]
+     pub fn interface(mut self, interface: Interface) -> Self {
+         self.interfaces.push(interface);
+         self
+     }

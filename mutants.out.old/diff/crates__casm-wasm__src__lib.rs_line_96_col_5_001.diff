@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace validate_with_patterns -> String with "xyzzy".into()
+@@ -88,17 +88,17 @@
+ /// Validates an architecture against a pattern library.
+ ///
+ /// `patterns` is a JSON array of pattern documents — the text of the files a `patterns/`
+ /// directory holds. A browser has no filesystem to find them in, so the caller supplies
+ /// them; everything else is identical to [`validate`].
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn validate_with_patterns(source: &str, patterns: &str) -> String {
+-    api::validate_with_patterns(source, patterns)
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Reports what an architecture must change to satisfy the patterns it claims.
+ ///
+ /// `casm evolve` without a filesystem: it reports rather than rewrites, because a pattern
+ /// is a shape to conform to and not a template to stamp (ADR-0012).
+ #[wasm_bindgen]
+ #[must_use]

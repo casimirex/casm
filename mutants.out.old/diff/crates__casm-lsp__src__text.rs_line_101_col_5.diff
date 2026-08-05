@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/text.rs
++++ replace utf16_len -> u32 with 0
+@@ -93,17 +93,17 @@
+ /// Returns the length of `text` in UTF-16 code units.
+ ///
+ /// This is the unit LSP counts in. A character outside the Basic Multilingual Plane —
+ /// an emoji, say — is two units, not one.
+ #[must_use]
+ pub fn utf16_len(text: &str) -> u32 {
+     // A document long enough to overflow `u32` would exceed the parser's size ceiling
+     // long before reaching here, but saturate rather than wrap regardless.
+-    u32::try_from(text.chars().map(char::len_utf16).sum::<usize>()).unwrap_or(u32::MAX)
++    0 /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Converts a byte offset within `line` into a UTF-16 code-unit offset.
+ ///
+ /// An offset past the end of the line, or one that falls inside a multi-byte character,
+ /// yields the length of the whole line rather than panicking.
+ #[must_use]
+ pub fn byte_to_utf16(line: &str, byte_offset: usize) -> u32 {

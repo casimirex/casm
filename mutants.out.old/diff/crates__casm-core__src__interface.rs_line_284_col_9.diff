@@ -1,0 +1,22 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::with_description -> Self with Default::default()
+@@ -276,18 +276,17 @@
+     pub const fn with_schema_hash(mut self, hash: SchemaHash) -> Self {
+         self.schema_hash = Some(hash);
+         self
+     }
+ 
+     /// Attaches a human-readable description.
+     #[must_use]
+     pub fn with_description(mut self, description: impl Into<String>) -> Self {
+-        self.description = Some(description.into());
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The interface's validated name.
+     #[inline]
+     #[must_use]
+     pub const fn name(&self) -> &Name {
+         &self.name
+     }

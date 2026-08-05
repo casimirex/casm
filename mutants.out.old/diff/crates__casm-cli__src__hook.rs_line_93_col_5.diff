@@ -1,0 +1,25 @@
+--- crates/casm-cli/src/hook.rs
++++ replace status -> Status with Default::default()
+@@ -85,21 +85,17 @@
+     /// CASIMIR's hook is installed.
+     Installed,
+     /// Someone else's hook is installed.
+     Foreign,
+ }
+ 
+ /// Inspects the hook at `git_dir`.
+ pub(crate) fn status(git_dir: &Path) -> Status {
+-    match std::fs::read_to_string(hook_path(git_dir)) {
+-        Err(_) => Status::Absent,
+-        Ok(contents) if contents.contains(MARKER) => Status::Installed,
+-        Ok(_) => Status::Foreign,
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Makes a file executable on Unix.
+ ///
+ /// Git ignores a hook that is not executable, silently — so an install that skipped this
+ /// would appear to succeed and do nothing.
+ #[cfg(unix)]
+ fn make_executable(path: &Path) -> std::io::Result<()> {

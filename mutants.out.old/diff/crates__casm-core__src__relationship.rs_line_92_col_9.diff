@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace RelationshipType::forms_dependency_cycle -> bool with true
+@@ -84,17 +84,17 @@
+     }
+ 
+     /// Returns `true` if this edge should participate in dependency-cycle detection.
+     ///
+     /// Asynchronous and event-driven edges are deliberately excluded: a publish/subscribe
+     /// loop is a legitimate topology, not a deadlock.
+     #[must_use]
+     pub const fn forms_dependency_cycle(self) -> bool {
+-        self.is_blocking()
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for RelationshipType {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         f.write_str(self.label())
+     }
+ }

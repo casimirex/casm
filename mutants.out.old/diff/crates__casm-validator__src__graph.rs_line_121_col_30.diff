@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/graph.rs
++++ replace > with == in DependencyGraph::critical_path_ms
+@@ -113,17 +113,17 @@
+         for index in order {
+             let arrival = longest.get(&index).copied().unwrap_or(0);
+             let mut walker = self.graph.neighbors(index).detach();
+ 
+             while let Some((edge, next)) = walker.next(&self.graph) {
+                 let budget = self.graph.edge_weight(edge).copied().unwrap_or(0);
+                 let candidate = arrival.saturating_add(budget);
+                 let best = longest.entry(next).or_insert(0);
+-                if candidate > *best {
++                if candidate == /* ~ changed by cargo-mutants ~ */ *best {
+                     *best = candidate;
+                 }
+             }
+         }
+ 
+         Some(longest.values().copied().max().unwrap_or(0))
+     }
+ 

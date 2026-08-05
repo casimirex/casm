@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/server.rs
++++ delete field insert_text from struct CompletionItem expression in convert_completion
+@@ -623,17 +623,17 @@
+             ItemKind::Value => CompletionItemKind::ENUM_MEMBER,
+             ItemKind::Reference => CompletionItemKind::REFERENCE,
+         }),
+         detail: Some(item.detail.clone()),
+         documentation: Some(Documentation::MarkupContent(MarkupContent {
+             kind: MarkupKind::Markdown,
+             value: item.documentation.clone(),
+         })),
+-        insert_text: Some(item.insert_text.clone()),
++         /* ~ changed by cargo-mutants ~ */
+         ..CompletionItem::default()
+     }
+ }
+ 
+ /// Converts a CASIMIR code action into a protocol one.
+ fn convert_action(uri: &Uri, action: actions::CodeAction) -> CodeActionOrCommand {
+     let edit = (!action.edits.is_empty()).then(|| {
+         let edits: Vec<TextEdit> = action

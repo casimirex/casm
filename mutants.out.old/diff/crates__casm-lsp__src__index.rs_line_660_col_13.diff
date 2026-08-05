@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm Some("type") in Builder::record_relationship
+@@ -652,17 +652,17 @@
+             Some("source") => {
+                 current.source.clone_from(&info.value);
+                 current.source_span = info.value_span;
+             }
+             Some("target") => {
+                 current.target.clone_from(&info.value);
+                 current.target_span = info.value_span;
+             }
+-            Some("type") => current.kind.clone_from(&info.value),
++             /* ~ changed by cargo-mutants ~ */
+             _ => {}
+         }
+     }
+ 
+     /// Records or extends a conformance claim.
+     fn record_claim(&mut self, info: &LineInfo) {
+         if info.section != Section::Patterns {
+             return;

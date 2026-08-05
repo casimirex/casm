@@ -1,0 +1,54 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace Ascii::node_block -> String with String::new()
+@@ -284,50 +284,17 @@
+             let _ = writeln!(out, "{description}");
+         }
+         out.push('\n');
+         out
+     }
+ 
+     /// Renders one node and its outgoing edges.
+     fn node_block(architecture: &Architecture, node: &Node) -> String {
+-        let mut out = format!("[{}] {}\n", node.node_type(), node.name());
+-
+-        if let Some(description) = node.description() {
+-            let _ = writeln!(out, "    {description}");
+-        }
+-
+-        for interface in node.interfaces() {
+-            let _ = writeln!(
+-                out,
+-                "    :: {} ({} v{})",
+-                interface.name(),
+-                interface.protocol(),
+-                interface.version()
+-            );
+-        }
+-
+-        for control in node.controls() {
+-            let _ = writeln!(
+-                out,
+-                "    # {} [{}]",
+-                control.standard(),
+-                control.control_type()
+-            );
+-        }
+-
+-        for edge in architecture.outgoing(node.id()) {
+-            let target = architecture.node(edge.target()).map_or_else(
+-                || edge.target().to_string(),
+-                |n| n.name().as_str().to_owned(),
+-            );
+-            let _ = writeln!(out, "    --{}--> {target}", Mermaid::edge_label(edge));
+-        }
+-
+-        out
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Renderer for Ascii {
+     fn id(&self) -> &'static str {
+         "ascii"
+     }
+ 

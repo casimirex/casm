@@ -1,0 +1,22 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::with_schema_hash -> Self with Default::default()
+@@ -269,18 +269,17 @@
+     pub fn with_schema(mut self, content: impl AsRef<[u8]>) -> Self {
+         self.schema_hash = Some(SchemaHash::of(content));
+         self
+     }
+ 
+     /// Attaches a pre-computed schema hash.
+     #[must_use]
+     pub const fn with_schema_hash(mut self, hash: SchemaHash) -> Self {
+-        self.schema_hash = Some(hash);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Attaches a human-readable description.
+     #[must_use]
+     pub fn with_description(mut self, description: impl Into<String>) -> Self {
+         self.description = Some(description.into());
+         self
+     }

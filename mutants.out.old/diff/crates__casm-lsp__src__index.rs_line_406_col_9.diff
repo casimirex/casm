@@ -1,0 +1,29 @@
+--- crates/casm-lsp/src/index.rs
++++ replace DocumentIndex::references_to -> Vec<&Symbol> with vec![]
+@@ -398,25 +398,17 @@
+     }
+ 
+     /// Finds every reference to the node called `name`.
+     ///
+     /// A `bind:` entry counts: binding a node to a pattern role is a use of that node, and
+     /// renaming it without following the binding leaves a claim pointing at nothing.
+     #[must_use]
+     pub fn references_to(&self, name: &str) -> Vec<&Symbol> {
+-        self.symbols
+-            .iter()
+-            .filter(|symbol| {
+-                matches!(
+-                    symbol.kind,
+-                    SymbolKind::NodeReference(_) | SymbolKind::BindingTarget
+-                ) && symbol.text == name
+-            })
+-            .collect()
++        vec![] /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Incremental state for a single pass over the document's lines.
+ #[derive(Default)]
+ struct Builder {
+     lines: Vec<LineInfo>,
+     raw_lines: Vec<String>,

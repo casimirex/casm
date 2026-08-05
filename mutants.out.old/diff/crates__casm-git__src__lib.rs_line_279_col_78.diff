@@ -1,0 +1,21 @@
+--- crates/casm-git/src/lib.rs
++++ replace == with != in Repository::blame_node
+@@ -271,17 +271,17 @@
+         &self,
+         path: &Path,
+         node: &str,
+         options: HistoryOptions,
+     ) -> Result<Vec<Revision>> {
+         Ok(self
+             .semantic_history(path, options)?
+             .into_iter()
+-            .filter(|revision| revision.changed_nodes.iter().any(|name| name == node))
++            .filter(|revision| revision.changed_nodes.iter().any(|name| name != /* ~ changed by cargo-mutants ~ */ node))
+             .collect())
+     }
+ 
+     /// Builds a snapshot of the architecture at one commit, if it parses there.
+     fn snapshot(&self, id: gix::ObjectId, relative: &Path) -> Option<Snapshot> {
+         let commit = self.inner.find_commit(id).ok()?;
+         let bytes = read_blob(&commit, relative)?;
+         let source = String::from_utf8(bytes).ok()?;

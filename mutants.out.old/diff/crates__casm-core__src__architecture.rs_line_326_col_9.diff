@@ -1,0 +1,24 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::degree -> usize with 0
+@@ -318,20 +318,17 @@
+         self.relationships
+             .iter()
+             .filter(move |edge| edge.target() == id)
+     }
+ 
+     /// Counts every relationship touching `id` in either direction.
+     #[must_use]
+     pub fn degree(&self, id: NodeId) -> usize {
+-        self.relationships
+-            .iter()
+-            .filter(|edge| edge.source() == id || edge.target() == id)
+-            .count()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns the nodes with no relationships at all.
+     ///
+     /// An isolated node is usually either a modelling mistake or a component nobody
+     /// remembers owning — both worth surfacing.
+     #[must_use]
+     pub fn isolated_nodes(&self) -> Vec<&Node> {

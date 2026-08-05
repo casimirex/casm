@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/text.rs
++++ replace >= with < in Span::is_empty
+@@ -81,17 +81,17 @@
+     #[must_use]
+     pub const fn width(&self) -> u32 {
+         self.end.saturating_sub(self.start)
+     }
+ 
+     /// Returns `true` if the span covers no characters.
+     #[must_use]
+     pub const fn is_empty(&self) -> bool {
+-        self.start >= self.end
++        self.start < /* ~ changed by cargo-mutants ~ */ self.end
+     }
+ }
+ 
+ /// Returns the length of `text` in UTF-16 code units.
+ ///
+ /// This is the unit LSP counts in. A character outside the Basic Multilingual Plane —
+ /// an emoji, say — is two units, not one.
+ #[must_use]

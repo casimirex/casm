@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ delete ! in PatternConfig::reject_unknown_roles
+@@ -387,17 +387,17 @@
+                 .any(|requirement| requirement.role() == role)
+         };
+ 
+         for relationship in relationships {
+             for (endpoint, role) in [
+                 ("source", relationship.source()),
+                 ("target", relationship.target()),
+             ] {
+-                if !declares(role) {
++                if  /* ~ changed by cargo-mutants ~ */declares(role) {
+                     return Err(PatternError::UnknownRole {
+                         endpoint,
+                         role: role.as_str().to_owned(),
+                     });
+                 }
+             }
+         }
+         Ok(())

@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace == with != in Architecture::remove_node
+@@ -470,17 +470,17 @@
+     /// # Errors
+     ///
+     /// Returns [`ArchitectureError::NodeStillReferenced`] with the reference count.
+     pub fn remove_node(&mut self, id: NodeId) -> Result<Option<Node>, ArchitectureError> {
+         let bound = self
+             .conformance
+             .iter()
+             .flat_map(|claim| claim.bindings().values())
+-            .filter(|bound| **bound == id)
++            .filter(|bound| **bound != /* ~ changed by cargo-mutants ~ */ id)
+             .count();
+ 
+         let references = self.degree(id) + bound;
+         if references > 0 {
+             return Err(ArchitectureError::NodeStillReferenced {
+                 id: id.to_string(),
+                 count: references,
+             });

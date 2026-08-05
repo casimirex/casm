@@ -1,0 +1,51 @@
+--- crates/casm-lsp/src/hover.rs
++++ replace append_edges with ()
+@@ -229,47 +229,17 @@
+     }
+ 
+     append_edges(&mut out, architecture, node);
+     out
+ }
+ 
+ /// Appends the node's incoming and outgoing relationships.
+ fn append_edges(out: &mut String, architecture: &Architecture, node: &Node) {
+-    let name_of = |id| {
+-        architecture
+-            .node(id)
+-            .map_or_else(|| "?".to_owned(), |other| other.name().as_str().to_owned())
+-    };
+-
+-    let outgoing: Vec<&Relationship> = architecture.outgoing(node.id()).collect();
+-    if !outgoing.is_empty() {
+-        out.push_str("\n\n**Calls**");
+-        for edge in outgoing {
+-            let _ = write!(
+-                out,
+-                "\n- → `{}` ({})",
+-                name_of(edge.target()),
+-                edge_summary(edge)
+-            );
+-        }
+-    }
+-
+-    let incoming: Vec<&Relationship> = architecture.incoming(node.id()).collect();
+-    if !incoming.is_empty() {
+-        out.push_str("\n\n**Called by**");
+-        for edge in incoming {
+-            let _ = write!(
+-                out,
+-                "\n- ← `{}` ({})",
+-                name_of(edge.source()),
+-                edge_summary(edge)
+-            );
+-        }
+-    }
++    () /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Summarises a relationship's type, protocol, and budget.
+ fn edge_summary(edge: &Relationship) -> String {
+     let mut parts = vec![edge.relationship_type().to_string()];
+     if let Some(protocol) = edge.protocol() {
+         parts.push(protocol.to_string());
+     }

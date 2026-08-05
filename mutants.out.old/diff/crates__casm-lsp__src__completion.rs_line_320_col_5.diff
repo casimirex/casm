@@ -1,0 +1,79 @@
+--- crates/casm-lsp/src/completion.rs
++++ replace value_completions -> CompletionResult with Default::default()
+@@ -312,75 +312,17 @@
+     index: &DocumentIndex,
+     patterns: &[Pattern],
+     section: Section,
+     block: Block,
+     key: Option<&str>,
+     before_cursor: &str,
+     separator: usize,
+ ) -> CompletionResult {
+-    let prefix = before_cursor
+-        .get(separator.saturating_add(1)..)
+-        .unwrap_or("")
+-        .trim()
+-        .to_owned();
+-
+-    let (context, terms) = match (section, block, key) {
+-        (Section::Patterns, Block::None, Some("pattern")) => {
+-            return CompletionResult {
+-                context: CompletionContext::PatternReferenceValue,
+-                prefix,
+-                items: patterns.iter().map(Completion::pattern).collect(),
+-            };
+-        }
+-        // Every key inside `bind:` takes a node name, whatever the role is called.
+-        (Section::Patterns, Block::Bindings, _) => {
+-            return CompletionResult {
+-                context: CompletionContext::NodeNameValue,
+-                prefix,
+-                items: index
+-                    .nodes()
+-                    .iter()
+-                    .map(|node| Completion::reference(&node.name, node.node_type.as_deref()))
+-                    .collect(),
+-            };
+-        }
+-        (Section::Nodes, Block::None, Some("type")) => {
+-            (CompletionContext::NodeTypeValue, NODE_TYPES)
+-        }
+-        (Section::Relationships, Block::None, Some("type")) => {
+-            (CompletionContext::RelationshipTypeValue, RELATIONSHIP_TYPES)
+-        }
+-        (_, Block::Controls, Some("type")) => (CompletionContext::ControlTypeValue, CONTROL_TYPES),
+-        (_, _, Some("protocol")) => (CompletionContext::ProtocolValue, PROTOCOLS),
+-        (Section::Relationships, Block::None, Some("source" | "target")) => {
+-            return CompletionResult {
+-                context: CompletionContext::NodeNameValue,
+-                prefix,
+-                items: index
+-                    .nodes()
+-                    .iter()
+-                    .map(|node| Completion::reference(&node.name, node.node_type.as_deref()))
+-                    .collect(),
+-            };
+-        }
+-        _ => {
+-            return CompletionResult {
+-                context: CompletionContext::None,
+-                prefix,
+-                items: Vec::new(),
+-            };
+-        }
+-    };
+-
+-    CompletionResult {
+-        context,
+-        prefix,
+-        items: terms.iter().map(Completion::value).collect(),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

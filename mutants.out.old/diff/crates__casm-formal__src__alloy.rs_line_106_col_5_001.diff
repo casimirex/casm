@@ -1,0 +1,32 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace signature_of -> &'static str with "xyzzy"
+@@ -98,28 +98,17 @@
+         .map_or_else(
+             || "N_unknown".to_owned(),
+             |(identifier, _)| identifier.clone(),
+         )
+ }
+ 
+ /// The Alloy signature name for a node type.
+ const fn signature_of(node_type: NodeType) -> &'static str {
+-    match node_type {
+-        NodeType::Service => "Service",
+-        NodeType::Database => "Database",
+-        NodeType::Queue => "Queue",
+-        NodeType::Cache => "Cache",
+-        NodeType::Gateway => "Gateway",
+-        NodeType::Storage => "Storage",
+-        NodeType::ExternalSystem => "ExternalSystem",
+-        NodeType::Legacy => "Legacy",
+-        NodeType::Human => "Human",
+-        NodeType::Boundary => "Boundary",
+-    }
++    "xyzzy" /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Converts an architecture name into a legal Alloy module name.
+ #[must_use]
+ pub fn module_name(architecture_name: &str) -> String {
+     let sanitised: String = architecture_name
+         .chars()
+         .map(|character| {

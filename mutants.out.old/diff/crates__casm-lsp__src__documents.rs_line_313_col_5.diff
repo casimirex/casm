@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace has_drive_letter -> bool with true
+@@ -305,21 +305,17 @@
+         _ => trimmed,
+     };
+ 
+     Path::new(&percent_decode(trimmed)).to_path_buf()
+ }
+ 
+ /// Returns `true` if `path` opens with a Windows drive specification such as `C:`.
+ fn has_drive_letter(path: &str) -> bool {
+-    let mut characters = path.chars();
+-    let Some(letter) = characters.next() else {
+-        return false;
+-    };
+-    letter.is_ascii_alphabetic() && characters.next().is_some_and(|next| next == ':')
++    true /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Decodes `%XX` escapes, leaving anything malformed exactly as it was found.
+ ///
+ /// Deliberately not a general URI decoder: `+` is not a space in a path, and a truncated
+ /// or non-hexadecimal escape is likelier to be a literal `%` in a filename than an error
+ /// worth refusing the workspace over.
+ fn percent_decode(text: &str) -> String {

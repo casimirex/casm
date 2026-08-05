@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::least_recently_used -> Option<String> with None
+@@ -267,21 +267,17 @@
+                 break;
+             };
+             self.documents.remove(&victim);
+         }
+     }
+ 
+     /// Finds the least recently used document, other than `protected`.
+     fn least_recently_used(&self, protected: &str) -> Option<String> {
+-        self.documents
+-            .iter()
+-            .filter(|(uri, _)| uri.as_str() != protected)
+-            .min_by_key(|(uri, document)| (document.accessed, (*uri).clone()))
+-            .map(|(uri, _)| uri.clone())
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl Default for DocumentStore {
+     fn default() -> Self {
+         Self::new(Limits::default(), ValidatorConfig::default())
+     }
+ }

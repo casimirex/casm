@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/server.rs
++++ delete ! in <impl LanguageServer for Backend>::did_change_watched_files
+@@ -232,17 +232,17 @@
+             .workspace
+             .lock()
+             .ok()
+             .and_then(|workspace| workspace.directory.clone());
+ 
+         let touched = params.changes.iter().any(|change| {
+             library::is_pattern_file(&uri_to_path(change.uri.as_str()), directory.as_deref())
+         });
+-        if !touched {
++        if  /* ~ changed by cargo-mutants ~ */touched {
+             return;
+         }
+ 
+         let note = self.reload_patterns().await;
+         self.client.log_message(MessageType::INFO, note).await;
+     }
+ 
+     async fn did_close(&self, params: DidCloseTextDocumentParams) {

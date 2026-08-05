@@ -1,0 +1,21 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace > with >= in write_assertions
+@@ -334,17 +334,17 @@
+         "// directly. Restates 'no-publicly-exposed-datastores'."
+     );
+     let _ = writeln!(out, "assert NoDirectExternalAccessToState {{");
+     let _ = writeln!(out, "    no e: External, d: Stateful | d in e.blocks");
+     let _ = writeln!(out, "}}");
+     let _ = writeln!(out, "check NoDirectExternalAccessToState for {scope}\n");
+ 
+     // Meaningless for a single node, which is a legitimate starting point.
+-    if model.nodes.len() > 1 {
++    if model.nodes.len() >= /* ~ changed by cargo-mutants ~ */ 1 {
+         let _ = writeln!(
+             out,
+             "// Every node participates in the architecture somehow."
+         );
+         let _ = writeln!(out, "// Restates 'no-isolated-nodes'.");
+         let _ = writeln!(out, "assert NoIsolatedNodes {{");
+         let _ = writeln!(out, "    all n: Node |");
+         let _ = writeln!(

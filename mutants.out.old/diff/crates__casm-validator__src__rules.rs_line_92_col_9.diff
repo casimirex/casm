@@ -1,0 +1,42 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoDependencyCycles>::check with ()
+@@ -84,38 +84,17 @@
+         "no-dependency-cycles"
+     }
+ 
+     fn description(&self) -> &'static str {
+         "blocking dependencies (sync, depends-on, composed, quantum-entangled) must be acyclic"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+-        for cycle in context.graph.cycles() {
+-            let names: Vec<String> = cycle.iter().map(|id| context.name_of(*id)).collect();
+-
+-            report.push(
+-                Diagnostic::new(
+-                    self.id(),
+-                    Severity::Error,
+-                    Subject::NodeSet {
+-                        names: names.clone(),
+-                    },
+-                    format!(
+-                        "{} nodes form a blocking dependency cycle, so no deployment order \
+-                         exists and a failure in any member propagates to all",
+-                        names.len()
+-                    ),
+-                )
+-                .with_suggestion(
+-                    "break the ring by making one hop 'async' or 'event-driven', or by \
+-                     extracting the shared concern into a node both can depend on",
+-                ),
+-            );
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A datastore must not be reachable directly from outside the control boundary.
+ ///
+ /// The canonical "no database on the public internet" rule.
+ pub struct NoPubliclyExposedDatastores;
+ 

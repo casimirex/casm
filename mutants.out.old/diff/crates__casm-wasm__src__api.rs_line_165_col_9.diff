@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/api.rs
++++ delete match arm (0, 0) in validate_with_patterns
+@@ -157,17 +157,17 @@
+     let warnings = diagnostics
+         .iter()
+         .filter(|d| d.severity == "warning")
+         .count();
+ 
+     // The same mapping `Report::exit_code` makes, so a page and a pipeline never
+     // disagree about whether a document passed.
+     let exit_code = match (errors, warnings) {
+-        (0, 0) => 0,
++         /* ~ changed by cargo-mutants ~ */
+         (0, _) => 1,
+         _ => 2,
+     };
+ 
+     let architecture = analysis.architecture.as_ref();
+ 
+     to_json(&ValidationResult {
+         valid: errors == 0 && architecture.is_some(),

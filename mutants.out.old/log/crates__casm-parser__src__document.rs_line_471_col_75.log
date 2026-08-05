@@ -1,0 +1,361 @@
+
+*** crates/casm-parser/src/document.rs:471:75: replace == with != in NodeIndex<'a>::lookup
+
+*** mutation diff:
+--- crates/casm-parser/src/document.rs
++++ replace == with != in NodeIndex<'a>::lookup
+@@ -463,17 +463,17 @@
+         }
+     }
+ 
+     /// Looks up a reference written as either a node name or a `NodeId`.
+     fn lookup(&self, reference: &str) -> Option<NodeId> {
+         // Names are tried first: they are the common case, and a name that happens to
+         // look like a UUID is impossible (the CASIMIR alphabet permits it, but a node so
+         // named would still be found here, which is the author's evident intent).
+-        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name == reference) {
++        if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name != /* ~ changed by cargo-mutants ~ */ reference) {
+             return Some(*id);
+         }
+ 
+         NodeId::parse(reference)
+             .ok()
+             .filter(|id| self.by_name.iter().any(|(_, known)| known == id))
+     }
+ 
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-parser@0.3.0
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh version_check v0.9.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh typenum v1.20.1
+       Fresh generic-array v0.14.7
+       Fresh getrandom v0.4.3
+       Fresh getrandom v0.3.4
+       Fresh rand_core v0.9.5
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh equivalent v1.0.2
+       Fresh linux-raw-sys v0.12.1
+       Fresh hashbrown v0.17.1
+       Fresh bitflags v2.13.1
+       Fresh autocfg v1.5.1
+       Fresh rustix v1.1.4
+       Fresh indexmap v2.14.0
+       Fresh serde v1.0.229
+       Fresh digest v0.10.7
+       Fresh zerocopy v0.8.55
+       Fresh thiserror-impl v2.0.19
+       Fresh fastrand v2.5.0
+       Fresh winnow v1.0.4
+       Fresh keccak v0.1.6
+       Fresh itoa v1.0.18
+       Fresh once_cell v1.21.4
+       Fresh thiserror v2.0.19
+       Fresh tempfile v3.27.0
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh sha3 v0.10.9
+       Fresh ppv-lite86 v0.2.21
+       Fresh zmij v1.0.23
+       Fresh uuid v1.24.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh semver v1.0.28
+       Fresh wait-timeout v0.2.1
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh bit-vec v0.8.0
+       Fresh ryu v1.0.23
+       Fresh unsafe-libyaml v0.2.11
+       Fresh memchr v2.8.3
+       Fresh quick-error v1.2.3
+       Fresh fnv v1.0.7
+       Fresh winnow v0.7.15
+       Fresh serde_json v1.0.151
+       Fresh rusty-fork v0.3.1
+       Fresh serde_yaml_ng v0.10.0
+       Fresh bit-set v0.8.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh num-traits v0.2.19
+       Fresh rand_chacha v0.9.0
+       Fresh rand_xorshift v0.4.0
+       Fresh rand v0.9.5
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Dirty casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser): couldn't read metadata for file `target/debug/deps/libcasm_parser-327bf4b87971bca8.rlib`
+   Compiling casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+       Fresh proptest v1.11.0
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_parser --edition=2024 crates/casm-parser/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=446d2155f71a3e56 -C extra-filename=-327bf4b87971bca8 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-be5421d115bf4420.rmeta --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --extern serde_yaml_ng=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_yaml_ng-716dab26a9d53256.rmeta --extern thiserror=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --extern toml=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtoml-c5208f55489b08fa.rmeta --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_parser --edition=2024 crates/casm-parser/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=655edf18454c8fb3 -C extra-filename=-0b4829f50063ece5 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-be5421d115bf4420.rlib --extern proptest=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libproptest-9bb8168c60fe8945.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --extern serde_yaml_ng=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_yaml_ng-716dab26a9d53256.rlib --extern thiserror=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --extern toml=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libtoml-c5208f55489b08fa.rlib --verbose`
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.22s
+  Executable `/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/casm_parser-0b4829f50063ece5`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-parser@0.3.0
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh version_check v0.9.5
+       Fresh quote v1.0.47
+       Fresh syn v3.0.3
+       Fresh typenum v1.20.1
+       Fresh generic-array v0.14.7
+       Fresh getrandom v0.4.3
+       Fresh getrandom v0.3.4
+       Fresh rand_core v0.9.5
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh bitflags v2.13.1
+       Fresh autocfg v1.5.1
+       Fresh linux-raw-sys v0.12.1
+       Fresh hashbrown v0.17.1
+       Fresh equivalent v1.0.2
+       Fresh rustix v1.1.4
+       Fresh indexmap v2.14.0
+       Fresh digest v0.10.7
+       Fresh serde v1.0.229
+       Fresh zerocopy v0.8.55
+       Fresh thiserror-impl v2.0.19
+       Fresh fastrand v2.5.0
+       Fresh once_cell v1.21.4
+       Fresh itoa v1.0.18
+       Fresh winnow v1.0.4
+       Fresh keccak v0.1.6
+       Fresh sha3 v0.10.9
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh tempfile v3.27.0
+       Fresh ppv-lite86 v0.2.21
+       Fresh thiserror v2.0.19
+       Fresh zmij v1.0.23
+       Fresh uuid v1.24.0
+       Fresh semver v1.0.28
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh wait-timeout v0.2.1
+       Fresh memchr v2.8.3
+       Fresh bit-vec v0.8.0
+       Fresh quick-error v1.2.3
+       Fresh winnow v0.7.15
+       Fresh fnv v1.0.7
+       Fresh unsafe-libyaml v0.2.11
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh ryu v1.0.23
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh serde_yaml_ng v0.10.0
+       Fresh rusty-fork v0.3.1
+       Fresh bit-set v0.8.0
+       Fresh serde_json v1.0.151
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh num-traits v0.2.19
+       Fresh rand_chacha v0.9.0
+       Fresh rand v0.9.5
+       Fresh rand_xorshift v0.4.0
+       Fresh unarray v0.1.4
+       Fresh regex-syntax v0.8.11
+       Fresh proptest v1.11.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running `/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/casm_parser-0b4829f50063ece5`
+
+running 83 tests
+test document::tests::a_malformed_schema_hash_is_refused_with_the_expected_shape ... ok
+test document::tests::declaring_both_schema_and_schema_hash_is_refused ... ok
+test document::tests::an_unresolvable_endpoint_reports_which_end_failed ... FAILED
+test document::tests::an_explicit_non_v7_id_is_rejected_with_a_hint ... ok
+test document::tests::duplicate_node_names_surface_as_a_semantic_error ... ok
+test document::tests::emitted_relationships_reference_nodes_by_name ... FAILED
+test document::tests::an_inline_schema_is_hashed_at_parse_time ... ok
+test document::tests::resolves_endpoints_written_as_ids ... FAILED
+test document::tests::an_unresolvable_endpoint_omits_a_hint_when_nothing_is_close ... FAILED
+test document::tests::resolves_endpoints_written_as_names ... FAILED
+test document::tests::resolves_relationships_declared_before_their_nodes ... ok
+test error::tests::location_clamps_zero_to_one ... ok
+test document::tests::round_trip_preserves_interfaces_and_controls ... FAILED
+test error::tests::accessors_agree_with_the_variant ... ok
+test document::tests::round_trip_preserves_node_ids ... ok
+test document::tests::round_trip_preserves_the_architecture ... FAILED
+test format::tests::resolve_falls_back_to_sniffing_without_an_extension ... ok
+test format::tests::resolve_prefers_the_extension_over_the_contents ... ok
+test format::tests::extensions_are_recognised ... ok
+test error::tests::location_preserves_real_positions ... ok
+test error::tests::render_appends_the_help_line ... ok
+test error::tests::render_omits_the_help_line_when_there_is_no_hint ... ok
+test error::tests::syntax_errors_lead_with_path_and_position ... ok
+test format::tests::extension_matching_is_case_insensitive ... ok
+test format::tests::sniff_detects_toml_by_a_table_header ... ok
+test format::tests::sniff_detects_json_by_its_opening_brace ... ok
+test format::tests::sniff_defaults_to_yaml_on_an_empty_document ... ok
+test format::tests::sniff_skips_comments_blank_lines_and_document_markers ... ok
+test format::tests::unknown_and_absent_extensions_are_unclassified ... ok
+test library::tests::a_library_loads_every_pattern_file_in_a_directory ... ok
+test format::tests::sniff_is_not_fooled_by_a_yaml_value_containing_equals ... ok
+test format::tests::sniff_treats_yaml_mappings_as_yaml ... ok
+test library::tests::a_missing_directory_reports_the_path_it_tried ... ok
+test library::tests::a_library_refuses_two_definitions_of_the_same_reference ... ok
+test library::tests::a_library_skips_files_that_are_not_architecture_formats ... ok
+test library::tests::a_misspelt_name_is_answered_with_the_nearest_one ... ok
+test format::tests::sniff_detects_toml_by_bare_assignment ... ok
+test library::tests::a_non_semver_version_is_rejected ... ok
+test library::tests::a_relationship_naming_an_undeclared_role_is_rejected_with_a_hint ... ok
+test library::tests::a_pattern_file_parses_into_the_shape_it_describes ... ok
+test library::tests::an_unknown_field_is_rejected_rather_than_silently_ignored ... ok
+test library::tests::an_empty_library_suggests_nothing ... ok
+test library::tests::a_pattern_file_may_omit_its_version ... ok
+test library::tests::a_wrong_version_is_answered_with_the_versions_that_exist ... ok
+test suggest::tests::closest_declines_on_a_tie ... ok
+test library::tests::two_versions_of_one_pattern_coexist ... ok
+test suggest::tests::closest_handles_an_empty_candidate_set ... ok
+test library::tests::a_pattern_round_trips_through_every_format ... ok
+test suggest::tests::closest_declines_when_nothing_is_near ... ok
+test suggest::tests::closest_finds_an_obvious_typo ... ok
+test suggest::tests::closest_accepts_an_exact_match ... ok
+test suggest::tests::closest_refuses_pathologically_long_input ... ok
+test suggest::tests::distance_counts_single_edits ... ok
+test suggest::tests::distance_handles_empty_strings ... ok
+test suggest::tests::hint_is_formatted_for_a_terminal ... ok
+test suggest::tests::distance_is_case_insensitive ... ok
+test tests::a_domain_violation_is_semantic_not_syntactic ... ok
+test tests::a_typo_in_a_relationship_endpoint_suggests_the_nearest_node ... FAILED
+test tests::a_self_edge_is_rejected_by_the_core_through_the_parser ... FAILED
+test tests::a_dangling_endpoint_is_reported_even_with_valid_syntax ... FAILED
+test suggest::tests::distance_is_symmetric ... ok
+test suggest::tests::distance_is_zero_for_identical_strings ... ok
+test suggest::tests::distance_handles_multibyte_characters_without_panicking ... ok
+test tests::offset_conversion_matches_hand_counted_positions ... ok
+test tests::an_empty_architecture_is_valid ... ok
+test tests::an_unknown_field_suggests_the_nearest_valid_one ... ok
+test tests::json_syntax_errors_carry_a_position ... ok
+test tests::offset_conversion_tolerates_an_out_of_range_offset ... ok
+test tests::an_unknown_node_type_suggests_the_nearest_valid_one ... ok
+test tests::emitted_json_ends_with_a_newline ... ok
+test tests::emitted_yaml_reparses_to_an_equal_architecture ... FAILED
+test tests::malformed_yaml_reports_a_line_and_column ... ok
+test tests::parse_file_reports_a_missing_file_as_io ... ok
+test tests::parse_file_reads_a_real_document ... ok
+test tests::parses_the_equivalent_toml_document ... FAILED
+test tests::parses_a_complete_yaml_architecture ... ok
+test tests::suggestion_inference_ignores_unrelated_messages ... ok
+test tests::parses_the_equivalent_json_document ... FAILED
+test tests::toml_syntax_errors_carry_a_position ... ok
+test tests::version_defaults_when_omitted ... ok
+test tests::round_trip_is_byte_stable_across_repeated_emission ... ok
+test tests::snake_case_field_aliases_are_accepted ... ok
+test tests::suggestion_inference_declines_when_nothing_is_near ... ok
+
+failures:
+
+---- document::tests::an_unresolvable_endpoint_reports_which_end_failed stdout ----
+
+thread 'document::tests::an_unresolvable_endpoint_reports_which_end_failed' (1041593) panicked at crates/casm-parser/src/document.rs:735:46:
+called `Result::unwrap_err()` on an `Ok` value: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e4-71d2-b672-c3ffc5ded70b): Node { id: NodeId(019fd1e8-73e4-71d2-b672-c3ffc5ded70b), name: Name("api"), node_type: Service, description: None, interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-73e4-71d2-b672-c40e6ff5d689): Node { id: NodeId(019fd1e8-73e4-71d2-b672-c40e6ff5d689), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e4-71d2-b672-c40e6ff5d689), target: NodeId(019fd1e8-73e4-71d2-b672-c3ffc5ded70b), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- document::tests::emitted_relationships_reference_nodes_by_name stdout ----
+
+thread 'document::tests::emitted_relationships_reference_nodes_by_name' (1041596) panicked at crates/casm-parser/src/document.rs:886:9:
+assertion `left == right` failed
+  left: "orders-db"
+ right: "api"
+
+---- document::tests::resolves_endpoints_written_as_ids stdout ----
+
+thread 'document::tests::resolves_endpoints_written_as_ids' (1041597) panicked at crates/casm-parser/src/document.rs:713:59:
+called `Result::unwrap()` on an `Err` value: Semantic { path: "architecture.yaml", message: "relationship '019fd1e8-73e6-7523-9277-b975df25e557' -> 'orders-db': relationship source and target are both '019fd1e8-73e6-7523-9277-b975df25e557'; self-edges are not permitted", suggestion: None }
+
+---- document::tests::an_unresolvable_endpoint_omits_a_hint_when_nothing_is_close stdout ----
+
+thread 'document::tests::an_unresolvable_endpoint_omits_a_hint_when_nothing_is_close' (1041592) panicked at crates/casm-parser/src/document.rs:755:46:
+called `Result::unwrap_err()` on an `Ok` value: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e7-7942-a520-e61786c9ce86): Node { id: NodeId(019fd1e8-73e7-7942-a520-e61786c9ce86), name: Name("api"), node_type: Service, description: None, interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-73e7-7942-a520-e62a64dd4db3): Node { id: NodeId(019fd1e8-73e7-7942-a520-e62a64dd4db3), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e7-7942-a520-e62a64dd4db3), target: NodeId(019fd1e8-73e7-7942-a520-e61786c9ce86), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+---- document::tests::resolves_endpoints_written_as_names stdout ----
+
+thread 'document::tests::resolves_endpoints_written_as_names' (1041598) panicked at crates/casm-parser/src/document.rs:702:9:
+assertion `left == right` failed
+  left: NodeId(019fd1e8-73e7-7942-a520-e642a3a8761f)
+ right: NodeId(019fd1e8-73e7-7942-a520-e636cd9c0c98)
+
+---- document::tests::round_trip_preserves_interfaces_and_controls stdout ----
+
+thread 'document::tests::round_trip_preserves_interfaces_and_controls' (1041600) panicked at crates/casm-parser/src/document.rs:913:9:
+assertion `left == right` failed
+  left: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b): Node { id: NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b), name: Name("api"), node_type: Service, description: None, interfaces: [Interface { name: Name("rest"), protocol: Http2, version: Version { major: 2, minor: 1, patch: 0 }, schema_hash: Some(SchemaHash(73a38b9e525c…)), description: Some("public surface") }], controls: [Control { control_type: Security, standard: "OWASP-A01", description: "access control enforced", evidence_required: true, tags: ["security"] }], metadata: {} }, NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee): Node { id: NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee), target: NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+ right: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b): Node { id: NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b), name: Name("api"), node_type: Service, description: None, interfaces: [Interface { name: Name("rest"), protocol: Http2, version: Version { major: 2, minor: 1, patch: 0 }, schema_hash: Some(SchemaHash(73a38b9e525c…)), description: Some("public surface") }], controls: [Control { control_type: Security, standard: "OWASP-A01", description: "access control enforced", evidence_required: true, tags: ["security"] }], metadata: {} }, NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee): Node { id: NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e8-7212-88ea-c1b9802e010b), target: NodeId(019fd1e8-73e8-7212-88ea-c1cc276b63ee), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+---- document::tests::round_trip_preserves_the_architecture stdout ----
+
+thread 'document::tests::round_trip_preserves_the_architecture' (1041602) panicked at crates/casm-parser/src/document.rs:863:9:
+assertion `left == right` failed: parse -> emit -> parse must be a fixed point
+  left: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85): Node { id: NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85), name: Name("api"), node_type: Service, description: None, interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5): Node { id: NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5), target: NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+ right: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: None, nodes: {NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85): Node { id: NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85), name: Name("api"), node_type: Service, description: None, interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5): Node { id: NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-73e9-79e1-9fc8-e5e47a83ca85), target: NodeId(019fd1e8-73e9-79e1-9fc8-e5fc25a344a5), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+---- tests::a_typo_in_a_relationship_endpoint_suggests_the_nearest_node stdout ----
+
+thread 'tests::a_typo_in_a_relationship_endpoint_suggests_the_nearest_node' (1041653) panicked at crates/casm-parser/src/lib.rs:426:9:
+assertion `left == right` failed: rendered: architecture.yaml: relationship 'api' -> 'orders-bd': relationship source and target are both '019fd1e8-7414-7f03-ab6e-e107ec53cf8f'; self-edges are not permitted
+  left: None
+ right: Some("did you mean `orders-db`?")
+
+---- tests::a_self_edge_is_rejected_by_the_core_through_the_parser stdout ----
+
+thread 'tests::a_self_edge_is_rejected_by_the_core_through_the_parser' (1041652) panicked at crates/casm-parser/src/lib.rs:476:9:
+architecture.yaml: relationship source 'api' does not match any declared node
+
+---- tests::a_dangling_endpoint_is_reported_even_with_valid_syntax stdout ----
+
+thread 'tests::a_dangling_endpoint_is_reported_even_with_valid_syntax' (1041650) panicked at crates/casm-parser/src/lib.rs:446:9:
+assertion failed: matches!(parse_str(source, &yaml_path()),
+    Err(ParseError::UnresolvedReference { endpoint: "target", .. }))
+
+---- tests::emitted_yaml_reparses_to_an_equal_architecture stdout ----
+
+thread 'tests::emitted_yaml_reparses_to_an_equal_architecture' (1041658) panicked at crates/casm-parser/src/lib.rs:551:9:
+assertion `left == right` failed
+  left: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741c-7c60-9932-48f186b6654e): Node { id: NodeId(019fd1e8-741c-7c60-9932-48f186b6654e), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741c-7c60-9932-4904e797e19b): Node { id: NodeId(019fd1e8-741c-7c60-9932-4904e797e19b), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741c-7c60-9932-48f186b6654e), target: NodeId(019fd1e8-741c-7c60-9932-4904e797e19b), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+ right: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741c-7c60-9932-48f186b6654e): Node { id: NodeId(019fd1e8-741c-7c60-9932-48f186b6654e), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741c-7c60-9932-4904e797e19b): Node { id: NodeId(019fd1e8-741c-7c60-9932-4904e797e19b), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741c-7c60-9932-4904e797e19b), target: NodeId(019fd1e8-741c-7c60-9932-48f186b6654e), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+---- tests::parses_the_equivalent_toml_document stdout ----
+
+thread 'tests::parses_the_equivalent_toml_document' (1041667) panicked at crates/casm-parser/src/lib.rs:326:9:
+assertion `left == right` failed
+  left: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17): Node { id: NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7): Node { id: NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7), target: NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+ right: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17): Node { id: NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7): Node { id: NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741e-71c3-8aa9-bf956d800c17), target: NodeId(019fd1e8-741e-71c3-8aa9-bfa01fd91ed7), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+---- tests::parses_the_equivalent_json_document stdout ----
+
+thread 'tests::parses_the_equivalent_json_document' (1041666) panicked at crates/casm-parser/src/lib.rs:318:9:
+assertion `left == right` failed
+  left: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741d-7853-91f8-72af743ffa11): Node { id: NodeId(019fd1e8-741d-7853-91f8-72af743ffa11), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81): Node { id: NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81), target: NodeId(019fd1e8-741d-7853-91f8-72af743ffa11), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+ right: Architecture { name: Name("checkout"), version: Version { major: 1, minor: 0, patch: 0 }, description: Some("Order capture and settlement"), nodes: {NodeId(019fd1e8-741d-7853-91f8-72af743ffa11): Node { id: NodeId(019fd1e8-741d-7853-91f8-72af743ffa11), name: Name("api"), node_type: Service, description: Some("Public entry point"), interfaces: [], controls: [], metadata: {} }, NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81): Node { id: NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81), name: Name("orders-db"), node_type: Database, description: None, interfaces: [], controls: [], metadata: {} }}, relationships: [Relationship { source: NodeId(019fd1e8-741d-7853-91f8-72af743ffa11), target: NodeId(019fd1e8-741d-7853-91f8-72bc995e3e81), relationship_type: Sync, protocol: Some(Sql), description: None, controls: [], latency_budget_ms: Some(50) }], conformance: [], metadata: {} }
+
+
+failures:
+    document::tests::an_unresolvable_endpoint_omits_a_hint_when_nothing_is_close
+    document::tests::an_unresolvable_endpoint_reports_which_end_failed
+    document::tests::emitted_relationships_reference_nodes_by_name
+    document::tests::resolves_endpoints_written_as_ids
+    document::tests::resolves_endpoints_written_as_names
+    document::tests::round_trip_preserves_interfaces_and_controls
+    document::tests::round_trip_preserves_the_architecture
+    tests::a_dangling_endpoint_is_reported_even_with_valid_syntax
+    tests::a_self_edge_is_rejected_by_the_core_through_the_parser
+    tests::a_typo_in_a_relationship_endpoint_suggests_the_nearest_node
+    tests::emitted_yaml_reparses_to_an_equal_architecture
+    tests::parses_the_equivalent_json_document
+    tests::parses_the_equivalent_toml_document
+
+test result: FAILED. 70 passed; 13 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p casm-parser --lib`
+
+*** result: Failure(101)

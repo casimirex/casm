@@ -1,0 +1,503 @@
+
+*** crates/casm-wasm/src/api.rs:54:5: replace to_json -> String with "xyzzy".into()
+
+*** mutation diff:
+--- crates/casm-wasm/src/api.rs
++++ replace to_json -> String with "xyzzy".into()
+@@ -46,19 +46,17 @@
+ const VIRTUAL_PATH: &str = "<editor>";
+ 
+ /// Serialises a result, falling back to a JSON error object.
+ ///
+ /// Serialisation of these types cannot fail, but `unwrap` is denied and a panic in
+ /// WebAssembly is fatal, so the impossible branch still returns something a caller can
+ /// parse rather than trapping.
+ fn to_json<T: Serialize>(value: &T) -> String {
+-    serde_json::to_string(value).unwrap_or_else(|error| {
+-        format!(r#"{{"ok":false,"error":"internal serialisation failure: {error}"}}"#)
+-    })
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// A diagnostic, flattened for JavaScript.
+ #[derive(Debug, Serialize)]
+ #[serde(rename_all = "camelCase")]
+ pub struct WasmDiagnostic {
+     /// `error`, `warning`, or `info`.
+     pub severity: &'static str,
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-wasm@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh cfg-if v1.0.4
+       Fresh hashbrown v0.17.1
+       Fresh proc-macro2 v1.0.107
+       Fresh serde_core v1.0.229
+       Fresh equivalent v1.0.2
+       Fresh libc v0.2.189
+       Fresh quote v1.0.47
+       Fresh generic-array v0.14.7
+       Fresh indexmap v2.14.0
+       Fresh syn v3.0.3
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh getrandom v0.4.3
+       Fresh keccak v0.1.6
+       Fresh serde_derive v1.0.229
+       Fresh digest v0.10.7
+       Fresh thiserror-impl v2.0.19
+       Fresh uuid v1.24.0
+       Fresh semver v1.0.28
+       Fresh serde v1.0.229
+       Fresh sha3 v0.10.9
+       Fresh thiserror v2.0.19
+       Fresh itoa v1.0.18
+       Fresh zmij v1.0.23
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh memchr v2.8.3
+       Fresh rustversion v1.0.23
+       Fresh wasm-bindgen-shared v0.2.126
+       Fresh syn v2.0.119
+       Fresh bumpalo v3.20.3
+       Fresh serde_json v1.0.151
+       Fresh foldhash v0.1.5
+       Fresh winnow v1.0.4
+       Fresh wasm-bindgen-macro-support v0.2.126
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh serde_spanned v1.1.1
+       Fresh hashbrown v0.15.5
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh fixedbitset v0.5.7
+       Fresh ryu v1.0.23
+       Fresh unsafe-libyaml v0.2.11
+       Fresh winnow v0.7.15
+       Fresh petgraph v0.8.3
+       Fresh serde_yaml_ng v0.10.0
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh wasm-bindgen-macro v0.2.126
+       Fresh once_cell v1.21.4
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-renderer)
+       Fresh wasm-bindgen v0.2.126
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-validator)
+       Fresh casm-diff v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-diff)
+       Fresh casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-lsp)
+       Fresh console_error_panic_hook v0.1.7
+       Dirty casm-wasm v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-wasm): the file `crates/casm-wasm/src/api.rs` has changed (1785933418.885044420s, 9s after last build at 1785933409.168823952s)
+   Compiling casm-wasm v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-wasm)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_wasm --edition=2024 crates/casm-wasm/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type cdylib --crate-type rlib --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=f02c942c99b81ee1 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-38ab8f9cc5cbd294.rlib --extern casm_diff=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_diff-56c79fc9dd0a1770.rlib --extern casm_lsp=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_lsp-f7ce6eddbc2a330b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-fd164bd7983e49b3.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-1fcb935038db35cd.rlib --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-63cf8602d2e097be.rlib --extern console_error_panic_hook=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libconsole_error_panic_hook-2dec12b9e293d1bc.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-6e908f11f9b7bd1f.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --extern wasm_bindgen=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libwasm_bindgen-aa14faa7e38fb98e.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_wasm --edition=2024 crates/casm-wasm/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9e26f585e305cb89 -C extra-filename=-3c0908bfd81efa80 --out-dir /tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_core-38ab8f9cc5cbd294.rlib --extern casm_diff=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_diff-56c79fc9dd0a1770.rlib --extern casm_lsp=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_lsp-f7ce6eddbc2a330b.rlib --extern casm_parser=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_parser-fd164bd7983e49b3.rlib --extern casm_renderer=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_renderer-1fcb935038db35cd.rlib --extern casm_validator=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libcasm_validator-63cf8602d2e097be.rlib --extern console_error_panic_hook=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libconsole_error_panic_hook-2dec12b9e293d1bc.rlib --extern serde=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde-6e908f11f9b7bd1f.rlib --extern serde_json=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --extern wasm_bindgen=/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/libwasm_bindgen-aa14faa7e38fb98e.rlib --verbose`
+warning: unused variable: `value`
+  --> crates/casm-wasm/src/api.rs:53:26
+   |
+53 | fn to_json<T: Serialize>(value: &T) -> String {
+   |                          ^^^^^ help: if this is intentional, prefix it with an underscore: `_value`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `casm-wasm` (lib) generated 1 warning (run `cargo fix --lib -p casm-wasm` to apply 1 suggestion)
+warning: `casm-wasm` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.25s
+  Executable `/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/casm_wasm-3c0908bfd81efa80`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-wasm@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh cfg-if v1.0.4
+       Fresh equivalent v1.0.2
+       Fresh proc-macro2 v1.0.107
+       Fresh hashbrown v0.17.1
+       Fresh quote v1.0.47
+       Fresh serde_core v1.0.229
+       Fresh libc v0.2.189
+       Fresh keccak v0.1.6
+       Fresh syn v3.0.3
+       Fresh generic-array v0.14.7
+       Fresh indexmap v2.14.0
+       Fresh getrandom v0.4.3
+       Fresh semver v1.0.28
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh uuid v1.24.0
+       Fresh itoa v1.0.18
+       Fresh serde v1.0.229
+       Fresh digest v0.10.7
+       Fresh thiserror v2.0.19
+       Fresh zmij v1.0.23
+       Fresh memchr v2.8.3
+       Fresh rustversion v1.0.23
+       Fresh wasm-bindgen-shared v0.2.126
+       Fresh syn v2.0.119
+       Fresh bumpalo v3.20.3
+       Fresh sha3 v0.10.9
+       Fresh serde_json v1.0.151
+       Fresh winnow v1.0.4
+       Fresh foldhash v0.1.5
+       Fresh wasm-bindgen-macro-support v0.2.126
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh ryu v1.0.23
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-core)
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh hashbrown v0.15.5
+       Fresh winnow v0.7.15
+       Fresh fixedbitset v0.5.7
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh unsafe-libyaml v0.2.11
+       Fresh wasm-bindgen-macro v0.2.126
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh petgraph v0.8.3
+       Fresh serde_yaml_ng v0.10.0
+       Fresh once_cell v1.21.4
+       Fresh casm-renderer v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-renderer)
+       Fresh casm-diff v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-diff)
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-parser)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-validator)
+       Fresh wasm-bindgen v0.2.126
+       Fresh casm-lsp v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-lsp)
+       Fresh console_error_panic_hook v0.1.7
+warning: unused variable: `value`
+  --> crates/casm-wasm/src/api.rs:53:26
+   |
+53 | fn to_json<T: Serialize>(value: &T) -> String {
+   |                          ^^^^^ help: if this is intentional, prefix it with an underscore: `_value`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `casm-wasm` (lib) generated 1 warning (run `cargo fix --lib -p casm-wasm` to apply 1 suggestion)
+warning: `casm-wasm` (lib test) generated 1 warning (1 duplicate)
+       Fresh casm-wasm v0.3.0 (/tmp/cargo-mutants-casm-Mdd4Ys.tmp/crates/casm-wasm)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running `/tmp/cargo-mutants-casm-Mdd4Ys.tmp/target/debug/deps/casm_wasm-3c0908bfd81efa80`
+
+running 47 tests
+test api::tests::a_broken_document_yields_a_result_rather_than_an_error ... FAILED
+test api::tests::a_converted_document_still_parses ... FAILED
+test api::tests::a_malformed_library_is_reported_as_a_value_not_a_trap ... FAILED
+test api::tests::a_claim_is_unchecked_without_a_library ... FAILED
+test api::tests::an_unchecked_claim_does_not_count_as_conforming ... FAILED
+test api::tests::a_claim_is_checked_once_a_library_is_supplied ... FAILED
+test api::tests::an_empty_library_is_not_an_error ... FAILED
+test api::tests::completion_offers_node_types_after_a_type_key ... FAILED
+test api::tests::an_unknown_format_is_rejected_as_a_value ... FAILED
+test api::tests::an_unknown_backend_is_reported_with_the_ones_that_exist ... FAILED
+test api::tests::a_document_claiming_nothing_conforms_vacuously ... FAILED
+test api::tests::completion_works_on_a_document_that_does_not_parse ... FAILED
+test api::tests::completion_offers_pattern_references_from_the_library ... FAILED
+test api::tests::conformance_infers_a_binding_the_document_did_not_write ... FAILED
+test api::tests::an_unknown_inventory_kind_is_rejected_as_a_value ... FAILED
+test api::tests::conformance_on_a_broken_document_is_a_value ... FAILED
+test api::tests::an_unmet_requirement_is_an_error_across_the_boundary ... FAILED
+test api::tests::diffing_names_which_side_failed_to_parse ... FAILED
+test api::tests::conformance_reports_the_bindings_it_resolved ... FAILED
+test api::tests::diffing_reports_a_breaking_removal ... FAILED
+test api::tests::drift_compares_against_a_native_inventory ... FAILED
+test api::tests::drift_compares_against_terraform_state ... FAILED
+test api::tests::extreme_positions_do_not_panic ... ok
+test api::tests::conformance_separates_what_a_tool_can_fix_from_what_a_human_must_decide ... FAILED
+test api::tests::formatting_converts_between_the_three_formats ... FAILED
+test api::tests::formatting_is_idempotent_once_identifiers_are_pinned ... FAILED
+test api::tests::fingerprinting_exposes_per_node_digests ... FAILED
+test api::tests::hover_explains_a_node ... FAILED
+test api::tests::hover_explains_a_claimed_pattern_from_the_library ... FAILED
+test api::tests::hover_over_empty_space_is_a_negative_result_not_an_error ... FAILED
+test api::tests::diffing_a_document_against_itself_is_empty ... FAILED
+test api::tests::rendering_produces_a_diagram_for_each_backend ... FAILED
+test api::tests::exit_codes_match_the_command_line ... FAILED
+test api::tests::rendering_a_broken_document_reports_the_parse_error ... FAILED
+test api::tests::the_version_is_reported ... ok
+test api::tests::one_broken_pattern_does_not_discard_the_rest ... FAILED
+test api::tests::the_rule_catalogue_matches_the_validator ... FAILED
+test api::tests::fingerprinting_is_stable_across_calls ... ok
+test api::tests::validating_a_good_document_reports_its_shape_and_fingerprint ... FAILED
+test tests::the_panic_hook_can_be_installed_more_than_once ... ok
+panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+test api::tests::validating_reports_findings_with_positions ... FAILED
+test api::tests::the_pattern_aware_calls_are_deterministic ... ok
+test api::tests::supplying_no_library_matches_the_older_entry_points_exactly ... ok
+panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+test api::tests::every_entry_point_returns_parseable_json ... FAILED
+panicked at crates/casm-wasm/src/lib.rs:230:9:
+assertion failed: format(source, "json").contains("\"ok\":true")
+test tests::the_bindings_delegate_to_the_api_unchanged ... FAILED
+test api::tests::validating_and_rendering_are_byte_deterministic ... ok
+test api::tests::nothing_panics_on_hostile_input ... ok
+
+failures:
+
+---- api::tests::a_broken_document_yields_a_result_rather_than_an_error stdout ----
+
+thread 'api::tests::a_broken_document_yields_a_result_rather_than_an_error' (1169090) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- api::tests::a_converted_document_still_parses stdout ----
+
+thread 'api::tests::a_converted_document_still_parses' (1169093) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::a_malformed_library_is_reported_as_a_value_not_a_trap stdout ----
+
+thread 'api::tests::a_malformed_library_is_reported_as_a_value_not_a_trap' (1169095) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::a_claim_is_unchecked_without_a_library stdout ----
+
+thread 'api::tests::a_claim_is_unchecked_without_a_library' (1169092) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_unchecked_claim_does_not_count_as_conforming stdout ----
+
+thread 'api::tests::an_unchecked_claim_does_not_count_as_conforming' (1169097) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::a_claim_is_checked_once_a_library_is_supplied stdout ----
+
+thread 'api::tests::a_claim_is_checked_once_a_library_is_supplied' (1169091) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_empty_library_is_not_an_error stdout ----
+
+thread 'api::tests::an_empty_library_is_not_an_error' (1169096) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::completion_offers_node_types_after_a_type_key stdout ----
+
+thread 'api::tests::completion_offers_node_types_after_a_type_key' (1169102) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_unknown_format_is_rejected_as_a_value stdout ----
+
+thread 'api::tests::an_unknown_format_is_rejected_as_a_value' (1169099) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_unknown_backend_is_reported_with_the_ones_that_exist stdout ----
+
+thread 'api::tests::an_unknown_backend_is_reported_with_the_ones_that_exist' (1169098) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::a_document_claiming_nothing_conforms_vacuously stdout ----
+
+thread 'api::tests::a_document_claiming_nothing_conforms_vacuously' (1169094) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::completion_works_on_a_document_that_does_not_parse stdout ----
+
+thread 'api::tests::completion_works_on_a_document_that_does_not_parse' (1169104) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::completion_offers_pattern_references_from_the_library stdout ----
+
+thread 'api::tests::completion_offers_pattern_references_from_the_library' (1169103) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::conformance_infers_a_binding_the_document_did_not_write stdout ----
+
+thread 'api::tests::conformance_infers_a_binding_the_document_did_not_write' (1169105) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_unknown_inventory_kind_is_rejected_as_a_value stdout ----
+
+thread 'api::tests::an_unknown_inventory_kind_is_rejected_as_a_value' (1169100) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::conformance_on_a_broken_document_is_a_value stdout ----
+
+thread 'api::tests::conformance_on_a_broken_document_is_a_value' (1169106) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::an_unmet_requirement_is_an_error_across_the_boundary stdout ----
+
+thread 'api::tests::an_unmet_requirement_is_an_error_across_the_boundary' (1169101) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::diffing_names_which_side_failed_to_parse stdout ----
+
+thread 'api::tests::diffing_names_which_side_failed_to_parse' (1169110) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::conformance_reports_the_bindings_it_resolved stdout ----
+
+thread 'api::tests::conformance_reports_the_bindings_it_resolved' (1169107) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::diffing_reports_a_breaking_removal stdout ----
+
+thread 'api::tests::diffing_reports_a_breaking_removal' (1169111) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::drift_compares_against_a_native_inventory stdout ----
+
+thread 'api::tests::drift_compares_against_a_native_inventory' (1169112) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::drift_compares_against_terraform_state stdout ----
+
+thread 'api::tests::drift_compares_against_terraform_state' (1169113) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::conformance_separates_what_a_tool_can_fix_from_what_a_human_must_decide stdout ----
+
+thread 'api::tests::conformance_separates_what_a_tool_can_fix_from_what_a_human_must_decide' (1169108) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::formatting_converts_between_the_three_formats stdout ----
+
+thread 'api::tests::formatting_converts_between_the_three_formats' (1169119) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::formatting_is_idempotent_once_identifiers_are_pinned stdout ----
+
+thread 'api::tests::formatting_is_idempotent_once_identifiers_are_pinned' (1169120) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::fingerprinting_exposes_per_node_digests stdout ----
+
+thread 'api::tests::fingerprinting_exposes_per_node_digests' (1169117) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::hover_explains_a_node stdout ----
+
+thread 'api::tests::hover_explains_a_node' (1169122) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::hover_explains_a_claimed_pattern_from_the_library stdout ----
+
+thread 'api::tests::hover_explains_a_claimed_pattern_from_the_library' (1169121) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::hover_over_empty_space_is_a_negative_result_not_an_error stdout ----
+
+thread 'api::tests::hover_over_empty_space_is_a_negative_result_not_an_error' (1169123) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::diffing_a_document_against_itself_is_empty stdout ----
+
+thread 'api::tests::diffing_a_document_against_itself_is_empty' (1169109) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::rendering_produces_a_diagram_for_each_backend stdout ----
+
+thread 'api::tests::rendering_produces_a_diagram_for_each_backend' (1169127) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::exit_codes_match_the_command_line stdout ----
+
+thread 'api::tests::exit_codes_match_the_command_line' (1169115) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::rendering_a_broken_document_reports_the_parse_error stdout ----
+
+thread 'api::tests::rendering_a_broken_document_reports_the_parse_error' (1169126) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::one_broken_pattern_does_not_discard_the_rest stdout ----
+
+thread 'api::tests::one_broken_pattern_does_not_discard_the_rest' (1169125) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::the_rule_catalogue_matches_the_validator stdout ----
+
+thread 'api::tests::the_rule_catalogue_matches_the_validator' (1169130) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+---- api::tests::validating_a_good_document_reports_its_shape_and_fingerprint stdout ----
+
+thread 'api::tests::validating_a_good_document_reports_its_shape_and_fingerprint' (1169132) panicked at crates/casm-wasm/src/api.rs:780:58:
+not JSON: expected value at line 1 column 1
+xyzzy
+
+
+failures:
+    api::tests::a_broken_document_yields_a_result_rather_than_an_error
+    api::tests::a_claim_is_checked_once_a_library_is_supplied
+    api::tests::a_claim_is_unchecked_without_a_library
+    api::tests::a_converted_document_still_parses
+    api::tests::a_document_claiming_nothing_conforms_vacuously
+    api::tests::a_malformed_library_is_reported_as_a_value_not_a_trap
+    api::tests::an_empty_library_is_not_an_error
+    api::tests::an_unchecked_claim_does_not_count_as_conforming
+    api::tests::an_unknown_backend_is_reported_with_the_ones_that_exist
+    api::tests::an_unknown_format_is_rejected_as_a_value
+    api::tests::an_unknown_inventory_kind_is_rejected_as_a_value
+    api::tests::an_unmet_requirement_is_an_error_across_the_boundary
+    api::tests::completion_offers_node_types_after_a_type_key
+    api::tests::completion_offers_pattern_references_from_the_library
+    api::tests::completion_works_on_a_document_that_does_not_parse
+    api::tests::conformance_infers_a_binding_the_document_did_not_write
+    api::tests::conformance_on_a_broken_document_is_a_value
+    api::tests::conformance_reports_the_bindings_it_resolved
+    api::tests::conformance_separates_what_a_tool_can_fix_from_what_a_human_must_decide
+    api::tests::diffing_a_document_against_itself_is_empty
+    api::tests::diffing_names_which_side_failed_to_parse
+    api::tests::diffing_reports_a_breaking_removal
+    api::tests::drift_compares_against_a_native_inventory
+    api::tests::drift_compares_against_terraform_state
+    api::tests::every_entry_point_returns_parseable_json
+    api::tests::exit_codes_match_the_command_line
+    api::tests::fingerprinting_exposes_per_node_digests
+    api::tests::formatting_converts_between_the_three_formats
+    api::tests::formatting_is_idempotent_once_identifiers_are_pinned
+    api::tests::hover_explains_a_claimed_pattern_from_the_library
+    api::tests::hover_explains_a_node
+    api::tests::hover_over_empty_space_is_a_negative_result_not_an_error
+    api::tests::one_broken_pattern_does_not_discard_the_rest
+    api::tests::rendering_a_broken_document_reports_the_parse_error
+    api::tests::rendering_produces_a_diagram_for_each_backend
+    api::tests::the_rule_catalogue_matches_the_validator
+    api::tests::validating_a_good_document_reports_its_shape_and_fingerprint
+    api::tests::validating_reports_findings_with_positions
+    tests::the_bindings_delegate_to_the_api_unchanged
+
+test result: FAILED. 8 passed; 39 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.19s
+
+error: test failed, to rerun pass `-p casm-wasm --lib`
+
+*** result: Failure(101)

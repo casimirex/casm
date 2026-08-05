@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/library.rs
++++ replace default_version -> String with String::new()
+@@ -48,17 +48,17 @@
+ /// The most patterns a single library directory will load.
+ ///
+ /// Rule 5: a directory is attacker-controlled input in exactly the same way a file is.
+ /// A thousand is far beyond any plausible hand-curated library.
+ pub const MAX_LIBRARY_PATTERNS: usize = 1024;
+ 
+ /// The default version when a pattern file omits one.
+ fn default_version() -> String {
+-    "0.1.0".to_owned()
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// A requirement as written by a human.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct RequirementDoc {
+     /// The role's name, unique within the pattern.
+     pub role: String,

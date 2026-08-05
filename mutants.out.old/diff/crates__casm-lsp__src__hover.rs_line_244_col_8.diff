@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/hover.rs
++++ delete ! in append_edges
+@@ -236,17 +236,17 @@
+ fn append_edges(out: &mut String, architecture: &Architecture, node: &Node) {
+     let name_of = |id| {
+         architecture
+             .node(id)
+             .map_or_else(|| "?".to_owned(), |other| other.name().as_str().to_owned())
+     };
+ 
+     let outgoing: Vec<&Relationship> = architecture.outgoing(node.id()).collect();
+-    if !outgoing.is_empty() {
++    if  /* ~ changed by cargo-mutants ~ */outgoing.is_empty() {
+         out.push_str("\n\n**Calls**");
+         for edge in outgoing {
+             let _ = write!(
+                 out,
+                 "\n- → `{}` ({})",
+                 name_of(edge.target()),
+                 edge_summary(edge)
+             );

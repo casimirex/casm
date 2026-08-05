@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/drift.rs
++++ replace || with && in detect
+@@ -324,17 +324,17 @@
+ /// report drift on every run.
+ #[must_use]
+ pub fn detect(architecture: &Architecture, inventory: &Inventory) -> DriftReport {
+     let mut drifts = Vec::new();
+     let mut matched = 0_usize;
+     let mut bound_ids: Vec<&str> = Vec::new();
+ 
+     for node in architecture.nodes() {
+-        if node.node_type().is_external() || node.node_type() == NodeType::Boundary {
++        if node.node_type().is_external() && /* ~ changed by cargo-mutants ~ */ node.node_type() == NodeType::Boundary {
+             continue;
+         }
+ 
+         let Some(resource) = inventory.bound_to(node) else {
+             drifts.push(Drift::Missing {
+                 node: node.name().as_str().to_owned(),
+                 node_type: node.node_type().to_string(),
+             });

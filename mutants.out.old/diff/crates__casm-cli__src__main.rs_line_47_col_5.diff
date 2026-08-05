@@ -1,0 +1,53 @@
+--- crates/casm-cli/src/main.rs
++++ replace main -> std::process::ExitCode with Default::default()
+@@ -39,49 +39,17 @@
+ use casm_telemetry::{Outcome, Recorder, Resource, Severity, sink};
+ use clap::Parser as _;
+ 
+ use cli::{Cli, Command};
+ use commands::CommandResult;
+ use exit::ExitCode;
+ 
+ fn main() -> std::process::ExitCode {
+-    let cli = Cli::parse();
+-    let telemetry = cli.telemetry;
+-    let name = cli.command.name();
+-
+-    let mut recorder = Recorder::new(
+-        Resource::new("casm", env!("CARGO_PKG_VERSION")).with_attribute("casm.command", name),
+-    );
+-
+-    let span = recorder.start(name);
+-    let result = dispatch(cli, &mut recorder);
+-
+-    // Recorded before the span closes, so it carries the span id and a log pipeline can
+-    // correlate the line with the trace.
+-    recorder.event(severity_of(&result), summarise(name, &result));
+-    recorder.finish(span, outcome_of(&result));
+-
+-    if let Some(format) = telemetry {
+-        // Stderr: stdout carries the command's output, and a pipeline parsing it must not
+-        // receive timing data mixed in. A telemetry write that fails is reported and does
+-        // not change the command's own exit code — the work succeeded either way.
+-        if let Err(error) = sink::write(&recorder, format.as_sink_format(), &mut std::io::stderr())
+-        {
+-            eprintln!("warning: could not write telemetry: {error}");
+-        }
+-    }
+-
+-    match result {
+-        Ok(code) => std::process::ExitCode::from(clamp(code.code())),
+-        Err(error) => {
+-            eprintln!("error: {}", error.0);
+-            std::process::ExitCode::from(clamp(ExitCode::Failure.code()))
+-        }
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// How a command's result reads as a span outcome.
+ ///
+ /// Validation findings are *not* an error: the command did its job and reported what it
+ /// found. Only a command that could not run is an error, which keeps a trace searchable
+ /// for real failures rather than for architectures that need work.
+ fn outcome_of(result: &CommandResult) -> Outcome {

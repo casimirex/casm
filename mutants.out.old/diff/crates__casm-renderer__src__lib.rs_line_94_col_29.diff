@@ -1,0 +1,21 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace == with != in diagram_id
+@@ -86,17 +86,17 @@
+         .enumerate()
+         .map(|(index, node)| (node.id(), format!("n{index}")))
+         .collect()
+ }
+ 
+ /// Resolves a node's diagram identifier.
+ fn diagram_id(ids: &[(NodeId, String)], node: NodeId) -> &str {
+     ids.iter()
+-        .find(|(id, _)| *id == node)
++        .find(|(id, _)| *id != /* ~ changed by cargo-mutants ~ */ node)
+         .map_or("unknown", |(_, diagram_id)| diagram_id.as_str())
+ }
+ 
+ /// Escapes a free-form label for embedding in a quoted diagram string.
+ ///
+ /// Node *names* never need this — the CASIMIR name alphabet has no metacharacters — but
+ /// descriptions are arbitrary text supplied by the author.
+ #[must_use]

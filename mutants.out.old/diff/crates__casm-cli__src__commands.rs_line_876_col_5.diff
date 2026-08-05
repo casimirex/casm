@@ -1,0 +1,43 @@
+--- crates/casm-cli/src/commands.rs
++++ replace walk -> Result<(), CommandError> with Ok(())
+@@ -868,39 +868,17 @@
+ /// The maximum directory depth `check` will descend.
+ ///
+ /// NASA Rule 4: the recursion needs a statically provable bound. Eight levels reaches
+ /// any sanely-organised repository and cannot be driven into a symlink loop.
+ const MAX_WALK_DEPTH: usize = 8;
+ 
+ /// Recursively collects architecture files, bounded by [`MAX_WALK_DEPTH`].
+ fn walk(directory: &Path, depth: usize, found: &mut Vec<PathBuf>) -> Result<(), CommandError> {
+-    if depth > MAX_WALK_DEPTH {
+-        return Ok(());
+-    }
+-
+-    let entries = std::fs::read_dir(directory)
+-        .map_err(|error| CommandError(format!("cannot read '{}': {error}", directory.display())))?;
+-
+-    for entry in entries.flatten() {
+-        let path = entry.path();
+-        let name = entry.file_name().to_string_lossy().to_string();
+-
+-        if name.starts_with('.') || name == "target" || name == "node_modules" {
+-            continue;
+-        }
+-
+-        if path.is_dir() {
+-            walk(&path, depth.saturating_add(1), found)?;
+-        } else if Format::from_path(&path).is_some() && is_architecture_file(&path) {
+-            found.push(path);
+-        }
+-    }
+-
+-    Ok(())
++    Ok(()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns `true` if `path` looks like a CASIMIR architecture rather than any old YAML.
+ ///
+ /// Checked by content, not by filename: a repository is full of YAML that is not an
+ /// architecture, and `check` reporting parse failures for every CI workflow file would
+ /// make it useless.
+ fn is_architecture_file(path: &Path) -> bool {

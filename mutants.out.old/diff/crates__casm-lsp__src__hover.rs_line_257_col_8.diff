@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/hover.rs
++++ delete ! in append_edges
+@@ -249,17 +249,17 @@
+                 "\n- → `{}` ({})",
+                 name_of(edge.target()),
+                 edge_summary(edge)
+             );
+         }
+     }
+ 
+     let incoming: Vec<&Relationship> = architecture.incoming(node.id()).collect();
+-    if !incoming.is_empty() {
++    if  /* ~ changed by cargo-mutants ~ */incoming.is_empty() {
+         out.push_str("\n\n**Called by**");
+         for edge in incoming {
+             let _ = write!(
+                 out,
+                 "\n- ← `{}` ({})",
+                 name_of(edge.source()),
+                 edge_summary(edge)
+             );

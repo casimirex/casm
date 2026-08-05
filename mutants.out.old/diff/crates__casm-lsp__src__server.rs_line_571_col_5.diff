@@ -1,0 +1,35 @@
+--- crates/casm-lsp/src/server.rs
++++ replace convert_diagnostic -> Diagnostic with Default::default()
+@@ -563,31 +563,17 @@
+ /// Line granularity is deliberate: an editor asks for actions at the cursor, and a fix
+ /// for the node on that line is what the author expects to be offered.
+ fn overlaps(span: Span, range: Range) -> bool {
+     span.line >= range.start.line && span.line <= range.end.line
+ }
+ 
+ /// Converts a CASIMIR diagnostic into a protocol one.
+ fn convert_diagnostic(diagnostic: &crate::diagnostics::Diagnostic) -> Diagnostic {
+-    Diagnostic {
+-        range: convert_span(diagnostic.span),
+-        severity: Some(match diagnostic.severity {
+-            Severity::Error => DiagnosticSeverity::ERROR,
+-            Severity::Warning => DiagnosticSeverity::WARNING,
+-            Severity::Info => DiagnosticSeverity::INFORMATION,
+-        }),
+-        code: Some(NumberOrString::String(diagnostic.code.clone())),
+-        code_description: None,
+-        source: Some("casm".to_owned()),
+-        message: diagnostic.message.clone(),
+-        related_information: None,
+-        tags: None,
+-        data: None,
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Converts an outline entry into a protocol document symbol.
+ ///
+ /// `range` covers the whole node item so the editor can highlight the block, while
+ /// `selection_range` is just the name so "reveal" lands on it rather than on the `- `.
+ #[allow(deprecated)] // `DocumentSymbol::deprecated` is deprecated but not optional.
+ fn build_symbol(entry: navigation::Outline) -> DocumentSymbol {

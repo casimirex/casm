@@ -1,0 +1,29 @@
+crates/casm-cli/src/commands.rs:190:5: replace print_human with ()
+crates/casm-cli/src/commands.rs:299:32: replace > with >= in check
+crates/casm-cli/src/commands.rs:483:16: delete ! in drift
+crates/casm-cli/src/commands.rs:491:22: replace && with || in drift
+crates/casm-cli/src/commands.rs:491:25: delete ! in drift
+crates/casm-cli/src/commands.rs:588:39: replace == with != in evolve_targets
+crates/casm-cli/src/commands.rs:614:5: replace print_conformance with ()
+crates/casm-cli/src/commands.rs:647:26: delete ! in repository_for
+crates/casm-cli/src/commands.rs:728:5: replace attribution_of -> Attribution with Default::default()
+crates/casm-cli/src/commands.rs:807:19: delete ! in print_revisions
+crates/casm-cli/src/commands.rs:784:5: replace print_revisions with ()
+crates/casm-cli/src/commands.rs:823:8: delete ! in checkout
+crates/casm-core/src/architecture.rs:82:9: replace ArchitectureConfig::description -> Self with Default::default()
+crates/casm-core/src/architecture.rs:110:9: replace ArchitectureConfig::metadata -> Self with Default::default()
+crates/casm-core/src/architecture.rs:212:9: replace Architecture::builder -> ArchitectureConfig with Default::default()
+crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with None
+crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with Some("")
+crates/casm-core/src/architecture.rs:233:9: replace Architecture::description -> Option<&str> with Some("xyzzy")
+crates/casm-core/src/architecture.rs:261:9: replace Architecture::is_empty -> bool with true
+crates/casm-core/src/architecture.rs:306:9: replace Architecture::contains -> bool with true
+crates/casm-core/src/architecture.rs:306:9: replace Architecture::contains -> bool with false
+crates/casm-core/src/architecture.rs:549:51: replace == with != in Architecture::verify_invariants
+crates/casm-core/src/relationship.rs:159:9: replace RelationshipConfig::control -> Self with Default::default()
+crates/casm-core/src/relationship.rs:265:9: replace Relationship::builder -> RelationshipConfig with Default::default()
+crates/casm-core/src/relationship.rs:293:9: replace Relationship::protocol -> Option<&Protocol> with None
+crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with None
+crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with Some("")
+crates/casm-core/src/relationship.rs:300:9: replace Relationship::description -> Option<&str> with Some("xyzzy")
+crates/casm-core/src/relationship.rs:307:9: replace Relationship::controls -> &[Control] with Vec::leak(Vec::new())

@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ delete ! in difference
+@@ -511,17 +511,17 @@
+         .relationships()
+         .find(|edge| &edge_key(architecture, edge) == key)
+ }
+ 
+ /// Returns the items added to and removed from `old` to reach `new`.
+ fn difference(old: &[String], new: &[String]) -> (Vec<String>, Vec<String>) {
+     let added = new
+         .iter()
+-        .filter(|item| !old.contains(item))
++        .filter(|item|  /* ~ changed by cargo-mutants ~ */old.contains(item))
+         .cloned()
+         .collect();
+     let removed = old
+         .iter()
+         .filter(|item| !new.contains(item))
+         .cloned()
+         .collect();
+     (added, removed)

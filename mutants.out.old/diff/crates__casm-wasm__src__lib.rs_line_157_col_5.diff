@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace hover -> String with String::new()
+@@ -149,17 +149,17 @@
+ pub fn complete_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+     api::complete_with_patterns(source, patterns, line, character)
+ }
+ 
+ /// Returns a hover tooltip for a zero-based cursor position.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn hover(source: &str, line: u32, character: u32) -> String {
+-    api::hover(source, line, character)
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns a hover tooltip, explaining a claimed pattern from the supplied library.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn hover_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+     api::hover_with_patterns(source, patterns, line, character)
+ }

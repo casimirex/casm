@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::total_bytes -> usize with 0
+@@ -241,17 +241,17 @@
+     #[must_use]
+     pub fn is_empty(&self) -> bool {
+         self.documents.is_empty()
+     }
+ 
+     /// The total source bytes held.
+     #[must_use]
+     pub fn total_bytes(&self) -> usize {
+-        self.documents.values().map(Document::size).sum()
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The URIs currently held, in arbitrary order.
+     #[must_use]
+     pub fn uris(&self) -> Vec<String> {
+         self.documents.keys().cloned().collect()
+     }
+ 

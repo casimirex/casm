@@ -1,0 +1,21 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::conformance -> impl Iterator<Item =&Conformance> with ::std::iter::once(Box::leak(Box::new(Default::default())))
+@@ -268,17 +268,17 @@
+ 
+     /// Iterates the relationships in insertion order.
+     pub fn relationships(&self) -> impl Iterator<Item = &Relationship> {
+         self.relationships.iter()
+     }
+ 
+     /// Iterates the pattern-conformance claims, in declaration order.
+     pub fn conformance(&self) -> impl Iterator<Item = &Conformance> {
+-        self.conformance.iter()
++        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// How many patterns this architecture claims to conform to.
+     #[inline]
+     #[must_use]
+     pub fn conformance_count(&self) -> usize {
+         self.conformance.len()
+     }

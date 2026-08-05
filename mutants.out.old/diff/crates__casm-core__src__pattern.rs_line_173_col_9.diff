@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Requirement::required_protocols -> &[Protocol] with Vec::leak(Vec::new())
+@@ -165,17 +165,17 @@
+     pub fn required_control_types(&self) -> &[ControlType] {
+         &self.required_control_types
+     }
+ 
+     /// Protocols the node must expose.
+     #[inline]
+     #[must_use]
+     pub fn required_protocols(&self) -> &[Protocol] {
+-        &self.required_protocols
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A relationship that must hold between two roles.
+ #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields, rename_all = "kebab-case")]
+ pub struct RequiredRelationship {
+     /// The originating role.

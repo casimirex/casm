@@ -1,0 +1,93 @@
+
+*** crates/casm-diff/src/drift.rs:348:13: replace && with || in detect
+
+*** mutation diff:
+--- crates/casm-diff/src/drift.rs
++++ replace && with || in detect
+@@ -340,17 +340,17 @@
+             });
+             continue;
+         };
+ 
+         bound_ids.push(&resource.id);
+         matched = matched.saturating_add(1);
+ 
+         if let Some(observed) = resource.node_type
+-            && observed != node.node_type()
++            || /* ~ changed by cargo-mutants ~ */ observed != node.node_type()
+         {
+             drifts.push(Drift::TypeMismatch {
+                 node: node.name().as_str().to_owned(),
+                 declared: node.node_type().to_string(),
+                 observed: observed.to_string(),
+             });
+         }
+     }
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-diff@0.3.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+       Fresh serde_core v1.0.229
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh equivalent v1.0.2
+       Fresh proc-macro2 v1.0.107
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh hashbrown v0.17.1
+       Fresh quote v1.0.47
+       Fresh generic-array v0.14.7
+       Fresh indexmap v2.14.0
+       Fresh getrandom v0.4.3
+       Fresh itoa v1.0.18
+       Fresh keccak v0.1.6
+       Fresh syn v3.0.3
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh uuid v1.24.0
+       Fresh zmij v1.0.23
+       Fresh semver v1.0.28
+       Fresh winnow v1.0.4
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh digest v0.10.7
+       Fresh memchr v2.8.3
+       Fresh toml_parser v1.1.3+spec-1.1.0
+       Fresh serde_spanned v1.1.1
+       Fresh toml_datetime v0.7.5+spec-1.1.0
+       Fresh ryu v1.0.23
+       Fresh serde v1.0.229
+       Fresh thiserror v2.0.19
+       Fresh sha3 v0.10.9
+       Fresh serde_json v1.0.151
+       Fresh unsafe-libyaml v0.2.11
+       Fresh winnow v0.7.15
+       Fresh toml_writer v1.1.2+spec-1.1.0
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-core)
+       Fresh toml v0.9.12+spec-1.1.0
+       Fresh serde_yaml_ng v0.10.0
+       Fresh casm-parser v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-parser)
+       Dirty casm-diff v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-diff): the file `crates/casm-diff/src/drift.rs` has changed (1785931645.958511090s, 1s after last build at 1785931644.590379516s)
+   Compiling casm-diff v0.3.0 (/tmp/cargo-mutants-casm-W5ytYW.tmp/crates/casm-diff)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9dda23a21ebb89cc -C extra-filename=-4e10ba2b0fd94d1b --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rlib --extern casm_parser=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_parser-46b061afdef23cde.rlib --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9565f1dc2285fbe6 -C extra-filename=-1f5d8f651604cc16 --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rmeta --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --verbose`
+error: `||` operators are not supported in let chain conditions
+   --> crates/casm-diff/src/drift.rs:348:13
+    |
+348 |             || /* ~ changed by cargo-mutants ~ */ observed != node.node_type()
+    |             ^^
+
+error: could not compile `casm-diff` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9565f1dc2285fbe6 -C extra-filename=-1f5d8f651604cc16 --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rmeta --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-2119863ca5860397.rmeta --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rmeta --verbose` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `casm-diff` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_diff --edition=2024 crates/casm-diff/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=9dda23a21ebb89cc -C extra-filename=-4e10ba2b0fd94d1b --out-dir /tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_core-0e2727cdb6cb7ba3.rlib --extern casm_parser=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libcasm_parser-46b061afdef23cde.rlib --extern serde=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde-2119863ca5860397.rlib --extern serde_json=/tmp/cargo-mutants-casm-W5ytYW.tmp/target/debug/deps/libserde_json-8ada6c1221654e94.rlib --verbose` (exit status: 1)
+
+*** result: Failure(101)

@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace match guard has_drive_letter(rest) with false in uri_to_path
+@@ -296,17 +296,17 @@
+ /// scheme leaves `/C:/dir`, which no Windows API will open — the leading slash has to go
+ /// when a drive letter follows it. And a folder whose name contains a space arrives
+ /// percent-encoded, so `%20` must come back before the path is used.
+ #[must_use]
+ pub fn uri_to_path(uri: &str) -> std::path::PathBuf {
+     let trimmed = uri.strip_prefix("file://").unwrap_or(uri);
+ 
+     let trimmed = match trimmed.strip_prefix('/') {
+-        Some(rest) if has_drive_letter(rest) => rest,
++        Some(rest) if false /* ~ changed by cargo-mutants ~ */ => rest,
+         _ => trimmed,
+     };
+ 
+     Path::new(&percent_decode(trimmed)).to_path_buf()
+ }
+ 
+ /// Returns `true` if `path` opens with a Windows drive specification such as `C:`.
+ fn has_drive_letter(path: &str) -> bool {

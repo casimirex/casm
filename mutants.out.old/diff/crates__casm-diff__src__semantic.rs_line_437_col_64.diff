@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace != with == in Diff::diff_relationships
+@@ -429,17 +429,17 @@
+         for edge in new.relationships() {
+             let key = edge_key(new, edge);
+             match find_edge(old, &key) {
+                 None => changes.push(Change::RelationshipAdded {
+                     source: key.0,
+                     target: key.1,
+                     kind: key.2,
+                 }),
+-                Some(previous) if previous.latency_budget_ms() != edge.latency_budget_ms() => {
++                Some(previous) if previous.latency_budget_ms() == /* ~ changed by cargo-mutants ~ */ edge.latency_budget_ms() => {
+                     changes.push(Change::LatencyBudgetChanged {
+                         source: key.0,
+                         target: key.1,
+                         from: previous.latency_budget_ms(),
+                         to: edge.latency_budget_ms(),
+                     });
+                 }
+                 Some(_) => {}

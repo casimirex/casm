@@ -1,0 +1,34 @@
+--- crates/casm-cli/src/commands.rs
++++ replace fmt -> CommandResult with Default::default()
+@@ -310,30 +310,17 @@
+     }
+ 
+     println!("\nchecked {checked} of {} file(s)", files.len());
+     Ok(worst)
+ }
+ 
+ /// Reformats or converts an architecture file.
+ pub(crate) fn fmt(file: &Path, format: DocumentFormat, write: bool) -> CommandResult {
+-    let architecture = parse_file(file)?;
+-    let rendered = emit_str(&architecture, format.as_parser_format())?;
+-
+-    if !write {
+-        print!("{rendered}");
+-        return Ok(ExitCode::Success);
+-    }
+-
+-    let target = target_path(file, format.as_parser_format());
+-    std::fs::write(&target, &rendered)
+-        .map_err(|error| CommandError(format!("cannot write '{}': {error}", target.display())))?;
+-
+-    println!("wrote {}", target.display());
+-    Ok(ExitCode::Success)
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Chooses the output path when `fmt --write` changes the format.
+ fn target_path(file: &Path, format: Format) -> PathBuf {
+     let extension = match format {
+         Format::Yaml => "yaml",
+         Format::Json => "json",
+         Format::Toml => "toml",

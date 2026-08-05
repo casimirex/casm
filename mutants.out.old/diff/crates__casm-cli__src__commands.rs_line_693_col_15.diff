@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace && with || in evidence
+@@ -685,17 +685,17 @@
+         }
+         EvidenceFormat::Json => {
+             let json = serde_json::to_string_pretty(&pack)
+                 .map_err(|error| CommandError(format!("cannot serialise the register: {error}")))?;
+             println!("{json}");
+         }
+     }
+ 
+-    if strict && pack.outstanding() > 0 {
++    if strict || /* ~ changed by cargo-mutants ~ */ pack.outstanding() > 0 {
+         return Ok(ExitCode::ValidationErrors);
+     }
+     Ok(ExitCode::Success)
+ }
+ 
+ /// Reads whatever Git can tell us about where an architecture came from.
+ ///
+ /// A file outside a repository, or one Git cannot read, yields

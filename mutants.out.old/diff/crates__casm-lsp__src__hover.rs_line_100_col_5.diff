@@ -1,0 +1,33 @@
+--- crates/casm-lsp/src/hover.rs
++++ replace describe_symbol -> String with String::new()
+@@ -92,29 +92,17 @@
+ 
+ /// Renders the tooltip for a resolved symbol.
+ fn describe_symbol(
+     index: &DocumentIndex,
+     architecture: Option<&Architecture>,
+     patterns: &[Pattern],
+     symbol: &Symbol,
+ ) -> String {
+-    match symbol.kind {
+-        // A `bind:` value names a node, so it gets the node's tooltip.
+-        SymbolKind::NodeDefinition | SymbolKind::NodeReference(_) | SymbolKind::BindingTarget => {
+-            describe_node(index, architecture, &symbol.text)
+-        }
+-        SymbolKind::PatternReference => describe_pattern(patterns, &symbol.text),
+-        SymbolKind::NodeTypeValue => describe_term(NODE_TYPES, &symbol.text, "node type"),
+-        SymbolKind::RelationshipTypeValue => {
+-            describe_term(RELATIONSHIP_TYPES, &symbol.text, "relationship type")
+-        }
+-        SymbolKind::ControlTypeValue => describe_term(CONTROL_TYPES, &symbol.text, "control type"),
+-        SymbolKind::ProtocolValue => describe_protocol(&symbol.text),
+-    }
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders a claimed pattern, from the library if it holds one.
+ ///
+ /// Says plainly when the library does not, rather than showing an empty tooltip: "the
+ /// library has no such pattern" is the answer the author needs, and it is the same thing
+ /// `patterns-are-satisfied` reports as a warning.
+ fn describe_pattern(patterns: &[Pattern], reference: &str) -> String {

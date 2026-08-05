@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/server.rs
++++ delete field kind from struct CodeAction expression in convert_action
+@@ -648,20 +648,17 @@
+         WorkspaceEdit {
+             changes: Some([(uri.clone(), edits)].into_iter().collect()),
+             ..WorkspaceEdit::default()
+         }
+     });
+ 
+     CodeActionOrCommand::CodeAction(CodeAction {
+         title: action.title.clone(),
+-        kind: Some(match action.kind {
+-            ActionKind::QuickFix => CodeActionKind::QUICKFIX,
+-            ActionKind::Source => CodeActionKind::SOURCE,
+-        }),
++         /* ~ changed by cargo-mutants ~ */
+         edit,
+         command: action.command.map(|command| Command {
+             title: command.title,
+             command: command.id,
+             arguments: Some(vec![serde_json::Value::String(uri.as_str().to_owned())]),
+         }),
+         ..CodeAction::default()
+     })

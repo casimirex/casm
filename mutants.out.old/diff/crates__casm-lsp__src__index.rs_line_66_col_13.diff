@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm "nodes" in Section::from_key
+@@ -58,17 +58,17 @@
+     /// Inside a top-level key CASIMIR does not recognise.
+     Unknown,
+ }
+ 
+ impl Section {
+     /// Classifies a top-level key.
+     fn from_key(key: &str) -> Self {
+         match key {
+-            "nodes" => Self::Nodes,
++             /* ~ changed by cargo-mutants ~ */
+             "relationships" => Self::Relationships,
+             "patterns" => Self::Patterns,
+             "metadata" => Self::Metadata,
+             "name" | "version" | "description" => Self::Root,
+             _ => Self::Unknown,
+         }
+     }
+ }

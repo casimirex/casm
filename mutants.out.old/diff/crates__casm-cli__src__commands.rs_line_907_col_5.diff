@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/commands.rs
++++ replace is_architecture_file -> bool with true
+@@ -899,20 +899,17 @@
+ }
+ 
+ /// Returns `true` if `path` looks like a CASIMIR architecture rather than any old YAML.
+ ///
+ /// Checked by content, not by filename: a repository is full of YAML that is not an
+ /// architecture, and `check` reporting parse failures for every CI workflow file would
+ /// make it useless.
+ fn is_architecture_file(path: &Path) -> bool {
+-    let Ok(source) = std::fs::read_to_string(path) else {
+-        return false;
+-    };
+-    source.contains("nodes") && (source.contains("relationships") || source.contains("name"))
++    true /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,46 @@
+--- crates/casm-lsp/src/library.rs
++++ replace discover -> Discovery with Default::default()
+@@ -66,42 +66,17 @@
+ /// `roots` are the workspace folders the client reported, most significant first.
+ /// `configured` is the `casm.patterns` setting, absolute or relative to the first root.
+ ///
+ /// An explicit setting is never silently ignored: a `configured` path that does not exist
+ /// yields an empty library and says so, rather than falling back to a conventional
+ /// directory the author did not ask for.
+ #[must_use]
+ pub fn discover(roots: &[PathBuf], configured: Option<&str>) -> Discovery {
+-    if let Some(setting) = configured {
+-        let candidate = resolve(roots, setting);
+-        if !candidate.is_dir() {
+-            return Discovery::empty(format!(
+-                "casm.patterns is set to '{}', which is not a directory — conformance \
+-                 claims will be reported as unchecked",
+-                candidate.display()
+-            ));
+-        }
+-        return load(&candidate);
+-    }
+-
+-    for root in roots {
+-        for suffix in CONVENTIONAL {
+-            let candidate = root.join(suffix);
+-            if candidate.is_dir() {
+-                return load(&candidate);
+-            }
+-        }
+-    }
+-
+-    Discovery::empty(
+-        "no pattern library found — looked for 'patterns/' and '.casm/patterns/' in each \
+-         workspace folder. Conformance claims will be reported as unchecked; set \
+-         'casm.patterns' to point at one.",
+-    )
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Loads a directory known to exist, turning any failure into a note.
+ fn load(directory: &Path) -> Discovery {
+     match Library::load(directory) {
+         Ok(library) => {
+             let patterns: Vec<Pattern> = library.patterns().cloned().collect();
+             Discovery {

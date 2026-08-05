@@ -1,0 +1,33 @@
+--- crates/casm-lsp/src/hover.rs
++++ replace describe_indexed_node -> String with "xyzzy".into()
+@@ -276,29 +276,17 @@
+     if let Some(budget) = edge.latency_budget_ms() {
+         parts.push(format!("{budget}ms"));
+     }
+     parts.join(", ")
+ }
+ 
+ /// The degraded picture, from a document that does not currently parse.
+ fn describe_indexed_node(index: &DocumentIndex, name: &str) -> String {
+-    let Some(entry) = index.node_named(name) else {
+-        return format!(
+-            "`{name}` does not match any node declared in this document.\n\n\
+-             Check the spelling, or add a node with this name under `nodes:`."
+-        );
+-    };
+-
+-    let mut out = match entry.node_type.as_deref() {
+-        Some(node_type) => format!("**{name}** — _{node_type}_"),
+-        None => format!("**{name}** — _type not yet declared_"),
+-    };
+-    out.push_str("\n\n_Showing partial information: the document does not currently parse._");
+-    out
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for BoundaryCrossingsRequireControls>::description -> &'static str with "xyzzy"
+@@ -297,17 +297,17 @@
+ pub struct BoundaryCrossingsRequireControls;
+ 
+ impl Rule for BoundaryCrossingsRequireControls {
+     fn id(&self) -> &'static str {
+         "boundary-crossings-require-controls"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "relationships that cross the trust boundary must declare at least one control"
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for edge in context.architecture.relationships() {
+             let (Some(source), Some(target)) = (
+                 context.architecture.node(edge.source()),
+                 context.architecture.node(edge.target()),
+             ) else {

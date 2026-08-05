@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace == with != in Builder::record_claim
+@@ -663,17 +663,17 @@
+     }
+ 
+     /// Records or extends a conformance claim.
+     fn record_claim(&mut self, info: &LineInfo) {
+         if info.section != Section::Patterns {
+             return;
+         }
+ 
+-        if info.is_list_item && info.block == Block::None {
++        if info.is_list_item && info.block != /* ~ changed by cargo-mutants ~ */ Block::None {
+             self.claims.push(ClaimEntry {
+                 item_line: info.number,
+                 last_line: info.number,
+                 field_indent: info.field_indent(),
+                 ..ClaimEntry::default()
+             });
+         }
+ 

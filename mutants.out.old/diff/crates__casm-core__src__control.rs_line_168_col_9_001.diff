@@ -1,0 +1,21 @@
+--- crates/casm-core/src/control.rs
++++ replace Control::evidence_required -> bool with false
+@@ -160,17 +160,17 @@
+     pub fn description(&self) -> &str {
+         &self.description
+     }
+ 
+     /// Whether an auditor must be shown evidence for this control.
+     #[inline]
+     #[must_use]
+     pub const fn evidence_required(&self) -> bool {
+-        self.evidence_required
++        false /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The tags attached to this control.
+     #[inline]
+     #[must_use]
+     pub fn tags(&self) -> &[String] {
+         &self.tags
+     }

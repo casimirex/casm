@@ -1,0 +1,21 @@
+--- crates/casm-git/src/time.rs
++++ replace / with * in DateTime::from_unix
+@@ -55,17 +55,17 @@
+         let remainder = seconds.rem_euclid(SECONDS_PER_DAY);
+ 
+         let (year, month, day) = civil_from_days(days);
+ 
+         Self {
+             year,
+             month,
+             day,
+-            hour: (remainder / 3_600) as u32,
++            hour: (remainder * /* ~ changed by cargo-mutants ~ */ 3_600) as u32,
+             minute: ((remainder % 3_600) / 60) as u32,
+             second: (remainder % 60) as u32,
+         }
+     }
+ 
+     /// Renders as `YYYY-MM-DD`.
+     #[must_use]
+     pub fn to_date(&self) -> String {

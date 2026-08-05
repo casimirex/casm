@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ replace == with != in ClaimEntry::binding_span
+@@ -269,17 +269,17 @@
+             .unwrap_or_else(|| Span::line_start(self.item_line))
+     }
+ 
+     /// Where the node bound to `role` is named, if the claim binds it.
+     #[must_use]
+     pub fn binding_span(&self, role: &str) -> Option<Span> {
+         self.bindings
+             .iter()
+-            .find(|(name, _)| name == role)
++            .find(|(name, _)| name != /* ~ changed by cargo-mutants ~ */ role)
+             .map(|(_, span)| *span)
+     }
+ }
+ 
+ /// A position-aware view of an architecture document.
+ ///
+ /// Construction never fails; a malformed document simply yields fewer symbols.
+ #[derive(Clone, Debug, Default)]

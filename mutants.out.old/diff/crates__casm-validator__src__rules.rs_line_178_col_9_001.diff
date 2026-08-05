@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for ServicesRequireSecurityControls>::description -> &'static str with "xyzzy"
+@@ -170,17 +170,17 @@
+ pub struct ServicesRequireSecurityControls;
+ 
+ impl Rule for ServicesRequireSecurityControls {
+     fn id(&self) -> &'static str {
+         "services-require-security-controls"
+     }
+ 
+     fn description(&self) -> &'static str {
+-        "each service and gateway must declare at least the configured number of security controls"
++        "xyzzy" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         let required = context.config.min_security_controls_per_service;
+         if required == 0 {
+             return;
+         }
+ 

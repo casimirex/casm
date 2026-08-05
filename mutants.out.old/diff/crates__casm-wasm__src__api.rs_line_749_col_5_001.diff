@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/api.rs
++++ replace version -> String with "xyzzy".into()
+@@ -741,17 +741,17 @@
+         .collect();
+ 
+     to_json(&catalogue)
+ }
+ 
+ /// The crate version, so a page can show what it is running.
+ #[must_use]
+ pub fn version() -> String {
+-    env!("CARGO_PKG_VERSION").to_owned()
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,21 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace <impl Renderer for Mermaid>::id -> &'static str with ""
+@@ -150,17 +150,17 @@
+             parts.push(format!("{budget}ms"));
+         }
+         parts.join(" / ")
+     }
+ }
+ 
+ impl Renderer for Mermaid {
+     fn id(&self) -> &'static str {
+-        "mermaid"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn extension(&self) -> &'static str {
+         "mmd"
+     }
+ 
+     fn render(&self, architecture: &Architecture) -> String {
+         let ids = diagram_ids(architecture);

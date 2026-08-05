@@ -415,6 +415,25 @@ mod tests {
     }
 
     #[test]
+    fn every_outcome_has_its_own_label() {
+        // The labels reach a human-readable summary, and nothing asserted them: replacing
+        // the whole function with a constant survived the mutation sweep.
+        assert_eq!(Outcome::Unset.label(), "unset");
+        assert_eq!(Outcome::Ok.label(), "ok");
+        assert_eq!(Outcome::Error.label(), "error");
+
+        let labels = [Outcome::Unset, Outcome::Ok, Outcome::Error].map(Outcome::label);
+        assert_eq!(
+            labels
+                .iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .len(),
+            3,
+            "two outcomes sharing a label would make a summary ambiguous"
+        );
+    }
+
+    #[test]
     fn severities_order_by_seriousness() {
         assert!(Severity::Debug < Severity::Info);
         assert!(Severity::Info < Severity::Warn);

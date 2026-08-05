@@ -1,0 +1,36 @@
+--- crates/casm-core/src/architecture.rs
++++ replace Architecture::remove_node -> Result<Option<Node>, ArchitectureError> with Ok(Some(Default::default()))
+@@ -466,32 +466,17 @@
+     /// quietly sever edges the author never inspected. A conformance binding counts as a
+     /// reference for the same reason — removing the node a pattern role is bound to
+     /// should make the author revisit the claim, not silently invalidate it.
+     ///
+     /// # Errors
+     ///
+     /// Returns [`ArchitectureError::NodeStillReferenced`] with the reference count.
+     pub fn remove_node(&mut self, id: NodeId) -> Result<Option<Node>, ArchitectureError> {
+-        let bound = self
+-            .conformance
+-            .iter()
+-            .flat_map(|claim| claim.bindings().values())
+-            .filter(|bound| **bound == id)
+-            .count();
+-
+-        let references = self.degree(id) + bound;
+-        if references > 0 {
+-            return Err(ArchitectureError::NodeStillReferenced {
+-                id: id.to_string(),
+-                count: references,
+-            });
+-        }
+-
+-        Ok(self.nodes.shift_remove(&id))
++        Ok(Some(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Consuming variant of [`Architecture::add_node`], for pipeline-style construction.
+     ///
+     /// # Errors
+     ///
+     /// As [`Architecture::add_node`].
+     pub fn with_node(mut self, node: Node) -> Result<Self, ArchitectureError> {

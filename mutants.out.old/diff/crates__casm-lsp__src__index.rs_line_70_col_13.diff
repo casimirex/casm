@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm "name" | "version" | "description" in Section::from_key
+@@ -62,17 +62,17 @@
+ impl Section {
+     /// Classifies a top-level key.
+     fn from_key(key: &str) -> Self {
+         match key {
+             "nodes" => Self::Nodes,
+             "relationships" => Self::Relationships,
+             "patterns" => Self::Patterns,
+             "metadata" => Self::Metadata,
+-            "name" | "version" | "description" => Self::Root,
++             /* ~ changed by cargo-mutants ~ */
+             _ => Self::Unknown,
+         }
+     }
+ }
+ 
+ /// A nested block within a node or relationship item.
+ #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+ pub enum Block {

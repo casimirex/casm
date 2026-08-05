@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace <impl TryFrom<String> for Name>::try_from -> Result<Self, Self::Error> with Ok(Default::default())
+@@ -116,17 +116,17 @@
+         &self.0
+     }
+ }
+ 
+ impl TryFrom<String> for Name {
+     type Error = NameError;
+ 
+     fn try_from(value: String) -> Result<Self, Self::Error> {
+-        Self::new(value)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl TryFrom<&str> for Name {
+     type Error = NameError;
+ 
+     fn try_from(value: &str) -> Result<Self, Self::Error> {
+         Self::new(value)

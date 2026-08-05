@@ -1,0 +1,21 @@
+--- crates/casm-diff/src/drift.rs
++++ replace Drift::is_missing -> bool with true
+@@ -231,17 +231,17 @@
+     /// Returns `true` if this finding means the architecture is describing something
+     /// that does not exist.
+     ///
+     /// The dangerous direction: an unexpected resource is usually something nobody
+     /// documented, whereas a missing node means a decision was written down and never
+     /// built, or was quietly torn down.
+     #[must_use]
+     pub const fn is_missing(&self) -> bool {
+-        matches!(self, Self::Missing { .. })
++        true /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl core::fmt::Display for Drift {
+     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+         match self {
+             Self::Missing { node, node_type } => write!(
+                 f,

@@ -1,0 +1,34 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Change::marker -> char with Default::default()
+@@ -152,30 +152,17 @@
+             | Self::PatternBindingsChanged { .. }
+             | Self::LatencyBudgetChanged { .. } => false,
+         }
+     }
+ 
+     /// The diff marker for this change: `+`, `-`, or `~`.
+     #[must_use]
+     pub const fn marker(&self) -> char {
+-        match self {
+-            Self::NodeAdded { .. }
+-            | Self::RelationshipAdded { .. }
+-            | Self::PatternClaimed { .. } => '+',
+-            Self::NodeRemoved { .. }
+-            | Self::RelationshipRemoved { .. }
+-            | Self::PatternDropped { .. } => '-',
+-            Self::Version { .. }
+-            | Self::NodeTypeChanged { .. }
+-            | Self::NodeInterfacesChanged { .. }
+-            | Self::NodeControlsChanged { .. }
+-            | Self::PatternBindingsChanged { .. }
+-            | Self::LatencyBudgetChanged { .. } => '~',
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl fmt::Display for Change {
+     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+         match self {
+             Self::Version { from, to } => write!(f, "architecture version {from} -> {to}"),
+             Self::NodeAdded { name, node_type } => write!(f, "node '{name}' added ({node_type})"),

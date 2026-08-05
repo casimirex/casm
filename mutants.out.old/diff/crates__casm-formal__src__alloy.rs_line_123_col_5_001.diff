@@ -1,0 +1,39 @@
+--- crates/casm-formal/src/alloy.rs
++++ replace module_name -> String with "xyzzy".into()
+@@ -115,35 +115,17 @@
+         NodeType::Human => "Human",
+         NodeType::Boundary => "Boundary",
+     }
+ }
+ 
+ /// Converts an architecture name into a legal Alloy module name.
+ #[must_use]
+ pub fn module_name(architecture_name: &str) -> String {
+-    let sanitised: String = architecture_name
+-        .chars()
+-        .map(|character| {
+-            if character.is_ascii_alphanumeric() {
+-                character
+-            } else {
+-                '_'
+-            }
+-        })
+-        .collect();
+-
+-    let trimmed = sanitised.trim_matches('_').to_owned();
+-    if trimmed.is_empty() || trimmed.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+-        format!("architecture_{trimmed}")
+-            .trim_end_matches('_')
+-            .to_owned()
+-    } else {
+-        trimmed
+-    }
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Renders a set of identifiers as an Alloy union, or `none` when empty.
+ fn union(members: &[String]) -> String {
+     if members.is_empty() {
+         "none".to_owned()
+     } else {
+         members.join(" + ")

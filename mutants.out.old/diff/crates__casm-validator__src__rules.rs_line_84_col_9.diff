@@ -1,0 +1,21 @@
+--- crates/casm-validator/src/rules.rs
++++ replace <impl Rule for NoDependencyCycles>::id -> &'static str with ""
+@@ -76,17 +76,17 @@
+ /// Blocking dependencies must not form a cycle.
+ ///
+ /// A cycle among blocking edges means no deployment order exists and a failure anywhere
+ /// in the ring propagates to every member.
+ pub struct NoDependencyCycles;
+ 
+ impl Rule for NoDependencyCycles {
+     fn id(&self) -> &'static str {
+-        "no-dependency-cycles"
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     fn description(&self) -> &'static str {
+         "blocking dependencies (sync, depends-on, composed, quantum-entangled) must be acyclic"
+     }
+ 
+     fn check(&self, context: &RuleContext<'_>, report: &mut Report) {
+         for cycle in context.graph.cycles() {

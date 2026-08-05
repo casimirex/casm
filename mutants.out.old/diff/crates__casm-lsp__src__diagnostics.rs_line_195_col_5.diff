@@ -1,0 +1,44 @@
+--- crates/casm-lsp/src/diagnostics.rs
++++ replace anchor -> Span with Default::default()
+@@ -187,40 +187,17 @@
+             return span;
+         }
+     }
+     Span::line_start(0)
+ }
+ 
+ /// Finds the span a validator subject should be underlined at.
+ fn anchor(index: &DocumentIndex, subject: &Subject) -> Span {
+-    match subject {
+-        Subject::Architecture => first_line_span(index),
+-        // On the `pattern:` value itself. A conformance finding is about the claim, and
+-        // the claim is a line the author wrote.
+-        Subject::Pattern { reference } => index.claim_of(reference).map_or_else(
+-            || first_line_span(index),
+-            crate::index::ClaimEntry::anchor_span,
+-        ),
+-        Subject::Node { name, .. } => index
+-            .node_named(name)
+-            .map_or_else(|| first_line_span(index), |node| node.name_span),
+-        Subject::Relationship { source, target } => {
+-            index.relationship_between(source, target).map_or_else(
+-                || first_line_span(index),
+-                crate::index::RelationshipEntry::anchor_span,
+-            )
+-        }
+-        Subject::NodeSet { names } => names
+-            .iter()
+-            .filter_map(|name| index.node_named(name))
+-            .map(|node| node.name_span)
+-            .min()
+-            .unwrap_or_else(|| first_line_span(index)),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Additional locations implicated in a finding.
+ fn related_locations(index: &DocumentIndex, subject: &Subject) -> Vec<(String, Span)> {
+     let Subject::NodeSet { names } = subject else {
+         return Vec::new();
+     };
+ 

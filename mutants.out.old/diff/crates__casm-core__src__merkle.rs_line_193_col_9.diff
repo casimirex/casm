@@ -1,0 +1,21 @@
+--- crates/casm-core/src/merkle.rs
++++ replace Encoder::optional_number -> &mut Self with Box::leak(Box::new(Default::default()))
+@@ -185,17 +185,17 @@
+             return self;
+         };
+         self.buffer.push(b'1');
+         self.text(text)
+     }
+ 
+     /// Appends an optional number.
+     fn optional_number(&mut self, value: Option<u64>) -> &mut Self {
+-        self.optional(value.map(|number| number.to_string()).as_deref())
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Appends a boolean.
+     fn flag(&mut self, value: bool) -> &mut Self {
+         self.buffer.push(if value { b'T' } else { b'F' });
+         self
+     }
+ 

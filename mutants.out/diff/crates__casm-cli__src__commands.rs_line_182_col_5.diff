@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/commands.rs
++++ replace exit_code_for -> ExitCode with Default::default()
+@@ -174,20 +174,17 @@
+         }
+     }
+ 
+     Ok(exit_code_for(&report, strict))
+ }
+ 
+ /// Maps a report onto an exit code, honouring `--strict`.
+ fn exit_code_for(report: &Report, strict: bool) -> ExitCode {
+-    if strict && report.has_warnings() {
+-        return ExitCode::ValidationErrors;
+-    }
+-    ExitCode::from_report_code(report.exit_code())
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Prints a validation report as prose.
+ fn print_human(file: &Path, architecture: &Architecture, report: &Report) {
+     println!(
+         "{}: {} v{} — {} node(s), {} relationship(s)",
+         file.display(),
+         architecture.name(),

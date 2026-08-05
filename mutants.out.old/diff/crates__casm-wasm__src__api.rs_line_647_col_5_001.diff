@@ -1,0 +1,49 @@
+--- crates/casm-wasm/src/api.rs
++++ replace conformance -> String with "xyzzy".into()
+@@ -639,45 +639,17 @@
+ /// This is `casm evolve` without a filesystem. It reports rather than rewrites, for the
+ /// reason ADR-0012 gives: a pattern is a shape to conform to, not a template to stamp, so
+ /// migrating to a new version is a computation over two sets and never a merge that could
+ /// silently corrupt the document.
+ ///
+ /// Never fails. A document that does not parse reports `ok: false` and the reason.
+ #[must_use]
+ pub fn conformance(source: &str, patterns: &str) -> String {
+-    let library = Library::read(patterns);
+-
+-    let architecture = match casm_parser::parse_str(source, Path::new(VIRTUAL_PATH)) {
+-        Ok(architecture) => architecture,
+-        Err(error) => {
+-            return to_json(&ConformanceResult {
+-                ok: false,
+-                conforms: false,
+-                error: Some(error.render()),
+-                patterns_loaded: library.patterns.len(),
+-                pattern_errors: library.errors,
+-                claims: Vec::new(),
+-            });
+-        }
+-    };
+-
+-    let claims: Vec<ClaimReport> = architecture
+-        .conformance()
+-        .map(|claim| check_claim(&architecture, &library.patterns, claim))
+-        .collect();
+-
+-    to_json(&ConformanceResult {
+-        ok: true,
+-        conforms: claims.iter().all(|claim| claim.checked && claim.conforms),
+-        error: None,
+-        patterns_loaded: library.patterns.len(),
+-        pattern_errors: library.errors,
+-        claims,
+-    })
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Checks one claim against the library, reporting an unheld pattern as unchecked.
+ fn check_claim(
+     architecture: &casm_core::Architecture,
+     patterns: &[casm_core::Pattern],
+     claim: &casm_core::Conformance,
+ ) -> ClaimReport {

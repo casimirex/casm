@@ -1,0 +1,23 @@
+--- crates/casm-lsp/src/server.rs
++++ replace <impl LanguageServer for Backend>::did_open with ()
+@@ -204,19 +204,17 @@
+         self.client.log_message(MessageType::INFO, note).await;
+     }
+ 
+     async fn shutdown(&self) -> RpcResult<()> {
+         Ok(())
+     }
+ 
+     async fn did_open(&self, params: DidOpenTextDocumentParams) {
+-        let document = params.text_document;
+-        self.refresh(&document.uri, document.text, document.version)
+-            .await;
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     async fn did_change(&self, params: DidChangeTextDocumentParams) {
+         // Full sync, so the last change carries the entire document.
+         let Some(change) = params.content_changes.into_iter().next_back() else {
+             return;
+         };
+         self.refresh(

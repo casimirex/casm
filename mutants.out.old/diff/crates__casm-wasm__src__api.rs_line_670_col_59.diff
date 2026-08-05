@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/api.rs
++++ replace && with || in conformance
+@@ -662,17 +662,17 @@
+ 
+     let claims: Vec<ClaimReport> = architecture
+         .conformance()
+         .map(|claim| check_claim(&architecture, &library.patterns, claim))
+         .collect();
+ 
+     to_json(&ConformanceResult {
+         ok: true,
+-        conforms: claims.iter().all(|claim| claim.checked && claim.conforms),
++        conforms: claims.iter().all(|claim| claim.checked || /* ~ changed by cargo-mutants ~ */ claim.conforms),
+         error: None,
+         patterns_loaded: library.patterns.len(),
+         pattern_errors: library.errors,
+         claims,
+     })
+ }
+ 
+ /// Checks one claim against the library, reporting an unheld pattern as unchecked.

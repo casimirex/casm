@@ -1,0 +1,30 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace edge_key -> (String, String, String) with ("xyzzy".into(), String::new(), String::new())
+@@ -485,26 +485,17 @@
+             out.push('\n');
+         }
+         out
+     }
+ }
+ 
+ /// Builds a relationship's name-based identity key.
+ fn edge_key(architecture: &Architecture, edge: &Relationship) -> (String, String, String) {
+-    let name_of = |id| {
+-        architecture
+-            .node(id)
+-            .map_or_else(|| "?".to_owned(), |node| node.name().as_str().to_owned())
+-    };
+-    (
+-        name_of(edge.source()),
+-        name_of(edge.target()),
+-        edge.relationship_type().to_string(),
+-    )
++    ("xyzzy".into(), String::new(), String::new()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Finds a relationship in `architecture` matching a name-based key.
+ fn find_edge<'a>(
+     architecture: &'a Architecture,
+     key: &(String, String, String),
+ ) -> Option<&'a Relationship> {
+     architecture

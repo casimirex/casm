@@ -1,0 +1,21 @@
+--- crates/casm-git/src/time.rs
++++ replace + with - in civil_from_days
+@@ -113,17 +113,17 @@
+ 
+     let day = (day_of_year - (153 * month_prime + 2) / 5 + 1) as u32;
+     let month = if month_prime < 10 {
+         month_prime + 3
+     } else {
+         month_prime - 9
+     } as u32;
+ 
+-    (if month <= 2 { year + 1 } else { year }, month, day)
++    (if month <= 2 { year - /* ~ changed by cargo-mutants ~ */ 1 } else { year }, month, day)
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

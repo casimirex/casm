@@ -476,6 +476,23 @@ mod tests {
         assert!(relationship.connects(a, b));
         assert!(relationship.connects(b, a));
         assert!(!relationship.connects(a, c));
+
+        // One endpoint matching is not enough, in either clause. Without these, replacing
+        // an `&&` with `||` survives: every case above either short-circuits on the first
+        // clause or happens to agree.
+        assert!(
+            !relationship.connects(c, a),
+            "source matches, target does not"
+        );
+        assert!(
+            !relationship.connects(b, c),
+            "target matches, source does not"
+        );
+        assert!(
+            !relationship.connects(c, b),
+            "reversed, still only one endpoint"
+        );
+        assert!(!relationship.connects(c, c));
     }
 
     #[test]

@@ -1,0 +1,21 @@
+--- crates/casm-parser/src/format.rs
++++ delete ! in Format::first_meaningful_line
+@@ -93,17 +93,17 @@
+         Self::Yaml
+     }
+ 
+     /// Returns the first line that is neither blank nor a `#` comment.
+     fn first_meaningful_line(source: &str) -> Option<&str> {
+         source
+             .lines()
+             .map(str::trim)
+-            .find(|line| !line.is_empty() && !line.starts_with('#') && !line.starts_with("---"))
++            .find(|line|  /* ~ changed by cargo-mutants ~ */line.is_empty() && !line.starts_with('#') && !line.starts_with("---"))
+     }
+ 
+     /// Resolves the format for a path, falling back to sniffing its contents.
+     #[must_use]
+     pub fn resolve(path: &Path, source: &str) -> Self {
+         Self::from_path(path).unwrap_or_else(|| Self::sniff(source))
+     }
+ }

@@ -1,0 +1,30 @@
+--- crates/casm-lsp/src/server.rs
++++ replace convert_span -> Range with Default::default()
+@@ -541,26 +541,17 @@
+ 
+ /// Converts a protocol position into CASIMIR's.
+ fn convert_position(position: Position) -> CasmPosition {
+     CasmPosition::new(position.line, position.character)
+ }
+ 
+ /// Converts a CASIMIR span into a protocol range.
+ fn convert_span(span: Span) -> Range {
+-    Range {
+-        start: Position {
+-            line: span.line,
+-            character: span.start,
+-        },
+-        end: Position {
+-            line: span.line,
+-            character: span.end,
+-        },
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns `true` if `span` intersects `range`, by line.
+ ///
+ /// Line granularity is deliberate: an editor asks for actions at the cursor, and a fix
+ /// for the node on that line is what the author expects to be offered.
+ fn overlaps(span: Span, range: Range) -> bool {
+     span.line >= range.start.line && span.line <= range.end.line

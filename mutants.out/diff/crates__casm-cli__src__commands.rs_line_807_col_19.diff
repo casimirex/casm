@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ delete ! in print_revisions
+@@ -799,17 +799,17 @@
+             revision.dated().to_date(),
+             revision.summary
+         );
+         println!("    {} <{}>", revision.author, revision.email);
+         println!("    fingerprint {}", revision.fingerprint.abbreviated(12));
+ 
+         if revision.introduced {
+             println!("    introduced here");
+-        } else if !revision.changed_nodes.is_empty() {
++        } else if  /* ~ changed by cargo-mutants ~ */revision.changed_nodes.is_empty() {
+             println!("    nodes: {}", revision.changed_nodes.join(", "));
+         }
+         println!();
+     }
+ 
+     println!("{} semantic change(s)", revisions.len());
+ }
+ 

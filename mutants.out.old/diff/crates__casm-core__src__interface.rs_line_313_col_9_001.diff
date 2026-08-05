@@ -1,0 +1,21 @@
+--- crates/casm-core/src/interface.rs
++++ replace Interface::schema_hash -> Option<&SchemaHash> with Some(Box::leak(Box::new(Default::default())))
+@@ -305,17 +305,17 @@
+     pub const fn version(&self) -> &Version {
+         &self.version
+     }
+ 
+     /// The content hash of the contract, if one was declared.
+     #[inline]
+     #[must_use]
+     pub const fn schema_hash(&self) -> Option<&SchemaHash> {
+-        self.schema_hash.as_ref()
++        Some(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The human-readable description, if any.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+         self.description.as_deref()
+     }

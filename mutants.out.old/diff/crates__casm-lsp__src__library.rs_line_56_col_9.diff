@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/library.rs
++++ replace Discovery::empty -> Self with Default::default()
+@@ -48,21 +48,17 @@
+     pub directory: Option<PathBuf>,
+     /// One line for the client's log, describing what happened.
+     pub note: String,
+ }
+ 
+ impl Discovery {
+     /// A discovery that found nothing, for the stated reason.
+     fn empty(note: impl Into<String>) -> Self {
+-        Self {
+-            patterns: Vec::new(),
+-            directory: None,
+-            note: note.into(),
+-        }
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// Finds and loads the library for a workspace.
+ ///
+ /// `roots` are the workspace folders the client reported, most significant first.
+ /// `configured` is the `casm.patterns` setting, absolute or relative to the first root.
+ ///

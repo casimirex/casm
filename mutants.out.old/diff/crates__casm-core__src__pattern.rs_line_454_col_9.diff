@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Pattern::name -> &Name with Box::leak(Box::new(Default::default()))
+@@ -446,17 +446,17 @@
+     pub fn builder() -> PatternConfig {
+         PatternConfig::new()
+     }
+ 
+     /// The pattern's name.
+     #[inline]
+     #[must_use]
+     pub const fn name(&self) -> &Name {
+-        &self.name
++        Box::leak(Box::new(Default::default())) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The pattern's semantic version.
+     #[inline]
+     #[must_use]
+     pub const fn version(&self) -> &Version {
+         &self.version
+     }

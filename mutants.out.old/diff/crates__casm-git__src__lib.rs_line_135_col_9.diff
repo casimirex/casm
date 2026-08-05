@@ -1,0 +1,30 @@
+--- crates/casm-git/src/lib.rs
++++ replace Repository::discover -> Result<Self> with Ok(Default::default())
+@@ -127,26 +127,17 @@
+ 
+ impl Repository {
+     /// Finds the repository containing `path` and opens it read-only.
+     ///
+     /// # Errors
+     ///
+     /// Returns [`GitError::NotARepository`] if no repository encloses `path`.
+     pub fn discover(path: &Path) -> Result<Self> {
+-        let inner = gix::discover(path).map_err(|_| GitError::NotARepository {
+-            path: path.to_path_buf(),
+-        })?;
+-
+-        let root = inner
+-            .workdir()
+-            .unwrap_or_else(|| inner.git_dir())
+-            .to_path_buf();
+-
+-        Ok(Self { inner, root })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The repository's working directory.
+     #[must_use]
+     pub fn root(&self) -> &Path {
+         &self.root
+     }
+ 

@@ -1,0 +1,23 @@
+--- crates/casm-wasm/src/api.rs
++++ replace to_json -> String with String::new()
+@@ -46,19 +46,17 @@
+ const VIRTUAL_PATH: &str = "<editor>";
+ 
+ /// Serialises a result, falling back to a JSON error object.
+ ///
+ /// Serialisation of these types cannot fail, but `unwrap` is denied and a panic in
+ /// WebAssembly is fatal, so the impossible branch still returns something a caller can
+ /// parse rather than trapping.
+ fn to_json<T: Serialize>(value: &T) -> String {
+-    serde_json::to_string(value).unwrap_or_else(|error| {
+-        format!(r#"{{"ok":false,"error":"internal serialisation failure: {error}"}}"#)
+-    })
++    String::new() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// A diagnostic, flattened for JavaScript.
+ #[derive(Debug, Serialize)]
+ #[serde(rename_all = "camelCase")]
+ pub struct WasmDiagnostic {
+     /// `error`, `warning`, or `info`.
+     pub severity: &'static str,

@@ -1,0 +1,25 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace diagram_ids -> Vec<(NodeId, String)> with vec![(Default::default(), String::new())]
+@@ -76,21 +76,17 @@
+ }
+ 
+ /// Assigns each node a stable, positional diagram identifier.
+ ///
+ /// Positional rather than `UUID`-derived: a node's `NodeId` changes whenever the file is
+ /// regenerated without a pinned id, and a diagram whose every identifier churns is a
+ /// diagram nobody can review in a pull request.
+ fn diagram_ids(architecture: &Architecture) -> Vec<(NodeId, String)> {
+-    architecture
+-        .nodes()
+-        .enumerate()
+-        .map(|(index, node)| (node.id(), format!("n{index}")))
+-        .collect()
++    vec![(Default::default(), String::new())] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Resolves a node's diagram identifier.
+ fn diagram_id(ids: &[(NodeId, String)], node: NodeId) -> &str {
+     ids.iter()
+         .find(|(id, _)| *id == node)
+         .map_or("unknown", |(_, diagram_id)| diagram_id.as_str())
+ }

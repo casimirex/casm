@@ -1,0 +1,25 @@
+--- crates/casm-formal/src/model.rs
++++ replace FormalModel::independent_names -> Vec<&str> with vec![""]
+@@ -132,21 +132,17 @@
+             .filter(|node| node.external)
+             .map(|node| node.name.as_str())
+             .collect()
+     }
+ 
+     /// The nodes nothing blocks on — failing one cannot make anything else unavailable.
+     #[must_use]
+     pub fn independent_names(&self) -> Vec<&str> {
+-        self.nodes
+-            .iter()
+-            .filter(|node| !self.closure.iter().any(|(_, target)| target == &node.name))
+-            .map(|node| node.name.as_str())
+-            .collect()
++        vec![""] /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The largest number of nodes any single failure can make unavailable.
+     ///
+     /// The generated specs use this to seed a blast-radius bound that already holds, so
+     /// the assertion documents the architecture rather than failing on first run.
+     #[must_use]
+     pub fn blast_radius(&self) -> usize {

@@ -1,0 +1,24 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm (Section::Nodes | Section::Relationships, Some("controls")) in Builder::update_scope
+@@ -533,20 +533,17 @@
+ 
+         // Entering a block, effective from the following line.
+         if self.block == Block::None {
+             match (self.section, key) {
+                 (Section::Nodes | Section::Relationships, Some("interfaces")) => {
+                     self.block = Block::Interfaces;
+                     self.block_indent = Some(indent);
+                 }
+-                (Section::Nodes | Section::Relationships, Some("controls")) => {
+-                    self.block = Block::Controls;
+-                    self.block_indent = Some(indent);
+-                }
++                 /* ~ changed by cargo-mutants ~ */
+                 (Section::Patterns, Some("bind")) => {
+                     self.block = Block::Bindings;
+                     self.block_indent = Some(indent);
+                 }
+                 _ => {}
+             }
+         }
+ 

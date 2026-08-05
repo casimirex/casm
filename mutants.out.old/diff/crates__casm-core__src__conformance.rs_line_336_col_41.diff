@@ -1,0 +1,21 @@
+--- crates/casm-core/src/conformance.rs
++++ replace == with != in resolve_role
+@@ -328,17 +328,17 @@
+                 found: node.node_type().to_string(),
+             });
+         }
+         return Ok(node);
+     }
+ 
+     let candidates: Vec<&Node> = architecture
+         .nodes()
+-        .filter(|node| node.node_type() == requirement.node_type())
++        .filter(|node| node.node_type() != /* ~ changed by cargo-mutants ~ */ requirement.node_type())
+         .collect();
+ 
+     match candidates.as_slice() {
+         [] => Err(Unmet::NoCandidate {
+             role: role.as_str().to_owned(),
+             node_type: requirement.node_type().to_string(),
+         }),
+         [only] => Ok(only),

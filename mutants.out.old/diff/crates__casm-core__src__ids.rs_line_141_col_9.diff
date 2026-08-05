@@ -1,0 +1,21 @@
+--- crates/casm-core/src/ids.rs
++++ replace <impl TryFrom<String> for NodeId>::try_from -> Result<Self, Self::Error> with Ok(Default::default())
+@@ -133,17 +133,17 @@
+         Self::parse(value)
+     }
+ }
+ 
+ impl TryFrom<String> for NodeId {
+     type Error = IdError;
+ 
+     fn try_from(value: String) -> Result<Self, Self::Error> {
+-        Self::parse(&value)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl<'de> Deserialize<'de> for NodeId {
+     /// Deserialisation enforces the version-7 requirement, exactly as [`NodeId::parse`] does.
+     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+     where
+         D: Deserializer<'de>,

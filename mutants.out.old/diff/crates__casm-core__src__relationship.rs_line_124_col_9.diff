@@ -1,0 +1,22 @@
+--- crates/casm-core/src/relationship.rs
++++ replace RelationshipConfig::source -> Self with Default::default()
+@@ -116,18 +116,17 @@
+     #[must_use]
+     pub fn new() -> Self {
+         Self::default()
+     }
+ 
+     /// Sets the originating node. Required.
+     #[must_use]
+     pub const fn source(mut self, source: NodeId) -> Self {
+-        self.source = Some(source);
+-        self
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Sets the receiving node. Required.
+     #[must_use]
+     pub const fn target(mut self, target: NodeId) -> Self {
+         self.target = Some(target);
+         self
+     }

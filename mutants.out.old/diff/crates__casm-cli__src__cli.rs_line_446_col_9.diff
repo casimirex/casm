@@ -1,0 +1,37 @@
+--- crates/casm-cli/src/cli.rs
++++ replace Command::name -> &'static str with ""
+@@ -438,33 +438,17 @@
+ impl Command {
+     /// The subcommand's name, as a span and metric label.
+     ///
+     /// Spelled out rather than derived from `Debug`: these strings are the dimension a
+     /// telemetry backend groups by, so they are a contract, and a rename would silently
+     /// split one series into two.
+     #[must_use]
+     pub(crate) const fn name(&self) -> &'static str {
+-        match self {
+-            Self::Init { .. } => "init",
+-            Self::Validate { .. } => "validate",
+-            Self::Generate { .. } => "generate",
+-            Self::Diff { .. } => "diff",
+-            Self::Check { .. } => "check",
+-            Self::Evolve { .. } => "evolve",
+-            Self::Evidence { .. } => "evidence",
+-            Self::Fmt { .. } => "fmt",
+-            Self::Drift { .. } => "drift",
+-            Self::Log { .. } => "log",
+-            Self::Blame { .. } => "blame",
+-            Self::Checkout { .. } => "checkout",
+-            Self::Formal { .. } => "formal",
+-            Self::Hook { .. } => "hook",
+-            Self::Rules { .. } => "rules",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,

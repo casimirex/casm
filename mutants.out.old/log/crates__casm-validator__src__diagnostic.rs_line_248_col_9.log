@@ -1,0 +1,231 @@
+
+*** crates/casm-validator/src/diagnostic.rs:248:9: replace Report::extend with ()
+
+*** mutation diff:
+--- crates/casm-validator/src/diagnostic.rs
++++ replace Report::extend with ()
+@@ -240,17 +240,17 @@
+ 
+     /// Appends a finding.
+     pub fn push(&mut self, diagnostic: Diagnostic) {
+         self.diagnostics.push(diagnostic);
+     }
+ 
+     /// Merges another report into this one.
+     pub fn extend(&mut self, other: Self) {
+-        self.diagnostics.extend(other.diagnostics);
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders every finding, one per stanza.
+     #[must_use]
+     pub fn render(&self) -> String {
+         self.diagnostics
+             .iter()
+             .map(Diagnostic::render)
+
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --no-run --verbose --package=casm-validator@0.3.0
+    Blocking waiting for file lock on package cache
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh serde_core v1.0.229
+       Fresh proc-macro2 v1.0.107
+       Fresh cfg-if v1.0.4
+       Fresh equivalent v1.0.2
+       Fresh hashbrown v0.17.1
+       Fresh quote v1.0.47
+       Fresh libc v0.2.189
+       Fresh indexmap v2.14.0
+       Fresh foldhash v0.1.5
+       Fresh keccak v0.1.6
+       Fresh generic-array v0.14.7
+       Fresh syn v3.0.3
+       Fresh getrandom v0.4.3
+       Fresh hashbrown v0.15.5
+       Fresh zmij v1.0.23
+       Fresh semver v1.0.28
+       Fresh itoa v1.0.18
+       Fresh crypto-common v0.1.7
+       Fresh block-buffer v0.10.4
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh uuid v1.24.0
+       Fresh fixedbitset v0.5.7
+       Fresh memchr v2.8.3
+       Fresh digest v0.10.7
+       Fresh thiserror v2.0.19
+       Fresh serde v1.0.229
+       Fresh petgraph v0.8.3
+       Fresh serde_json v1.0.151
+       Fresh sha3 v0.10.9
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-core)
+       Dirty casm-validator v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-validator): the file `crates/casm-validator/src/diagnostic.rs` has changed (1785933240.580919731s, 2s after last build at 1785933238.421868643s)
+   Compiling casm-validator v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-validator)
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_validator --edition=2024 crates/casm-validator/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1deff5d4a863ff7c -C extra-filename=-36dacec8b948e526 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libcasm_core-e0f19a3016ddb7a5.rlib --extern petgraph=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libpetgraph-d37e46375a04efe6.rlib --extern serde=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rlib --extern serde_json=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rlib --extern thiserror=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rlib --verbose`
+     Running `/home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/rustc --crate-name casm_validator --edition=2024 crates/casm-validator/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --warn=rust_2018_idioms '--warn=clippy::pedantic' '--warn=clippy::unwrap_used' --forbid=unsafe_code --warn=unreachable_pub '--warn=clippy::too_many_lines' '--allow=clippy::struct_field_names' '--warn=clippy::panic' '--allow=clippy::must_use_candidate' '--allow=clippy::module_name_repetitions' '--allow=clippy::missing_errors_doc' --warn=missing_docs '--warn=clippy::indexing_slicing' '--warn=clippy::expect_used' '--warn=clippy::cognitive_complexity' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=c2eaf3c9cb38c8bc -C extra-filename=-3911de0553578312 --out-dir /tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps -C incremental=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/incremental -L dependency=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps --extern casm_core=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libcasm_core-e0f19a3016ddb7a5.rmeta --extern petgraph=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libpetgraph-d37e46375a04efe6.rmeta --extern serde=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde-b350d0787b7cbc8c.rmeta --extern serde_json=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libserde_json-84a4a36019a8dd80.rmeta --extern thiserror=/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/libthiserror-6c739655cb578a90.rmeta --verbose`
+warning: unused variable: `other`
+   --> crates/casm-validator/src/diagnostic.rs:247:30
+    |
+247 |     pub fn extend(&mut self, other: Self) {
+    |                              ^^^^^ help: if this is intentional, prefix it with an underscore: `_other`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `casm-validator` (lib) generated 1 warning (run `cargo fix --lib -p casm-validator` to apply 1 suggestion)
+warning: `casm-validator` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.15s
+  Executable `/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/casm_validator-36dacec8b948e526`
+
+*** result: Success
+
+*** /home/srinivasan/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo test --verbose --package=casm-validator@0.3.0
+       Fresh unicode-ident v1.0.24
+       Fresh version_check v0.9.5
+       Fresh typenum v1.20.1
+       Fresh equivalent v1.0.2
+       Fresh serde_core v1.0.229
+       Fresh proc-macro2 v1.0.107
+       Fresh hashbrown v0.17.1
+       Fresh quote v1.0.47
+       Fresh libc v0.2.189
+       Fresh cfg-if v1.0.4
+       Fresh indexmap v2.14.0
+       Fresh syn v3.0.3
+       Fresh generic-array v0.14.7
+       Fresh getrandom v0.4.3
+       Fresh foldhash v0.1.5
+       Fresh keccak v0.1.6
+       Fresh zmij v1.0.23
+       Fresh semver v1.0.28
+       Fresh block-buffer v0.10.4
+       Fresh crypto-common v0.1.7
+       Fresh serde_derive v1.0.229
+       Fresh thiserror-impl v2.0.19
+       Fresh hashbrown v0.15.5
+       Fresh uuid v1.24.0
+       Fresh fixedbitset v0.5.7
+       Fresh memchr v2.8.3
+       Fresh itoa v1.0.18
+       Fresh digest v0.10.7
+       Fresh thiserror v2.0.19
+       Fresh serde v1.0.229
+       Fresh petgraph v0.8.3
+       Fresh serde_json v1.0.151
+       Fresh sha3 v0.10.9
+       Fresh casm-core v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-core)
+warning: unused variable: `other`
+   --> crates/casm-validator/src/diagnostic.rs:247:30
+    |
+247 |     pub fn extend(&mut self, other: Self) {
+    |                              ^^^^^ help: if this is intentional, prefix it with an underscore: `_other`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `casm-validator` (lib) generated 1 warning (run `cargo fix --lib -p casm-validator` to apply 1 suggestion)
+warning: `casm-validator` (lib test) generated 1 warning (1 duplicate)
+       Fresh casm-validator v0.3.0 (/tmp/cargo-mutants-casm-PaMmur.tmp/crates/casm-validator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running `/tmp/cargo-mutants-casm-PaMmur.tmp/target/debug/deps/casm_validator-36dacec8b948e526`
+
+running 79 tests
+test config::tests::builders_override_individual_thresholds ... ok
+test config::tests::defaults_match_the_documented_constants ... ok
+test config::tests::omitted_fields_fall_back_to_defaults ... ok
+test config::tests::config_round_trips_through_json_with_kebab_case_keys ... ok
+test config::tests::suppression_is_by_exact_id ... ok
+test diagnostic::tests::an_empty_report_is_clean_and_exits_zero ... ok
+test diagnostic::tests::clean_summary_says_so_plainly ... ok
+test diagnostic::tests::counts_and_filters_agree ... ok
+test config::tests::suppressions_are_deduplicated ... ok
+test diagnostic::tests::errors_exit_two_and_dominate_warnings ... ok
+test diagnostic::tests::info_alone_still_exits_zero ... ok
+test diagnostic::tests::extend_merges_and_preserves_order ... FAILED
+test diagnostic::tests::severity_maps_onto_sarif_levels ... ok
+test diagnostic::tests::report_round_trips_through_json ... ok
+test diagnostic::tests::severity_orders_from_least_to_most_serious ... ok
+test diagnostic::tests::summary_counts_each_severity ... ok
+test diagnostic::tests::subject_display_names_the_element ... ok
+test diagnostic::tests::warnings_exit_one ... ok
+test graph::tests::a_mixed_cycle_with_one_blocking_edge_is_not_a_cycle ... ok
+test graph::tests::a_blocking_cycle_is_detected ... ok
+test graph::tests::an_acyclic_graph_reports_no_cycles ... ok
+test graph::tests::an_async_loop_is_not_a_cycle ... ok
+test graph::tests::critical_path_ignores_non_blocking_edges ... ok
+test graph::tests::critical_path_is_undefined_for_a_cyclic_graph ... ok
+test graph::tests::critical_path_picks_the_worst_branch_not_the_first ... ok
+test graph::tests::critical_path_sums_the_longest_chain ... ok
+test graph::tests::critical_path_treats_a_missing_budget_as_zero ... ok
+test diagnostic::tests::diagnostic_render_includes_rule_subject_and_severity ... ok
+test graph::tests::cycle_output_is_deterministic ... ok
+test graph::tests::an_empty_architecture_has_a_zero_critical_path ... ok
+test diagnostic::tests::diagnostic_render_appends_a_help_line_when_present ... ok
+test graph::tests::an_event_driven_loop_is_not_a_cycle ... ok
+test graph::tests::every_node_appears_in_the_graph_even_when_isolated ... ok
+test graph::tests::outgoing_blocking_budget_excludes_async_edges ... ok
+test graph::tests::roots_and_leaves_are_identified ... ok
+test rules::tests::a_cyclic_architecture_does_not_also_report_a_budget_violation ... ok
+test rules::tests::a_dependency_cycle_is_an_error ... ok
+test rules::tests::a_satisfied_claim_produces_no_finding ... ok
+test rules::tests::a_decision_and_an_edit_get_different_suggestions ... ok
+test rules::tests::a_claim_with_no_library_is_a_warning_rather_than_an_error ... ok
+test rules::tests::a_service_fronting_the_database_clears_the_exposure_rule ... ok
+test rules::tests::a_controlled_boundary_crossing_is_quiet ... ok
+test rules::tests::a_claim_naming_an_absent_version_lists_what_was_supplied ... ok
+test rules::tests::a_service_with_enough_security_controls_is_quiet ... ok
+test rules::tests::a_service_without_security_controls_warns ... ok
+test rules::tests::a_stateless_service_does_not_trip_the_stateful_rule ... ok
+test rules::tests::a_sync_target_without_interfaces_is_reported_as_info_only ... ok
+test rules::tests::an_architecture_that_claims_nothing_is_never_touched_by_this_rule ... ok
+test rules::tests::an_over_budget_critical_path_warns ... ok
+test rules::tests::an_uncontrolled_database_warns ... ok
+test rules::tests::an_external_system_reaching_a_database_is_an_error ... ok
+test rules::tests::an_isolated_node_warns_but_a_lone_node_does_not ... ok
+test rules::tests::an_unsatisfied_claim_is_an_error_naming_the_pattern ... ok
+test rules::tests::every_built_in_rule_documents_itself ... ok
+test rules::tests::an_uncontrolled_boundary_crossing_warns ... ok
+test rules::tests::the_security_control_threshold_is_configurable ... ok
+test rules::tests::declaring_an_interface_satisfies_the_sync_target_rule ... ok
+test rules::tests::every_built_in_rule_has_a_unique_kebab_case_id ... ok
+test sarif::tests::a_node_set_produces_one_logical_location_per_member ... ok
+test sarif::tests::document_declares_the_schema_and_version ... ok
+test sarif::tests::a_relationship_subject_renders_as_an_arrow ... ok
+test sarif::tests::a_node_subject_becomes_a_named_logical_location ... ok
+test sarif::tests::string_output_is_pretty_printed_and_newline_terminated ... ok
+test sarif::tests::an_empty_report_still_produces_a_valid_run ... ok
+test sarif::tests::severities_map_onto_sarif_levels ... ok
+test sarif::tests::the_driver_reports_the_crate_version ... ok
+test sarif::tests::the_artifact_path_is_recorded_on_every_result ... ok
+test sarif::tests::the_driver_catalogues_every_built_in_rule ... ok
+test sarif::tests::the_suggestion_is_folded_into_the_message ... ok
+test tests::an_empty_architecture_is_clean ... ok
+test tests::a_broken_architecture_reports_every_independent_problem_at_once ... ok
+test tests::a_custom_rule_can_be_added ... ok
+test tests::an_empty_validator_reports_nothing ... ok
+test sarif::tests::string_output_reparses_as_json ... ok
+test tests::suppressed_rules_do_not_fire ... ok
+test tests::the_default_validator_exposes_its_rule_set ... ok
+test tests::validation_is_deterministic_across_runs ... ok
+test tests::a_healthy_architecture_produces_a_clean_report ... ok
+test tests::reports_render_and_serialise_to_sarif ... ok
+
+failures:
+
+---- diagnostic::tests::extend_merges_and_preserves_order stdout ----
+
+thread 'diagnostic::tests::extend_merges_and_preserves_order' (1113814) panicked at crates/casm-validator/src/diagnostic.rs:375:9:
+assertion `left == right` failed
+  left: 1
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    diagnostic::tests::extend_merges_and_preserves_order
+
+test result: FAILED. 78 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p casm-validator --lib`
+
+*** result: Failure(101)

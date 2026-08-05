@@ -1,0 +1,46 @@
+--- crates/casm-formal/src/model.rs
++++ replace transitive_closure -> Vec<(String, String)> with vec![(String::new(), "xyzzy".into())]
+@@ -192,42 +192,17 @@
+ 
+ /// Computes the transitive closure of a set of edges.
+ ///
+ /// A breadth-first walk from each node. Bounded by construction: the frontier only ever
+ /// contains nodes not already seen, so the work is `O(V·E)` and cannot loop even when the
+ /// input contains a cycle — which matters, because detecting one is a thing the caller
+ /// wants to ask about afterwards.
+ fn transitive_closure(edges: &[ModelEdge]) -> Vec<(String, String)> {
+-    let mut adjacency: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
+-    for edge in edges {
+-        adjacency
+-            .entry(edge.source.as_str())
+-            .or_default()
+-            .push(edge.target.as_str());
+-    }
+-
+-    let mut closure: BTreeSet<(String, String)> = BTreeSet::new();
+-
+-    for start in adjacency.keys().copied() {
+-        let mut seen: BTreeSet<&str> = BTreeSet::new();
+-        let mut frontier: Vec<&str> = adjacency.get(start).cloned().unwrap_or_default();
+-
+-        while let Some(current) = frontier.pop() {
+-            if !seen.insert(current) {
+-                continue;
+-            }
+-            closure.insert((start.to_owned(), current.to_owned()));
+-            if let Some(next) = adjacency.get(current) {
+-                frontier.extend(next.iter().copied());
+-            }
+-        }
+-    }
+-
+-    closure.into_iter().collect()
++    vec![(String::new(), "xyzzy".into())] /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,
+     clippy::indexing_slicing

@@ -1,0 +1,21 @@
+--- crates/casm-cli/src/commands.rs
++++ replace == with != in evolve
+@@ -545,17 +545,17 @@
+             continue;
+         };
+ 
+         let report = conformance::check(&architecture, pattern, claim);
+         unmet_total = unmet_total.saturating_add(report.unmet().len());
+         print_conformance(&reference, &report, &architecture);
+     }
+ 
+-    if unmet_total == 0 {
++    if unmet_total != /* ~ changed by cargo-mutants ~ */ 0 {
+         println!("conforms to every pattern claimed");
+         return Ok(ExitCode::Success);
+     }
+ 
+     println!("{unmet_total} requirement(s) unmet");
+     if strict {
+         return Ok(ExitCode::ValidationErrors);
+     }

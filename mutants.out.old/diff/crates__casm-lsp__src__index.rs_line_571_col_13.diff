@@ -1,0 +1,23 @@
+--- crates/casm-lsp/src/index.rs
++++ delete match arm (Section::Relationships, Block::None, "target") in Builder::record_symbol
+@@ -563,19 +563,17 @@
+ 
+         let kind = match (info.section, info.block, key) {
+             (Section::Nodes, Block::None, "name") => SymbolKind::NodeDefinition,
+             (Section::Nodes, Block::None, "type") => SymbolKind::NodeTypeValue,
+             (Section::Relationships, Block::None, "type") => SymbolKind::RelationshipTypeValue,
+             (Section::Relationships, Block::None, "source") => {
+                 SymbolKind::NodeReference(Endpoint::Source)
+             }
+-            (Section::Relationships, Block::None, "target") => {
+-                SymbolKind::NodeReference(Endpoint::Target)
+-            }
++             /* ~ changed by cargo-mutants ~ */
+             (Section::Patterns, Block::None, "pattern") => SymbolKind::PatternReference,
+             // Every key inside `bind:` is a role name, so the *value* is the node
+             // reference regardless of what the key is called.
+             (Section::Patterns, Block::Bindings, _) => SymbolKind::BindingTarget,
+             (_, Block::Controls, "type") => SymbolKind::ControlTypeValue,
+             (_, _, "protocol") => SymbolKind::ProtocolValue,
+             _ => return,
+         };

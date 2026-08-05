@@ -1,0 +1,22 @@
+--- crates/casm-parser/src/library.rs
++++ replace parse_pattern_file -> Result<Pattern, ParseError> with Ok(Default::default())
+@@ -282,18 +282,17 @@
+ /// Reads and parses a pattern from a file.
+ ///
+ /// # Errors
+ ///
+ /// - [`ParseError::Io`] if the file cannot be read.
+ /// - [`ParseError::TooLarge`] if it exceeds [`MAX_DOCUMENT_BYTES`].
+ /// - Otherwise as [`parse_pattern_str`].
+ pub fn parse_pattern_file(path: &Path) -> Result<Pattern, ParseError> {
+-    let source = read_bounded(path)?;
+-    parse_pattern_str(&source, path)
++    Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Serialises a pattern back into authoring form.
+ ///
+ /// # Errors
+ ///
+ /// Returns [`ParseError::Emit`] if the underlying serialiser fails.
+ pub fn emit_pattern_str(pattern: &Pattern, format: Format) -> Result<String, ParseError> {

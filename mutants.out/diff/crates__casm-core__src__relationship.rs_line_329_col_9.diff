@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace Relationship::identity -> (NodeId, NodeId, RelationshipType) with (Default::default(), Default::default(), Default::default())
+@@ -321,17 +321,17 @@
+     }
+ 
+     /// The identity used for duplicate detection: source, target, and type.
+     ///
+     /// Two edges may legitimately connect the same pair of nodes with *different*
+     /// semantics (a sync call and an async event), so type is part of the key.
+     #[must_use]
+     pub fn identity(&self) -> (NodeId, NodeId, RelationshipType) {
+-        (self.source, self.target, self.relationship_type)
++        (Default::default(), Default::default(), Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ #[allow(
+     clippy::unwrap_used,
+     clippy::expect_used,
+     clippy::panic,

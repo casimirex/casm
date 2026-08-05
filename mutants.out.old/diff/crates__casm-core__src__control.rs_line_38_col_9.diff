@@ -1,0 +1,26 @@
+--- crates/casm-core/src/control.rs
++++ replace ControlType::label -> &'static str with ""
+@@ -30,22 +30,17 @@
+     /// Governs data handling: retention, residency, classification.
+     DataGovernance,
+ }
+ 
+ impl ControlType {
+     /// Returns the canonical lowercase label.
+     #[must_use]
+     pub const fn label(self) -> &'static str {
+-        match self {
+-            Self::Security => "security",
+-            Self::Compliance => "compliance",
+-            Self::Operational => "operational",
+-            Self::DataGovernance => "data-governance",
+-        }
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Returns `true` if absence of this control is an audit finding rather than a risk.
+     #[must_use]
+     pub const fn is_auditable(self) -> bool {
+         match self {
+             Self::Compliance | Self::DataGovernance => true,
+             Self::Security | Self::Operational => false,

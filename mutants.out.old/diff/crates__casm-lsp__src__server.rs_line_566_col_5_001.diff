@@ -1,0 +1,21 @@
+--- crates/casm-lsp/src/server.rs
++++ replace overlaps -> bool with false
+@@ -558,17 +558,17 @@
+     }
+ }
+ 
+ /// Returns `true` if `span` intersects `range`, by line.
+ ///
+ /// Line granularity is deliberate: an editor asks for actions at the cursor, and a fix
+ /// for the node on that line is what the author expects to be offered.
+ fn overlaps(span: Span, range: Range) -> bool {
+-    span.line >= range.start.line && span.line <= range.end.line
++    false /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Converts a CASIMIR diagnostic into a protocol one.
+ fn convert_diagnostic(diagnostic: &crate::diagnostics::Diagnostic) -> Diagnostic {
+     Diagnostic {
+         range: convert_span(diagnostic.span),
+         severity: Some(match diagnostic.severity {
+             Severity::Error => DiagnosticSeverity::ERROR,

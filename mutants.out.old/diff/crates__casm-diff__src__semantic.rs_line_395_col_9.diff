@@ -1,0 +1,50 @@
+--- crates/casm-diff/src/semantic.rs
++++ replace Diff::diff_conformance with ()
+@@ -387,46 +387,17 @@
+         }
+     }
+ 
+     /// Appends conformance-claim changes.
+     ///
+     /// Included because the fingerprint includes them: if `casm diff` stayed silent about
+     /// a claim `casm log` reports as a change, the two would contradict each other.
+     fn diff_conformance(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+-        for claim in new.conformance() {
+-            let reference = claim.pattern().to_string();
+-            let Some(previous) = old
+-                .conformance()
+-                .find(|earlier| earlier.pattern() == claim.pattern())
+-            else {
+-                changes.push(Change::PatternClaimed { reference });
+-                continue;
+-            };
+-
+-            let (added, removed) = difference(&bindings(old, previous), &bindings(new, claim));
+-            if !added.is_empty() || !removed.is_empty() {
+-                changes.push(Change::PatternBindingsChanged {
+-                    reference,
+-                    added,
+-                    removed,
+-                });
+-            }
+-        }
+-
+-        for claim in old.conformance() {
+-            let still_claimed = new
+-                .conformance()
+-                .any(|current| current.pattern() == claim.pattern());
+-            if !still_claimed {
+-                changes.push(Change::PatternDropped {
+-                    reference: claim.pattern().to_string(),
+-                });
+-            }
+-        }
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Appends relationship-level changes.
+     fn diff_relationships(old: &Architecture, new: &Architecture, changes: &mut Vec<Change>) {
+         for edge in new.relationships() {
+             let key = edge_key(new, edge);
+             match find_edge(old, &key) {
+                 None => changes.push(Change::RelationshipAdded {

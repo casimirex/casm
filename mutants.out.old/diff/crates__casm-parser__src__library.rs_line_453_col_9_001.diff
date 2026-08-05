@@ -1,0 +1,22 @@
+--- crates/casm-parser/src/library.rs
++++ replace Library::versions_of -> impl Iterator<Item =&'a Pattern> with ::std::iter::once(Box::leak(Box::new(Default::default())))
+@@ -445,18 +445,17 @@
+         self.patterns
+             .iter()
+             .find(|(pattern, _)| reference.matches(pattern))
+             .map(|(_, path)| path.as_path())
+     }
+ 
+     /// Every version of `name` the library holds, in load order.
+     pub fn versions_of<'a>(&'a self, name: &'a str) -> impl Iterator<Item = &'a Pattern> {
+-        self.patterns()
+-            .filter(move |pattern| pattern.name().as_str() == name)
++        ::std::iter::once(Box::leak(Box::new(Default::default()))) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The nearest reference to `wanted`, for a "did you mean" hint.
+     ///
+     /// Nearest by name rather than by version: an author who wrote the wrong version
+     /// number is better served by being shown the versions that exist.
+     #[must_use]
+     pub fn closest(&self, wanted: &PatternRef) -> Option<String> {

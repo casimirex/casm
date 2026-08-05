@@ -1,0 +1,22 @@
+--- crates/casm-lsp/src/documents.rs
++++ replace DocumentStore::load_patterns with ()
+@@ -135,18 +135,17 @@
+     }
+ 
+     /// Replaces the pattern library and re-analyses every open document.
+     ///
+     /// Called when the workspace is resolved and again whenever a pattern file changes.
+     /// Re-analysing matters more here than for a threshold change: editing a pattern moves
+     /// findings in every document that claims it, none of which the author has touched.
+     pub fn load_patterns(&mut self, patterns: Vec<Pattern>) {
+-        self.patterns = patterns;
+-        self.reanalyse_all();
++        () /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Re-runs analysis over every open document, in place.
+     fn reanalyse_all(&mut self) {
+         let uris: Vec<String> = self.documents.keys().cloned().collect();
+         for uri in uris {
+             let Some(existing) = self.documents.get(&uri) else {
+                 continue;

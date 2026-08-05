@@ -1,0 +1,21 @@
+--- crates/casm-core/src/pattern.rs
++++ replace Requirement::description -> Option<&str> with None
+@@ -144,17 +144,17 @@
+     pub const fn node_type(&self) -> NodeType {
+         self.node_type
+     }
+ 
+     /// What the role is for.
+     #[inline]
+     #[must_use]
+     pub fn description(&self) -> Option<&str> {
+-        self.description.as_deref()
++        None /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The fewest security controls required.
+     #[inline]
+     #[must_use]
+     pub const fn min_security_controls(&self) -> usize {
+         self.min_security_controls
+     }

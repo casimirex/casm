@@ -1,0 +1,24 @@
+--- crates/casm-cli/src/commands.rs
++++ replace discover -> Result<Vec<PathBuf>, CommandError> with Ok(vec![])
+@@ -854,20 +854,17 @@
+     Ok(ExitCode::Success)
+ }
+ 
+ /// Finds every plausible architecture file under `directory`.
+ ///
+ /// The walk is depth-bounded and skips `target/`, `node_modules/`, and dot-directories,
+ /// because sweeping a build directory finds nothing and takes forever.
+ fn discover(directory: &Path) -> Result<Vec<PathBuf>, CommandError> {
+-    let mut found = Vec::new();
+-    walk(directory, 0, &mut found)?;
+-    found.sort();
+-    Ok(found)
++    Ok(vec![]) /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The maximum directory depth `check` will descend.
+ ///
+ /// NASA Rule 4: the recursion needs a statically provable bound. Eight levels reaches
+ /// any sanely-organised repository and cannot be driven into a symlink loop.
+ const MAX_WALK_DEPTH: usize = 8;
+ 

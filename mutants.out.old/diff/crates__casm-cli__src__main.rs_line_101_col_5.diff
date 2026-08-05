@@ -1,0 +1,25 @@
+--- crates/casm-cli/src/main.rs
++++ replace severity_of -> Severity with Default::default()
+@@ -93,21 +93,17 @@
+ 
+ /// How a command's result reads as an event severity.
+ ///
+ /// Deliberately different from [`outcome_of`]. The span outcome answers "did the tool
+ /// work"; the event severity answers "what did it find", which is what somebody filtering
+ /// a log stream is asking. An architecture with errors is a healthy run of `casm` and an
+ /// `ERROR` line in the log, and both readings are correct.
+ fn severity_of(result: &CommandResult) -> Severity {
+-    match result {
+-        Ok(ExitCode::Success) => Severity::Info,
+-        Ok(ExitCode::Warnings) => Severity::Warn,
+-        Ok(ExitCode::ValidationErrors | ExitCode::Failure) | Err(_) => Severity::Error,
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// One line describing how the command ended, for a log stream.
+ fn summarise(name: &'static str, result: &CommandResult) -> String {
+     match result {
+         Ok(code) => format!("{name} finished with exit code {}", code.code()),
+         Err(error) => format!("{name} failed: {}", error.0),
+     }

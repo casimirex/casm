@@ -1,0 +1,50 @@
+--- crates/casm-renderer/src/lib.rs
++++ replace <impl Renderer for Dot>::render -> String with String::new()
+@@ -232,46 +232,17 @@
+         "dot"
+     }
+ 
+     fn extension(&self) -> &'static str {
+         "dot"
+     }
+ 
+     fn render(&self, architecture: &Architecture) -> String {
+-        let ids = diagram_ids(architecture);
+-        let mut out = format!("digraph \"{}\" {{\n", architecture.name());
+-
+-        out.push_str("  rankdir=LR;\n");
+-        out.push_str("  node [fontname=\"Helvetica\"];\n");
+-        out.push_str("  edge [fontname=\"Helvetica\", fontsize=10];\n");
+-
+-        for node in architecture.nodes() {
+-            let id = diagram_id(&ids, node.id());
+-            let _ = writeln!(
+-                out,
+-                "  {id} [label=\"{}\", shape={}];",
+-                node.name(),
+-                Self::shape(node.node_type())
+-            );
+-        }
+-
+-        for edge in architecture.relationships() {
+-            let source = diagram_id(&ids, edge.source());
+-            let target = diagram_id(&ids, edge.target());
+-            let label = escape_label(&Mermaid::edge_label(edge));
+-            let _ = writeln!(
+-                out,
+-                "  {source} -> {target} [label=\"{label}\", style={}];",
+-                Self::style(edge.relationship_type())
+-            );
+-        }
+-
+-        out.push_str("}\n");
+-        out
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// The ASCII backend: readable in a CI log, a terminal, or a commit message.
+ pub struct Ascii;
+ 
+ impl Ascii {
+     /// Renders the header block.

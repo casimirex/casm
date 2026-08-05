@@ -1,0 +1,25 @@
+--- crates/casm-lsp/src/index.rs
++++ replace LineInfo::field_indent -> usize with 0
+@@ -168,21 +168,17 @@
+ 
+ impl LineInfo {
+     /// The indent at which this item's fields sit.
+     ///
+     /// For `  - name: api` the fields are at column 4, aligned under `name`, not under
+     /// the dash. Quick-fixes that insert a field need this to produce valid YAML.
+     #[must_use]
+     pub const fn field_indent(&self) -> usize {
+-        if self.is_list_item {
+-            self.indent.saturating_add(2)
+-        } else {
+-            self.indent
+-        }
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ /// A node declaration found in the document.
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub struct NodeEntry {
+     /// The declared name.
+     pub name: String,

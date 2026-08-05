@@ -1,0 +1,21 @@
+--- crates/casm-git/src/time.rs
++++ replace DateTime::to_date -> String with String::new()
+@@ -64,17 +64,17 @@
+             minute: ((remainder % 3_600) / 60) as u32,
+             second: (remainder % 60) as u32,
+         }
+     }
+ 
+     /// Renders as `YYYY-MM-DD`.
+     #[must_use]
+     pub fn to_date(&self) -> String {
+-        format!("{:04}-{:02}-{:02}", self.year, self.month, self.day)
++        String::new() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// Renders as `YYYY-MM-DD HH:MM:SS`.
+     #[must_use]
+     pub fn to_datetime(&self) -> String {
+         format!(
+             "{:04}-{:02}-{:02} {:02}:{:02}:{:02}",
+             self.year, self.month, self.day, self.hour, self.minute, self.second

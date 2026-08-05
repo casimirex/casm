@@ -1,0 +1,21 @@
+--- crates/casm-wasm/src/lib.rs
++++ replace complete -> String with "xyzzy".into()
+@@ -135,17 +135,17 @@
+ pub fn format(source: &str, target: &str) -> String {
+     api::format(source, target)
+ }
+ 
+ /// Returns completions for a zero-based cursor position.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn complete(source: &str, line: u32, character: u32) -> String {
+-    api::complete(source, line, character)
++    "xyzzy".into() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// Returns completions, offering pattern references from the supplied library.
+ #[wasm_bindgen]
+ #[must_use]
+ pub fn complete_with_patterns(source: &str, patterns: &str, line: u32, character: u32) -> String {
+     api::complete_with_patterns(source, patterns, line, character)
+ }

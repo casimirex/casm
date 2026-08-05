@@ -1,0 +1,21 @@
+--- crates/casm-core/src/names.rs
++++ replace <impl TryFrom<&str> for Name>::try_from -> Result<Self, Self::Error> with Ok(Default::default())
+@@ -124,17 +124,17 @@
+         Self::new(value)
+     }
+ }
+ 
+ impl TryFrom<&str> for Name {
+     type Error = NameError;
+ 
+     fn try_from(value: &str) -> Result<Self, Self::Error> {
+-        Self::new(value)
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ impl<'de> Deserialize<'de> for Name {
+     /// Deserialisation runs the *same* validation as [`Name::new`].
+     ///
+     /// NASA Rule 7: there is no back door. A `Name` recovered from YAML is subject to
+     /// exactly the constraints a `Name` built in code is.

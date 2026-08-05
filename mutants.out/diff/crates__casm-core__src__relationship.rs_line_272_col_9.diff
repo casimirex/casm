@@ -1,0 +1,21 @@
+--- crates/casm-core/src/relationship.rs
++++ replace Relationship::source -> NodeId with Default::default()
+@@ -264,17 +264,17 @@
+     pub fn builder() -> RelationshipConfig {
+         RelationshipConfig::new()
+     }
+ 
+     /// The originating node.
+     #[inline]
+     #[must_use]
+     pub const fn source(&self) -> NodeId {
+-        self.source
++        Default::default() /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The receiving node.
+     #[inline]
+     #[must_use]
+     pub const fn target(&self) -> NodeId {
+         self.target
+     }
