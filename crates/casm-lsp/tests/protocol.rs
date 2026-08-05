@@ -455,9 +455,34 @@ patterns:
   - pattern: secure-web-tier@1.0.0
 ";
 
+/// Builds a `file:` URI for `path`, as a client would send one.
+///
+/// Windows is the whole reason this is not string concatenation: its separator is a
+/// backslash, which a URI does not accept, and its paths open with a drive letter that
+/// must sit *after* the authority's slash — `file:///C:/dir`.
+fn file_uri(path: &std::path::Path) -> String {
+    let text = path.display().to_string().replace('\\', "/");
+    let encoded: String = text
+        .chars()
+        .map(|character| {
+            if character == ' ' {
+                "%20".to_owned()
+            } else {
+                character.to_string()
+            }
+        })
+        .collect();
+
+    if encoded.starts_with('/') {
+        format!("file://{encoded}")
+    } else {
+        format!("file:///{encoded}")
+    }
+}
+
 /// An `initialize` naming `root` as the single workspace folder.
 fn initialize_in(root: &std::path::Path) -> String {
-    let uri = format!("file://{}", root.display());
+    let uri = file_uri(root);
     format!(
         r#"{{"jsonrpc":"2.0","id":1,"method":"initialize","params":{{"capabilities":{{}},"workspaceFolders":[{{"uri":"{uri}","name":"w"}}]}}}}"#
     )

@@ -286,14 +286,72 @@ impl Default for DocumentStore {
     }
 }
 
-/// Converts a document URI into a path for error attribution.
+/// Converts a document or workspace URI into a path.
 ///
-/// Only the trailing path component matters — it appears in parse error messages — so a
-/// URI that does not decode cleanly falls back to being used verbatim rather than failing.
+/// Total. A URI that does not decode cleanly is used verbatim rather than failing: for a
+/// document the path only reaches parse-error messages, and for a workspace folder a
+/// nonsensical path simply finds no pattern library.
+///
+/// Two details are not cosmetic. A Windows URI is `file:///C:/dir`, and stripping the
+/// scheme leaves `/C:/dir`, which no Windows API will open — the leading slash has to go
+/// when a drive letter follows it. And a folder whose name contains a space arrives
+/// percent-encoded, so `%20` must come back before the path is used.
 #[must_use]
 pub fn uri_to_path(uri: &str) -> std::path::PathBuf {
     let trimmed = uri.strip_prefix("file://").unwrap_or(uri);
-    Path::new(trimmed).to_path_buf()
+
+    let trimmed = match trimmed.strip_prefix('/') {
+        Some(rest) if has_drive_letter(rest) => rest,
+        _ => trimmed,
+    };
+
+    Path::new(&percent_decode(trimmed)).to_path_buf()
+}
+
+/// Returns `true` if `path` opens with a Windows drive specification such as `C:`.
+fn has_drive_letter(path: &str) -> bool {
+    let mut characters = path.chars();
+    let Some(letter) = characters.next() else {
+        return false;
+    };
+    letter.is_ascii_alphabetic() && characters.next().is_some_and(|next| next == ':')
+}
+
+/// Decodes `%XX` escapes, leaving anything malformed exactly as it was found.
+///
+/// Deliberately not a general URI decoder: `+` is not a space in a path, and a truncated
+/// or non-hexadecimal escape is likelier to be a literal `%` in a filename than an error
+/// worth refusing the workspace over.
+fn percent_decode(text: &str) -> String {
+    if !text.contains('%') {
+        return text.to_owned();
+    }
+
+    let bytes = text.as_bytes();
+    let mut out: Vec<u8> = Vec::with_capacity(bytes.len());
+    let mut index = 0_usize;
+
+    // Bounded by the input length: every arm advances `index`.
+    while let Some(&byte) = bytes.get(index) {
+        let decoded = if byte == b'%' {
+            bytes
+                .get(index.saturating_add(1)..index.saturating_add(3))
+                .and_then(|pair| std::str::from_utf8(pair).ok())
+                .and_then(|pair| u8::from_str_radix(pair, 16).ok())
+        } else {
+            None
+        };
+
+        if let Some(value) = decoded {
+            out.push(value);
+            index = index.saturating_add(3);
+        } else {
+            out.push(byte);
+            index = index.saturating_add(1);
+        }
+    }
+
+    String::from_utf8(out).unwrap_or_else(|_| text.to_owned())
 }
 
 #[cfg(test)]
@@ -617,5 +675,58 @@ requires:
         assert_eq!(document.version, 1);
         assert!(patterns.is_empty());
         assert!(store.get_with_patterns("file:///missing.yaml").is_none());
+    }
+
+    #[test]
+    fn a_posix_uri_becomes_its_path() {
+        assert_eq!(
+            uri_to_path("file:///home/eng/architecture.yaml"),
+            Path::new("/home/eng/architecture.yaml")
+        );
+    }
+
+    #[test]
+    fn a_windows_uri_loses_the_slash_before_its_drive_letter() {
+        // `/C:/w` is not a path any Windows API will open, and this is what a client
+        // actually sends. Asserted on every platform because the string transformation is
+        // the same one either way.
+        assert_eq!(
+            uri_to_path("file:///C:/w/architecture.yaml")
+                .display()
+                .to_string(),
+            "C:/w/architecture.yaml"
+        );
+    }
+
+    #[test]
+    fn a_leading_slash_survives_when_no_drive_letter_follows() {
+        assert_eq!(uri_to_path("file:///srv/a.yaml"), Path::new("/srv/a.yaml"));
+        assert_eq!(uri_to_path("file:///1:/odd"), Path::new("/1:/odd"));
+    }
+
+    #[test]
+    fn percent_escapes_are_decoded() {
+        assert_eq!(
+            uri_to_path("file:///home/My%20Work/a.yaml"),
+            Path::new("/home/My Work/a.yaml")
+        );
+    }
+
+    #[test]
+    fn a_malformed_escape_is_left_alone_rather_than_refused() {
+        // Likelier a literal `%` in a filename than a URI worth rejecting the folder over.
+        assert_eq!(
+            uri_to_path("file:///tmp/100%/a.yaml"),
+            Path::new("/tmp/100%/a.yaml")
+        );
+        assert_eq!(uri_to_path("file:///tmp/%zz"), Path::new("/tmp/%zz"));
+        assert_eq!(uri_to_path("file:///tmp/%4"), Path::new("/tmp/%4"));
+    }
+
+    #[test]
+    fn decoding_is_total_on_arbitrary_input() {
+        for uri in ["", "%", "%%%%", "file://", "not a uri", "%e2%82"] {
+            let _ = uri_to_path(uri);
+        }
     }
 }
