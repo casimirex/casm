@@ -69,6 +69,21 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   - The tagged releases were left alone; the missing artefact is paperwork rather than a
     defect in the binaries. `RELEASING.md` says which releases are affected.
 
+- **`SHA256SUMS` cannot ship partial.** The manifest was written with
+  `sha256sum *.tar.gz *.zip 2>/dev/null || true` — the same swallowed failure as the SBOM
+  step, on the artefact people verify a download with. A build that did not arrive would
+  have produced a shorter manifest, or an empty one, without a word. The release now names
+  every archive it expects, refuses to publish when one is missing, and checks the manifest
+  covers all of them. Every release so far is correct; the construct was one failed build
+  away from not being.
+
+- **The install instructions work.** `cargo install casm-cli casm-lsp` appeared in the
+  README, the book's introduction, and the editor guide, and failed for every reader:
+  nothing is published to crates.io. They now point at the release archives, the container,
+  or `cargo install --path`, and say plainly that crates.io publishing has not happened.
+  The container instruction carries the same caveat — a `ghcr.io` package inherits the
+  repository's visibility, so it needs a `docker login` while this repository is private.
+
 ### Known limitations
 
 - There is no network exporter. An HTTP client, TLS, and a retry policy are three

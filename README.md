@@ -45,16 +45,30 @@ carry no defensive handling for states they cannot encounter.
 
 ## Install
 
+Download a binary for Linux, macOS, or Windows from the
+[releases page](https://github.com/casimirex/casimir/releases), and verify it:
+
 ```console
-$ cargo install casm-cli casm-lsp
+$ tar xzf casm-0.3.0-x86_64-unknown-linux-gnu.tar.gz
+$ sha256sum -c SHA256SUMS
 ```
 
-Or download a binary for Linux, macOS, or Windows from the
-[releases page](https://github.com/casimirex/casimir/releases), or run the container:
+Or run the container, which needs a `docker login ghcr.io` while this repository is
+private — the package inherits the repository's visibility:
 
 ```console
 $ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casimir validate /work/architecture.yaml
 ```
+
+Or build from a checkout:
+
+```console
+$ cargo install --path crates/casm-cli
+$ cargo install --path crates/casm-lsp
+```
+
+**Not on crates.io yet**, so `cargo install casm-cli` does not work — see
+[RELEASING.md](RELEASING.md#publishing-to-cratesio) for what publishing needs.
 
 Building from source needs Rust 1.88 or later. No other toolchain — diagram generation is
 pure Rust and never shells out to `dot` or `mmdc`.

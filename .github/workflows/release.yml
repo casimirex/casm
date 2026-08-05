@@ -177,12 +177,61 @@ jobs:
         with:
           path: artifacts
 
+      # Every archive the matrix builds, named here so a missing one is a failure rather
+      # than a shorter list. The previous version wrote the manifest with
+      # `sha256sum *.tar.gz *.zip 2>/dev/null || true`, which would have shipped a partial
+      # SHA256SUMS — or an empty one — without a word if a build had not arrived. That is
+      # the artefact people verify a download against.
       - name: collect
+        env:
+          EXPECTED_ARCHIVES: |
+            x86_64-unknown-linux-gnu.tar.gz
+            aarch64-unknown-linux-gnu.tar.gz
+            x86_64-apple-darwin.tar.gz
+            aarch64-apple-darwin.tar.gz
+            x86_64-pc-windows-msvc.zip
         run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
           mkdir -p dist
-          find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.sha256' -o -name '*.json' \) \
+
+          find artifacts -type f \
+            \( -name '*.tar.gz' -o -name '*.zip' -o -name '*.sha256' -o -name '*.json' \) \
             -exec cp {} dist/ \;
-          (cd dist && sha256sum *.tar.gz *.zip 2>/dev/null > SHA256SUMS || true)
+
+          missing=0
+          while read -r suffix; do
+            [ -n "$suffix" ] || continue
+            archive="dist/casm-${version}-${suffix}"
+            if [ ! -s "$archive" ]; then
+              echo "error: $archive is missing or empty" >&2
+              missing=$((missing + 1))
+            fi
+          done <<<"$EXPECTED_ARCHIVES"
+
+          if [ "$missing" -ne 0 ]; then
+            echo "error: $missing archive(s) did not arrive; refusing to publish a partial release" >&2
+            ls -la dist >&2
+            exit 1
+          fi
+
+          # Bare names, matching every earlier release, so anyone with tooling around
+          # SHA256SUMS sees the same format. Safe as a glob now that the archives above
+          # are known to exist: with no error suppression, an unmatched pattern reaches
+          # `sha256sum`, which fails, which fails the step.
+          (cd dist && sha256sum *.tar.gz *.zip >SHA256SUMS)
+
+          # And the manifest must cover every archive, not merely exist.
+          archives="$(find dist -maxdepth 1 -type f \( -name '*.tar.gz' -o -name '*.zip' \) | wc -l)"
+          summed="$(wc -l <dist/SHA256SUMS)"
+          if [ "$archives" != "$summed" ]; then
+            echo "error: SHA256SUMS covers $summed of $archives archive(s)" >&2
+            cat dist/SHA256SUMS >&2
+            exit 1
+          fi
+
+          echo "SHA256SUMS covers all $archives archive(s):"
+          cat dist/SHA256SUMS
           ls -la dist
 
       # Build provenance, signed by GitHub's OIDC identity. Cheaper and harder to get

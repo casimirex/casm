@@ -1,8 +1,12 @@
 # Set up your editor
 
 ```console
-$ cargo install casm-lsp
+$ cargo install --path crates/casm-lsp
 ```
+
+`casm-lsp` is not on crates.io yet, so install it from a checkout or take the binary from a
+[release archive](https://github.com/casimirex/casimir/releases) — every archive carries
+both `casm` and `casm-lsp`.
 
 `casm-lsp` speaks the Language Server Protocol, so VS Code, Neovim, Helix, and Zed all
 work. Setup for each is in [`editors/`](https://github.com/casimirex/casimir/tree/main/editors).

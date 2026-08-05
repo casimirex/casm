@@ -41,16 +41,29 @@ takes about ten minutes and ends with a validated architecture, a diagram, and a
 
 ## Install
 
+Download a binary from the [releases page](https://github.com/casimirex/casimir/releases)
+and verify it:
+
 ```console
-$ cargo install casm-cli casm-lsp
+$ tar xzf casm-0.3.0-x86_64-unknown-linux-gnu.tar.gz
+$ sha256sum -c SHA256SUMS
 ```
 
-Or download a binary from the [releases page](https://github.com/casimirex/casimir/releases),
-or run the container:
+Or run the container, which needs a `docker login ghcr.io` while this repository is
+private:
 
 ```console
 $ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casimir validate /work/architecture.yaml
 ```
+
+Or build from a checkout:
+
+```console
+$ cargo install --path crates/casm-cli
+$ cargo install --path crates/casm-lsp
+```
+
+**Not on crates.io yet**, so `cargo install casm-cli` does not work.
 
 Requires Rust 1.88 or later if building from source. Nothing else — diagram generation is
 pure Rust and never shells out.

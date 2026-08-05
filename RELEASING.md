@@ -37,6 +37,11 @@ filename `cargo cyclonedx` does not write and swallowed the failure, so v0.1.0 a
 shipped without it. Fixed on `main`; the tagged releases were left as they are, since the
 missing artefact is paperwork rather than a defect in the binaries.
 
+**The container image is private too.** `ghcr.io` packages inherit the repository's
+visibility, so `docker pull ghcr.io/casimirex/casimir` answers `unauthorized` without a
+`docker login`. Like attestations and Pages, this resolves itself if the repository is made
+public.
+
 **Attestations need a public repository.** GitHub does not offer them for user-owned
 private repositories, so the step is guarded on visibility and skipped here — the first
 release run failed on exactly this before it was guarded. Checksums ship either way, and
