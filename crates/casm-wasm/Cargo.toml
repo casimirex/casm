@@ -27,7 +27,7 @@ serde_json.workspace = true
 # The analysis half of the language server, without its JSON-RPC layer or async runtime.
 # This is what gives the browser diagnostics with line and column positions, and the same
 # completion the editor gets.
-casm-lsp = { path = "../casm-lsp", version = "0.1.0", default-features = false }
+casm-lsp = { path = "../casm-lsp", version = "0.2.0", default-features = false }
 
 wasm-bindgen = "0.2"
 

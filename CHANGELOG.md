@@ -7,6 +7,17 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-05
+
+Patterns, everywhere CASIMIR runs. Roadmap Phase 7, plus the editor and browser halves of
+it that the 0.1.0 notes listed as unbuilt.
+
+**This release invalidates every fingerprint computed by 0.1.0.** The Merkle scheme tag is
+now `casm-merkle-v2`, because conformance claims are part of what an architecture asserts
+about itself and therefore belong in its identity. `casm log` will report a change at the
+upgrade boundary for every architecture; that is the scheme tag doing its job rather than a
+defect. Pre-1.0, a minor bump may break the API — see [Versioning](RELEASING.md#versioning).
+
 ### Added
 
 - **Patterns** (roadmap Phase 7). A pattern is a *shape to conform to*, not a template to
@@ -57,11 +68,6 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   - A malformed library is a value, never a trap — one bad pattern is reported and the
     rest still load.
 
-### Known limitations
-
-- Signing, content addressing over the wire, and a federated hub remain unbuilt. Patterns
-  already carry a fingerprint, which is what content addressing needs.
-
 ### Changed
 
 - **The Merkle scheme tag is now `casm-merkle-v2`.** Conformance claims are part of what
@@ -70,6 +76,23 @@ CASIMIR is pre-1.0. The API will change, and a minor version may break it.
   Every previously computed digest is invalidated, which is what the scheme tag is for.
 - `ArchitectureError::NodeStillReferenced` now counts conformance bindings alongside
   relationships, and its message says "reference(s)" rather than "relationship(s)".
+- `casm_lsp::diagnostics::analyse`, `completion::complete`, and `hover::hover` each take
+  the pattern library. Source-compatible for anyone passing `&[]`.
+
+### Fixed
+
+- **Workspace folders resolve correctly on Windows.** A folder arrives as `file:///C:/dir`,
+  and stripping the scheme left `/C:/dir` — not a path any Windows API will open. It had
+  never mattered, because the only consumer was parse-error attribution where a wrong path
+  is cosmetic; discovering a pattern library underneath a root made it load-bearing.
+  Percent escapes are now decoded too, so a folder called `My Work` resolves.
+
+### Known limitations
+
+- Signing, content addressing over the wire, and a federated hub remain unbuilt. Patterns
+  already carry a fingerprint, which is what content addressing needs.
+- The `no_std` embedded validator, the LLM half of Phase 9, and Phase 11 (OpenTelemetry)
+  are still unimplemented, for the reasons given in the 0.1.0 notes below.
 
 
 ## [0.1.0] — 2026-08-03
@@ -132,5 +155,6 @@ First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
 - Phase 7 (distributed pattern registry) and Phase 11 (OpenTelemetry) are not implemented.
 - Edge cold-start latency is unmeasured; it can only be observed on the platform.
 
-[Unreleased]: https://github.com/casimirex/casimir/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/casimirex/casimir/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/casimirex/casimir/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/casimirex/casimir/releases/tag/v0.1.0

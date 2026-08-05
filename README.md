@@ -508,10 +508,12 @@ the absence of a panic. CI runs a short campaign on every push.
 
 ## Status
 
-**v0.1.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
-Git-native history, WebAssembly runtime, and formal-methods bridge are implemented,
-tested, and usable, with a release pipeline and container image behind them. The API is
-pre-1.0 and will change — see [CHANGELOG.md](CHANGELOG.md) and [RELEASING.md](RELEASING.md).
+**v0.2.0 — early, but real.** The core, parser, validator, renderer, CLI, language server,
+Git-native history, WebAssembly runtime, patterns, and formal-methods bridge are
+implemented, tested, and usable, with a release pipeline and container image behind them.
+The API is pre-1.0 and will change — see [CHANGELOG.md](CHANGELOG.md) and
+[RELEASING.md](RELEASING.md). 0.2.0 changed the fingerprint scheme, so digests computed by
+0.1.0 no longer match.
 
 Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
 8, and 10 are complete, and Phase 9's formal verification bridge is what you see above.
@@ -528,8 +530,8 @@ pretending. Phase 12 ships release engineering, fuzzing, the container image, an
 site; its multi-language translations and certification programme do not, and are not
 planned — machine-translated documentation nobody can review is worse than none.
 
-Phase 7 ships as patterns, conformance checking, and `casm evolve`. The federated registry
-does not: [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md) makes a pattern a
+Phase 7 ships as patterns, conformance checking, `casm evolve`, and claim checking in the
+editor and the browser. The federated registry does not: [ADR-0012](docs/adr/0012-patterns-are-shapes-not-templates.md) makes a pattern a
 *shape to conform to* rather than a template to stamp, which turns patterns into ordinary
 files and demotes the registry from prerequisite to distribution mechanism. Signing,
 content addressing, and a hub API remain open — a pattern already carries a fingerprint,

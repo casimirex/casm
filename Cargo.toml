@@ -6,7 +6,7 @@ exclude = ["fuzz"]
 members = ["crates/casm-core", "crates/casm-parser", "crates/casm-validator", "crates/casm-renderer", "crates/casm-cli", "crates/casm-lsp", "crates/casm-diff", "crates/casm-git", "crates/casm-wasm", "crates/casm-formal"]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.88"
 license = "Apache-2.0"
@@ -18,15 +18,15 @@ keywords = ["architecture", "architecture-as-code", "validation", "c4", "calm"]
 categories = ["development-tools", "command-line-utilities"]
 
 [workspace.dependencies]
-casm-core = { path = "crates/casm-core", version = "0.1.0" }
-casm-parser = { path = "crates/casm-parser", version = "0.1.0" }
-casm-validator = { path = "crates/casm-validator", version = "0.1.0" }
-casm-renderer = { path = "crates/casm-renderer", version = "0.1.0" }
-casm-lsp = { path = "crates/casm-lsp", version = "0.1.0" }
-casm-diff = { path = "crates/casm-diff", version = "0.1.0" }
-casm-git = { path = "crates/casm-git", version = "0.1.0" }
-casm-wasm = { path = "crates/casm-wasm", version = "0.1.0" }
-casm-formal = { path = "crates/casm-formal", version = "0.1.0" }
+casm-core = { path = "crates/casm-core", version = "0.2.0" }
+casm-parser = { path = "crates/casm-parser", version = "0.2.0" }
+casm-validator = { path = "crates/casm-validator", version = "0.2.0" }
+casm-renderer = { path = "crates/casm-renderer", version = "0.2.0" }
+casm-lsp = { path = "crates/casm-lsp", version = "0.2.0" }
+casm-diff = { path = "crates/casm-diff", version = "0.2.0" }
+casm-git = { path = "crates/casm-git", version = "0.2.0" }
+casm-wasm = { path = "crates/casm-wasm", version = "0.2.0" }
+casm-formal = { path = "crates/casm-formal", version = "0.2.0" }
 
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

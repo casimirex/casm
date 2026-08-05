@@ -2,7 +2,7 @@
   "name": "casimir",
   "displayName": "CASIMIR \u2014 Architecture as Code",
   "description": "Completion, validation, hover, and quick-fixes for CASIMIR architecture files.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "casimirex",
   "license": "Apache-2.0",
   "repository": {
