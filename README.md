@@ -74,6 +74,17 @@ Building from source needs Rust 1.88 or later. No other toolchain — diagram ge
 pure Rust and never shells out to `dot` or `mmdc`.
 
 📖 **[Documentation](docs/book/)** — tutorial, how-to guides, explanation, and reference.
+It is an [mdBook](https://rust-lang.github.io/mdBook/), so it runs on its own with search
+and cross-linking, no network required:
+
+```console
+$ cargo install mdbook            # once
+$ mdbook serve docs/book --open   # http://localhost:3000, reloads as you edit
+```
+
+`mdbook build docs/book` instead writes plain HTML to `docs/book/book/`, which any static
+server will host. The site is not published: GitHub Pages needs a public repository, and
+the deploy job is guarded on visibility rather than left failing.
 
 ---
 
