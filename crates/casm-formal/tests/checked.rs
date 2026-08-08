@@ -1,6 +1,6 @@
 //! Runs the generated specifications through the real model checkers.
 //!
-//! The unit tests assert on the *text* CASIMIR emits. That catches a malformed set
+//! The unit tests assert on the *text* CASM emits. That catches a malformed set
 //! literal; it cannot catch a specification that parses cleanly and means nothing. Only
 //! TLC and Alloy can say whether the properties hold, and — more importantly — whether
 //! they *fail* when they should.

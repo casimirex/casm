@@ -7,7 +7,7 @@
 //! # Why SARIF
 //!
 //! SARIF (OASIS Static Analysis Results Interchange Format) is what GitHub Advanced
-//! Security, GitLab, and most CI dashboards ingest natively. Emitting it means CASIMIR
+//! Security, GitLab, and most CI dashboards ingest natively. Emitting it means CASM
 //! findings appear as annotations on the pull request that introduced them, next to the
 //! changed lines, rather than buried in a build log nobody opens.
 //!

@@ -16,14 +16,14 @@ use std::path::PathBuf;
 /// The default architecture file name, used when a command is given no path.
 pub(crate) const DEFAULT_ARCHITECTURE_FILE: &str = "architecture.yaml";
 
-/// CASIMIR — a NASA-grade, Rust-native Architecture-as-Code platform.
+/// CASM — a NASA-grade, Rust-native Architecture-as-Code platform.
 ///
 /// Exit codes: `0` success, `1` warnings, `2` validation errors, `3` command failure.
 #[derive(Debug, Parser)]
 #[command(
     name = "casm",
     version,
-    about = "CASIMIR — architecture as code, validated like flight software",
+    about = "CASM — architecture as code, validated like flight software",
     long_about = None,
     propagate_version = true
 )]
@@ -111,9 +111,9 @@ impl DiagramFormat {
 /// Where an inventory of real infrastructure comes from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub(crate) enum InventorySource {
-    /// CASIMIR's own inventory schema.
+    /// CASM's own inventory schema.
     Native,
-    /// A Terraform state file, projected through CASIMIR's resource-type map.
+    /// A Terraform state file, projected through CASM's resource-type map.
     Terraform,
 }
 
@@ -151,7 +151,7 @@ impl DocumentFormat {
     }
 }
 
-/// Every CASIMIR subcommand.
+/// Every CASM subcommand.
 #[derive(Debug, Subcommand)]
 pub(crate) enum Command {
     /// Scaffold a new architecture file.
@@ -390,7 +390,7 @@ pub(crate) enum Command {
     /// Export the architecture as a formal specification.
     ///
     /// TLA+ models failure propagation over time; Alloy models static structure.
-    /// Both restate CASIMIR's own rules as machine-checked assertions.
+    /// Both restate CASM's own rules as machine-checked assertions.
     Formal {
         /// The architecture file to export.
         #[arg(default_value = DEFAULT_ARCHITECTURE_FILE)]
@@ -425,11 +425,11 @@ pub(crate) enum Command {
 pub(crate) enum HookAction {
     /// Install the pre-commit hook.
     Install {
-        /// Replace an existing hook that CASIMIR did not write.
+        /// Replace an existing hook that CASM did not write.
         #[arg(long)]
         force: bool,
     },
-    /// Remove the pre-commit hook, if CASIMIR wrote it.
+    /// Remove the pre-commit hook, if CASM wrote it.
     Uninstall,
     /// Report whether the hook is installed.
     Status,

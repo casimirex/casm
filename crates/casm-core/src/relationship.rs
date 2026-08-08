@@ -1,5 +1,5 @@
 //! Module: `casm_core::relationship`
-//! Purpose: Typed, directed edges between nodes — the structured void CASIMIR governs.
+//! Purpose: Typed, directed edges between nodes — the structured void CASM governs.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -19,7 +19,7 @@ use crate::error::RelationshipError;
 use crate::ids::NodeId;
 use crate::interface::Protocol;
 
-/// The upper bound CASIMIR accepts for a single-hop latency budget, in milliseconds.
+/// The upper bound CASM accepts for a single-hop latency budget, in milliseconds.
 ///
 /// NASA Rule 4: bounds must be static and provable. Twenty-four hours is far beyond any
 /// legitimate synchronous hop; a larger value indicates a units error (seconds mistaken
@@ -44,7 +44,7 @@ pub enum RelationshipType {
     DeployedOn,
     /// Semantic coupling: a change to either end invalidates the other.
     ///
-    /// CASIMIR's headline construct. Unlike [`Self::DependsOn`], entanglement is
+    /// CASM's headline construct. Unlike [`Self::DependsOn`], entanglement is
     /// symmetric in its *invalidation* semantics while remaining directed in topology:
     /// the validator treats a contract change at either end as breaking both.
     QuantumEntangled,

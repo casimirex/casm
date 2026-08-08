@@ -1,5 +1,5 @@
 //! Module: `casm_parser::format`
-//! Purpose: Detecting which concrete syntax a CASIMIR document is written in.
+//! Purpose: Detecting which concrete syntax a CASM document is written in.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -13,7 +13,7 @@
 
 use std::path::Path;
 
-/// A concrete syntax a CASIMIR architecture can be written in.
+/// A concrete syntax a CASM architecture can be written in.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Format {
     /// YAML 1.2 — the format intended for humans.
@@ -25,7 +25,7 @@ pub enum Format {
 }
 
 impl Format {
-    /// Every format CASIMIR can read, in preference order.
+    /// Every format CASM can read, in preference order.
     pub const ALL: [Self; 3] = [Self::Yaml, Self::Json, Self::Toml];
 
     /// Returns the canonical lowercase label.
@@ -226,7 +226,7 @@ mod tests {
 
     #[test]
     fn sniff_skips_comments_blank_lines_and_document_markers() {
-        let source = "# CASIMIR architecture\n\n---\nname: checkout\n";
+        let source = "# CASM architecture\n\n---\nname: checkout\n";
         assert_eq!(Format::sniff(source), Format::Yaml);
     }
 

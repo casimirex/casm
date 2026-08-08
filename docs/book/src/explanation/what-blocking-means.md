@@ -1,7 +1,7 @@
 # What blocking means
 
 A relationship's `type` is the most consequential field in the format. It decides whether
-CASIMIR thinks two nodes can fail independently.
+CASM thinks two nodes can fail independently.
 
 ## The split
 
@@ -36,7 +36,7 @@ the two services now fail independently.
 
 ## The consequence for you
 
-**The model is only as good as your edge types.** Mark everything `sync` and CASIMIR will
+**The model is only as good as your edge types.** Mark everything `sync` and CASM will
 correctly prove that everything depends on everything, which is useless. The distinction
 surfaces the quality of your input rather than compensating for it.
 

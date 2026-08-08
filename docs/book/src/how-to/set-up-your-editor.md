@@ -34,11 +34,11 @@ First hit wins — nothing is merged, because two directories holding different 
 one pattern would otherwise make the answer depend on scan order. A setting that points at
 nothing is reported rather than quietly falling back to a directory you did not name.
 
-Where it looked and what it found goes to the CASIMIR output channel, so an absent library
+Where it looked and what it found goes to the CASM output channel, so an absent library
 and one that failed to load never look the same.
 
 Editing a pattern re-analyses every open document immediately. If your client does not
-watch files, run **CASIMIR: Reload the pattern library** (`casm.reloadPatterns`) — which is
+watch files, run **CASM: Reload the pattern library** (`casm.reloadPatterns`) — which is
 also what to use when a library appears mid-session, after a `git checkout`.
 
 A claim naming a pattern the library does not hold is reported as *unchecked*: a warning,

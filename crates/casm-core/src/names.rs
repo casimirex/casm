@@ -1,5 +1,5 @@
 //! Module: `casm_core::names`
-//! Purpose: The single validation authority for every human-readable name in CASIMIR.
+//! Purpose: The single validation authority for every human-readable name in CASM.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -19,7 +19,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::error::NameError;
 
-/// The maximum permitted length of any CASIMIR name, in bytes.
+/// The maximum permitted length of any CASM name, in bytes.
 pub const MAX_NAME_LEN: usize = 128;
 
 /// A validated human-readable identifier.

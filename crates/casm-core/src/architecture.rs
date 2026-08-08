@@ -7,7 +7,7 @@
 //! # The central design claim
 //!
 //! Most architecture tools parse a file into a permissive structure, then run a
-//! validation pass and hope every caller remembers to invoke it. CASIMIR does not:
+//! validation pass and hope every caller remembers to invoke it. CASM does not:
 //! **an `Architecture` value that exists is an `Architecture` whose invariants hold.**
 //!
 //! Concretely, the type system guarantees:

@@ -25,7 +25,7 @@ Keep it on the **error** enums (`NodeError`, `ArchitectureError`, `ParseError`, 
 the reasoning inverts: a consumer matching on errors *should* tolerate new variants, and
 a new failure mode is not something every call site must handle individually.
 
-`Protocol::Custom(String)` remains the extension point for protocols CASIMIR does not
+`Protocol::Custom(String)` remains the extension point for protocols CASM does not
 model natively, so the closed enum is not a closed world.
 
 ## Consequences

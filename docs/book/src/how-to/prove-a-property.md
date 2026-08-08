@@ -80,4 +80,4 @@ $ # Alloy
 $ java -jar org.alloytools.alloy.dist.jar exec storefront.als
 ```
 
-Both need a JVM. Neither is a dependency of CASIMIR — `casm formal` only writes files.
+Both need a JVM. Neither is a dependency of CASM — `casm formal` only writes files.

@@ -226,7 +226,7 @@ impl Report {
 
     /// The process exit code this report implies.
     ///
-    /// `0` clean or informational, `1` warnings, `2` errors. Every CASIMIR surface —
+    /// `0` clean or informational, `1` warnings, `2` errors. Every CASM surface —
     /// CLI, CI, pre-commit hook — derives its exit status from here, so they cannot
     /// drift apart.
     #[must_use]

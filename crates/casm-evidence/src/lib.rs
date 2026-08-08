@@ -7,7 +7,7 @@
 //! # This is a claims register, not evidence
 //!
 //! An auditor asking for evidence wants an artefact: a log excerpt, a configuration
-//! export, a signed attestation, a penetration-test report. CASIMIR has none of those.
+//! export, a signed attestation, a penetration-test report. CASM has none of those.
 //! What it has is an architecture file in which somebody *wrote down* that a control
 //! exists.
 //!
@@ -16,7 +16,7 @@
 //! labelled "SOC2 evidence" from claims alone would launder an assertion into an artefact,
 //! in the one domain where doing that gets people prosecuted.
 //!
-//! So every line this crate produces is traceable to something CASIMIR can actually
+//! So every line this crate produces is traceable to something CASM can actually
 //! verify — the text in the file, the commit that introduced it, a fingerprint the reader
 //! can recompute, and conformance the validator checked. A control marked
 //! `evidence-required` appears as an **open item**, never a satisfied one. See
@@ -27,7 +27,7 @@
 //! Assembly is a function from an architecture, a pattern library, and whatever provenance
 //! the caller supplies. [`Provenance`] is defined here rather than imported from
 //! `casm-git`, so this crate touches no repository, pulls in no `gix`, and runs anywhere
-//! the rest of CASIMIR does — including a browser.
+//! the rest of CASM does — including a browser.
 //!
 //! # Using it
 //!

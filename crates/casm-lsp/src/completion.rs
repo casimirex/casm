@@ -6,7 +6,7 @@
 //!
 //! # Context is the whole feature
 //!
-//! Offering every keyword CASIMIR knows is barely better than offering nothing. The value
+//! Offering every keyword CASM knows is barely better than offering nothing. The value
 //! is in narrowing: after `type:` inside `nodes:` the answer is ten node types; after
 //! `type:` inside a `controls:` block it is four control types; after `source:` it is the
 //! names of the nodes *this document declares*.
@@ -59,7 +59,7 @@ pub enum CompletionContext {
     ProtocolValue,
     /// The value of a `source:` or `target:` — a node name.
     NodeNameValue,
-    /// Nowhere CASIMIR can usefully suggest anything, such as inside `metadata:`.
+    /// Nowhere CASM can usefully suggest anything, such as inside `metadata:`.
     None,
 }
 

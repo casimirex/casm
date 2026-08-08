@@ -8,7 +8,7 @@
 //!
 //! LSP positions are **zero-based lines and UTF-16 code-unit offsets**, not byte offsets
 //! and not character counts. Rust strings are UTF-8, so the three coincide only for
-//! ASCII — which every CASIMIR [`casm_core::Name`] is, but which descriptions and
+//! ASCII — which every CASM [`casm_core::Name`] is, but which descriptions and
 //! comments are not.
 //!
 //! Getting this wrong produces a bug that is invisible until someone writes an em-dash in
@@ -35,7 +35,7 @@ impl Position {
 
 /// A contiguous range within a single line, in LSP coordinates.
 ///
-/// Single-line by construction: every symbol CASIMIR's grammar can produce — a key, a
+/// Single-line by construction: every symbol CASM's grammar can produce — a key, a
 /// scalar value, a node name — lives on one line. Multi-line ranges are built at the
 /// protocol boundary when a diagnostic needs to span a block.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]

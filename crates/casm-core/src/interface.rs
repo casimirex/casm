@@ -62,7 +62,7 @@ pub enum Protocol {
     Tcp,
     /// A SQL wire protocol (`PostgreSQL`, `MySQL`, …).
     Sql,
-    /// An escape hatch for protocols CASIMIR does not model natively.
+    /// An escape hatch for protocols CASM does not model natively.
     Custom(String),
 }
 
@@ -238,7 +238,7 @@ impl Interface {
     ///
     /// # Errors
     ///
-    /// - [`InterfaceError::Name`] if the name violates the CASIMIR alphabet.
+    /// - [`InterfaceError::Name`] if the name violates the CASM alphabet.
     /// - [`InterfaceError::InvalidVersion`] if `version` is not Semantic Versioning.
     /// - [`InterfaceError::EmptyCustomProtocol`] if a custom protocol label is blank.
     pub fn new(

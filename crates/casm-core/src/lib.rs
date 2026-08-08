@@ -1,12 +1,12 @@
 //! Module: `casm_core`
-//! Purpose: The CASIMIR domain layer — entities, value objects, and their invariants.
+//! Purpose: The CASM domain layer — entities, value objects, and their invariants.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0
 //!
 //! # What this crate is
 //!
-//! `casm-core` is the innermost ring of the CASIMIR hexagon. It has **no I/O, no
+//! `casm-core` is the innermost ring of the CASM hexagon. It has **no I/O, no
 //! parsing, no rendering, and no knowledge of files, networks, or terminals** — only
 //! the entities of the architecture universe and the rules they obey.
 //!

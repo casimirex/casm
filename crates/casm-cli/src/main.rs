@@ -1,5 +1,5 @@
 //! Module: `casm_cli`
-//! Purpose: The `casm` binary — CASIMIR's primary human interface.
+//! Purpose: The `casm` binary — CASM's primary human interface.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0
@@ -115,7 +115,7 @@ fn summarise(name: &'static str, result: &CommandResult) -> String {
 
 /// Narrows an exit code into the byte the operating system accepts.
 ///
-/// Every code CASIMIR produces is already in `0..=3`; the clamp exists so the conversion
+/// Every code CASM produces is already in `0..=3`; the clamp exists so the conversion
 /// is total and cannot panic (NASA Rule 3).
 fn clamp(code: i32) -> u8 {
     u8::try_from(code).unwrap_or(u8::MAX)

@@ -1,4 +1,4 @@
-// CASIMIR as a Cloudflare Worker.
+// CASM as a Cloudflare Worker.
 //
 // The entire deployable is this file, the generated bindings, and a ~940 KB `.wasm`.
 // There is no container, no cold-start of a language runtime, and no server to keep

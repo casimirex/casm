@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "CASIMIR infrastructure layer: multi-format architecture parsing with diagnostic-grade errors"
+description = "CASM infrastructure layer: multi-format architecture parsing with diagnostic-grade errors"
 keywords.workspace = true
 categories.workspace = true
 

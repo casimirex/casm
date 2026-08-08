@@ -7,7 +7,7 @@
 //! # NASA compliance
 //!
 //! Rule 4 (statically provable loop bounds): the edit-distance computation is bounded by
-//! the product of the two input lengths, and both are capped — candidates are CASIMIR
+//! the product of the two input lengths, and both are capped — candidates are CASM
 //! [`casm_core::Name`]s, which cannot exceed 128 bytes. A hostile document therefore
 //! cannot turn suggestion generation into a denial of service.
 //!

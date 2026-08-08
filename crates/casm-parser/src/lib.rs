@@ -1,5 +1,5 @@
 //! Module: `casm_parser`
-//! Purpose: Turning YAML, JSON, and TOML bytes into a validated CASIMIR architecture.
+//! Purpose: Turning YAML, JSON, and TOML bytes into a validated CASM architecture.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0
@@ -23,7 +23,7 @@
 //! reference, an absurd latency budget.
 //!
 //! Conflating the two is what produces the notoriously unhelpful "invalid type: map,
-//! expected struct" class of message. Keeping them apart is what lets CASIMIR say
+//! expected struct" class of message. Keeping them apart is what lets CASM say
 //! `architecture.yaml:14:5: unknown variant 'srvice'` and then `help: did you mean
 //! 'service'?`.
 //!

@@ -6,7 +6,7 @@
 //!
 //! # The question this crate answers
 //!
-//! `casm validate` decides whether an architecture obeys CASIMIR's rules. This crate asks
+//! `casm validate` decides whether an architecture obeys CASM's rules. This crate asks
 //! a different one: **can a machine prove it?**
 //!
 //! The answer requires deciding what an architecture *means* formally, which is not

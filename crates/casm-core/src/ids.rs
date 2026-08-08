@@ -1,12 +1,12 @@
 //! Module: `casm_core::ids`
-//! Purpose: Time-ordered, strongly-typed identifiers for CASIMIR entities.
+//! Purpose: Time-ordered, strongly-typed identifiers for CASM entities.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
 //!
 //! # Why `UUIDv7`
 //!
-//! CASIMIR identifiers must sort chronologically. A `UUIDv7` embeds a millisecond
+//! CASM identifiers must sort chronologically. A `UUIDv7` embeds a millisecond
 //! Unix timestamp in its leading 48 bits, so the natural byte ordering of a set of
 //! `NodeId`s *is* their creation ordering. This is what makes architecture archaeology
 //! (Phase 8) possible without maintaining a side index: given a Merkle snapshot, the
@@ -29,7 +29,7 @@ use uuid::Uuid;
 
 use crate::error::IdError;
 
-/// The UUID version CASIMIR mandates for all entity identifiers.
+/// The UUID version CASM mandates for all entity identifiers.
 const REQUIRED_UUID_VERSION: usize = 7;
 
 /// A validated, time-ordered identifier for a [`crate::Node`].

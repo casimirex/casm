@@ -12,7 +12,7 @@ other names, one is a hosted product rather than a tool, and the phrase "auto-ge
 evidence" hides the decision that matters.
 
 An auditor asking for evidence wants an artefact: a log excerpt, a screenshot of a
-configuration, a signed attestation, a penetration-test report. CASIMIR has none of those.
+configuration, a signed attestation, a penetration-test report. CASM has none of those.
 What it has is an architecture file in which somebody *wrote down* that a control exists:
 
 ```yaml
@@ -34,15 +34,15 @@ the one domain where that gets people prosecuted.
 **`casm evidence` assembles claims and their provenance. It never states that a control is
 implemented.**
 
-Every line of the pack is traceable to something CASIMIR can actually verify:
+Every line of the pack is traceable to something CASM can actually verify:
 
-| In the pack | What CASIMIR actually knows |
+| In the pack | What CASM actually knows |
 |---|---|
 | the control's standard and description | the text in the file |
 | who claimed it, and when | the commit that introduced it, from Git |
 | the architecture's fingerprint | computed, and reproducible by the reader |
 | conformance to a pattern that cites the standard | checked by `casm validate` |
-| **evidence outstanding** | the claim says `evidence-required` and CASIMIR holds no artefact |
+| **evidence outstanding** | the claim says `evidence-required` and CASM holds no artefact |
 
 The last row is the point. A control marked `evidence-required: true` appears in the pack
 as an **open item**, not a satisfied one. A pack in which every auditable control is
@@ -51,7 +51,7 @@ and it is more useful than a green page.
 
 The pack's own wording carries this. It is titled a *claims register*, each section says
 what is asserted rather than what is true, and the preamble states in one sentence that
-CASIMIR verified the structure and not the reality.
+CASM verified the structure and not the reality.
 
 ### Three consequences for the crate layout
 
@@ -76,14 +76,14 @@ second one would mean maintaining a worse copy of the thing already under the fi
 ## Consequences
 
 **Good.** The pack is defensible. Every claim in it names its source, and nothing in it can
-be read as CASIMIR vouching for a control. An auditor can recompute the fingerprint and get
+be read as CASM vouching for a control. An auditor can recompute the fingerprint and get
 the same answer.
 
 **Good.** Outstanding evidence is visible rather than absent. The gap between "we wrote
 down a control" and "we can show it works" is the thing a compliance programme is actually
 managing, and the pack makes it a number.
 
-**Good.** Evidence assembly runs anywhere the rest of CASIMIR does, including a browser,
+**Good.** Evidence assembly runs anywhere the rest of CASM does, including a browser,
 because it touches no filesystem and no repository.
 
 **Bad.** The pack is less impressive than the roadmap implies. Somebody expecting a green
@@ -93,7 +93,7 @@ the one the phase title promises.
 
 **Bad.** Provenance is only as good as the commit history. An architecture committed once
 as "initial import" attributes every control to that commit and that author, which is true
-and unhelpful. CASIMIR cannot improve on the history it is given.
+and unhelpful. CASM cannot improve on the history it is given.
 
 **Mitigated.** Hand-rolling the OTLP encoding would have meant verifying it against the
 specification's field names rather than against a live collector, so `scripts/verify-otlp.sh`
@@ -111,7 +111,7 @@ apart, but it cannot make anyone set it.
 
 ## What this does not decide
 
-Whether CASIMIR should ever *hold* evidence artefacts — attaching a PDF, a log excerpt, or
+Whether CASM should ever *hold* evidence artefacts — attaching a PDF, a log excerpt, or
 a signed attestation to a control, and fingerprinting it alongside the architecture. That
 would turn the register into a genuine pack, and it is a much larger design: storage,
 retention, redaction, and access control all arrive with it. Nothing here forecloses it;

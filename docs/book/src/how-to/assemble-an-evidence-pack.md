@@ -10,7 +10,7 @@ A register of the controls your architecture **claims**, grouped by the standard
 cites, with the commit and author that introduced it and a fingerprint the reader can
 recompute.
 
-You do not get evidence. CASIMIR has no log excerpt, no configuration export, no signed
+You do not get evidence. CASM has no log excerpt, no configuration export, no signed
 attestation — it has a file in which somebody wrote down that a control exists. That is a
 claim, and the register says so in its first sentence. Producing a document labelled "SOC2
 evidence" from assertions alone is the one thing this command will not do; see
@@ -26,7 +26,7 @@ controls:
     evidence-required: true
 ```
 
-`evidence-required: true` means "an artefact exists for this, somewhere outside CASIMIR".
+`evidence-required: true` means "an artefact exists for this, somewhere outside CASM".
 The register lists it as **outstanding** — something to go and collect, never something
 satisfied. That deliberately makes a well-annotated architecture look worse than a careless
 one, so the register also tells you when *nothing* is flagged:
@@ -45,7 +45,7 @@ $ casm evidence architecture.yaml
 Control claims register — storefront v1.4.0
 
 This is a register of the controls this architecture CLAIMS, assembled from the file and
-its history. CASIMIR verified the structure, not the reality: nothing here is evidence
+its history. CASM verified the structure, not the reality: nothing here is evidence
 that a control is implemented.
 
   fingerprint  1733be37d1b9f58f750cc7d6e5697f28ca541336fcb99d596ef806cd97b9a2b8

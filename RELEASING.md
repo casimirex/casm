@@ -1,4 +1,4 @@
-# Releasing CASIMIR
+# Releasing CASM
 
 ## Cutting a release
 

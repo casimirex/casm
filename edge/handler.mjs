@@ -1,4 +1,4 @@
-// The request-handling logic of the CASIMIR edge worker.
+// The request-handling logic of the CASM edge worker.
 //
 // Deliberately separated from `worker.mjs`, which does nothing but instantiate the
 // WebAssembly module and delegate here. Cloudflare's module format cannot be imported
@@ -23,7 +23,7 @@
 //   {"architecture": "<document>", "patterns": ["<pattern>", ...]}
 //
 // `/validate` still accepts a bare document, and tells the two apart by the top-level
-// `architecture` key — which the CASIMIR grammar does not have, so a document written in
+// `architecture` key — which the CASM grammar does not have, so a document written in
 // JSON can never be mistaken for an envelope.
 
 /** The largest request body the worker will read, in bytes. */

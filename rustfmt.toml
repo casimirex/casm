@@ -1,4 +1,4 @@
-# CASIMIR formatting conventions (NASA-grade readability).
+# CASM formatting conventions (NASA-grade readability).
 edition = "2024"
 max_width = 100
 use_field_init_shorthand = true

@@ -1,7 +1,7 @@
 {
-  "name": "casimir",
-  "displayName": "CASIMIR \u2014 Architecture as Code",
-  "description": "Completion, validation, hover, and quick-fixes for CASIMIR architecture files.",
+  "name": "casm",
+  "displayName": "CASM \u2014 Architecture as Code",
+  "description": "Completion, validation, hover, and quick-fixes for CASM architecture files.",
   "version": "0.3.0",
   "publisher": "casimirex",
   "license": "Apache-2.0",
@@ -20,7 +20,7 @@
   "keywords": [
     "architecture",
     "architecture-as-code",
-    "casimir",
+    "casm",
     "c4"
   ],
   "main": "./out/extension.js",
@@ -33,7 +33,7 @@
       {
         "id": "casm",
         "aliases": [
-          "CASIMIR Architecture",
+          "CASM Architecture",
           "casm"
         ],
         "extensions": [
@@ -58,22 +58,22 @@
       {
         "command": "casm.generateDiagram",
         "title": "Generate Mermaid diagram",
-        "category": "CASIMIR"
+        "category": "CASM"
       },
       {
         "command": "casm.validateWorkspace",
         "title": "Validate every open architecture",
-        "category": "CASIMIR"
+        "category": "CASM"
       },
       {
         "command": "casm.reloadPatterns",
         "title": "Reload the pattern library",
-        "category": "CASIMIR"
+        "category": "CASM"
       },
       {
         "command": "casm.restartServer",
         "title": "Restart the language server",
-        "category": "CASIMIR"
+        "category": "CASM"
       }
     ],
     "menus": {
@@ -86,7 +86,7 @@
       ]
     },
     "configuration": {
-      "title": "CASIMIR",
+      "title": "CASM",
       "properties": {
         "casm.server.path": {
           "type": "string",

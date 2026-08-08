@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "CASIMIR infrastructure layer: deterministic Mermaid, Graphviz DOT, and ASCII diagram generation"
+description = "CASM infrastructure layer: deterministic Mermaid, Graphviz DOT, and ASCII diagram generation"
 keywords.workspace = true
 categories.workspace = true
 

@@ -6,7 +6,7 @@
 //!
 //! # Why drift is the hard half
 //!
-//! Every other check in CASIMIR asks whether an architecture is *internally* coherent.
+//! Every other check in CASM asks whether an architecture is *internally* coherent.
 //! This one asks whether it is *true*. An architecture that nobody has compared against
 //! running infrastructure is a diagram, and diagrams are wrong within a quarter.
 //!
@@ -26,13 +26,13 @@
 //!     infrastructure-id: aws_db_instance.orders
 //! ```
 //!
-//! Name equality remains as a fallback for the easy case. Anything CASIMIR cannot bind is
+//! Name equality remains as a fallback for the easy case. Anything CASM cannot bind is
 //! reported rather than guessed at — a false "this is fine" is far more dangerous here
 //! than a false alarm.
 //!
 //! # What a mismatch means
 //!
-//! A type mismatch is only reported when the observed resource's type is one CASIMIR
+//! A type mismatch is only reported when the observed resource's type is one CASM
 //! recognises. An unmapped Terraform resource type asserts nothing about the node's type,
 //! because the alternative is inventing a disagreement out of ignorance.
 
@@ -51,7 +51,7 @@ pub struct Resource {
     pub id: String,
     /// The human-facing name, used for the fallback binding.
     pub name: String,
-    /// The CASIMIR node type this resource corresponds to, when it is known.
+    /// The CASM node type this resource corresponds to, when it is known.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub node_type: Option<NodeType>,
     /// The provider's own type string, kept for diagnostics.
@@ -77,7 +77,7 @@ fn default_source() -> String {
 }
 
 impl Inventory {
-    /// Parses a native CASIMIR inventory document.
+    /// Parses a native CASM inventory document.
     ///
     /// # Errors
     ///
@@ -144,10 +144,10 @@ fn terraform_resource(entry: &serde_json::Value) -> Option<Resource> {
     })
 }
 
-/// Maps a Terraform resource type onto a CASIMIR node type.
+/// Maps a Terraform resource type onto a CASM node type.
 ///
 /// Deliberately incomplete. An unmapped type yields `None`, which suppresses type-mismatch
-/// reporting for that resource — CASIMIR would rather say nothing than invent a
+/// reporting for that resource — CASM would rather say nothing than invent a
 /// disagreement from a type it does not understand.
 #[must_use]
 pub fn terraform_type(provider_type: &str) -> Option<NodeType> {
@@ -479,7 +479,7 @@ nodes:
     #[test]
     fn an_unrecognised_resource_type_asserts_nothing_about_the_node() {
         // The alternative — assuming a disagreement — would report drift for every
-        // resource type CASIMIR has not been taught.
+        // resource type CASM has not been taught.
         let report = detect(
             &parse(ARCHITECTURE),
             &inventory(vec![

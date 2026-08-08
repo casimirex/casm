@@ -27,7 +27,7 @@
 //! # The shape
 //!
 //! OTLP nests every signal three deep — resource, scope, then records — so that one
-//! payload can carry data from several libraries in several processes. CASIMIR is one
+//! payload can carry data from several libraries in several processes. CASM is one
 //! library in one process, so every document here has exactly one resource and one scope.
 //! The nesting is still emitted, because a collector rejects a payload that omits it.
 //!
@@ -345,7 +345,7 @@ fn encode_span(trace_id: &str, span: &Span) -> OtlpSpan {
         parent_span_id: span.parent_span_id.map(SpanId::to_hex),
         name: span.name.clone().into_owned(),
         // 1 is SPAN_KIND_INTERNAL: work inside this process, not a request across a
-        // boundary. Everything CASIMIR does is internal.
+        // boundary. Everything CASM does is internal.
         kind: 1,
         start_time_unix_nano: span.start.as_nanos().to_string(),
         end_time_unix_nano: span.end.as_nanos().to_string(),

@@ -115,7 +115,7 @@ pub fn quick_fixes(index: &DocumentIndex, diagnostic: &Diagnostic) -> Vec<CodeAc
 pub fn source_actions() -> Vec<CodeAction> {
     vec![
         CodeAction {
-            title: "CASIMIR: generate Mermaid diagram".to_owned(),
+            title: "CASM: generate Mermaid diagram".to_owned(),
             kind: ActionKind::Source,
             edits: Vec::new(),
             command: Some(Command {
@@ -125,7 +125,7 @@ pub fn source_actions() -> Vec<CodeAction> {
             resolves: None,
         },
         CodeAction {
-            title: "CASIMIR: validate every architecture in the workspace".to_owned(),
+            title: "CASM: validate every architecture in the workspace".to_owned(),
             kind: ActionKind::Source,
             edits: Vec::new(),
             command: Some(Command {
@@ -135,7 +135,7 @@ pub fn source_actions() -> Vec<CodeAction> {
             resolves: None,
         },
         CodeAction {
-            title: "CASIMIR: reload the pattern library".to_owned(),
+            title: "CASM: reload the pattern library".to_owned(),
             kind: ActionKind::Source,
             edits: Vec::new(),
             command: Some(Command {

@@ -4,7 +4,7 @@
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
 //!
-//! # The only place CASIMIR writes to a repository
+//! # The only place CASM writes to a repository
 //!
 //! Everything else in `casm-git` is strictly read-only. Installing a hook is the
 //! exception, and it is guarded accordingly: an existing hook is never overwritten
@@ -24,14 +24,14 @@
 
 use std::path::{Path, PathBuf};
 
-/// Identifies a hook as CASIMIR's, so `uninstall` never removes somebody else's.
+/// Identifies a hook as CASM's, so `uninstall` never removes somebody else's.
 pub(crate) const MARKER: &str = "# casm-hook v1 — managed by `casm hook install`";
 
 /// The pre-commit script installed into a repository.
 pub(crate) const SCRIPT: &str = r#"#!/bin/sh
 # casm-hook v1 — managed by `casm hook install`
 #
-# Validates every staged CASIMIR architecture file. Warnings are printed; only errors
+# Validates every staged CASM architecture file. Warnings are printed; only errors
 # (exit code 2 or above) refuse the commit. Remove with `casm hook uninstall`.
 
 if ! command -v casm >/dev/null 2>&1; then
@@ -82,7 +82,7 @@ pub(crate) fn hook_path(git_dir: &Path) -> PathBuf {
 pub(crate) enum Status {
     /// No pre-commit hook exists.
     Absent,
-    /// CASIMIR's hook is installed.
+    /// CASM's hook is installed.
     Installed,
     /// Someone else's hook is installed.
     Foreign,
@@ -126,7 +126,7 @@ pub(crate) fn install(git_dir: &Path, force: bool) -> Result<Status, String> {
 
     if existing == Status::Foreign && !force {
         return Err(format!(
-            "'{}' already exists and was not written by CASIMIR.\n\
+            "'{}' already exists and was not written by CASM.\n\
              Inspect it first, then pass --force to replace it.",
             hook_path(git_dir).display()
         ));
@@ -145,7 +145,7 @@ pub(crate) fn install(git_dir: &Path, force: bool) -> Result<Status, String> {
     Ok(existing)
 }
 
-/// Removes CASIMIR's hook, leaving a foreign one alone.
+/// Removes CASM's hook, leaving a foreign one alone.
 ///
 /// # Errors
 ///
@@ -156,7 +156,7 @@ pub(crate) fn uninstall(git_dir: &Path) -> Result<Status, String> {
     match existing {
         Status::Absent => Ok(existing),
         Status::Foreign => Err(format!(
-            "'{}' was not written by CASIMIR; leaving it alone.",
+            "'{}' was not written by CASM; leaving it alone.",
             hook_path(git_dir).display()
         )),
         Status::Installed => {

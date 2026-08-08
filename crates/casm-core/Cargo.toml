@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "CASIMIR domain layer: entities, value objects, and construction-time invariants"
+description = "CASM domain layer: entities, value objects, and construction-time invariants"
 keywords.workspace = true
 categories.workspace = true
 

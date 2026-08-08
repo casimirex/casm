@@ -5,7 +5,7 @@
 
 ## Context
 
-CASIMIR must be usable as a CLI today and, per the roadmap, as a language server, a WASM
+CASM must be usable as a CLI today and, per the roadmap, as a language server, a WASM
 module, and an HTTP registry later. Each of those is a different *adapter* onto the same
 domain. A single crate would make every one of those futures a rewrite.
 

@@ -1,4 +1,4 @@
-# cargo-deny configuration — supply chain gates for CASIMIR.
+# cargo-deny configuration — supply chain gates for CASM.
 #
 # Rationale: a dependency is code you did not write running with your privileges.
 # These gates make adding one a deliberate act rather than an accident.

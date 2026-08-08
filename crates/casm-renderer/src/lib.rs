@@ -97,7 +97,7 @@ fn diagram_id(ids: &[(NodeId, String)], node: NodeId) -> &str {
 
 /// Escapes a free-form label for embedding in a quoted diagram string.
 ///
-/// Node *names* never need this — the CASIMIR name alphabet has no metacharacters — but
+/// Node *names* never need this — the CASM name alphabet has no metacharacters — but
 /// descriptions are arbitrary text supplied by the author.
 #[must_use]
 pub fn escape_label(raw: &str) -> String {
@@ -214,7 +214,7 @@ impl Dot {
 
     /// Maps a relationship type onto a Graphviz edge style.
     ///
-    /// Graphviz offers fewer distinct line styles than CASIMIR has relationship types,
+    /// Graphviz offers fewer distinct line styles than CASM has relationship types,
     /// so `composed` and `quantum-entangled` share `bold`. They remain distinguishable
     /// by the edge label, which always carries the exact type.
     fn style(relationship_type: RelationshipType) -> &'static str {

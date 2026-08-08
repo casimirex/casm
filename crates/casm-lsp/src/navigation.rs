@@ -6,7 +6,7 @@
 //!
 //! # Names are the linking mechanism
 //!
-//! CASIMIR relationships reference nodes by name, and the core guarantees names are
+//! CASM relationships reference nodes by name, and the core guarantees names are
 //! unique within an architecture (see ADR-0004). So navigation is exact rather than
 //! heuristic: a `source: api` has precisely one declaration it can mean, and finding it
 //! is a lookup, not a guess.

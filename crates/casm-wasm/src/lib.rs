@@ -1,5 +1,5 @@
 //! Module: `casm_wasm`
-//! Purpose: CASIMIR in a browser, at the edge, or anywhere else `.wasm` runs.
+//! Purpose: CASM in a browser, at the edge, or anywhere else `.wasm` runs.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0
@@ -9,7 +9,7 @@
 //! The domain, parser, validator, renderer, and the analysis half of the language server
 //! are all pure functions with no I/O — a property maintained deliberately since ADR-0001,
 //! and the reason this phase is a thin binding layer rather than a rewrite. Nothing had to
-//! change for CASIMIR to run in a browser.
+//! change for CASM to run in a browser.
 //!
 //! The result: a page that validates architectures with no server, an edge worker that
 //! checks a pull request without a container, and a playground that needs no build step.
@@ -180,7 +180,7 @@ pub fn rules() -> String {
     api::rules()
 }
 
-/// Returns the CASIMIR version this module was built from.
+/// Returns the CASM version this module was built from.
 #[wasm_bindgen]
 #[must_use]
 pub fn version() -> String {

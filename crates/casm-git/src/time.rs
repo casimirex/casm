@@ -6,7 +6,7 @@
 //!
 //! # Why not `chrono` or `jiff`
 //!
-//! CASIMIR needs exactly one thing from a date library: turn a Unix timestamp into
+//! CASM needs exactly one thing from a date library: turn a Unix timestamp into
 //! `YYYY-MM-DD HH:MM:SS` for a log line. That is forty lines of arithmetic. A date
 //! library brings timezone databases, parsing, locales, and leap-second policy — none of
 //! which is used, all of which is dependency surface on a tool whose supply chain is a
@@ -17,7 +17,7 @@
 //! has no branches for leap years beyond the era arithmetic.
 //!
 //! Everything is rendered in **UTC**. A commit timestamp carries an author's local offset,
-//! but showing history in mixed local times makes ordering unreadable, and CASIMIR already
+//! but showing history in mixed local times makes ordering unreadable, and CASM already
 //! requires UTC everywhere else.
 
 /// Seconds in a day.

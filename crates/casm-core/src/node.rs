@@ -1,5 +1,5 @@
 //! Module: `casm_core::node`
-//! Purpose: The Node aggregate — a participant in a CASIMIR architecture.
+//! Purpose: The Node aggregate — a participant in a CASM architecture.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -186,7 +186,7 @@ impl NodeConfig {
     /// # Errors
     ///
     /// - [`NodeError::MissingField`] if `name` or `node_type` was never set.
-    /// - [`NodeError::Name`] if the name violates the CASIMIR alphabet.
+    /// - [`NodeError::Name`] if the name violates the CASM alphabet.
     /// - [`NodeError::DuplicateInterface`] if two interfaces share a name.
     pub fn build(self) -> Result<Node, NodeError> {
         let raw_name = self.name.ok_or(NodeError::MissingField { field: "name" })?;

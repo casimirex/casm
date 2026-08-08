@@ -6,7 +6,7 @@
 //!
 //! # Why the clock is a value
 //!
-//! Everything else in CASIMIR is a pure function, which is what lets the test suite assert
+//! Everything else in CASM is a pure function, which is what lets the test suite assert
 //! on exact output. Telemetry cannot be: a span that does not know when it started is not
 //! telemetry. Reading the system clock directly would make every record in this crate
 //! untestable except by shape.

@@ -1,4 +1,4 @@
-# Contributing to CASIMIR
+# Contributing to CASM
 
 ## The short version
 
@@ -21,7 +21,7 @@ image, the book, and `casm check examples --strict`.
 
 ## Engineering rules
 
-CASIMIR adapts the JPL Power of Ten. These are enforced mechanically, so you will meet
+CASM adapts the JPL Power of Ten. These are enforced mechanically, so you will meet
 them as build failures rather than review comments.
 
 1. **No `unsafe`.** Every crate carries `#![forbid(unsafe_code)]`.
@@ -87,7 +87,7 @@ tests are the specification; a reader should be able to learn the rules from the
    process. The `every_backend_is_deterministic` test covers new backends automatically.
 3. Use positional node ids, never `NodeId`s
    ([ADR-0007](docs/adr/0007-deterministic-rendering.md)).
-4. Route free-form text through `escape_label`. Node names need no escaping — the CASIMIR
+4. Route free-form text through `escape_label`. Node names need no escaping — the CASM
    name alphabet has no metacharacters — but descriptions do.
 
 ## Architecture decisions

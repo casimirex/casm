@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifies that CASIMIR's OTLP output is accepted by a real OpenTelemetry Collector.
+# Verifies that CASM's OTLP output is accepted by a real OpenTelemetry Collector.
 #
 # `casm-telemetry` encodes OTLP/HTTP JSON by hand rather than through the SDK
 # (docs/adr/0013-evidence-is-assembled-not-asserted.md). Its unit tests assert the *shape*

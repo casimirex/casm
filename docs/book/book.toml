@@ -1,7 +1,7 @@
 [book]
-title = "CASIMIR"
+title = "CASM"
 description = "Architecture as code, validated like flight software."
-authors = ["CASIMIR Engineering"]
+authors = ["CASM Engineering"]
 language = "en"
 src = "src"
 
@@ -10,7 +10,7 @@ default-theme = "rust"
 preferred-dark-theme = "ayu"
 git-repository-url = "https://github.com/casimirex/casimir"
 edit-url-template = "https://github.com/casimirex/casimir/edit/main/docs/book/{path}"
-additional-css = ["theme/casimir.css"]
+additional-css = ["theme/casm.css"]
 
 [output.html.fold]
 enable = true

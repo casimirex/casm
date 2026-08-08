@@ -48,7 +48,7 @@ architecture, so `source: gateway` is unambiguous. You never write a UUID.
 down, the gateway cannot serve. Change it to `async` and that stops being true. This one
 field drives cycle detection, latency arithmetic, and the formal models.
 
-**`latency-budget-ms` is a promise.** CASIMIR sums budgets along blocking paths and tells
+**`latency-budget-ms` is a promise.** CASM sums budgets along blocking paths and tells
 you whether your end-to-end target is arithmetically achievable.
 
 ## Validate it
@@ -88,7 +88,7 @@ Add two security controls to `orders`:
         description: Callers must present the orders.write scope to mutate an order.
 ```
 
-A control needs a *description*, and CASIMIR refuses an empty one. A control with no
+A control needs a *description*, and CASM refuses an empty one. A control with no
 description is indistinguishable from compliance theatre.
 
 ## Draw it
@@ -110,5 +110,5 @@ Also available: `--format dot` for Graphviz, `--format ascii` for a CI log.
 
 ## Next
 
-[Making it fail](making-it-fail.md) — deliberately break things, to see what CASIMIR
+[Making it fail](making-it-fail.md) — deliberately break things, to see what CASM
 catches and what it does not.

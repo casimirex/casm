@@ -1,5 +1,5 @@
 //! Module: `casm_cli::commands`
-//! Purpose: The implementation of each CASIMIR subcommand.
+//! Purpose: The implementation of each CASM subcommand.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -8,7 +8,7 @@
 //!
 //! Everything below `casm-cli` is a pure function of its inputs. This module is where
 //! files are read, standard output is written, and exit codes are decided. Keeping the
-//! boundary sharp is what makes the rest of CASIMIR testable without a filesystem.
+//! boundary sharp is what makes the rest of CASM testable without a filesystem.
 
 use casm_core::{Architecture, Pattern, conformance};
 use casm_evidence::{Attribution, Pack, Provenance, render::Format as RenderFormat};
@@ -30,7 +30,7 @@ use casm_diff::Diff;
 /// Deliberately a *valid* architecture that nonetheless produces warnings: a newcomer's
 /// first `casm validate` should demonstrate what the tool is for, not print "all clear"
 /// and teach them nothing.
-const TEMPLATE: &str = r"# CASIMIR architecture
+const TEMPLATE: &str = r"# CASM architecture
 # Validate with:  casm validate
 # Diagram with:   casm generate --format mermaid
 
@@ -434,7 +434,7 @@ pub(crate) fn manage_hook(action: &HookAction) -> CommandResult {
             }
             hook::Status::Absent => println!("not installed; run `casm hook install`"),
             hook::Status::Foreign => println!(
-                "a pre-commit hook exists at {}, but CASIMIR did not write it",
+                "a pre-commit hook exists at {}, but CASM did not write it",
                 hook::hook_path(&git_dir).display()
             ),
         },
@@ -652,7 +652,7 @@ fn repository_for(file: &Path) -> Result<casm_git::Repository, CommandError> {
 /// Assembles a register of the control claims an architecture makes.
 ///
 /// Reports claims, never satisfaction. A control flagged `evidence-required` is listed as
-/// outstanding, because CASIMIR does not hold the artefact behind it and saying otherwise
+/// outstanding, because CASM does not hold the artefact behind it and saying otherwise
 /// would launder an assertion into evidence — see ADR-0013.
 pub(crate) fn evidence(
     file: &Path,
@@ -898,7 +898,7 @@ fn walk(directory: &Path, depth: usize, found: &mut Vec<PathBuf>) -> Result<(), 
     Ok(())
 }
 
-/// Returns `true` if `path` looks like a CASIMIR architecture rather than any old YAML.
+/// Returns `true` if `path` looks like a CASM architecture rather than any old YAML.
 ///
 /// Checked by content, not by filename: a repository is full of YAML that is not an
 /// architecture, and `check` reporting parse failures for every CI workflow file would

@@ -77,7 +77,7 @@ fn key_table(section: Section, block: Block) -> &'static [Term] {
         (Section::Nodes | Section::Relationships, Block::Controls) => CONTROL_KEYS,
         (Section::Relationships, Block::None | Block::Interfaces) => RELATIONSHIP_KEYS,
         (Section::Patterns, Block::None) => CLAIM_KEYS,
-        // Inside `bind:` every key is a role name defined by the pattern, not by CASIMIR,
+        // Inside `bind:` every key is a role name defined by the pattern, not by CASM,
         // so there is no fixed vocabulary to explain.
         //
         // The remaining pairs cannot arise — `crate::index` only opens `bind:` inside
@@ -173,7 +173,7 @@ fn describe_protocol(label: &str) -> String {
     find(PROTOCOLS, label).map_or_else(
         || {
             format!(
-                "**{label}** — _custom protocol_\n\nNot a protocol CASIMIR models natively. \
+                "**{label}** — _custom protocol_\n\nNot a protocol CASM models natively. \
                  It is accepted, and treated as synchronous for validation purposes."
             )
         },

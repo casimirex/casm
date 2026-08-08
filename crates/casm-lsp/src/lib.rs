@@ -1,5 +1,5 @@
 //! Module: `casm_lsp`
-//! Purpose: The CASIMIR language server — architecture editing as fluid as code editing.
+//! Purpose: The CASM language server — architecture editing as fluid as code editing.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0

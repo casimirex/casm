@@ -1,9 +1,9 @@
 # Changelog
 
-Notable changes to CASIMIR. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
+Notable changes to CASM. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-CASIMIR is pre-1.0. The API will change, and a minor version may break it.
+CASM is pre-1.0. The API will change, and a minor version may break it.
 
 ## [Unreleased]
 
@@ -100,7 +100,7 @@ cannot work.
     satisfied. An architecture that flags nothing is reported as *silent* rather than
     complete, because the two look identical in a tally and mean opposite things.
   - Human, Markdown, and JSON output. Every rendering opens with one sentence stating that
-    CASIMIR verified the structure and not the reality, and no rendering says "satisfied",
+    CASM verified the structure and not the reality, and no rendering says "satisfied",
     "compliant", or "verified" of any control.
   - `--strict` fails a pipeline while any claim is outstanding; `--no-history` skips Git
     for a file outside a repository or a shallow checkout.
@@ -176,7 +176,7 @@ cannot work.
 
 ## [0.2.0] — 2026-08-05
 
-Patterns, everywhere CASIMIR runs. Roadmap Phase 7, plus the editor and browser halves of
+Patterns, everywhere CASM runs. Roadmap Phase 7, plus the editor and browser halves of
 it that the 0.1.0 notes listed as unbuilt.
 
 **This release invalidates every fingerprint computed by 0.1.0.** The Merkle scheme tag is

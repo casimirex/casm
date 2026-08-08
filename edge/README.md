@@ -1,4 +1,4 @@
-# CASIMIR at the edge
+# CASM at the edge
 
 Validate architectures on a pull request without a container, a language runtime, or a
 server to keep patched. The whole deployable is one JavaScript file and a ~940 KB `.wasm`.

@@ -1,6 +1,6 @@
 //! The parser must never panic on any input.
 //!
-//! SECURITY.md names untrusted architecture files as CASIMIR's threat model: a document
+//! SECURITY.md names untrusted architecture files as CASM's threat model: a document
 //! may arrive from a pull request, a third party, or a generated pipeline. A panic here is
 //! a denial of service in `casm check`, in the language server, and — worst — a trap in the
 //! WebAssembly build, where it poisons the module for every subsequent call.

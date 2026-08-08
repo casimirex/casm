@@ -26,7 +26,7 @@
 //!
 //! # Why line-oriented is enough
 //!
-//! The CASIMIR grammar is a flat, regular subset of YAML: block mappings, block
+//! The CASM grammar is a flat, regular subset of YAML: block mappings, block
 //! sequences, and scalar values. It has no flow mappings, no anchors, and no multi-line
 //! scalars. Every symbol the server cares about is `key: value` on a single line.
 //!
@@ -55,7 +55,7 @@ pub enum Section {
     Patterns,
     /// Inside the `metadata:` mapping.
     Metadata,
-    /// Inside a top-level key CASIMIR does not recognise.
+    /// Inside a top-level key CASM does not recognise.
     Unknown,
 }
 
@@ -107,7 +107,7 @@ impl Endpoint {
     }
 }
 
-/// What a span of text means to CASIMIR.
+/// What a span of text means to CASM.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum SymbolKind {
     /// The `name:` of a node — the declaration a reference resolves to.

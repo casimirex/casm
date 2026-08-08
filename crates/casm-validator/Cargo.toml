@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "CASIMIR infrastructure layer: structural, semantic, and policy validation with SARIF output"
+description = "CASM infrastructure layer: structural, semantic, and policy validation with SARIF output"
 keywords.workspace = true
 categories.workspace = true
 

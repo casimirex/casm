@@ -1,4 +1,4 @@
-# ADR-0011: A CASIMIR architecture models failure propagation, and each tool proves a different class of property
+# ADR-0011: A CASM architecture models failure propagation, and each tool proves a different class of property
 
 - **Status:** Accepted
 - **Date:** 2026-08-03
@@ -9,7 +9,7 @@ Phase 9 asks for a bridge to TLA+ and Alloy so that properties can be proved "be
 build". The roadmap's example is *"if Service A fails, Service B will degrade gracefully
 within 500ms"*.
 
-That framing hides the actual design question: **what does a CASIMIR architecture mean
+That framing hides the actual design question: **what does a CASM architecture mean
 formally?** A document listing nodes and edges is not a specification of anything until
 someone decides what the edges *do*. Emitting a spec without answering that produces a file
 that typechecks and proves nothing.
@@ -24,7 +24,7 @@ An architecture is modelled as a **failure-propagation system**:
 - A node is **unavailable** if it has failed, or if anything it *blocks on* is unavailable,
   transitively.
 - **Asynchronous and event-driven edges do not propagate unavailability.** That is the
-  entire point of the distinction CASIMIR already draws in
+  entire point of the distinction CASM already draws in
   [ADR-0006](0006-only-blocking-edges-form-cycles.md), and it is what makes "put a queue
   between them" a formally meaningful act rather than a diagram change.
 
@@ -56,7 +56,7 @@ graph the validator already builds.
 
 ### Nodes are strings in TLA+, identifiers in Alloy
 
-CASIMIR names permit `-` and `.`, which are illegal in both languages' identifiers.
+CASM names permit `-` and `.`, which are illegal in both languages' identifiers.
 
 TLA+ has real strings, so `Nodes == {"orders-db"}` sidesteps the problem entirely — no
 mangling, no collisions, and the spec reads in the author's own vocabulary.
@@ -73,7 +73,7 @@ declaration order, and the mapping is emitted as a comment.
 as a machine-checked assertion; `AsyncIsolation` proves that a node behind a queue cannot
 take down its publisher; `EveryFailureIsRepaired` confirms the model is not deadlocked.
 
-**Good.** A spec is a starting point a human extends. Everything CASIMIR knows is
+**Good.** A spec is a starting point a human extends. Everything CASM knows is
 declared; the domain properties it cannot know are left for the author to add, in a file
 that already has the topology encoded correctly.
 

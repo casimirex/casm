@@ -1,5 +1,5 @@
 //! Module: `casm_core::error`
-//! Purpose: The complete, exhaustive failure taxonomy of the CASIMIR domain layer.
+//! Purpose: The complete, exhaustive failure taxonomy of the CASM domain layer.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -26,9 +26,9 @@ pub enum IdError {
 
     /// The UUID parsed, but is not version 7 (time-ordered).
     ///
-    /// CASIMIR requires `UUIDv7` so that identifiers sort chronologically, which makes
+    /// CASM requires `UUIDv7` so that identifiers sort chronologically, which makes
     /// architecture history reconstructable without an auxiliary index.
-    #[error("identifier '{value}' is UUID version {found}, but CASIMIR requires version 7")]
+    #[error("identifier '{value}' is UUID version {found}, but CASM requires version 7")]
     WrongVersion {
         /// The rejected input.
         value: String,
@@ -372,7 +372,7 @@ pub enum PatternError {
     },
 }
 
-/// The aggregate error type for the CASIMIR domain layer.
+/// The aggregate error type for the CASM domain layer.
 ///
 /// Every fallible operation in `casm-core` ultimately reduces to one of these variants.
 /// Downstream crates match on this to produce diagnostics without stringly-typed logic.
@@ -412,7 +412,7 @@ pub enum CoreError {
     Pattern(#[from] PatternError),
 }
 
-/// The canonical result type of the CASIMIR domain layer.
+/// The canonical result type of the CASM domain layer.
 pub type Result<T, E = CoreError> = core::result::Result<T, E>;
 
 #[cfg(test)]

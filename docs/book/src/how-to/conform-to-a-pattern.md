@@ -1,7 +1,7 @@
 # Conform to a pattern
 
 A pattern is a **shape to conform to**, not a template to stamp. Nothing here is copied
-into your architecture: you declare that you conform, and CASIMIR checks that you do.
+into your architecture: you declare that you conform, and CASM checks that you do.
 
 ## Write the pattern
 

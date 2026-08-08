@@ -1,8 +1,8 @@
-# CASIMIR
+# CASM
 
 **Architecture as code, validated like flight software.**
 
-Most architecture tooling documents a decision after it has been made. CASIMIR's premise is
+Most architecture tooling documents a decision after it has been made. CASM's premise is
 that an architecture is a *specification with checkable properties*, and that the expensive
 mistakes are mechanically detectable before anyone writes a service:
 
@@ -31,7 +31,7 @@ split:
 
 | Section | Answers | Read it when |
 |---|---|---|
-| **Tutorial** | "Teach me" | You have never used CASIMIR |
+| **Tutorial** | "Teach me" | You have never used CASM |
 | **How-to** | "How do I…" | You have a specific task |
 | **Explanation** | "Why is it like this" | Something surprised you |
 | **Reference** | "What exactly does X do" | You need the details |
@@ -72,7 +72,7 @@ pure Rust and never shells out.
 
 **A value that exists is a value whose invariants hold.**
 
-CASIMIR does not parse an architecture into a permissive structure and then offer you a
+CASM does not parse an architecture into a permissive structure and then offer you a
 `validate()` you might forget to call. An `Architecture` with a duplicate node name or a
 dangling reference is not a bug caught later — it is unrepresentable.
 

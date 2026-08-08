@@ -8,7 +8,7 @@
 //!
 //! A batch tool can be careless about memory; it exits. A language server runs for a
 //! working day, and an editor may hand it every YAML file in a monorepo. Without a bound,
-//! "CASIMIR ate 8 GB" is a matter of how large the repository is.
+//! "CASM ate 8 GB" is a matter of how large the repository is.
 //!
 //! So the store enforces two limits — a document count and a total byte budget — and
 //! evicts least-recently-used entries to stay inside them. An evicted document is not

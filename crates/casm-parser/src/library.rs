@@ -173,7 +173,7 @@ impl RequiredRelationshipDoc {
     }
 }
 
-/// A CASIMIR pattern in authoring form: permissive, unvalidated, human-shaped.
+/// A CASM pattern in authoring form: permissive, unvalidated, human-shaped.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "kebab-case")]
 pub struct PatternDoc {
@@ -342,7 +342,7 @@ impl Library {
 
     /// Loads every pattern file in `directory`, one level deep.
     ///
-    /// Files whose extension is not a recognised CASIMIR format are skipped rather than
+    /// Files whose extension is not a recognised CASM format are skipped rather than
     /// rejected, so a `README.md` alongside the patterns is not an error.
     ///
     /// # Errors

@@ -400,7 +400,7 @@ impl LanguageServer for Backend {
                         })
                     })
                     .unwrap_or_else(|| {
-                        "%% CASIMIR could not render: the document does not currently parse.\n"
+                        "%% CASM could not render: the document does not currently parse.\n"
                             .to_owned()
                     });
 
@@ -539,12 +539,12 @@ fn workspace_roots(params: &InitializeParams) -> Vec<PathBuf> {
         .unwrap_or_default()
 }
 
-/// Converts a protocol position into CASIMIR's.
+/// Converts a protocol position into CASM's.
 fn convert_position(position: Position) -> CasmPosition {
     CasmPosition::new(position.line, position.character)
 }
 
-/// Converts a CASIMIR span into a protocol range.
+/// Converts a CASM span into a protocol range.
 fn convert_span(span: Span) -> Range {
     Range {
         start: Position {
@@ -566,7 +566,7 @@ fn overlaps(span: Span, range: Range) -> bool {
     span.line >= range.start.line && span.line <= range.end.line
 }
 
-/// Converts a CASIMIR diagnostic into a protocol one.
+/// Converts a CASM diagnostic into a protocol one.
 fn convert_diagnostic(diagnostic: &crate::diagnostics::Diagnostic) -> Diagnostic {
     Diagnostic {
         range: convert_span(diagnostic.span),
@@ -614,7 +614,7 @@ fn build_symbol(entry: navigation::Outline) -> DocumentSymbol {
     }
 }
 
-/// Converts a CASIMIR completion into a protocol item.
+/// Converts a CASM completion into a protocol item.
 fn convert_completion(item: &completion::Completion) -> CompletionItem {
     CompletionItem {
         label: item.label.clone(),
@@ -633,7 +633,7 @@ fn convert_completion(item: &completion::Completion) -> CompletionItem {
     }
 }
 
-/// Converts a CASIMIR code action into a protocol one.
+/// Converts a CASM code action into a protocol one.
 fn convert_action(uri: &Uri, action: actions::CodeAction) -> CodeActionOrCommand {
     let edit = (!action.edits.is_empty()).then(|| {
         let edits: Vec<TextEdit> = action
@@ -702,7 +702,7 @@ mod tests {
         let range = convert_span(Span::new(7, 2, 9));
         assert_eq!(
             range.start.line, range.end.line,
-            "CASIMIR symbols never span lines"
+            "CASM symbols never span lines"
         );
     }
 

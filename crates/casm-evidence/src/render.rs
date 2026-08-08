@@ -12,7 +12,7 @@
 //!
 //! A register handed to an auditor with the word "evidence" at the top and a list of
 //! assertions underneath is a document that misrepresents itself. Every rendering here
-//! opens with one sentence saying what CASIMIR checked and what it did not, and that
+//! opens with one sentence saying what CASM checked and what it did not, and that
 //! sentence is not optional or configurable.
 
 use core::fmt::Write as _;
@@ -24,7 +24,7 @@ use crate::pack::Pack;
 /// Not configurable, and not omittable. A reader who sees only the tables must still be
 /// unable to mistake this document for verified evidence.
 const DISCLAIMER: &str = "This is a register of the controls this architecture CLAIMS, \
-                          assembled from the file and its history. CASIMIR verified the \
+                          assembled from the file and its history. CASM verified the \
                           structure, not the reality: nothing here is evidence that a \
                           control is implemented.";
 

@@ -7,7 +7,7 @@
 //! # Why controls are first-class
 //!
 //! In most architecture tooling, compliance is a spreadsheet maintained beside the
-//! diagram, and the two drift apart within a quarter. In CASIMIR a [`Control`] is part
+//! diagram, and the two drift apart within a quarter. In CASM a [`Control`] is part
 //! of the architecture value itself, so a policy rule such as "every internet-facing
 //! service carries two security controls" is a property of the data structure that the
 //! validator can decide mechanically.

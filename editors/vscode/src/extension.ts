@@ -1,5 +1,5 @@
 /**
- * CASIMIR VS Code client.
+ * CASM VS Code client.
  *
  * Deliberately thin: it launches `casm-lsp` and lets the server do everything. Any logic
  * added here would be logic the Neovim, Helix, and Zed users do not get — the point of
@@ -26,7 +26,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand('casm.restartServer', async () => {
       await stop();
       await start(context);
-      window.showInformationMessage('CASIMIR: language server restarted.');
+      window.showInformationMessage('CASM: language server restarted.');
     }),
   );
 
@@ -68,10 +68,10 @@ async function start(context: ExtensionContext): Promise<void> {
       fileEvents: workspace.createFileSystemWatcher('**/*.{yaml,yml}'),
     },
     initializationOptions: patterns && patterns.length > 0 ? { patterns } : undefined,
-    outputChannelName: 'CASIMIR',
+    outputChannelName: 'CASM',
   };
 
-  client = new LanguageClient('casm', 'CASIMIR', serverOptions, clientOptions);
+  client = new LanguageClient('casm', 'CASM', serverOptions, clientOptions);
 
   try {
     await client.start();
@@ -80,7 +80,7 @@ async function start(context: ExtensionContext): Promise<void> {
     // The overwhelmingly common cause is the binary not being installed, so say that
     // rather than surfacing a raw spawn error.
     window.showErrorMessage(
-      `CASIMIR: could not start '${command}'. Install it with ` +
+      `CASM: could not start '${command}'. Install it with ` +
         '`cargo install --path crates/casm-lsp`, or set `casm.server.path`. ' +
         `(${error instanceof Error ? error.message : String(error)})`,
     );
@@ -99,7 +99,7 @@ async function stop(): Promise<void> {
 async function generateDiagram(): Promise<void> {
   const editor = window.activeTextEditor;
   if (!client || !editor) {
-    window.showWarningMessage('CASIMIR: open an architecture file first.');
+    window.showWarningMessage('CASM: open an architecture file first.');
     return;
   }
 
@@ -118,7 +118,7 @@ async function generateDiagram(): Promise<void> {
 /** Asks the server to summarise findings across every open architecture. */
 async function validateWorkspace(): Promise<void> {
   if (!client) {
-    window.showWarningMessage('CASIMIR: the language server is not running.');
+    window.showWarningMessage('CASM: the language server is not running.');
     return;
   }
 
@@ -126,13 +126,13 @@ async function validateWorkspace(): Promise<void> {
     command: 'casm.validateWorkspace',
     arguments: [],
   });
-  window.showInformationMessage(`CASIMIR: ${summary}`);
+  window.showInformationMessage(`CASM: ${summary}`);
 }
 
 /** Asks the server to re-read the pattern library from disk. */
 async function reloadPatterns(): Promise<void> {
   if (!client) {
-    window.showWarningMessage('CASIMIR: the language server is not running.');
+    window.showWarningMessage('CASM: the language server is not running.');
     return;
   }
 

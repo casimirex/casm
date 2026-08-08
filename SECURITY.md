@@ -6,7 +6,7 @@
 |---|---|
 | 0.1.x | Yes |
 
-CASIMIR is pre-1.0. Only the latest release receives fixes.
+CASM is pre-1.0. Only the latest release receives fixes.
 
 ## Reporting a vulnerability
 
@@ -24,7 +24,7 @@ unless you prefer otherwise.
 
 ## Threat model
 
-CASIMIR parses untrusted input: an architecture file may arrive from a pull request, a
+CASM parses untrusted input: an architecture file may arrive from a pull request, a
 third party, or a generated pipeline. The parser and validator are the security-relevant
 surface.
 
@@ -43,7 +43,7 @@ surface.
 **Out of scope:**
 
 - The *content* of an architecture being wrong. Reporting an insecure architecture is
-  what CASIMIR does; it does not make CASIMIR insecure.
+  what CASM does; it does not make CASM insecure.
 - Rules being too strict or too lax. That is a design discussion — open an issue.
 - Vulnerabilities in a dependency already flagged by `cargo deny`, which runs in CI.
 
@@ -60,7 +60,7 @@ surface.
 | Output injection | The `Name` alphabet excludes diagram metacharacters; free-form text goes through `escape_label` |
 | Supply chain | `cargo deny` gates licences, advisories, and crate sources |
 
-## What CASIMIR does not do
+## What CASM does not do
 
 It makes no network connections, spawns no subprocesses, and reads no files beyond those
 named on the command line and, for `casm check`, those found beneath the given directory.

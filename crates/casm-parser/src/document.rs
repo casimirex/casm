@@ -1,5 +1,5 @@
 //! Module: `casm_parser::document`
-//! Purpose: The CASIMIR authoring grammar, and its resolution into the core model.
+//! Purpose: The CASM authoring grammar, and its resolution into the core model.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -244,7 +244,7 @@ impl NodeDoc {
                 path: path.to_path_buf(),
                 message: format!("node '{}': {error}", self.name),
                 suggestion: Some(
-                    "omit 'id' to have CASIMIR generate a valid UUIDv7 for you".to_owned(),
+                    "omit 'id' to have CASM generate a valid UUIDv7 for you".to_owned(),
                 ),
             })?;
             config = config.id(id);
@@ -466,7 +466,7 @@ impl<'a> NodeIndex<'a> {
     /// Looks up a reference written as either a node name or a `NodeId`.
     fn lookup(&self, reference: &str) -> Option<NodeId> {
         // Names are tried first: they are the common case, and a name that happens to
-        // look like a UUID is impossible (the CASIMIR alphabet permits it, but a node so
+        // look like a UUID is impossible (the CASM alphabet permits it, but a node so
         // named would still be found here, which is the author's evident intent).
         if let Some((_, id)) = self.by_name.iter().find(|(name, _)| *name == reference) {
             return Some(*id);
@@ -522,7 +522,7 @@ impl<'a> NodeIndex<'a> {
     }
 }
 
-/// A CASIMIR architecture in authoring form: permissive, unvalidated, human-shaped.
+/// A CASM architecture in authoring form: permissive, unvalidated, human-shaped.
 ///
 /// See the module documentation for the grammar and for why this type is separate from
 /// [`Architecture`].

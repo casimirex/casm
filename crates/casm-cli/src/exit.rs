@@ -6,7 +6,7 @@
 //!
 //! # Why this is its own module
 //!
-//! Exit codes are the contract between CASIMIR and every CI system that runs it. A shell
+//! Exit codes are the contract between CASM and every CI system that runs it. A shell
 //! script cannot read a diagnostic; it reads `$?`. Defining the codes in one place, with
 //! their meanings attached, is what stops `validate` and `check` from disagreeing about
 //! whether warnings should fail a build.

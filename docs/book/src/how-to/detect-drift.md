@@ -42,9 +42,9 @@ be, so expecting it there would report drift on every run.
 
 ## Type mismatches
 
-If a bound resource's type is one CASIMIR recognises and it disagrees with the node's
+If a bound resource's type is one CASM recognises and it disagrees with the node's
 declared type, that is reported. If the type is *unrecognised*, nothing is asserted —
-inventing a disagreement from a resource type CASIMIR has not been taught is worse than
+inventing a disagreement from a resource type CASM has not been taught is worse than
 staying quiet.
 
 The recognised set covers the common AWS, GCP, and Azure resources. Anything else maps to
@@ -68,7 +68,7 @@ Not using Terraform? The native format is small:
 $ casm drift --inventory inventory.json --from native
 ```
 
-`node-type` is optional. Omit it and CASIMIR checks existence without asserting anything
+`node-type` is optional. Omit it and CASM checks existence without asserting anything
 about types.
 
 ## In CI

@@ -1,4 +1,4 @@
-# The CASIMIR playground
+# The CASM playground
 
 Validation, diagrams, and fingerprints, entirely client-side. No server, no upload, no
 build step beyond compiling the module once.

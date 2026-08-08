@@ -33,7 +33,7 @@ $ casm validate
 ```
 
 **That is the central idea.** An asynchronous edge is not a stylistic choice. It is the
-thing that makes two services independent, and CASIMIR treats it as such everywhere: in
+thing that makes two services independent, and CASM treats it as such everywhere: in
 cycle detection, in latency arithmetic, and in the formal models. See
 [What blocking means](../explanation/what-blocking-means.md).
 
@@ -75,7 +75,7 @@ architecture.yaml:4:5: unknown variant `srvice`, expected one of `service`, ...
 ```
 
 The same applies to field names and to relationship endpoints — misspell `orders-db` as
-`orders-bd` and CASIMIR suggests the node you meant.
+`orders-bd` and CASM suggests the node you meant.
 
 ## An impossible SLO
 

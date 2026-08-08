@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-description = "CASIMIR compliance evidence: assemble the control claims an architecture makes, and their provenance"
+description = "CASM compliance evidence: assemble the control claims an architecture makes, and their provenance"
 keywords.workspace = true
 categories.workspace = true
 

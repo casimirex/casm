@@ -79,7 +79,7 @@ jobs:
       - run: cargo check --workspace --all-features
 
   # Gate 5: NASA Rule 1. Every crate is `#![forbid(unsafe_code)]`, so the compiler already
-  # guarantees CASIMIR contains none; what Miri adds is detecting undefined behaviour
+  # guarantees CASM contains none; what Miri adds is detecting undefined behaviour
   # reached *through dependencies* — `uuid`, `sha3`, `indexmap`, and `serde` all have
   # unsafe internals.
   #
@@ -212,7 +212,7 @@ jobs:
           done
 
   # Gate 12: the container image must build. It is how a good number of people will run
-  # CASIMIR, and a Dockerfile nobody builds is a Dockerfile that has already rotted.
+  # CASM, and a Dockerfile nobody builds is a Dockerfile that has already rotted.
   container:
     name: container image
     runs-on: ubuntu-latest
@@ -227,7 +227,7 @@ jobs:
           tags: casm:ci
       # The example claims a pattern, so the pattern library is mounted alongside it.
       # That is not incidental: it proves the image can read a library from a mounted
-      # volume, which is how anyone running CASIMIR in a container will supply one.
+      # volume, which is how anyone running CASM in a container will supply one.
       - name: the image runs
         run: |
           docker run --rm casm:ci --version
@@ -452,7 +452,7 @@ jobs:
           if-no-files-found: warn
 
 
-  # Gate 17: CASIMIR validates its own example architectures. If the tool cannot keep
+  # Gate 17: CASM validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
   dogfood:
     name: dogfood (casm check)

@@ -1,8 +1,8 @@
-# CASIMIR
+# CASM
 
 **Architecture as code, validated like flight software.**
 
-CASIMIR turns a system's architecture into a typed, version-controlled artefact that a
+CASM turns a system's architecture into a typed, version-controlled artefact that a
 machine can check. Write your topology in YAML; get referential integrity, dependency
 cycle detection, latency-budget arithmetic, compliance-control coverage, and deterministic
 diagrams — as a build gate, not a slide deck.
@@ -26,7 +26,7 @@ $ echo $?
 
 ## Why it exists
 
-Most architecture tooling documents a decision after it is made. CASIMIR's premise is
+Most architecture tooling documents a decision after it is made. CASM's premise is
 that an architecture is a *specification with checkable properties* — and that most of the
 expensive mistakes are mechanically detectable before anyone writes a service:
 
@@ -255,7 +255,7 @@ merge silently corrupts the file — which is the failure this project exists to
 The registry is therefore optional rather than a prerequisite: patterns are files, and a
 directory works.
 
-Conformance is checked everywhere CASIMIR runs. The CLI takes `--patterns <dir>`. The
+Conformance is checked everywhere CASM runs. The CLI takes `--patterns <dir>`. The
 language server finds its own library — the `casm.patterns` setting, then `patterns/`,
 then `.casm/patterns/` — and republishes every open document when one changes. The browser
 and edge builds have no filesystem, so they take the library across the ABI as text:
@@ -289,7 +289,7 @@ $ tlc Storefront.tla
 Model checking completed. No error has been found.
 ```
 
-The semantics are the ones CASIMIR already uses: **a node is unavailable if it has failed,
+The semantics are the ones CASM already uses: **a node is unavailable if it has failed,
 or if anything it *blocks on* is unavailable, transitively.** Asynchronous and event-driven
 edges deliberately do not propagate failure — which is what makes "put a queue between
 them" a formally meaningful act rather than a diagram change. See
@@ -422,7 +422,7 @@ do:
     infrastructure-id: aws_db_instance.primary
 ```
 
-CASIMIR reports what it cannot bind rather than guessing. A resource type it does not
+CASM reports what it cannot bind rather than guessing. A resource type it does not
 recognise asserts nothing about the node's type, because inventing a disagreement from
 ignorance is worse than staying quiet.
 
@@ -446,7 +446,7 @@ The server finds its pattern library itself, since there is no `--patterns` flag
 it: `casm.patterns` if you set it, otherwise `patterns/` and then `.casm/patterns/` at
 each workspace folder. Editing a pattern republishes every open document — a finding that
 moved because the library changed belongs on screen without you touching the file. Where
-it looked, and what it found, is in the CASIMIR output channel.
+it looked, and what it found, is in the CASM output channel.
 
 The part that matters: **all of this works while the document is syntactically broken**,
 which is when you actually need it. The server reads the text through a line-oriented
@@ -535,7 +535,7 @@ reader can recompute.
 $ casm evidence architecture.yaml --patterns patterns --strict
 ```
 
-It is not evidence, and it says so in its first sentence. CASIMIR holds no log excerpt, no
+It is not evidence, and it says so in its first sentence. CASM holds no log excerpt, no
 configuration export, no signed attestation — it has a file in which somebody wrote a
 control down. A control flagged `evidence-required: true` is reported as **outstanding**,
 never satisfied, because the gap between "we wrote it down" and "we can show it works" is
@@ -577,7 +577,7 @@ container image behind them. The API is pre-1.0 and will change — see
 [CHANGELOG.md](CHANGELOG.md) and [RELEASING.md](RELEASING.md). 0.2.0 changed the
 fingerprint scheme, so digests computed by 0.1.0 no longer match.
 
-Built against a 12-phase roadmap ([`CASIMIR_Roadmap.md`](CASIMIR_Roadmap.md)). Phases 0–6,
+Built against a 12-phase roadmap ([`CASM_Roadmap.md`](CASM_Roadmap.md)). Phases 0–6,
 8, and 10 are complete, and Phase 9's formal verification bridge is what you see above.
 
 Phase 10 is three-quarters done: the browser module, playground, and edge worker ship; the

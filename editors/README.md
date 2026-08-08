@@ -111,7 +111,7 @@ In `settings.json`:
 labels as the `casm` language. Check your filetype mapping first.
 
 **The server exited.** It logs to the client's output channel via `window/logMessage`, and
-panics go to stderr. In VS Code, look at the "CASIMIR" output channel.
+panics go to stderr. In VS Code, look at the "CASM" output channel.
 
 **A request failed but the editor kept working.** That is by design: every handler runs
 inside `catch_unwind`, so a bug costs one request rather than the session. The error

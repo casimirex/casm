@@ -15,7 +15,7 @@
 //! the call as loop-invariant and computed it once. Seeding the loop did not help, because
 //! the result was still separable into "a constant plus the seed".
 //!
-//! So it measures the operation CASIMIR actually performs: parse an architecture, then
+//! So it measures the operation CASM actually performs: parse an architecture, then
 //! validate it. That allocates, walks a graph, and returns a structure the caller
 //! consumes, none of which can be folded away — and it is the thing the 5% is a
 //! percentage *of*.

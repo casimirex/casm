@@ -1,4 +1,4 @@
-//! What every CASIMIR operation costs, measured on the same document.
+//! What every CASM operation costs, measured on the same document.
 //!
 //! The roadmap asks for "built-in benchmarks for every operation". These cover the whole
 //! pipeline a command actually runs: parse, validate, render, fingerprint, diff, and

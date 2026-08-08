@@ -1,5 +1,5 @@
 //! Module: `casm_telemetry`
-//! Purpose: Observability for CASIMIR — spans, counters, and structured events.
+//! Purpose: Observability for CASM — spans, counters, and structured events.
 //! Safety: `#![forbid(unsafe_code)]` — verified via Miri in CI.
 //! Complexity: Max 10 per function (enforced by clippy).
 //! License: Apache-2.0

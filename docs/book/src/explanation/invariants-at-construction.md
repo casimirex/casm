@@ -5,7 +5,7 @@ offer a `validate()` function. The failure mode is well known — some code path
 call it, and an architecture with a dangling reference reaches the renderer, which then
 needs its own defensive handling for a state that should have been impossible.
 
-CASIMIR does not do that.
+CASM does not do that.
 
 > **A value that exists is a value whose invariants hold.**
 

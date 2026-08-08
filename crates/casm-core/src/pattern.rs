@@ -32,7 +32,7 @@
 //!
 //! Per ADR-0002, a `Pattern` that exists is one whose invariants hold:
 //!
-//! - Role names are unique within a pattern, and obey the CASIMIR name alphabet.
+//! - Role names are unique within a pattern, and obey the CASM name alphabet.
 //! - Every relationship references roles the pattern actually declares.
 //! - A relationship cannot connect a role to itself.
 //! - The version is Semantic Versioning.
@@ -825,7 +825,7 @@ mod tests {
     }
 
     #[test]
-    fn role_names_obey_the_casimir_alphabet() {
+    fn role_names_obey_the_casm_alphabet() {
         assert!(Requirement::new("has spaces", NodeType::Service).is_err());
         assert!(Requirement::new("", NodeType::Service).is_err());
         assert!(Requirement::new("edge-tier.v2", NodeType::Service).is_ok());

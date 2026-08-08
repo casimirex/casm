@@ -1,5 +1,5 @@
 //! Module: `casm_lsp::schema`
-//! Purpose: The vocabulary of the CASIMIR grammar — every key and enum value, documented.
+//! Purpose: The vocabulary of the CASM grammar — every key and enum value, documented.
 //! Safety: `#![forbid(unsafe_code)]` — inherited from crate root.
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
@@ -22,7 +22,7 @@
 //! there is also a count assertion per enum that fails the moment a variant is added
 //! upstream.
 
-/// One entry in the CASIMIR vocabulary.
+/// One entry in the CASM vocabulary.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Term {
     /// The literal text inserted or matched.
@@ -424,7 +424,7 @@ pub const PROTOCOLS: &[Term] = &[
         label: "tcp",
         detail: "synchronous",
         documentation: "A raw TCP or UDP socket protocol with no application framing that \
-                        CASIMIR models.",
+                        CASM models.",
     },
     Term {
         label: "sql",

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the CASIMIR WebAssembly module and its bindings.
+# Builds the CASM WebAssembly module and its bindings.
 #
 # Produces three things:
 #   dist/node/  — CommonJS bindings, used by the Node test harness

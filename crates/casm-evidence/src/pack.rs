@@ -14,7 +14,7 @@
 //! # What "outstanding" counts
 //!
 //! A control carrying `evidence-required: true` is one whose author said an artefact
-//! exists somewhere outside CASIMIR. CASIMIR does not hold it, so the claim is
+//! exists somewhere outside CASM. CASM does not hold it, so the claim is
 //! **outstanding**: something to go and collect, not something satisfied.
 //!
 //! This deliberately makes a well-annotated architecture look *worse* than a careless one.
@@ -40,7 +40,7 @@ pub struct ClaimRecord {
     pub control_type: String,
     /// What the control is asserted to do, verbatim from the file.
     pub description: String,
-    /// `true` if the author said an artefact exists that CASIMIR does not hold.
+    /// `true` if the author said an artefact exists that CASM does not hold.
     pub evidence_required: bool,
     /// Whatever tags the control carries.
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -389,7 +389,7 @@ mod tests {
     #[test]
     fn evidence_required_counts_as_outstanding_not_satisfied() {
         // The whole point: a control saying an artefact exists elsewhere is something to
-        // go and collect, never something CASIMIR can vouch for.
+        // go and collect, never something CASM can vouch for.
         let pack = Pack::assemble(&architecture(), &[], Provenance::unknown());
 
         assert_eq!(pack.outstanding(), 2);

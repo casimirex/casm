@@ -4,7 +4,7 @@
 //! Complexity: Max 10 (enforced by clippy).
 //! License: Apache-2.0
 //!
-//! CASIMIR has two content digests — [`crate::SchemaHash`] for interface contracts and
+//! CASM has two content digests — [`crate::SchemaHash`] for interface contracts and
 //! [`crate::Fingerprint`] for whole architectures — and both are SHA3-256 rendered as 64
 //! lowercase hexadecimal characters. Two copies of that conversion would be two places to
 //! get an off-by-one wrong, so it lives here.

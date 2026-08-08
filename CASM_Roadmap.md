@@ -1,4 +1,4 @@
-# 🌌 PROJECT CASIMIR
+# 🌌 PROJECT CASM
 ## The Quantum Architecture Operating System
 ### A NASA-Grade, Rust-Native Architecture-as-Code Platform
 
@@ -8,15 +8,15 @@
 
 ## 1. EXECUTIVE VISION
 
-**CASIMIR** (Composable Architecture Specification for Interconnected Models, Infrastructure & Relationships) is not a clone of CALM. It is a **fundamental reimagining** of how human intent translates into machine-executable architecture.
+**CASM** (Composable Architecture Specification for Interconnected Models, Infrastructure & Relationships) is not a clone of CALM. It is a **fundamental reimagining** of how human intent translates into machine-executable architecture.
 
-While CALM asks *"How do we document architecture in code?"*, CASIMIR asks:
+While CALM asks *"How do we document architecture in code?"*, CASM asks:
 - *"How do we make architecture self-aware?"*
 - *"How do we enable architectures to evolve like biological organisms?"*
 - *"How do we prove an architecture is correct before a single line of application code is written?"*
 
 ### Core Thesis
-Architecture is the **vacuum field** of software. Like the Casimir effect, where forces emerge from the quantum vacuum between two plates, software behavior emerges from the structured void we define between components. CASIMIR gives you precision control over that void.
+Architecture is the **vacuum field** of software. Like the Casimir effect — after which this project was originally named — where forces emerge from the quantum vacuum between two plates, software behavior emerges from the structured void we define between components. CASM gives you precision control over that void.
 
 ---
 
@@ -24,7 +24,7 @@ Architecture is the **vacuum field** of software. Like the Casimir effect, where
 
 We adopt the **JPL Power of Ten Rules** and NASA-STD-8719.13C, translated for Rust systems programming:
 
-### The Ten Commandments of CASIMIR Code
+### The Ten Commandments of CASM Code
 
 | # | Principle | Rust Implementation |
 |---|-----------|-------------------|
@@ -66,10 +66,10 @@ casm/
 
 ## 3. THE QUANTUM DIFFERENTIATORS (Out-of-the-Box)
 
-These are not features. These are **axioms** that make CASIMIR unlike anything that exists.
+These are not features. These are **axioms** that make CASM unlike anything that exists.
 
 ### 3.1 Superposition Architecture
-An architecture can exist in **superposition** — multiple valid states simultaneously — until "observed" (deployed or reviewed). CASIMIR natively supports branching realities:
+An architecture can exist in **superposition** — multiple valid states simultaneously — until "observed" (deployed or reviewed). CASM natively supports branching realities:
 ```yaml
 architecture:
   superposition:
@@ -83,18 +83,18 @@ architecture:
 When two nodes are entangled, a change to one **instantly invalidates** the other if constraints are violated. Not just reference integrity — **semantic entanglement**.
 
 ### 3.3 The Observer Effect
-Every time an architecture is read (by human, CI, or AI), it leaves a trace. CASIMIR maintains an **audit heatmap** showing which parts of your architecture are "hot" (frequently accessed) vs "cold" (potentially abandoned).
+Every time an architecture is read (by human, CI, or AI), it leaves a trace. CASM maintains an **audit heatmap** showing which parts of your architecture are "hot" (frequently accessed) vs "cold" (potentially abandoned).
 
 ### 3.4 Vacuum Energy (Self-Healing)
-If a referenced pattern is updated in the registry, CASIMIR can **auto-migrate** dependent architectures through formal refactoring transformations — like `cargo fix` but for distributed systems.
+If a referenced pattern is updated in the registry, CASM can **auto-migrate** dependent architectures through formal refactoring transformations — like `cargo fix` but for distributed systems.
 
 ### 3.5 Temporal Architecture (Time-Travel)
 Every architecture file is a **Merkle DAG**. You can `casm checkout v1.2.3 --of architecture.yaml` and see exactly how your system topology evolved. Diff two architecture versions and see not just text changes, but **semantic drift**.
 
 ### 3.6 Formal Verification Bridge
-CASIMIR architectures can be translated to **TLA+** or **Alloy** specifications. Before you build, you can prove properties like: *"If Service A fails, Service B will degrade gracefully within 500ms."*
+CASM architectures can be translated to **TLA+** or **Alloy** specifications. Before you build, you can prove properties like: *"If Service A fails, Service B will degrade gracefully within 500ms."*
 
-### 3.7 The Casimir Force Engine
+### 3.7 The CASM Force Engine
 A built-in optimizer that calculates the "force" between components (data gravity, latency tension, coupling pressure) and suggests architectural moves to minimize system energy.
 
 ---
@@ -117,7 +117,7 @@ A built-in optimizer that calculates the "force" between components (data gravit
 
 **Claude Context Prompt:**
 ```
-You are the founding engineer of CASIMIR, a NASA-grade Architecture-as-Code platform written in Rust. 
+You are the founding engineer of CASM, a NASA-grade Architecture-as-Code platform written in Rust. 
 We are in Phase 0: establishing the quantum field (project scaffolding).
 
 CONSTRAINTS (NASA Rules):
@@ -148,7 +148,7 @@ Generate the complete workspace structure, Cargo.toml files, and skeleton lib.rs
 ---
 
 ### Phase 1: The First Particle (Weeks 3-4)
-**Goal:** Define the fundamental entities of the CASIMIR universe.
+**Goal:** Define the fundamental entities of the CASM universe.
 
 **Deliverables:**
 - [ ] Core domain model with strong typing:
@@ -163,7 +163,7 @@ Generate the complete workspace structure, Cargo.toml files, and skeleton lib.rs
 
 **Claude Context Prompt:**
 ```
-You are building the fundamental particle system of CASIMIR (Phase 1).
+You are building the fundamental particle system of CASM (Phase 1).
 
 DOMAIN REQUIREMENTS:
 Define these entities in casm-core with NASA-grade rigor:
@@ -192,8 +192,8 @@ Generate the complete casm-core crate with all modules, tests, and documentation
 
 ---
 
-### Phase 2: The Casimir Grammar (Weeks 5-6)
-**Goal:** Define the formal language — how humans write CASIMIR.
+### Phase 2: The CASM Grammar (Weeks 5-6)
+**Goal:** Define the formal language — how humans write CASM.
 
 **Deliverables:**
 - [ ] Multi-format parser: YAML (human), JSON (machine), TOML (config)
@@ -204,7 +204,7 @@ Generate the complete casm-core crate with all modules, tests, and documentation
 
 **Claude Context Prompt:**
 ```
-You are building the universal parser for CASIMIR (Phase 2).
+You are building the universal parser for CASM (Phase 2).
 
 REQUIREMENTS:
 Create casm-parser that can read architecture definitions in YAML, JSON, and TOML.
@@ -240,7 +240,7 @@ Generate the complete casm-parser crate with error types, visitors, and comprehe
 
 **Claude Context Prompt:**
 ```
-You are building the CASIMIR Validator Core (Phase 3) — the engine that enforces physical laws.
+You are building the CASM Validator Core (Phase 3) — the engine that enforces physical laws.
 
 REQUIREMENTS:
 Create casm-validator with three validation layers:
@@ -286,7 +286,7 @@ Generate the complete casm-validator with all three layers, test architectures, 
 
 **Claude Context Prompt:**
 ```
-You are building the CASIMIR Observer (Phase 4) — the visualization engine.
+You are building the CASM Observer (Phase 4) — the visualization engine.
 
 REQUIREMENTS:
 Create casm-renderer that transforms Architecture into visual representations.
@@ -330,7 +330,7 @@ Generate the complete casm-renderer with all backends and a CLI integration.
 
 **Claude Context Prompt:**
 ```
-You are building the CASIMIR CLI Singularity (Phase 5) — the primary human interface.
+You are building the CASM CLI Singularity (Phase 5) — the primary human interface.
 
 REQUIREMENTS:
 Create casm-cli as the unified command interface.
@@ -388,7 +388,7 @@ Generate the complete casm-cli with all commands, shell completions, and man pag
 
 **Claude Context Prompt:**
 ```
-You are building the Quantum Bridge (Phase 6) — the CASIMIR Language Server.
+You are building the Quantum Bridge (Phase 6) — the CASM Language Server.
 
 REQUIREMENTS:
 Create casm-lsp implementing the Language Server Protocol (LSP).
@@ -443,7 +443,7 @@ Generate the complete casm-lsp with tower-lsp, all handlers, and VSCode extensio
 
 **Claude Context Prompt:**
 ```
-You are building the CASIMIR Pattern Registry (Phase 7) — the Hub.
+You are building the CASM Pattern Registry (Phase 7) — the Hub.
 
 REQUIREMENTS:
 Create casm-hub as a distributed pattern registry.
@@ -540,7 +540,7 @@ Generate the complete casm-git with Merkle tree implementation and Git plumbing.
 **Goal:** AI is not a bolt-on. It is a first-class citizen of the architecture universe.
 
 **Deliverables:**
-- [ ] LLM-native architecture generation: describe in English, get CASIMIR YAML
+- [ ] LLM-native architecture generation: describe in English, get CASM YAML
 - [ ] Architecture review assistant: "Analyze this architecture for single points of failure"
 - [ ] Pattern suggestion: "Your e-commerce architecture looks like Pattern XYZ v2.1. Apply it?"
 - [ ] Formal verification bridge: export to TLA+/Alloy, import proofs
@@ -548,16 +548,16 @@ Generate the complete casm-git with Merkle tree implementation and Git plumbing.
 
 **Claude Context Prompt:**
 ```
-You are building the AI Oracle (Phase 9) — CASIMIR's intelligence layer.
+You are building the AI Oracle (Phase 9) — CASM's intelligence layer.
 
 REQUIREMENTS:
-Create casm-ai as a bridge between human language, formal methods, and CASIMIR.
+Create casm-ai as a bridge between human language, formal methods, and CASM.
 
 MODULES:
 
 1. Generation Engine (casm-ai/generate):
    - Takes natural language prompt + constraints
-   - Generates valid CASIMIR architecture YAML
+   - Generates valid CASM architecture YAML
    - Uses structured output (JSON mode) with schema validation
    - Iterative refinement: generate → validate → fix → validate
 
@@ -596,7 +596,7 @@ Generate the complete casm-ai with all modules, prompt engineering templates, an
 ---
 
 ### Phase 10: The Universal Runtime (WASM) (Weeks 21-22)
-**Goal:** CASIMIR must run everywhere — browser, edge, embedded, space.
+**Goal:** CASM must run everywhere — browser, edge, embedded, space.
 
 **Deliverables:**
 - [ ] Core library compiled to WASM
@@ -607,7 +607,7 @@ Generate the complete casm-ai with all modules, prompt engineering templates, an
 
 **Claude Context Prompt:**
 ```
-You are building the Universal Runtime (Phase 10) — CASIMIR in WASM.
+You are building the Universal Runtime (Phase 10) — CASM in WASM.
 
 REQUIREMENTS:
 Create casm-wasm for browser and edge deployment.
@@ -621,7 +621,7 @@ FEATURES:
 
 2. Interactive Web Editor:
    - React/Vue/Svelte component library for architecture editing
-   - Drag-and-drop node editor that emits CASIMIR YAML
+   - Drag-and-drop node editor that emits CASM YAML
    - Real-time validation underlining
    - Collaborative editing via Yjs + CRDT
 
@@ -658,7 +658,7 @@ Generate the complete casm-wasm with build scripts, JS bindings, and a sample we
 
 **Claude Context Prompt:**
 ```
-You are building the Telemetry Matrix (Phase 11) — CASIMIR's observability nervous system.
+You are building the Telemetry Matrix (Phase 11) — CASM's observability nervous system.
 
 REQUIREMENTS:
 Create casm-telemetry for comprehensive observability.
@@ -705,7 +705,7 @@ Generate the complete casm-telemetry with exporters, dashboard templates, and be
 **Deliverables:**
 - [ ] Complete documentation site (Docusaurus/MdBook)
 - [ ] Interactive tutorials (like calm.finos.org/tutorials but better)
-- [ ] Certification program: "Certified CASIMIR Architect"
+- [ ] Certification program: "Certified CASM Architect"
 - [ ] Conference talk deck: "The Quantum Mechanics of Software Architecture"
 - [ ] 1.0 release with stability guarantees
 - [ ] Security audit by external firm
@@ -713,7 +713,7 @@ Generate the complete casm-telemetry with exporters, dashboard templates, and be
 
 **Claude Context Prompt:**
 ```
-You are executing the Grand Unification (Phase 12) — preparing CASIMIR for production.
+You are executing the Grand Unification (Phase 12) — preparing CASM for production.
 
 REQUIREMENTS:
 1. Documentation Site:
@@ -774,10 +774,10 @@ Generate the release checklist, documentation structure, and community governanc
 ### File Header Template
 ```rust
 //! Module: casm_core::entities::node
-//! Purpose: Defines the Node aggregate root for CASIMIR architectures
+//! Purpose: Defines the Node aggregate root for CASM architectures
 //! Safety: #![forbid(unsafe_code)] — verified via Miri in CI
 //! Complexity: Max 10 (enforced by clippy)
-//! Author: CASIMIR Engineering <engineering@casm.io>
+//! Author: CASM Engineering <engineering@casm.io>
 //! License: Apache-2.0
 ```
 
@@ -856,7 +856,7 @@ mod tests {
 
 This is not a project. This is a **declaration**.
 
-Software architecture has been stuck in the dark ages — drawing tools, PowerPoint, and hope. CALM lit a candle. **CASIMIR ignites a star.**
+Software architecture has been stuck in the dark ages — drawing tools, PowerPoint, and hope. CALM lit a candle. **CASM ignites a star.**
 
 Build it with the rigor of NASA, the imagination of quantum physics, and the craftsmanship of Rust. The universe is waiting.
 
