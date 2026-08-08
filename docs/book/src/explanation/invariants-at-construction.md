@@ -53,4 +53,4 @@ There is a test that constructs an invalid architecture through `serde_json::fro
 the only route that skips the builders, and asserts it is caught. That test is the reason
 to believe the guarantee.
 
-See [ADR-0002](https://github.com/casimirex/casimir/blob/main/docs/adr/0002-invariants-at-construction.md).
+See [ADR-0002](https://github.com/casimirex/casm/blob/main/docs/adr/0002-invariants-at-construction.md).

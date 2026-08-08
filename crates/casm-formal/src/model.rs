@@ -14,7 +14,7 @@
 //! validator and to a reader; they say nothing about whether the system stays up.
 //!
 //! Latency budgets are carried through for the generated comments but are **not** part of
-//! the model. See [ADR-0011](https://github.com/casimirex/casimir/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md):
+//! the model. See [ADR-0011](https://github.com/casimirex/casm/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md):
 //! the specs prove *whether* a node degrades, not *how fast*, and pretending otherwise
 //! would misrepresent what the checker was given.
 //!

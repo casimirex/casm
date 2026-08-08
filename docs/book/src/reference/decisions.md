@@ -6,19 +6,19 @@ with no downsides has not finished thinking.
 
 | # | Decision |
 |---|---|
-| [0001](https://github.com/casimirex/casimir/blob/main/docs/adr/0001-hexagonal-crate-layout.md) | Hexagonal crate layout |
-| [0002](https://github.com/casimirex/casimir/blob/main/docs/adr/0002-invariants-at-construction.md) | Invariants at construction, not by a validation pass |
-| [0003](https://github.com/casimirex/casimir/blob/main/docs/adr/0003-uuidv7-identifiers.md) | `NodeId` is a validated UUIDv7 |
-| [0004](https://github.com/casimirex/casimir/blob/main/docs/adr/0004-separate-authoring-grammar.md) | Authoring grammar separate from the domain model |
-| [0005](https://github.com/casimirex/casimir/blob/main/docs/adr/0005-domain-enums-are-exhaustive.md) | Domain enums are not `#[non_exhaustive]` |
-| [0006](https://github.com/casimirex/casimir/blob/main/docs/adr/0006-only-blocking-edges-form-cycles.md) | Only blocking edges form dependency cycles |
-| [0007](https://github.com/casimirex/casimir/blob/main/docs/adr/0007-deterministic-rendering.md) | Positional diagram ids; rendering is a pure function |
-| [0008](https://github.com/casimirex/casimir/blob/main/docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
-| [0009](https://github.com/casimirex/casimir/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
-| [0010](https://github.com/casimirex/casimir/blob/main/docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred |
-| [0011](https://github.com/casimirex/casimir/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md) | What a formal model of an architecture means |
-| [0012](https://github.com/casimirex/casimir/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md) | A pattern is a shape to conform to, not a template to stamp |
-| [0013](https://github.com/casimirex/casimir/blob/main/docs/adr/0013-evidence-is-assembled-not-asserted.md) | An evidence pack assembles claims; it does not assert they are true |
+| [0001](https://github.com/casimirex/casm/blob/main/docs/adr/0001-hexagonal-crate-layout.md) | Hexagonal crate layout |
+| [0002](https://github.com/casimirex/casm/blob/main/docs/adr/0002-invariants-at-construction.md) | Invariants at construction, not by a validation pass |
+| [0003](https://github.com/casimirex/casm/blob/main/docs/adr/0003-uuidv7-identifiers.md) | `NodeId` is a validated UUIDv7 |
+| [0004](https://github.com/casimirex/casm/blob/main/docs/adr/0004-separate-authoring-grammar.md) | Authoring grammar separate from the domain model |
+| [0005](https://github.com/casimirex/casm/blob/main/docs/adr/0005-domain-enums-are-exhaustive.md) | Domain enums are not `#[non_exhaustive]` |
+| [0006](https://github.com/casimirex/casm/blob/main/docs/adr/0006-only-blocking-edges-form-cycles.md) | Only blocking edges form dependency cycles |
+| [0007](https://github.com/casimirex/casm/blob/main/docs/adr/0007-deterministic-rendering.md) | Positional diagram ids; rendering is a pure function |
+| [0008](https://github.com/casimirex/casm/blob/main/docs/adr/0008-unwinding-for-lsp-panic-isolation.md) | Release builds unwind, so the LSP can contain panics |
+| [0009](https://github.com/casimirex/casm/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md) | The Merkle fingerprint is a semantic identity |
+| [0010](https://github.com/casimirex/casm/blob/main/docs/adr/0010-embedded-validator-deferred.md) | The embedded `no_std` validator is deferred |
+| [0011](https://github.com/casimirex/casm/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md) | What a formal model of an architecture means |
+| [0012](https://github.com/casimirex/casm/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md) | A pattern is a shape to conform to, not a template to stamp |
+| [0013](https://github.com/casimirex/casm/blob/main/docs/adr/0013-evidence-is-assembled-not-asserted.md) | An evidence pack assembles claims; it does not assert they are true |
 
 ## Engineering rules
 

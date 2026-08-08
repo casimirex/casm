@@ -46,7 +46,7 @@ carry no defensive handling for states they cannot encounter.
 ## Install
 
 Download a binary for Linux, macOS, or Windows from the
-[releases page](https://github.com/casimirex/casimir/releases), and verify it:
+[releases page](https://github.com/casimirex/casm/releases), and verify it:
 
 ```console
 $ tar xzf casm-0.3.0-x86_64-unknown-linux-gnu.tar.gz
@@ -57,7 +57,7 @@ Or run the container, which needs a `docker login ghcr.io` while this repository
 private — the package inherits the repository's visibility:
 
 ```console
-$ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casimir validate /work/architecture.yaml
+$ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casm validate /work/architecture.yaml
 ```
 
 Or build from a checkout:

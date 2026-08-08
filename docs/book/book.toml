@@ -8,8 +8,8 @@ src = "src"
 [output.html]
 default-theme = "rust"
 preferred-dark-theme = "ayu"
-git-repository-url = "https://github.com/casimirex/casimir"
-edit-url-template = "https://github.com/casimirex/casimir/edit/main/docs/book/{path}"
+git-repository-url = "https://github.com/casimirex/casm"
+edit-url-template = "https://github.com/casimirex/casm/edit/main/docs/book/{path}"
 additional-css = ["theme/casm.css"]
 
 [output.html.fold]

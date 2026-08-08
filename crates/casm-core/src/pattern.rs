@@ -10,7 +10,7 @@
 //! it, plus the relationships that must hold between those roles. A pattern is not a
 //! fragment that gets copied into an architecture; it is a shape the architecture is
 //! measured against. See
-//! [ADR-0012](https://github.com/casimirex/casimir/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md)
+//! [ADR-0012](https://github.com/casimirex/casm/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md)
 //! for why, and for what that costs.
 //!
 //! ```yaml

@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/casimirex/casimir.git",
+    "url": "https://github.com/casimirex/casm.git",
     "directory": "editors/vscode"
   },
   "engines": {

@@ -29,7 +29,7 @@ Consumers verify with:
 
 ```console
 $ sha256sum -c SHA256SUMS
-$ gh attestation verify casm-0.2.0-x86_64-unknown-linux-gnu.tar.gz --repo casimirex/casimir
+$ gh attestation verify casm-0.2.0-x86_64-unknown-linux-gnu.tar.gz --repo casimirex/casm
 ```
 
 Releases before v0.3.0 carry only the SPDX document: the CycloneDX step searched for a
@@ -38,7 +38,7 @@ shipped without it. Fixed on `main`; the tagged releases were left as they are, 
 missing artefact is paperwork rather than a defect in the binaries.
 
 **The container image is private too.** `ghcr.io` packages inherit the repository's
-visibility, so `docker pull ghcr.io/casimirex/casimir` answers `unauthorized` without a
+visibility, so `docker pull ghcr.io/casimirex/casm` answers `unauthorized` without a
 `docker login`. Like attestations and Pages, this resolves itself if the repository is made
 public.
 

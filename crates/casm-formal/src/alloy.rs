@@ -13,7 +13,7 @@
 //!
 //! It has no notion of time, so failure and recovery cannot be expressed in it at all.
 //! That half lives in [`crate::tla`]. The split is deliberate; see
-//! [ADR-0011](https://github.com/casimirex/casimir/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md).
+//! [ADR-0011](https://github.com/casimirex/casm/blob/main/docs/adr/0011-what-a-formal-model-of-an-architecture-means.md).
 //!
 //! # Identifiers, and why they are prefixed
 //!

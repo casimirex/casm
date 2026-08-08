@@ -322,7 +322,7 @@ First working release. Roadmap phases 0–6, 8, 9 (formal bridge), 10, and 12.
 - Phase 7 (distributed pattern registry) and Phase 11 (OpenTelemetry) are not implemented.
 - Edge cold-start latency is unmeasured; it can only be observed on the platform.
 
-[Unreleased]: https://github.com/casimirex/casimir/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/casimirex/casimir/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/casimirex/casimir/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/casimirex/casimir/releases/tag/v0.1.0
+[Unreleased]: https://github.com/casimirex/casm/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/casimirex/casm/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/casimirex/casm/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/casimirex/casm/releases/tag/v0.1.0

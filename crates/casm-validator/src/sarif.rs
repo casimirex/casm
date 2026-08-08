@@ -69,7 +69,7 @@ fn driver() -> Value {
                 "id": rule.id(),
                 "name": rule.id(),
                 "shortDescription": { "text": rule.description() },
-                "helpUri": format!("https://github.com/casimirex/casimir#{}", rule.id()),
+                "helpUri": format!("https://github.com/casimirex/casm#{}", rule.id()),
             })
         })
         .collect();
@@ -77,7 +77,7 @@ fn driver() -> Value {
     json!({
         "name": "casm",
         "version": env!("CARGO_PKG_VERSION"),
-        "informationUri": "https://github.com/casimirex/casimir",
+        "informationUri": "https://github.com/casimirex/casm",
         "rules": rules,
     })
 }

@@ -41,7 +41,7 @@ takes about ten minutes and ends with a validated architecture, a diagram, and a
 
 ## Install
 
-Download a binary from the [releases page](https://github.com/casimirex/casimir/releases)
+Download a binary from the [releases page](https://github.com/casimirex/casm/releases)
 and verify it:
 
 ```console
@@ -53,7 +53,7 @@ Or run the container, which needs a `docker login ghcr.io` while this repository
 private:
 
 ```console
-$ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casimir validate /work/architecture.yaml
+$ docker run --rm -v "$PWD:/work" ghcr.io/casimirex/casm validate /work/architecture.yaml
 ```
 
 Or build from a checkout:

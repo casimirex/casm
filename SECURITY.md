@@ -12,7 +12,7 @@ CASM is pre-1.0. Only the latest release receives fixes.
 
 **Do not open a public issue.**
 
-Use GitHub's [private vulnerability reporting](https://github.com/casimirex/casimir/security/advisories/new)
+Use GitHub's [private vulnerability reporting](https://github.com/casimirex/casm/security/advisories/new)
 for this repository.
 
 Please include the affected version, reproduction steps or a proof of concept, and the

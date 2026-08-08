@@ -14,7 +14,7 @@ You do not get evidence. CASM has no log excerpt, no configuration export, no si
 attestation — it has a file in which somebody wrote down that a control exists. That is a
 claim, and the register says so in its first sentence. Producing a document labelled "SOC2
 evidence" from assertions alone is the one thing this command will not do; see
-[ADR-0013](https://github.com/casimirex/casimir/blob/main/docs/adr/0013-evidence-is-assembled-not-asserted.md).
+[ADR-0013](https://github.com/casimirex/casm/blob/main/docs/adr/0013-evidence-is-assembled-not-asserted.md).
 
 ## Flag what needs an artefact
 

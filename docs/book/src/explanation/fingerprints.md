@@ -59,4 +59,4 @@ the encoding is detectable rather than silent. It is therefore a compatibility s
 bumping it invalidates every previously computed digest. It was bumped once already, in
 0.2.0, when pattern-conformance claims joined the encoding.
 
-See [ADR-0009](https://github.com/casimirex/casimir/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md).
+See [ADR-0009](https://github.com/casimirex/casm/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md).

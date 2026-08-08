@@ -152,4 +152,4 @@ It cannot scaffold: you get a checklist, not generated YAML. And it can only req
 the model can express — "the gateway must rate-limit" is a control requirement, but "the
 gateway must rate-limit at 1000 requests per minute" is not, because control values are
 free text. See
-[ADR-0012](https://github.com/casimirex/casimir/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md).
+[ADR-0012](https://github.com/casimirex/casm/blob/main/docs/adr/0012-patterns-are-shapes-not-templates.md).

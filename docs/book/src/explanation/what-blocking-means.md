@@ -44,4 +44,4 @@ That is deliberate. The alternative — guessing from protocol, or from node typ
 a heuristic that is wrong occasionally and unfalsifiably, which is worse than a field you
 have to think about once.
 
-See [ADR-0006](https://github.com/casimirex/casimir/blob/main/docs/adr/0006-only-blocking-edges-form-cycles.md).
+See [ADR-0006](https://github.com/casimirex/casm/blob/main/docs/adr/0006-only-blocking-edges-form-cycles.md).
