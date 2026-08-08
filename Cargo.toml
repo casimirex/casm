@@ -14,7 +14,7 @@ authors = ["CASM Engineering <engineering@casm.io>"]
 repository = "https://github.com/casimirex/casimir"
 homepage = "https://github.com/casimirex/casimir"
 description = "CASM — a NASA-grade, Rust-native Architecture-as-Code platform"
-keywords = ["architecture", "architecture-as-code", "validation", "c4", "calm"]
+keywords = ["architecture", "architecture-as-code", "validation", "c4", "compliance"]
 categories = ["development-tools", "command-line-utilities"]
 
 [workspace.dependencies]

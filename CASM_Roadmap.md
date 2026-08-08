@@ -8,9 +8,9 @@
 
 ## 1. EXECUTIVE VISION
 
-**CASM** (Composable Architecture Specification for Interconnected Models, Infrastructure & Relationships) is not a clone of CALM. It is a **fundamental reimagining** of how human intent translates into machine-executable architecture.
+**CASM** (Composable Architecture Specification Model) is a reimagining of how human intent translates into machine-executable architecture.
 
-While CALM asks *"How do we document architecture in code?"*, CASM asks:
+Documenting architecture in code is the easy half, and several tools do it. CASM asks the harder questions:
 - *"How do we make architecture self-aware?"*
 - *"How do we enable architectures to evolve like biological organisms?"*
 - *"How do we prove an architecture is correct before a single line of application code is written?"*
@@ -338,7 +338,7 @@ Create casm-cli as the unified command interface.
 COMMANDS:
 1. casm init [--template <pattern>] [--name <name>]
    - Interactive wizard using dialoguer
-   - Scaffold architecture.yaml, calm.yaml config, .gitignore
+   - Scaffold architecture.yaml, casm.yaml config, .gitignore
 
 2. casm validate <file> [--strict] [--format sarif|json|human]
    - Rich terminal output with miette for beautiful diagnostics
@@ -704,7 +704,7 @@ Generate the complete casm-telemetry with exporters, dashboard templates, and be
 
 **Deliverables:**
 - [ ] Complete documentation site (Docusaurus/MdBook)
-- [ ] Interactive tutorials (like calm.finos.org/tutorials but better)
+- [ ] Interactive tutorials, runnable in the browser against the WebAssembly build
 - [ ] Certification program: "Certified CASM Architect"
 - [ ] Conference talk deck: "The Quantum Mechanics of Software Architecture"
 - [ ] 1.0 release with stability guarantees
@@ -856,7 +856,7 @@ mod tests {
 
 This is not a project. This is a **declaration**.
 
-Software architecture has been stuck in the dark ages — drawing tools, PowerPoint, and hope. CALM lit a candle. **CASM ignites a star.**
+Software architecture has been stuck in the dark ages — drawing tools, PowerPoint, and hope. **CASM makes it checkable.**
 
 Build it with the rigor of NASA, the imagination of quantum physics, and the craftsmanship of Rust. The universe is waiting.
 
