@@ -374,7 +374,7 @@ jobs:
           path: fuzz/artifacts/
           if-no-files-found: ignore
 
-  # Gate 17: mutation testing, weekly.
+  # Gate 17: mutation testing, weekly, as a ratchet.
   #
   # Four bugs in one day were checks that could not fail — a benchmark assertion in a
   # target `cargo test` never runs, an OTLP check reading a meaningless 200, an SBOM step
@@ -382,31 +382,75 @@ jobs:
   # This finds that class mechanically, by changing the code and reporting which changes no
   # test objects to.
   #
-  # Weekly rather than per-push: a full sweep is 1,700 mutants and roughly forty minutes,
-  # which is not a price worth paying on every commit. It does not gate a merge — it opens
-  # a conversation about a test that is not testing.
-  mutants:
-    name: mutation testing (weekly)
+  # Split in two on purpose. Crates that have been cleared must *stay* cleared, and that is
+  # a gate. The rest are surveyed without failing, because a job that is red every week for
+  # a known reason is a job people stop reading. Clearing a crate moves it from one list to
+  # the other, and the ratchet tightens.
+  #
+  # Sharded per crate rather than run as one sweep: the single-job version was cancelled at
+  # its 90-minute ceiling, because a runner has four cores where the machine it was timed
+  # on has eight.
+  mutants-clean:
+    name: mutation ratchet (${{ matrix.crate }})
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        crate:
+          - casm-core
+          - casm-parser
+          - casm-validator
+          - casm-telemetry
+          - casm-evidence
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo install cargo-mutants --locked
-      - name: sweep
-        # Not `--in-place`: it is mutually exclusive with `--jobs`, and parallelism is
-        # worth more than the disk a scratch copy costs on a forty-minute sweep. The first
-        # dispatch of this job failed on exactly that combination — flags that had never
-        # been run together, in a job that until then had never been run at all.
-        run: cargo mutants -j 4 --no-shuffle
+      - name: no mutant may survive in a cleared crate
+        run: cargo mutants --package ${{ matrix.crate }} -j 2 --no-shuffle
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: mutants-${{ matrix.crate }}
+          path: mutants.out/
+          if-no-files-found: warn
+
+  # The crates still carrying survivors. Reported, never failed: the count is the point,
+  # and it is worked down deliberately rather than declared an emergency every Sunday.
+  mutants-survey:
+    name: mutation survey (${{ matrix.crate }})
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        crate:
+          - casm-lsp
+          - casm-cli
+          - casm-diff
+          - casm-formal
+          - casm-wasm
+          - casm-git
+          - casm-renderer
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-mutants --locked
+      - name: survey
+        run: cargo mutants --package ${{ matrix.crate }} -j 2 --no-shuffle
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mutants-report
+          name: mutants-survey-${{ matrix.crate }}
           path: mutants.out/
           if-no-files-found: warn
+
 
   # Gate 17: CASIMIR validates its own example architectures. If the tool cannot keep
   # If the tool cannot keep its own house in order, it has no business auditing anyone else's.
