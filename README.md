@@ -335,6 +335,25 @@ The [playground](web/) validates as you type, renders diagrams, and shows the fi
 updating — reorder two nodes and watch it stay the same. All client-side; nothing is
 uploaded.
 
+![The CASM playground validating an architecture in the browser, showing two warnings with rule identifiers and suggestions](docs/images/playground-findings.png)
+
+Findings carry the same rule identifiers, severities, and suggestions the CLI prints,
+because it is the same rule library — compiled to WebAssembly rather than reimplemented.
+Click a finding to jump to its line.
+
+![The playground showing generated Mermaid flowchart source for the same architecture](docs/images/playground-diagram.png)
+
+Mermaid, Graphviz DOT, and ASCII all render in the page. The output is byte-identical to
+`casm generate`, because diagram identifiers are positional rather than
+UUID-derived ([ADR-0007](docs/adr/0007-deterministic-rendering.md)).
+
+![The playground checking a pattern conformance claim against a library the page carries as text](docs/images/playground-patterns.png)
+
+A browser has no filesystem to discover a `patterns/` directory in, so the page carries its
+library as text and hands it across the ABI. The claim above is checked and satisfied —
+change the version to one the library does not hold and it is reported as *unchecked*,
+never as met.
+
 ```javascript
 import init, * as casm from "./pkg/casm_wasm.js";
 await init();
@@ -350,10 +369,11 @@ page and a pipeline never disagree.
 
 | | raw | gzip |
 |---|---|---|
-| `casm_wasm_bg.wasm` | 938 KB | 314 KB |
-| total with JS glue | 956 KB | 317 KB |
+| `casm_wasm_bg.wasm` | 1,124,813 B | 375,936 B |
+| total with JS glue | 1,147,552 B | 379,900 B |
 
-45% of the roadmap's 2 MiB ceiling; the build script fails if that is ever exceeded.
+The module is 54% of the roadmap's 2 MiB ceiling; the build script fails if that is ever
+exceeded. Measured on the build these screenshots were taken from.
 
 ### At the edge
 
@@ -363,6 +383,16 @@ one JavaScript file and a `.wasm`:
 ```console
 $ curl -X POST --data-binary @architecture.yaml https://casm.example/validate
 ```
+
+Seven routes — `/validate`, `/render`, `/fingerprint`, `/diff`, `/conformance`, `/rules`,
+`/health` — described in [`edge/openapi.yaml`](edge/openapi.yaml) (OpenAPI 3.1). The
+description is written against the worker's *observed* behaviour, and
+`edge/tests/openapi.test.mjs` fails if the two ever disagree, so it cannot rot the way a
+hand-maintained one usually does.
+
+The status code carries the verdict, so a CI step can branch on it without parsing the
+body: `200` means fit to build against, `422` means not. An unchecked conformance claim is
+a `422` — a claim nobody verified is not a claim met.
 
 Cold-start latency is **unverified**: it can only be measured on the platform, and this
 has not been deployed.

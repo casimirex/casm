@@ -164,6 +164,8 @@ jobs:
       - run: ./scripts/build-wasm.sh
       - run: node crates/casm-wasm/tests/node/run.mjs
       - run: node edge/tests/handler.test.mjs
+      # The API description must still describe the worker that exists.
+      - run: node edge/tests/openapi.test.mjs
 
   # Gate 10: the generated specifications must be accepted by the real model checkers,
   # and must still FAIL on an architecture that violates them. A spec that parses and

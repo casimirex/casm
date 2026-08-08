@@ -32,11 +32,11 @@ never assumed satisfied.
 
 | | raw | gzip |
 |---|---|---|
-| `casm_wasm_bg.wasm` | 1,124,825 B | 375,937 B |
-| `casm_wasm.js` (glue) | 22,742 B | 3,968 B |
-| **total** | **1,147,567 B** | **379,905 B** |
+| `casm_wasm_bg.wasm` | 1,124,813 B | 375,936 B |
+| `casm_wasm.js` (glue) | 22,739 B | 3,964 B |
+| **total** | **1,147,552 B** | **379,900 B** |
 
-The roadmap's ceiling is 2 MiB; this is 53% of it. `scripts/build-wasm.sh` fails the build
+The roadmap's ceiling is 2 MiB; the module is 54% of it. `scripts/build-wasm.sh` fails the build
 if that is ever exceeded.
 
 No `wasm-opt` pass is applied. Running one would likely take a further 10–20% off, and it

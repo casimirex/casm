@@ -1,0 +1,395 @@
+# OpenAPI description of the CASM edge worker.
+#
+# Written against the worker's *observed* behaviour, not its intentions: every status code
+# and response field below was probed from `edge/handler.mjs` running the real WebAssembly
+# module. `tests/openapi.test.mjs` keeps it that way — it fails if this file and the
+# worker's route table disagree, so the description cannot quietly rot the way a
+# hand-maintained one usually does.
+#
+# There is no server to point this at. The worker is a Cloudflare Worker that has never
+# been deployed (see the README), so `servers` below is an example host rather than a
+# promise.
+
+openapi: 3.1.0
+
+info:
+  title: CASM edge worker
+  version: 0.3.0
+  summary: Validate, render, fingerprint, diff, and conformance-check architectures at the edge.
+  description: |
+    The same WebAssembly module the browser playground runs, behind seven HTTP routes.
+    No container and no language runtime — one JavaScript file and a `.wasm`.
+
+    **The status code carries the verdict.** A CI step can branch on it without parsing the
+    body, which is the same distinction `casm validate` makes with exit codes: `200` means
+    the document is fit to build against, `422` means it is not.
+
+    **Nothing traps.** A parse failure is a value in the response, never a crash: a
+    WebAssembly trap poisons the module and would break the worker until it restarted.
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+
+servers:
+  - url: https://casm.example
+    description: Example host. The worker has not been deployed.
+
+paths:
+  /health:
+    get:
+      summary: Version and liveness.
+      operationId: health
+      responses:
+        "200":
+          description: The worker is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, version, runtime]
+                properties:
+                  ok: { type: boolean, const: true }
+                  version: { type: string, examples: ["0.3.0"] }
+                  runtime: { type: string, const: wasm }
+
+  /rules:
+    get:
+      summary: The built-in rule catalogue.
+      description: |
+        The same nine rules the command line runs. Identifiers are a public contract: they
+        appear in SARIF output and in `--allow` suppression, so renaming one is a breaking
+        change.
+      operationId: rules
+      responses:
+        "200":
+          description: Every rule, in the order the validator runs them.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, description]
+                  properties:
+                    id: { type: string, examples: ["no-dependency-cycles"] }
+                    description: { type: string }
+
+  /validate:
+    post:
+      summary: Validate an architecture.
+      description: |
+        Accepts either a bare document or an envelope carrying a pattern library. The two
+        are told apart by the top-level `architecture` key, which the CASM grammar does not
+        have — so a document written in JSON can never be mistaken for an envelope.
+      operationId: validate
+      requestBody:
+        required: true
+        content:
+          text/yaml:
+            schema: { $ref: "#/components/schemas/Document" }
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/Document"
+                - $ref: "#/components/schemas/Envelope"
+      responses:
+        "200":
+          description: The document parsed and produced no errors.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ValidationResult" }
+        "400": { $ref: "#/components/responses/BadEnvelope" }
+        "413": { $ref: "#/components/responses/BodyRefused" }
+        "422":
+          description: |
+            The document did not parse, or produced errors. Warnings alone are still a
+            `200`, matching `casm validate` without `--strict`.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ValidationResult" }
+
+  /render:
+    post:
+      summary: Render a diagram.
+      operationId: render
+      parameters:
+        - name: backend
+          in: query
+          required: false
+          description: Defaults to `mermaid`.
+          schema:
+            type: string
+            enum: [mermaid, dot, ascii]
+            default: mermaid
+      requestBody:
+        required: true
+        content:
+          text/yaml:
+            schema: { $ref: "#/components/schemas/Document" }
+      responses:
+        "200":
+          description: The diagram source.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RenderResult" }
+        "413": { $ref: "#/components/responses/BodyRefused" }
+        "422":
+          description: The document did not parse, or the backend is not one of the three.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RenderResult" }
+
+  /fingerprint:
+    post:
+      summary: The architecture's semantic identity.
+      description: |
+        Excludes declaration order, formatting, comments, and generated identifiers, so
+        reordering two nodes does not change the answer
+        ([ADR-0009](https://github.com/casimirex/casm/blob/main/docs/adr/0009-merkle-fingerprint-is-semantic.md)).
+      operationId: fingerprint
+      requestBody:
+        required: true
+        content:
+          text/yaml:
+            schema: { $ref: "#/components/schemas/Document" }
+      responses:
+        "200":
+          description: The digest, and one per node.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FingerprintResult" }
+        "413": { $ref: "#/components/responses/BodyRefused" }
+        "422":
+          description: The document did not parse.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FingerprintResult" }
+
+  /diff:
+    post:
+      summary: Compare two architectures by meaning.
+      operationId: diff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [before, after]
+              properties:
+                before: { $ref: "#/components/schemas/Document" }
+                after: { $ref: "#/components/schemas/Document" }
+      responses:
+        "200":
+          description: The changes, and whether any is breaking.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DiffResult" }
+        "400":
+          description: The body is not JSON, or `before`/`after` are not both strings.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Failure" }
+        "413": { $ref: "#/components/responses/BodyRefused" }
+        "422":
+          description: Either document did not parse.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DiffResult" }
+
+  /conformance:
+    post:
+      summary: Check the patterns an architecture claims.
+      description: |
+        `casm evolve` without a filesystem. A worker has no disk to discover a `patterns/`
+        directory in, so the library is sent with the document.
+
+        **An unchecked claim is a `422`.** A claim nobody verified is not a claim met, and
+        answering `200` for one would be the most dangerous possible default.
+      operationId: conformance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Envelope" }
+          text/yaml:
+            schema: { $ref: "#/components/schemas/Document" }
+      responses:
+        "200":
+          description: Every claim was checked and satisfied.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConformanceResult" }
+        "400": { $ref: "#/components/responses/BadEnvelope" }
+        "413": { $ref: "#/components/responses/BodyRefused" }
+        "422":
+          description: The document did not parse, or a claim is unmet or unchecked.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConformanceResult" }
+
+components:
+  responses:
+    BadEnvelope:
+      description: The envelope's `patterns` is present but not an array.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Failure" }
+    BodyRefused:
+      description: |
+        The body is empty, or larger than 1 MiB. A declared `content-length` over the limit
+        is refused before the body is read at all.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Failure" }
+
+  schemas:
+    Document:
+      type: string
+      description: A CASM architecture, in YAML, JSON, or TOML.
+      examples:
+        - |
+          name: checkout
+          version: 1.0.0
+          nodes:
+            - name: api
+              type: service
+
+    Envelope:
+      type: object
+      description: A document together with the pattern library to check it against.
+      required: [architecture]
+      properties:
+        architecture: { $ref: "#/components/schemas/Document" }
+        patterns:
+          type: array
+          description: Each entry is the text of a pattern file.
+          items: { type: string }
+
+    Failure:
+      type: object
+      required: [ok, error]
+      properties:
+        ok: { type: boolean, const: false }
+        error: { type: string }
+
+    Diagnostic:
+      type: object
+      required: [severity, rule, message, line, start, end]
+      properties:
+        severity: { type: string, enum: [error, warning, info] }
+        rule:
+          type: string
+          description: A rule identifier, or `syntax` for a parse failure.
+        message: { type: string }
+        line: { type: integer, minimum: 0, description: Zero-based. }
+        start: { type: integer, minimum: 0, description: Zero-based, UTF-16 code units. }
+        end: { type: integer, minimum: 0 }
+
+    ValidationResult:
+      type: object
+      required:
+        [valid, parsed, exitCode, summary, nodeCount, relationshipCount, diagnostics,
+         patternsLoaded, patternErrors]
+      properties:
+        valid: { type: boolean }
+        parsed: { type: boolean }
+        exitCode:
+          type: integer
+          enum: [0, 1, 2]
+          description: What `casm validate` would exit with — 0 clean, 1 warnings, 2 errors.
+        summary: { type: string }
+        fingerprint:
+          type: [string, "null"]
+          description: 64 hexadecimal characters, when the document parsed.
+        nodeCount: { type: integer, minimum: 0 }
+        relationshipCount: { type: integer, minimum: 0 }
+        diagnostics:
+          type: array
+          items: { $ref: "#/components/schemas/Diagnostic" }
+        patternsLoaded:
+          type: integer
+          minimum: 0
+          description: How many patterns the supplied library held.
+        patternErrors:
+          type: array
+          description: Any pattern source that could not be read. Never fails the request.
+          items: { type: string }
+
+    RenderResult:
+      type: object
+      required: [ok, diagram]
+      properties:
+        ok: { type: boolean }
+        diagram: { type: string }
+        error: { type: [string, "null"] }
+
+    FingerprintResult:
+      type: object
+      required: [ok, nodes]
+      properties:
+        ok: { type: boolean }
+        fingerprint: { type: [string, "null"] }
+        short: { type: [string, "null"] }
+        nodes:
+          type: object
+          description: A digest per node, keyed by node name.
+          additionalProperties: { type: string }
+        error: { type: [string, "null"] }
+
+    DiffResult:
+      type: object
+      required: [ok, identical, breaking, changes]
+      properties:
+        ok: { type: boolean }
+        identical: { type: boolean }
+        breaking:
+          type: boolean
+          description: True when a change would break a consumer — a removal, or a contract change.
+        changes:
+          type: array
+          items: { type: string }
+        error: { type: [string, "null"] }
+
+    ClaimReport:
+      type: object
+      required: [pattern, checked, conforms, bindings, unmet]
+      properties:
+        pattern: { type: string, examples: ["secure-web-tier@1.0.0"] }
+        checked:
+          type: boolean
+          description: Whether the supplied library held the pattern at all.
+        conforms: { type: boolean, description: Meaningless unless `checked`. }
+        bindings:
+          type: object
+          description: Which node fills each role, including roles bound automatically.
+          additionalProperties: { type: string }
+        unmet:
+          type: array
+          items:
+            type: object
+            required: [message, mechanical]
+            properties:
+              message: { type: string }
+              mechanical:
+                type: boolean
+                description: |
+                  True when a tool could satisfy it by adding to the architecture. False
+                  when only a person can decide — the distinction ADR-0012 rests on.
+
+    ConformanceResult:
+      type: object
+      required: [ok, conforms, patternsLoaded, patternErrors, claims]
+      properties:
+        ok: { type: boolean, description: Whether the document parsed. }
+        conforms:
+          type: boolean
+          description: False if any claim is unmet *or* unchecked.
+        error: { type: [string, "null"] }
+        patternsLoaded: { type: integer, minimum: 0 }
+        patternErrors:
+          type: array
+          items: { type: string }
+        claims:
+          type: array
+          items: { $ref: "#/components/schemas/ClaimReport" }

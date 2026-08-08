@@ -58,6 +58,13 @@ CASM is pre-1.0. The API will change, and a minor version may break it.
 
 ### Added
 
+- **An OpenAPI 3.1 description of the edge worker**, `edge/openapi.yaml`, covering all
+  seven routes. Written against the worker's observed behaviour — every status code and
+  response field was probed from the real handler — and `edge/tests/openapi.test.mjs`
+  fails if the description and the route table ever disagree, in either direction.
+- **Screenshots of the browser playground** in the README, captured from the real
+  WebAssembly build rather than mocked up.
+
 - **Weekly scheduled CI.** A mutation sweep and an hour-per-target fuzz campaign, neither
   of which is worth paying for on every push. The fuzz job's comment had described the
   campaign as belonging "on a schedule" since it was written; no schedule existed.
